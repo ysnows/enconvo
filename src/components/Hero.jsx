@@ -43,12 +43,12 @@ export function Hero() {
                             </a>
                         ))}
                     </div>
-                    <a
-                        href="#"
-                        className="rounded-md bg-indigo-700 px-3.5 py-1.5 text-sm  font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
-                    >
-                        Download
-                    </a>
+                    {/*<a*/}
+                    {/*    href="#"*/}
+                    {/*    className="rounded-md bg-indigo-700 px-3.5 py-1.5 text-sm  font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"*/}
+                    {/*>*/}
+                    {/*    Download (Coming Soon)*/}
+                    {/*</a>*/}
                     {/*<div className="hidden lg:flex lg:basis-1/12 lg:justify-end">*/}
                     {/*    /!*<a href="#" className="text-sm font-semibold leading-6 text-white">*!/*/}
                     {/*    /!*    Log in <span aria-hidden="true">&rarr;</span>*!/*/}
@@ -136,7 +136,7 @@ export function Hero() {
                                     href="#"
                                     className="rounded-md bg-indigo-700 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
                                 >
-                                    Download En-Convo
+                                    Download En-Convo (Coming Soon)
                                 </a>
                                 {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
                                 {/*    Learn more <span aria-hidden="true">→</span>*/}
