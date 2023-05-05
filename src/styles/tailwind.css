@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#__next {
+  min-height: 100%;
+}
+
+
+.flexj {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
