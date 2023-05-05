@@ -133,7 +133,7 @@ export function Pricing() {
             name="Lifetime"
             price="$19.99"
             description="Lifetime access to all features."
-            href="https://enconvo.lemonsqueezy.com/checkout/buy/0a9cd075-8917-46ac-8986-89f6de891459"
+            href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
             features={[
               'Efficient Prompt',
               'Instant access to all features',
