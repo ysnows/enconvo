@@ -131,7 +131,7 @@ export function Pricing() {
           <Plan
             featured
             name="Lifetime"
-            price="$19"
+            price="$19.99"
             description="Lifetime access to all features."
             href="https://enconvo.lemonsqueezy.com/checkout/buy/0a9cd075-8917-46ac-8986-89f6de891459"
             features={[
