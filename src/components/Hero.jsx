@@ -132,11 +132,14 @@ export function Hero() {
                                 with convenient and efficient writing, coding, or any other task
                                 beyond imagination.</p>
                             <div className="mt-10 flex items-center justify-center gap-x-6">
+
                                 <a
-                                    href="#"
-                                    className="rounded-md bg-indigo-700 px-6 py-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"
+                                    href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                                    className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
                                 >
-                                    Download En-Convo (Coming Soon)
+
+
+                                    Download En-Convo
                                 </a>
                                 {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
                                 {/*    Learn more <span aria-hidden="true">→</span>*/}
