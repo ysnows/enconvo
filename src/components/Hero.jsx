@@ -5,7 +5,7 @@ import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
 const navigation = [
     {name: 'Pricing', href: '#pricing'},
     {name: 'Features', href: '#features'},
-    {name: 'Twitter', href: '#'},
+    {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
 ]
 
 export function Hero() {
