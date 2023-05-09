@@ -4,31 +4,33 @@ import {Tab} from '@headlessui/react'
 import clsx from 'clsx'
 
 import {Container} from '@/components/Container'
-import backgroundImage from '@/images/background-features.jpg'
-import screenshotExpenses from '@/images/screenshots/expenses.png'
-import screenshotPayroll from '@/images/screenshots/payroll.png'
-import screenshotReporting from '@/images/screenshots/reporting.png'
-import screenshotVatReturns from '@/images/screenshots/vat-returns.png'
-// import writing from '@/images/screenshots/writing.mp4'
+import comingSoon from '@/images/coming soon.png'
 
 const features = [
     {
         title: 'Writing Assistant',
         description:
             "With our writing assistant, you'll never have to worry about spelling or grammar again.",
-        image: "https://file-newi.oss-cn-qingdao.aliyuncs.com/writing.mp4",
+        video: "https://file-newi.oss-cn-qingdao.aliyuncs.com/writing.mp4",
     },
     {
         title: 'Code Assistant',
         description:
             "Our code assistant will help you write code that's easier to read, easier to maintain, and easier to debug.",
-        image: "https://file-newi.oss-cn-qingdao.aliyuncs.com/code.mp4",
+        video: "https://file-newi.oss-cn-qingdao.aliyuncs.com/code.mp4",
     },
     {
-        title: 'Instant Access',
+        title: 'Chat With Data (Coming Soon)',
         description:
-            "With our instant access feature, you'll have instant access to all of your prompt, all of the time.",
-        image: "https://file-newi.oss-cn-qingdao.aliyuncs.com/code.mp4",
+            "Chat with your own private data, such as PDFs, Word documents, videos, images, Markdown files, and more, in a convenient and engaging way.",
+        image: comingSoon,
+        video: undefined
+    }, {
+        title: 'Plugin System (Coming Soon)',
+        description:
+            "Empowering existing services with AI, including external services (such as food delivery) and local services (such as local scripts), and even AI-driven automation.",
+        image: comingSoon,
+        video: undefined
     }
 ]
 
@@ -134,18 +136,27 @@ export function PrimaryFeatures() {
                                             </p>
                                         </div>
                                         <div
-                                            className="mt-10 w-[45rem] overflow-hidden rounded-xl  sm:w-auto lg:mt-0 lg:w-[67.8125rem]">
-                                            <video className="w-10/12 h-1/6" controls>
-                                                <source src={feature.image} type="video/mp4"/>
-                                                Your browser does not support the video tag.
-                                            </video>
-                                            {/*<Image*/}
-                                            {/*  className="w-full"*/}
-                                            {/*  src={feature.image}*/}
-                                            {/*  alt=""*/}
-                                            {/*  priority*/}
-                                            {/*  sizes="(min-width: 1024px) 67.8125rem, (min-width: 640px) 100vw, 45rem"*/}
-                                            {/*/>*/}
+                                            // sm:w-auto lg:mt-0 lg:w-[67.8125rem]
+                                            className="sm:w-auto lg:mt-0 mt-10 lg:w-[67.8125rem] overflow-hidden ">
+
+                                            {/* 判断如果feature.video存在则显示<video/>，否则显示<Image/>}
+                                            {/*实现上边的逻辑*/}
+
+                                            {feature.video
+                                                ? <video
+                                                    className="lg:w-10/12 sm:w-auto h-1/6 mt-10 lg:mt-0 rounded-xl"
+                                                    controls>
+                                                    <source src={feature.video} type="video/mp4"/>
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                                : <Image
+                                                    className="lg:w-10/12 sm:w-auto h-1/6 mt-10 lg:mt-0 rounded-xl"
+                                                    src={feature.image}
+                                                    alt=""
+                                                    priority
+                                                    sizes="(min-width: 1024px) 67.8125rem, (min-width: 640px) 100vw, 45rem"
+                                                />
+                                            }
                                         </div>
                                     </Tab.Panel>
                                 ))}

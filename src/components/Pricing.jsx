@@ -85,6 +85,7 @@ function Plan({name, price, description, href, features, featured = false}) {
                 variant={featured ? 'solid' : 'outline'}
                 color="white"
                 className="mt-8"
+                target="_blank"
                 aria-label={`Get started with the ${name} plan for ${price}`}
             >
                 Get started
@@ -106,12 +107,13 @@ export function Pricing() {
             <span className="relative whitespace-nowrap">
               <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400"/>
               <span className="relative">Simple pricing,</span>
-            </span>{' '}
+
+            </span>
+                        {' '}
                         for everyone.
                     </h2>
                     <p className="mt-4 text-lg text-slate-400">
-                        It doesn’t matter what size your business is, our software won’t
-                        work well for you.
+                        No matter who you are, our software is designed to meet your requirements.
                     </p>
                 </div>
                 <div
@@ -133,7 +135,7 @@ export function Pricing() {
                         featured
                         name="Lifetime"
                         price="Free"
-                        description="Lifetime access to all features."
+                        description="Lifetime access to all free features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
                         features={[
                             'Unlimited Times',

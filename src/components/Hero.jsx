@@ -6,6 +6,7 @@ const navigation = [
     {name: 'Pricing', href: '#pricing'},
     {name: 'Features', href: '#features'},
     {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
+    {name: 'Discord', href: 'https://discord.gg/jYsdVRRK2k'},
 ]
 
 export function Hero() {
@@ -38,7 +39,8 @@ export function Hero() {
                     <div className="mr-32 hidden lg:flex lg:gap-x-12">
                         {navigation.map((item) => (
                             <a key={item.name} href={item.href}
-                               className="text-sm font-semibold leading-6 text-white">
+                               target={item.href.startsWith('http') ? '_blank' : '_self'}
+                               className="text-sm font-semibold leading-6 text-white" rel="noreferrer">
                                 {item.name}
                             </a>
                         ))}
@@ -135,11 +137,12 @@ export function Hero() {
 
                                 <a
                                     href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
-                                    className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
+                                    target="_blank"
+                                    className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400" rel="noreferrer"
                                 >
 
 
-                                    Download En-Convo
+                                    Download En-Convo (Beta)
                                 </a>
                                 {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
                                 {/*    Learn more <span aria-hidden="true">→</span>*/}
