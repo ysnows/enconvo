@@ -116,30 +116,29 @@ export function Pricing() {
                 </div>
                 <div
                     className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
-                    <Plan
-                        name="Free"
-                        price="$0"
-                        description="Good for anyone who is self-employed and just getting started."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
-                        features={[
-                            '10 free times every day',
-                            'Efficient Prompt',
-                            'Instant access to all features',
-                            'Local plugin associated with the power of the chatgpt',
-                        ]}
-                    />
+                    {/*<Plan*/}
+                    {/*    name="Free"*/}
+                    {/*    price="$0"*/}
+                    {/*    description="Good for anyone who is self-employed and just getting started."*/}
+                    {/*    href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"*/}
+                    {/*    features={[*/}
+                    {/*        '10 free times every day',*/}
+                    {/*        'Efficient Prompt',*/}
+                    {/*        'Instant access to all features',*/}
+                    {/*        'Local plugin associated with the power of the chatgpt',*/}
+                    {/*    ]}*/}
+                    {/*/>*/}
 
                     <Plan
                         featured
                         name="Lifetime"
-                        price="$19.99"
+                        price="Free"
                         description="Lifetime access to all features."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
+                        href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
                         features={[
                             'Unlimited Times',
                             'Efficient Prompt',
-                            'Instant access to all features',
-                            'Local plugin associated with the power of the chatgpt',
+                            'Instant access to free features'
                         ]}
                     />
                     {/*<Plan*/}
