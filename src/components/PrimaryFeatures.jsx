@@ -23,13 +23,13 @@ const features = [
         title: 'Chat With Data (Coming Soon)',
         description:
             "Chat with your own private data, such as PDFs, Word documents, videos, images, Markdown files, and more, in a convenient and engaging way.",
-        image: comingSoon,
+        image: "https://github.com/ysnows/sparkle/blob/main/media/images/coming%20soon.png?raw=true",
         video: undefined
     }, {
         title: 'Plugin System (Coming Soon)',
         description:
             "Empowering existing services with AI, including external services (such as food delivery) and local services (such as local scripts), and even AI-driven automation.",
-        image: comingSoon,
+        image: "https://github.com/ysnows/sparkle/blob/main/media/images/coming%20soon.png?raw=true",
         video: undefined
     }
 ]
@@ -151,8 +151,10 @@ export function PrimaryFeatures() {
                                                 </video>
                                                 : <Image
                                                     className="lg:w-10/12 sm:w-auto h-1/6 mt-10 lg:mt-0 rounded-xl"
-                                                    src={feature.image}
+                                                    src={"https://github.com/ysnows/sparkle/blob/main/media/images/coming%20soon.png?raw=true"}
                                                     alt=""
+                                                    width={2245}
+                                                    height={1636}
                                                     priority
                                                     sizes="(min-width: 1024px) 67.8125rem, (min-width: 640px) 100vw, 45rem"
                                                 />
