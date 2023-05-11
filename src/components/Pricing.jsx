@@ -46,7 +46,15 @@ function CheckIcon({className}) {
     )
 }
 
-function Plan({name, price, description, href, features, featured = false}) {
+function Plan({
+                  name,
+                  price,
+                  description,
+                  href,
+                  startText = "Get started",
+                  features,
+                  featured = false
+              }) {
     return (
         <section
             className={clsx(
@@ -88,7 +96,7 @@ function Plan({name, price, description, href, features, featured = false}) {
                 target="_blank"
                 aria-label={`Get started with the ${name} plan for ${price}`}
             >
-                Get started
+                {startText}
             </Button>
         </section>
     )
@@ -118,44 +126,42 @@ export function Pricing() {
                 </div>
                 <div
                     className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
-                    {/*<Plan*/}
-                    {/*    name="Free"*/}
-                    {/*    price="$0"*/}
-                    {/*    description="Good for anyone who is self-employed and just getting started."*/}
-                    {/*    href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"*/}
-                    {/*    features={[*/}
-                    {/*        '10 free times every day',*/}
-                    {/*        'Efficient Prompt',*/}
-                    {/*        'Instant access to all features',*/}
-                    {/*        'Local plugin associated with the power of the chatgpt',*/}
-                    {/*    ]}*/}
-                    {/*/>*/}
+                    <Plan
+                        name="Free"
+                        price="Free"
+                        description="Good for anyone who is self-employed and just getting started."
+                        href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                        features={[
+                            '10 Built-in Plugins',
+                            'Seamless Access to Basic Features',
+                        ]}
+                    />
 
                     <Plan
                         featured
-                        name="Lifetime"
-                        price="Free"
-                        description="Lifetime access to all free features."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                        name="Premium"
+                        price="$29"
+                        description="Lifetime access to all features."
+                        href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
                         features={[
-                            'Unlimited Times',
-                            'Efficient Prompt',
-                            'Instant access to free features'
+                            'Unlimited Plugins Installed(Coming Soon)',
+                            'Unlimited Custom Plugins(Coming Soon)',
+                            'Chatting With Your Own Data(Coming Soon)',
+                            'Seamless Access to All Features'
                         ]}
                     />
-                    {/*<Plan*/}
-                    {/*  name="Enterprise"*/}
-                    {/*  price="$39"*/}
-                    {/*  description="For even the biggest enterprise companies."*/}
-                    {/*  href="/register"*/}
-                    {/*  features={[*/}
-                    {/*    'Send unlimited quotes and invoices',*/}
-                    {/*    'Connect up to 15 bank accounts',*/}
-                    {/*    'Track up to 200 expenses per month',*/}
-                    {/*    'Automated payroll support',*/}
-                    {/*    'Export up to 25 reports, including TPS',*/}
-                    {/*  ]}*/}
-                    {/*/>*/}
+                    <Plan
+                        name="Subscription"
+                        price="$8/mo"
+                        description="get acess to all the features without an openai key."
+                        href=""
+                        startText={'Coming Soon'}
+                        features={[
+                            'All Premium Features',
+                            'Access Without OpenAI Key',
+                            'Seamless Access to All Features'
+                        ]}
+                    />
                 </div>
             </Container>
         </section>
