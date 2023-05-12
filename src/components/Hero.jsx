@@ -6,7 +6,7 @@ const navigation = [
     {name: 'Pricing', href: '#pricing'},
     {name: 'Features', href: '#features'},
     {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
-    {name: 'Discord', href: 'https://discord.gg/jYsdVRRK2k'},
+    {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
 ]
 
 export function Hero() {
