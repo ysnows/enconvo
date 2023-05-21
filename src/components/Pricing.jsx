@@ -132,8 +132,8 @@ export function Pricing() {
                         description="Good for anyone who is self-employed and just getting started."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
                         features={[
-                            '10 Built-in Plugins',
-                            'Seamless Access to Basic Features',
+                            'Use & Create Prompt Plugins (One Step)',
+                            'Seamless Access To Power Of AI',
                         ]}
                     />
 
@@ -144,10 +144,9 @@ export function Pricing() {
                         description="Lifetime access to all features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
                         features={[
-                            'Unlimited Plugins Installed(Coming Soon)',
-                            'Unlimited Custom Plugins(Coming Soon)',
+                            'Use & Create Unlimited Plugins',
                             'Chatting With Your Own Data(Coming Soon)',
-                            'Seamless Access to All Features'
+                            'Seamless Access To Power Of AI'
                         ]}
                     />
                     <Plan
