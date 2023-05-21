@@ -7,7 +7,7 @@ const navigation = [
     {name: 'Features', href: '#features'},
     {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
     {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
-    
+
 ]
 
 export function Hero() {
@@ -41,7 +41,8 @@ export function Hero() {
                         {navigation.map((item) => (
                             <a key={item.name} href={item.href}
                                target={item.href.startsWith('http') ? '_blank' : '_self'}
-                               className="text-sm font-semibold leading-6 text-white" rel="noreferrer">
+                               className="text-sm font-semibold leading-6 text-white"
+                               rel="noreferrer">
                                 {item.name}
                             </a>
                         ))}
@@ -139,24 +140,45 @@ export function Hero() {
                                 <a
                                     href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
                                     target="_blank"
-                                    className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400" rel="noreferrer"
+                                    className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
+                                    rel="noreferrer"
                                 >
 
 
-                                    Download En-Convo (Beta)
+                                    Download EnConvo
                                 </a>
+
                                 {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
                                 {/*    Learn more <span aria-hidden="true">→</span>*/}
                                 {/*</a>*/}
+                                <a href="https://www.producthunt.com/posts/enconvo?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-enconvo"
+                                   target="_blank" rel="noreferrer"><img
+                                    src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=395518&theme=light"
+                                    alt="Enconvo - seamless&#0032;ai&#0032;assistant&#0032; | Product Hunt"
+                                    width="250"
+                                    height="54"/></a>
+
                             </div>
+
+                            <div>
+                            </div>
+
                         </div>
-                        <img
-                            src="https://file-newi.oss-cn-qingdao.aliyuncs.com/app-screenshot.png"
-                            alt="App screenshot"
-                            width={2432}
-                            height={1442}
-                            className="mt-16 rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
-                        />
+
+                        <iframe
+
+                            src="https://www.youtube.com/embed/dzOpL40ha0Y"
+                            title="YouTube video player" frameBorder="0"
+                            className="mt-16 lg:w-full lg:h-screen rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; "
+                            allowFullScreen></iframe>
+                        {/*<img*/}
+                        {/*    src="https://file-newi.oss-cn-qingdao.aliyuncs.com/app-screenshot.png"*/}
+                        {/*    alt="App screenshot"*/}
+                        {/*    width={2432}*/}
+                        {/*    height={1442}*/}
+                        {/*    className="mt-16 rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"*/}
+                        {/*/>*/}
                     </div>
                 </div>
                 <div
