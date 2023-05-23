@@ -8,23 +8,23 @@ import comingSoon from '@/images/coming soon.png'
 
 const features = [
     {
-        title: 'Writing Assistant',
+        title: 'Seamless Acess',
         description:
-            "With our writing assistant, you'll never have to worry about spelling or grammar again.",
-        video: "https://file-newi.oss-cn-qingdao.aliyuncs.com/writing.mp4",
-    },
-    {
-        title: 'Code Assistant',
-        description:
-            "Our code assistant will help you write code that's easier to read, easier to maintain, and easier to debug.",
-        video: "https://file-newi.oss-cn-qingdao.aliyuncs.com/code.mp4",
+            "Get to your prompts&tools in anywhere&anytime with only one entrance",
+        image: "https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/378shots_so.png",
     },
     {
         title: 'Plugin System',
         description:
-            "Empowering existing services with AI, including external services (such as food delivery) and local services (such as local scripts), and even AI-driven automation.",
+            "Combine the power of AI with your existing tools.",
         image: "https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/581shots_so.png",
         video: undefined
+    },
+    {
+        title: 'Plugin Chain',
+        description:
+            "Combine the power of plugin with other plugins again and again",
+        image: "https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/787shots_so.png",
     },
     {
         title: 'Chat With Data (Coming Soon)',
@@ -70,11 +70,10 @@ export function PrimaryFeatures() {
             <Container className="relative">
                 <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
                     <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
-                        Everything you need to run your books.
+                        The future is just beginning.
                     </h2>
                     <p className="mt-6 text-lg tracking-tight text-blue-100">
-                        Well everything you need if you aren’t that picky about minor
-                        details like tax compliance.
+                        The future is full of possibilities, challenges and opportunities, and with innovation and collaboration, we can achieve remarkable breakthroughs.
                     </p>
                 </div>
                 <Tab.Group

@@ -20,7 +20,7 @@ export function Hero() {
                     <div className="ml-32 flex lg:flex-1 items-center ">
                         <img
                             className="h-10 w-auto"
-                            src="https://file-newi.oss-cn-qingdao.aliyuncs.com/enconvologo.png"
+                            src="https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/enconvologo.png"
                             alt=""
                         />
                         <div className="ml-3">

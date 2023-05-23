@@ -2,7 +2,7 @@ export function Logo(props) {
   return (
       <img
           className="h-10 w-auto"
-          src="https://file-newi.oss-cn-qingdao.aliyuncs.com/enconvologo.png"
+          src="https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/enconvologo.png"
           alt=""
       />
     // <svg aria-hidden="true" viewBox="0 0 109 40" {...props}>
