@@ -169,7 +169,7 @@ export function Hero() {
 
                             src="https://www.youtube.com/embed/dzOpL40ha0Y"
                             title="YouTube video player" frameBorder="0"
-                            className="mt-16 lg:w-full lg:h-screen rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
+                            className="w-full aspect-video mt-16  rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; "
                             allowFullScreen></iframe>
                         {/*<img*/}
