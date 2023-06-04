@@ -8,11 +8,11 @@ export function CallToAction() {
   return (
     <section
       id="get-started-today"
-      className="relative overflow-hidden bg-blue-600 py-32"
+      className="relative overflow-hidden bg-gradient-to-br bggray py-32"
     >
       <Image
-        className="absolute left-1/2 top-1/2 max-w-none -translate-x-1/2 -translate-y-1/2"
-        src={backgroundImage}
+        className="absolute left-1/2 top-1/2 max-w-none translate-x-[-44%] translate-y-[-42%]"
+        // src={backgroundImage}
         alt=""
         width={2347}
         height={1244}

@@ -11,10 +11,10 @@ function classNames(...classes) {
 
 
 const navigation = [
-    {name: 'Pricing', href: '#pricing'},
     {name: 'Features', href: '#features'},
     {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
     {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
+    {name: 'Developer', href: '#pricing'},
 ]
 
 export function Hero() {
@@ -184,12 +184,10 @@ export function Hero() {
                             <a
                                 href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
                                 target="_blank"
-                                className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400"
+                                className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled"
                                 rel="noreferrer"
                             >
-
-
-                                Download EnConvo
+                                Download EnConvo Free
                             </a>
 
                             {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
