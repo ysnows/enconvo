@@ -15,7 +15,7 @@ const navigation = [
     {name: 'Features', href: '#features'},
     {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
     {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
-    {name: 'Developer', href: '#pricing'},
+    {name: 'Developer', href: '/developer'},
 ]
 
 export function Hero() {
