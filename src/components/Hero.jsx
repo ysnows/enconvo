@@ -4,6 +4,7 @@ import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
 import {Fragment} from 'react'
 import {Menu, Transition} from '@headlessui/react'
 import {EllipsisVerticalIcon} from '@heroicons/react/20/solid'
+import Link from "next/link";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -74,20 +75,20 @@ export function Hero() {
                                 className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <div className="py-1">
                                     <Menu.Item>
-                                        {({active}) => (<a
-                                            href="/privacy"
+                                        {({active}) => (
+                                            <Link href="/privacy"
                                             className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                         >
                                             Privacy Policy
-                                        </a>)}
+                                        </Link>)}
                                     </Menu.Item>
                                     <Menu.Item>
-                                        {({active}) => (<a
+                                        {({active}) => (<Link
                                             href="/terms"
                                             className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                         >
                                             Terms of Use
-                                        </a>)}
+                                        </Link>)}
                                     </Menu.Item>
                                 </div>
                             </Menu.Items>
