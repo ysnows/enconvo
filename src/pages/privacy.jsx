@@ -55,10 +55,10 @@ export default function Privacy() {
                         Enconvo does not collect core data generated during your usage, such as
                         translated text and recognized images. If you enable services that require
                         network requests, Enconvo may send data over the network to the service
-                        provider's server for data processing to obtain the required results.
+                        provider server for data processing to obtain the required results.
                     </p>
                     <p className="mt-8">
-                        In addition, when you use certain service providers' services, you may need
+                        In addition, when you use certain service provider services, you may need
                         to enter your own key into the Enconvo main program to use them normally.
                         Enconvo only saves your key locally and does not upload it to the server.
                         <br/> However, to provide a better user experience, Enconvo may collect the
