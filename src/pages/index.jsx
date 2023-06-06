@@ -14,10 +14,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>EnConvo - Accounting made simple for small businesses</title>
+        <title>EnConvo - Seamless Ai Assistant</title>
         <meta
           name="description"
-          content="Most bookkeeping software is accurate, but hard to use. We make the opposite trade-off, and hope you don’t get audited."
+          content="ou can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."
         />
       </Head>
       {/*<Header />*/}
