@@ -183,12 +183,12 @@ export function Hero() {
                         <div className="mt-10 flex items-center justify-center gap-x-6">
 
                             <a
-                                href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                                href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a"
                                 target="_blank"
                                 className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled"
                                 rel="noreferrer"
                             >
-                                Download EnConvo Free
+                                Download EnConvo
                             </a>
 
                             {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
