@@ -77,10 +77,10 @@ export function Hero() {
                                     <Menu.Item>
                                         {({active}) => (
                                             <Link href="/privacy"
-                                            className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
-                                        >
-                                            Privacy Policy
-                                        </Link>)}
+                                                  className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
+                                            >
+                                                Privacy Policy
+                                            </Link>)}
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (<Link
@@ -183,12 +183,12 @@ export function Hero() {
                         <div className="mt-10 flex items-center justify-center gap-x-6">
 
                             <a
-                                href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a"
+                                href=""
                                 target="_blank"
-                                className="rounded-md px-16 py-4 text-sm font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled"
+                                className="rounded-md px-16 py-4 lg:text-sm sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
                             >
-                                Download EnConvo
+                                Download EnConvo(In beta testing)
                             </a>
 
                             {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}

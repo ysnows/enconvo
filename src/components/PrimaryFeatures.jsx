@@ -151,7 +151,7 @@ export function PrimaryFeatures() {
                                                 </video>
                                                 :
                                                 <img
-                                                    className="lg:w-10/12 sm:w-auto h-1/6 mt-10 lg:mt-0 rounded-xl"
+                                                    className="lg:w-10/12 sm:w-auto sm:h-auto lg:h-1/6 mt-10 lg:mt-0 rounded-xl"
                                                     src={feature.image}
                                                     />
 
