@@ -13,6 +13,7 @@ function classNames(...classes) {
 
 const navigation = [
     {name: 'Features', href: '#features'},
+    {name: 'Pricing', href: '#pricing'},
     {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
     {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
     {name: 'Developer', href: '/developer'},
