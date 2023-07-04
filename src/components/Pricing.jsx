@@ -152,18 +152,18 @@ export function Pricing() {
                             'Seamless Access To Power Of AI'
                         ]}
                     />
-                    <Plan
-                        name="Subscription"
-                        price="$8/mo"
-                        description="get acess to all the features without an openai key."
-                        href=""
-                        startText={'Coming Soon'}
-                        features={[
-                            'All Premium Features',
-                            'Access Without OpenAI Key',
-                            'Seamless Access to All Features'
-                        ]}
-                    />
+                    {/*<Plan*/}
+                    {/*    name="Subscription"*/}
+                    {/*    price="$8/mo"*/}
+                    {/*    description="get acess to all the features without an openai key."*/}
+                    {/*    href=""*/}
+                    {/*    startText={'Coming Soon'}*/}
+                    {/*    features={[*/}
+                    {/*        'All Premium Features',*/}
+                    {/*        'Access Without OpenAI Key',*/}
+                    {/*        'Seamless Access to All Features'*/}
+                    {/*    ]}*/}
+                    {/*/>*/}
                 </div>
             </Container>
         </section>
