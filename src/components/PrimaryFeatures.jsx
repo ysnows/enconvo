@@ -118,7 +118,7 @@ export function PrimaryFeatures() {
                 </div>
 
                 <div
-                    className="flex text-white font-mono sm:mt-60 mt-6  flex-col  ">
+                    className="flex text-white font-mono sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row  ">
 
                     <div className="pr-20 mt-16 flex flex-col  "
                          style={{
@@ -154,10 +154,9 @@ export function PrimaryFeatures() {
                             alt={""}/>
                     </div>
 
-
                 </div>
                 <div
-                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col ">
+                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row ">
 
                     <div className="pr-20 mt-16 flex flex-col  "
                          style={{

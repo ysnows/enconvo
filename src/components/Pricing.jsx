@@ -130,7 +130,7 @@ export function Pricing() {
                         name="Free"
                         price="Free"
                         description="Good for anyone who is self-employed and just getting started."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                        href="https://github.com/ysnows/EnconvoAI/releases"
                         features={[
                             'Use & Create Prompt',
                             'Use of Plugins',

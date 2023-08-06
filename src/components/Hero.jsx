@@ -108,11 +108,7 @@ export function Hero() {
                     <div className="flex items-center justify-between">
                         <a href="#" className="-m-1.5 p-1.5">
                             <span className="sr-only">Your Company</span>
-                            <img
-                                className="h-8 w-auto"
-                                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                                alt=""
-                            />
+
                         </a>
                         <button
                             type="button"
@@ -180,7 +176,7 @@ export function Hero() {
                                 target="_blank"
                                 className="border-2 border-purple-300  rounded-xl px-16 py-3 sm:px-24 sm:py-4 lg:text-base sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
-                                href=""
+                                href="https://github.com/ysnows/EnconvoAI/releases"
                             >
                                 Download For Mac
                             </a>
