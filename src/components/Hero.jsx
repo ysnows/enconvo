@@ -5,6 +5,10 @@ import {Fragment} from 'react'
 import {Menu, Transition} from '@headlessui/react'
 import {EllipsisVerticalIcon} from '@heroicons/react/20/solid'
 import Link from "next/link";
+import {Logo} from "@/components/Logo";
+import avatar1 from "@/images/avatars/avatar-1.png";
+import Image from "next/image";
+import appScreeShot from "@/images/screenshots/app-screenshot.png";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -14,7 +18,6 @@ function classNames(...classes) {
 const navigation = [
     {name: 'Features', href: '#features'},
     {name: 'Pricing', href: '#pricing'},
-    {name: 'Twitter', href: 'https://twitter.com/EnConvoAI'},
     {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
     {name: 'Developer', href: '/developer'},
 ]
@@ -26,13 +29,12 @@ export function Hero() {
         <header className="absolute inset-x-0 top-0 z-50">
             <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div className="ml-32 flex lg:flex-1 items-center ">
-                    <img
-                        className="h-10 w-auto"
-                        src="https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/enconvologo.png"
-                        alt=""
-                    />
+                    <Link href="/" aria-label="Home">
+                        <Logo className="h-10 w-auto"/>
+                    </Link>
+
                     <div className="ml-3">
-                        <span className="text-white font-bold">En-Convo</span>
+                        <span className="text-white font-bold">Enconvo</span>
                     </div>
                 </div>
                 <div className="flex lg:hidden">
@@ -96,17 +98,6 @@ export function Hero() {
                         </Transition>
                     </Menu>
                 </div>
-                {/*<a*/}
-                {/*    href="#"*/}
-                {/*    className="rounded-md bg-indigo-700 px-3.5 py-1.5 text-sm  font-semibold text-white shadow-sm hover:bg-indigo-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400"*/}
-                {/*>*/}
-                {/*    Download (Coming Soon)*/}
-                {/*</a>*/}
-                {/*<div className="hidden lg:flex lg:basis-1/12 lg:justify-end">*/}
-                {/*    /!*<a href="#" className="text-sm font-semibold leading-6 text-white">*!/*/}
-                {/*    /!*    Log in <span aria-hidden="true">&rarr;</span>*!/*/}
-                {/*    /!*</a>*!/*/}
-                {/*</div>*/}
             </nav>
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen}
                     onClose={setMobileMenuOpen}>
@@ -168,61 +159,44 @@ export function Hero() {
                     }}
                 />
             </div>
-            <div className="py-24 sm:py-32 lg:pb-40">
+            <div className="py-0 sm:py-28 lg:pb-40">
                 <div className="mx-auto max-w-7xl  px-6 lg:px-8 ">
 
                     <div className="mx-auto max-w-5xl   text-center">
-                        <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl ">
+                        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-6xl ">
                             <br/>
                             <br/>
                             Be there for you whenever you need
                         </h1>
-                        <p className="mt-6 text-lg leading-8 text-gray-300">EnConvo allows you
+                        <p className="mt-6 text-sm sm:text-base leading-8 text-gray-300">EnConvo allows you
                             to access AI at any time, within any software. It can assist you
                             with convenient and efficient writing, coding, or any other task
                             beyond imagination.</p>
-                        <div className="mt-10 flex items-center justify-center gap-x-6">
+                        <div className="mt-10 flex  items-center justify-center gap-x-6">
 
                             <a
                                 target="_blank"
                                 className="rounded-md px-16 py-4 lg:text-sm sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
-                                href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                                href=""
                             >
-                                Download EnConvo
+                                Download For Mac
                             </a>
 
                             {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
                             {/*    Learn more <span aria-hidden="true">→</span>*/}
                             {/*</a>*/}
-                            <a href="https://www.producthunt.com/posts/enconvo?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-enconvo"
-                               target="_blank" rel="noreferrer"><img
-                                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=395518&theme=light"
-                                alt="Enconvo - seamless&#0032;ai&#0032;assistant&#0032; | Product Hunt"
-                                width="250"
-                                height="54"/></a>
-
                         </div>
 
                         <div>
                         </div>
 
                     </div>
-
-                    <iframe
-
-                        src="https://www.youtube.com/embed/dzOpL40ha0Y"
-                        title="YouTube video player" frameBorder="0"
-                        className="w-full aspect-video mt-16  rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; "
-                        allowFullScreen></iframe>
-                    {/*<img*/}
-                    {/*    src="https://file-newi.oss-cn-qingdao.aliyuncs.com/app-screenshot.png"*/}
-                    {/*    alt="App screenshot"*/}
-                    {/*    width={2432}*/}
-                    {/*    height={1442}*/}
-                    {/*    className="mt-16 rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"*/}
-                    {/*/>*/}
+                    <Image
+                        src={appScreeShot}
+                        alt="App screenshot"
+                        className="mt-16 rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
+                    />
                 </div>
             </div>
             <div
