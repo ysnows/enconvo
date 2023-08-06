@@ -61,7 +61,7 @@ export function PrimaryFeatures() {
         <section
             id="features"
             aria-label="Features for running your books"
-            className="relative overflow-hidden bg-gray-900 pb-28 pt-20 sm:py-32"
+            className="relative overflow-hidden bg-gray-900 pb-28 sm:pt-20 pt-6 sm:py-32"
         >
 
             <Container className="relative">
@@ -77,9 +77,9 @@ export function PrimaryFeatures() {
 
 
                 <div
-                    className="flex text-white font-mono mt-28 ">
+                    className="flex flex-col sm:flex-row lg:flex-row  text-white font-mono sm:mt-28 mt-18 ">
 
-                    <div className="pr-20 mt-16 "
+                    <div className="pr-20 mt-16 flex flex-col "
                          style={{
                              flexGrow: 0.6,
                              flexBasis: 0,
@@ -108,7 +108,7 @@ export function PrimaryFeatures() {
                         </p>
                     </div>
 
-                    <div className="flex-1">
+                    <div className="flex-1 sm:mt-0 mt-6">
                         <Image
                             className="basis-0 rounded-xl "
                             src={writing}
@@ -118,7 +118,7 @@ export function PrimaryFeatures() {
                 </div>
 
                 <div
-                    className="flex text-white font-mono mt-60 ">
+                    className="flex text-white font-mono sm:mt-60 mt-6  flex-col  ">
 
                     <div className="pr-20 mt-16 flex flex-col  "
                          style={{
@@ -142,10 +142,12 @@ export function PrimaryFeatures() {
                                 className="bg-gradient-to-tr from-cyan-950 to-emerald-200 text-transparent bg-clip-text">Plugin </span> System
                         </p>
                         <p className="mt-6">
-                            With the plugin system, you can easily add new features to your system, and If you are a developer, you can easily create your own plugin and share it with others.
+                            With the plugin system, you can easily add new features to your system,
+                            and If you are a developer, you can easily create your own plugin and
+                            share it with others.
                         </p>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 mt-6 sm:mt-0">
                         <Image
                             className="basis-0 rounded-xl "
                             src={plugin}
@@ -155,7 +157,7 @@ export function PrimaryFeatures() {
 
                 </div>
                 <div
-                    className="flex text-white font-mono mt-60 ">
+                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col ">
 
                     <div className="pr-20 mt-16 flex flex-col  "
                          style={{
@@ -183,7 +185,7 @@ export function PrimaryFeatures() {
                             customize
                             your own powerful workflow </p>
                     </div>
-                    <div className="flex-1">
+                    <div className="flex-1 mt-6 sm:mt-0">
                         <Image
                             className="basis-0 rounded-xl "
                             src={chain}
