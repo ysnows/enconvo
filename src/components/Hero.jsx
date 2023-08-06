@@ -3,13 +3,10 @@ import {Dialog} from '@headlessui/react'
 import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
 import {Fragment} from 'react'
 import {Menu, Transition} from '@headlessui/react'
-import {EllipsisVerticalIcon} from '@heroicons/react/20/solid'
 import Link from "next/link";
 import {Logo} from "@/components/Logo";
-import avatar1 from "@/images/avatars/avatar-1.png";
 import Image from "next/image";
 import appScreeShot from "@/images/screenshots/app-screenshot.png";
-import {Button} from "@/components/ui/button";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
