@@ -9,18 +9,20 @@ import {Logo} from "@/components/Logo";
 import avatar1 from "@/images/avatars/avatar-1.png";
 import Image from "next/image";
 import appScreeShot from "@/images/screenshots/app-screenshot.png";
+import {Button} from "@/components/ui/button";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 
-const navigation = [
-    {name: 'Features', href: '#features'},
-    {name: 'Pricing', href: '#pricing'},
-    {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
-    {name: 'Developer', href: '/developer'},
-]
+const navigation = [{name: 'Features', href: '#features'}, {
+    name: 'Pricing',
+    href: '#pricing'
+}, {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'}, {
+    name: 'Developer',
+    href: '/developer'
+},]
 
 export function Hero() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -54,8 +56,7 @@ export function Hero() {
                            className="text-sm font-semibold leading-6 text-white"
                            rel="noreferrer">
                             {item.name}
-                        </a>
-                    ))}
+                        </a>))}
 
                     <Menu as="div" className="relative inline-block text-left">
                         <div>
@@ -78,12 +79,11 @@ export function Hero() {
                                 className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <div className="py-1">
                                     <Menu.Item>
-                                        {({active}) => (
-                                            <Link href="/privacy"
-                                                  className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
-                                            >
-                                                Privacy Policy
-                                            </Link>)}
+                                        {({active}) => (<Link href="/privacy"
+                                                              className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
+                                        >
+                                            Privacy Policy
+                                        </Link>)}
                                     </Menu.Item>
                                     <Menu.Item>
                                         {({active}) => (<Link
@@ -159,33 +159,39 @@ export function Hero() {
                     }}
                 />
             </div>
-            <div className="py-0 sm:py-28 lg:pb-40">
+
+            <div className=" py-28 sm:py-48 lg:pb-40">
                 <div className="mx-auto max-w-7xl  px-6 lg:px-8 ">
 
                     <div className="mx-auto max-w-5xl   text-center">
-                        <h1 className="text-3xl font-bold tracking-tight text-white sm:text-6xl ">
-                            <br/>
-                            <br/>
-                            Be there for you whenever you need
+                        <h1 className="bg-gradient-to-r from-red-500  to-blue-500 text-transparent bg-clip-text text-3xl font-bold tracking-tight sm:text-6xl">
+                            Productivity Powered by AI
                         </h1>
-                        <p className="mt-6 text-sm sm:text-base leading-8 text-gray-300">EnConvo allows you
+
+                        <p className="mt-8 text-sm sm:text-base leading-8 text-gray-300">EnConvo
+                            allows you
                             to access AI at any time, within any software. It can assist you
                             with convenient and efficient writing, coding, or any other task
                             beyond imagination.</p>
-                        <div className="mt-10 flex  items-center justify-center gap-x-6">
+                        <div className="mt-10 sm:mt-20 flex flex-col items-center  gap-x-6">
 
                             <a
                                 target="_blank"
-                                className="rounded-md px-16 py-4 lg:text-sm sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
+                                className="border-2 border-purple-300  rounded-xl px-16 py-3 sm:px-24 sm:py-4 lg:text-base sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
                                 href=""
                             >
                                 Download For Mac
                             </a>
 
-                            {/*<a href="#" className="text-sm font-semibold leading-6 text-white">*/}
-                            {/*    Learn more <span aria-hidden="true">→</span>*/}
-                            {/*</a>*/}
+                            <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
+                                <span
+                                    className=" pb-3  pl-1">v1.2.5</span>
+                                <span className="pb-3  pl-1 text-xs">|</span>
+                                <span
+                                    className=" pb-3  pl-1">macOS 13+</span>
+                            </div>
+
                         </div>
 
                         <div>
