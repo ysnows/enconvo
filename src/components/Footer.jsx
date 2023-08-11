@@ -21,7 +21,7 @@ export function Footer() {
         <div className="flex flex-col items-center border-t border-slate-400/10 py-10 sm:flex-row-reverse sm:justify-between">
           <div className="flex gap-x-6">
             <Link
-              href="https://twitter.com/yesterday_snows"
+              href="https://twitter.com/FrostyEveing"
               className="group"
               aria-label="EnConvo on Twitter"
             >
