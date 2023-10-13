@@ -25,6 +25,9 @@ export default function Register() {
             password,
             options: {
                 emailRedirectTo: `${location.origin}/login`,
+                data: {
+                    name: name,
+                }
             },
         })
         console.log(user)
@@ -46,7 +49,7 @@ export default function Register() {
                         Get started for free
                     </h2>
                 </div>
-                <form
+                <div
                     action="#"
                     className="mt-20 grid grid-cols-1 gap-x-6 gap-y-8 "
                 >
@@ -94,7 +97,7 @@ export default function Register() {
               </span>
                         </Button>
                     </div>
-                </form>
+                </div>
 
                 <p className="mt-2 text-sm text-gray-700">
                     Already registered?{' '}

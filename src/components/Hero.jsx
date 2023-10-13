@@ -7,6 +7,7 @@ import Link from "next/link";
 import {Logo} from "@/components/Logo";
 import Image from "next/image";
 import appScreeShot from "@/images/screenshots/app-screenshot.png";
+import {Button} from "@/components/Button";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -105,6 +106,7 @@ export function Hero() {
                     </Menu>
                 </div>
             </nav>
+
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen}
                     onClose={setMobileMenuOpen}>
                 <div className="fixed inset-0 z-50"/>
@@ -213,6 +215,7 @@ export function Hero() {
                 aria-hidden="true"
             >
             </div>
+
         </div>
     </div>)
 }
