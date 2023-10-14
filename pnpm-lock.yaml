@@ -5,8 +5,7 @@ specifiers:
   '@heroicons/react': ^2.0.17
   '@radix-ui/react-icons': ^1.3.0
   '@radix-ui/react-slot': ^1.0.2
-  '@supabase/auth-ui-react': ^0.4.5
-  '@supabase/auth-ui-shared': ^0.1.7
+  '@supabase/auth-helpers-nextjs': ^0.7.1
   '@supabase/supabase-js': ^2.38.1
   '@tailwindcss/forms': ^0.5.3
   autoprefixer: ^10.4.12
@@ -32,8 +31,7 @@ dependencies:
   '@heroicons/react': 2.0.18_react@18.2.0
   '@radix-ui/react-icons': 1.3.0_react@18.2.0
   '@radix-ui/react-slot': 1.0.2_react@18.2.0
-  '@supabase/auth-ui-react': 0.4.5_pcjaa7b3cq3gl7nlth7zx5kuz4
-  '@supabase/auth-ui-shared': 0.1.7_pcjaa7b3cq3gl7nlth7zx5kuz4
+  '@supabase/auth-helpers-nextjs': 0.7.4_pcjaa7b3cq3gl7nlth7zx5kuz4
   '@supabase/supabase-js': 2.38.1
   '@tailwindcss/forms': 0.5.6_tailwindcss@3.3.3
   autoprefixer: 10.4.16
@@ -309,29 +307,23 @@ packages:
     resolution: {integrity: sha512-6i/8UoL0P5y4leBIGzvkZdS85RDMG9y1ihZzmTZQ5LdHUYmZ7pKFoj8X0236s3lusPs1Fa5HTQUpwI+UfTcmeA==}
     dev: true
 
-  /@stitches/core/1.2.8:
-    resolution: {integrity: sha512-Gfkvwk9o9kE9r9XNBmJRfV8zONvXThnm1tcuojL04Uy5uRyqg93DC83lDebl0rocZCfKSjUv+fWYtMQmEDJldg==}
+  /@supabase/auth-helpers-nextjs/0.7.4_pcjaa7b3cq3gl7nlth7zx5kuz4:
+    resolution: {integrity: sha512-MyGCkB7LEDcGrKmesKGjyG54Jlbiss8VGTegrNde/ywXujQyRFnzycijoASDBc6i9SmE7eE1qWBsMr2URb07nw==}
+    peerDependencies:
+      '@supabase/supabase-js': ^2.19.0
+    dependencies:
+      '@supabase/auth-helpers-shared': 0.4.1_pcjaa7b3cq3gl7nlth7zx5kuz4
+      '@supabase/supabase-js': 2.38.1
+      set-cookie-parser: 2.6.0
     dev: false
 
-  /@supabase/auth-ui-react/0.4.5_pcjaa7b3cq3gl7nlth7zx5kuz4:
-    resolution: {integrity: sha512-p7mZoD/iJKP7KorQ4F/RK4NfWDpXzop+LhMuHxkO5BahD+VpGIxwtykuXfZ0g7rijaKnA1BimdCBTCrV5EWTag==}
+  /@supabase/auth-helpers-shared/0.4.1_pcjaa7b3cq3gl7nlth7zx5kuz4:
+    resolution: {integrity: sha512-IEDX9JzWkIjQiLUaP4Qy5YDiG0jFQatWfS+jw8cCQs6QfbNdEPd2Y3qonwGHnM90CZom9SvjuylBv2pFVAL7Lw==}
     peerDependencies:
-      '@supabase/supabase-js': ^2.21.0
-    dependencies:
-      '@stitches/core': 1.2.8
-      '@supabase/auth-ui-shared': 0.1.7_pcjaa7b3cq3gl7nlth7zx5kuz4
-      '@supabase/supabase-js': 2.38.1
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@supabase/auth-ui-shared/0.1.7_pcjaa7b3cq3gl7nlth7zx5kuz4:
-    resolution: {integrity: sha512-ueqyfCHVYX/ioehwL1ErH0+cZwiSzsIfZfhf326yJdDI0XExTKPV4lxPtWT1xx6c8A4FPPmT3kJKQaWs27pxCw==}
-    peerDependencies:
-      '@supabase/supabase-js': ^2.21.0
+      '@supabase/supabase-js': ^2.19.0
     dependencies:
       '@supabase/supabase-js': 2.38.1
+      jose: 4.15.3
     dev: false
 
   /@supabase/functions-js/2.1.5:
@@ -1882,6 +1874,10 @@ packages:
     hasBin: true
     dev: false
 
+  /jose/4.15.3:
+    resolution: {integrity: sha512-RZJdL9Qjd1sqNdyiVteRGV/bnWtik/+PJh1JP4kT6+x1QQMn+7ryueRys5BEueuayvSVY8CWGCisCDazeRLTuw==}
+    dev: false
+
   /js-sdsl/4.4.2:
     resolution: {integrity: sha512-dwXFwByc/ajSV6m5bcKAPwe4yDDF6D614pxmIi5odytzxRlwqF6nwoiCek80Ixc7Cvma5awClxrzFtxCQvcM8w==}
     dev: true
@@ -2461,6 +2457,7 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+    dev: true
 
   /pump/3.0.0:
     resolution: {integrity: sha512-LwZy+p3SFs1Pytd/jYct4wpv49HiYCqd9Rlc5ZVdk0V+8Yzv6jR5Blk3TRmPL1ft69TxP0IMZGJ+WPFU2BFhww==}
@@ -2503,6 +2500,7 @@ packages:
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+    dev: true
 
   /react/18.2.0:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
@@ -2640,6 +2638,10 @@ packages:
     dependencies:
       lru-cache: 6.0.0
     dev: true
+
+  /set-cookie-parser/2.6.0:
+    resolution: {integrity: sha512-RVnVQxTXuerk653XfuliOxBP81Sf0+qfQE73LIYKcyMYHG94AuH0kgrQpRDuTZnSmjpysHmzxJXKNfa6PjFhyQ==}
+    dev: false
 
   /set-function-name/2.0.1:
     resolution: {integrity: sha512-tMNCiqYVkXIZgc2Hnoy2IvC/f8ezc5koaRFkCjrpWzGpCd3qbZXPzVy9MAZzK1ch/X0jvSkojys3oqJN0qCmdA==}
