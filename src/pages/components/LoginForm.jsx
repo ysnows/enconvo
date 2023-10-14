@@ -16,8 +16,9 @@ import {Input} from "@/components/ui/input";
 import * as React from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {NativeRouter} from "@/utils/app/native_router";
 
-export default function LoginForm() {
+export default function LoginForm({loginState, setLoginState}) {
 
     const supabase = createClientComponentClient()
 
@@ -58,6 +59,33 @@ export default function LoginForm() {
                 return ``;
         }
 
+    }
+
+    async function signIn() {
+        // check if email is valid
+        if (!email || !email.includes('@')) {
+            alert('Please enter a valid email')
+            return
+        }
+
+        setEmailIsLoading(true)
+        const {data, error} = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        })
+
+        if (error) {
+            setError(error.message)
+            setEmailIsLoading(false)
+            return
+        }
+        console.log(data)
+
+        NativeRouter.login(data.session.access_token, data.session.refresh_token)
+        setLoginState("success")
+
+        setEmailIsLoading(false)
+        // setContinueLogin(true)
     }
 
     async function signInWithEmail() {
@@ -153,7 +181,7 @@ export default function LoginForm() {
                                     </Alert>
                                 }
 
-                                <Button onClick={signInWithEmail} disabled={emailIsLoading}
+                                <Button onClick={signIn} disabled={emailIsLoading}
                                 >
                                     {emailIsLoading &&
                                         <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
@@ -192,6 +220,16 @@ export default function LoginForm() {
                                     {/*                              Sign in with Google*/}
                                     {/*                          </Button>*/}
 
+                                    <p className="mt-2 ml-1 text-sm text-gray-700">
+                                        Don’t have an account?{' '}
+                                        <Link
+                                            href="/register"
+                                            className="font-medium text-blue-600 hover:underline"
+                                        >
+                                            Sign up
+                                        </Link>{' '}
+                                        for a free trial.
+                                    </p>
 
                                     <p className="px-8 text-center text-sm text-muted-foreground">
                                         By clicking continue, you agree to our{" "}
@@ -215,17 +253,6 @@ export default function LoginForm() {
                         </div>
                     </div>
 
-
-                    {/*<p className="mt-2 ml-1 text-sm text-gray-700">*/}
-                    {/*    Don’t have an account?{' '}*/}
-                    {/*    <Link*/}
-                    {/*        href="/register"*/}
-                    {/*        className="font-medium text-blue-600 hover:underline"*/}
-                    {/*    >*/}
-                    {/*        Sign up*/}
-                    {/*    </Link>{' '}*/}
-                    {/*    for a free trial.*/}
-                    {/*</p>*/}
 
                 </div>
             </main>
