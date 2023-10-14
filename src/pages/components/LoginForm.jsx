@@ -30,11 +30,6 @@ export default function LoginForm() {
 
     const router = useRouter()
 
-    // supabase.auth.getSession().then((session) => {
-    //     if (session) {
-    //         console.log(session)
-    //     }
-    // })
 
     function getEmailProvider(email) {
         const domain = email.split('@')[1];
@@ -93,11 +88,11 @@ export default function LoginForm() {
             setEmailIsLoading(false)
             return
         }
-        console.log(error)
         console.log(data)
+        alert('open enconvo app')
 
         setEmailIsLoading(false)
-        setContinueLogin(true)
+        // setContinueLogin(true)
     }
 
     return (
@@ -150,7 +145,7 @@ export default function LoginForm() {
                                 />
 
                                 {error &&
-                                    <Alert variant="destructive" >
+                                    <Alert variant="destructive">
                                         <AlertDescription className="flex items-center">
                                             <ExclamationTriangleIcon className="h-4 w-4 mr-2"/>
                                             {error}
@@ -168,7 +163,6 @@ export default function LoginForm() {
                                     {continueLogin &&
                                         <ArrowTopRightIcon className="mr-2 h-4 w-4 ml-2"/>}
                                 </Button>
-
 
                             </div>
 
