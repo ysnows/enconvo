@@ -7,7 +7,7 @@ import '@/styles/tailwind.css'
 import React from 'react';
 import Script from 'next/script';
 
-const App = ({ Component, pageProps }) => {
+const App = ({Component, pageProps}) => {
     return (
         <>
             <Script

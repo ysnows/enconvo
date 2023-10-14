@@ -16,12 +16,9 @@ import {Input} from "@/components/ui/input";
 import * as React from "react";
 import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import {NativeRouter} from "@/utils/app/native_router";
 
-export default function LoginSuccess() {
-
-    const supabase = createClientComponentClient()
-
-    const [email, setEmail] = useState('')
+export default function LoginSuccess({handleOpenApp}) {
 
 
     return (
@@ -34,21 +31,23 @@ export default function LoginSuccess() {
                 />
             </Head>
 
-            <main>
+            <main className="mt-52">
 
-                <div className="">
-                    <div className="flex flex-col items-center">
-                        <Link className="mt-28" href="/" aria-label="Home">
-                            <Logo className="h-20 w-auto"/>
-                        </Link>
-                        <div className="mt-10 flex flex-col items-center">
-                            <h3 className="text-xl font-semibold tracking-tight">
-                                Log in to your Enconvo account
-                            </h3>
+                <div className="flex flex-col  items-center justify-center">
+                    <Logo className="h-20 w-auto"/>
+                    <div className="mt-10 flex text-center flex-col items-center max-w-md">
+                        <h3 className="text-4xl  font-semibold tracking-tight">
+                            Successfully connected to Enconvo Account
+                        </h3>
+                        <div className="text-base  text-gray-600 mt-10">
+                            You have successfully connected to Raycast Account. Now it’s time to
+                            open Raycast to use the new commands of the extension.
+
                         </div>
+
+                        <Button onClick={handleOpenApp} className="mt-10 border-2 ">Open
+                            Enconvo</Button>
                     </div>
-
-
                 </div>
             </main>
         </>

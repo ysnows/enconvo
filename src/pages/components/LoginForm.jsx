@@ -186,7 +186,7 @@ export default function LoginForm({loginState, setLoginState}) {
                                     {emailIsLoading &&
                                         <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
 
-                                    {emailIsLoading ? "Sending magic link" : (continueLogin ? "Check Link in your Email" : "Sign In")}
+                                    {emailIsLoading ? "Signing in" : (continueLogin ? "Check Link in your Email" : "Sign In")}
 
                                     {continueLogin &&
                                         <ArrowTopRightIcon className="mr-2 h-4 w-4 ml-2"/>}
