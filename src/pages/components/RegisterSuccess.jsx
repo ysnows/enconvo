@@ -44,7 +44,7 @@ export default function RegisterSuccess({email}) {
                             Check your email
                         </h3>
                         <div className="text-base  text-gray-600 mt-10">
-                            We've sent you a login link.
+                            We&apos;ve sent you a login link.
 
                             Check your inbox at yong531315@gmail.com to login.
                         </div>
