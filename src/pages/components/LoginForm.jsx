@@ -2,15 +2,12 @@ import Head from 'next/head'
 import Link from 'next/link'
 
 import {ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon} from "@radix-ui/react-icons"
-import {Icons} from "@/components/icons"
 
 import {Button} from "@/components/ui/button"
 
 
 import {Logo} from '@/components/Logo'
-import {SUPABASE_ANON_KEY, SUPABASE_URL} from "@/utils/app/const";
 import {useState} from "react";
-import {createClient} from "@supabase/supabase-js";
 import {useRouter} from "next/navigation";
 import {Input} from "@/components/ui/input";
 import * as React from "react";
