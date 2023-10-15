@@ -28,8 +28,8 @@ export default function LoginSuccess({handleOpenApp}) {
                             Successfully connected to Enconvo Account
                         </h3>
                         <div className="text-base  text-gray-600 mt-10">
-                            You have successfully connected to Raycast Account. Now it’s time to
-                            open Raycast to use the new commands of the extension.
+                            You have successfully connected to Enconvo Account. Now it’s time to
+                            open Enconvo to use the new commands of the extension.
 
                         </div>
 
