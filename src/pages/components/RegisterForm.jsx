@@ -41,7 +41,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
             email: email,
             password: password,
             options: {
-                emailRedirectTo: 'http://localhost:3000/login',
+                emailRedirectTo: 'https://www.enconvo.com/login',
                 data: {
                     name: name,
                 }
