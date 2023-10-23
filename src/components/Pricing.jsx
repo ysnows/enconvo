@@ -132,9 +132,7 @@ export function Pricing() {
                         description="Good for anyone who is self-employed and just getting started."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
                         features={[
-                            'Use & Create Prompt',
-                            'Use of Plugins',
-                            'Seamless Access To Power Of AI',
+                            'Using limited count of plugins',
                             '10 times per day'
                         ]}
                     />
@@ -142,13 +140,15 @@ export function Pricing() {
                     <Plan
                         featured
                         name="Premium"
-                        price="$29"
+                        price="$49"
                         description="Lifetime access to all features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
                         features={[
                             'Use & Create Prompt',
+                            'Ultimate Use Ocr',
+                            'Chat With Document',
+                            'Text To Speech',
                             'Ultimate Use of Plugins',
-                            'Chatting With Your Own Data(Coming Soon)',
                             'Seamless Access To Power Of AI'
                         ]}
                     />

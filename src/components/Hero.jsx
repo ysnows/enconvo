@@ -1,45 +1,83 @@
-import {useState} from 'react'
-import {Dialog} from '@headlessui/react'
-import {Bars3Icon, XMarkIcon} from '@heroicons/react/24/outline'
-import {Fragment} from 'react'
-import {Menu, Transition} from '@headlessui/react'
+import { useEffect, useState } from 'react'
+import { Dialog } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Fragment } from 'react'
+import { Menu, Transition } from '@headlessui/react'
 import Link from "next/link";
-import {Logo} from "@/components/Logo";
+import { Logo } from "@/components/Logo";
 import Image from "next/image";
 import appScreeShot from "@/images/screenshots/app-screenshot.png";
-import {Button} from "@/components/Button";
+import { Button } from "@/components/Button";
+
+import {
+    createClientComponentClient
+} from '@supabase/auth-helpers-nextjs'
+import { useRouter } from 'next/router'
+
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
 }
 
 
-const navigation = [
-    {name: 'Features', href: '#features'},
-    {
-        name: 'Pricing',
-        href: '#pricing'
-    },
-    {name: 'Telegram', href: 'https://t.me/+iHQntezKbVViMWE1'},
-    {
-        name: 'Developer',
-        href: '/developer'
-    },
-    {
-        name: 'Log in',
-        href: '/login'
-    },
-]
 
 export function Hero() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+    const [loginState, setLoginState] = useState("login")
+    const [navigation, setNavigation] = useState([
+        { name: 'Features', href: '#features' },
+        {
+            name: 'Pricing',
+            href: '#pricing'
+        },
+        { name: 'Discord', href: 'https://discord.gg/7Rh5M9vS' },
+        {
+            name: 'Developer',
+            href: '/developer'
+        },
+        {
+            name: 'Log in',
+            href: '/login'
+        },
+    ])
+
+    const supabase = createClientComponentClient()
+
+
+
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data, error }) => {
+            if (data.session) {
+
+                setNavigation([
+                    { name: 'Features', href: '#features' },
+                    {
+                        name: 'Pricing',
+                        href: '#pricing'
+                    },
+                    { name: 'Discord', href: 'https://discord.gg/7Rh5M9vS' },
+                    {
+                        name: 'Developer',
+                        href: '/developer'
+                    },
+                    {
+                        name: data.session.user.user_metadata.name,
+                        href: '/login'
+                    },
+                ])
+
+            }
+        })
+    }, [])
+
 
     return (<div className="bg-gray-900">
         <header className="absolute inset-x-0 top-0 z-50">
             <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div className="ml-32 flex lg:flex-1 items-center ">
                     <Link href="/" aria-label="Home">
-                        <Logo className="h-10 w-auto"/>
+                        <Logo className="h-10 w-auto" />
                     </Link>
 
                     <div className="ml-3">
@@ -53,19 +91,19 @@ export function Hero() {
                         onClick={() => setMobileMenuOpen(true)}
                     >
                         <span className="sr-only">Open main menu</span>
-                        <Bars3Icon className="h-6 w-6" aria-hidden="true"/>
+                        <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
                 </div>
                 <div className="mr-32 hidden lg:flex lg:gap-x-12">
                     {navigation.map((item) => (
                         <a key={item.name} href={item.href === 'menu' ? null : item.href}
-                           target={item.href.startsWith('http') ? '_blank' : '_self'}
-                           className="text-sm font-semibold leading-6 text-white"
-                           rel="noreferrer">
+                            target={item.href.startsWith('http') ? '_blank' : '_self'}
+                            className="text-sm font-semibold leading-6 text-white"
+                            rel="noreferrer">
                             {item.name}
                         </a>))}
 
-                    <Menu as="div" className="relative inline-block text-left">
+                    {/* <Menu as="div" className="relative inline-block text-left">
                         <div>
                             <Menu.Button
                                 className="text-sm font-semibold leading-6 text-white">
@@ -86,14 +124,14 @@ export function Hero() {
                                 className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <div className="py-1">
                                     <Menu.Item>
-                                        {({active}) => (<Link href="/privacy"
-                                                              className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
+                                        {({ active }) => (<Link href="/privacy"
+                                            className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                         >
                                             Privacy Policy
                                         </Link>)}
                                     </Menu.Item>
                                     <Menu.Item>
-                                        {({active}) => (<Link
+                                        {({ active }) => (<Link
                                             href="/terms"
                                             className={classNames(active ? 'bg-gray-100 text-gray-900' : 'text-gray-700', 'block px-4 py-2 text-sm')}
                                         >
@@ -103,13 +141,13 @@ export function Hero() {
                                 </div>
                             </Menu.Items>
                         </Transition>
-                    </Menu>
+                    </Menu> */}
                 </div>
             </nav>
 
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen}
-                    onClose={setMobileMenuOpen}>
-                <div className="fixed inset-0 z-50"/>
+                onClose={setMobileMenuOpen}>
+                <div className="fixed inset-0 z-50" />
                 <Dialog.Panel
                     className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
                     <div className="flex items-center justify-between">
@@ -123,7 +161,7 @@ export function Hero() {
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             <span className="sr-only">Close menu</span>
-                            <XMarkIcon className="h-6 w-6" aria-hidden="true"/>
+                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                         </button>
                     </div>
                     <div className="mt-6 flow-root">
@@ -179,14 +217,14 @@ export function Hero() {
                             beyond imagination.</p>
                         <div className="mt-10 sm:mt-20 flex flex-col items-center  gap-x-6">
 
-                            <a
+                            <Link
                                 target="_blank"
                                 className="border-2 border-purple-300  rounded-xl px-16 py-3 sm:px-24 sm:py-4 lg:text-base sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
-                                href="https://github.com/ysnows/EnconvoAI/releases"
+                                href="/"
                             >
                                 Download For Mac
-                            </a>
+                            </Link>
 
 
                             <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
