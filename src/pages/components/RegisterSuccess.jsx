@@ -34,7 +34,7 @@ export default function RegisterSuccess({email}) {
                         <div className="text-base  text-gray-600 mt-10">
                             We&apos;ve sent you a login link.
 
-                            Check your inbox at yong531315@gmail.com to login.
+                            Check your inbox to login.
                         </div>
 
                         <Button onClick={openEmail} className="mt-10 border-2 ">Open

@@ -221,7 +221,7 @@ export function Hero() {
                                 target="_blank"
                                 className="border-2 border-purple-300  rounded-xl px-16 py-3 sm:px-24 sm:py-4 lg:text-base sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
-                                href="/"
+                                href="https://file.enconvo.com/EnConvo.dmg"
                             >
                                 Download For Mac
                             </Link>
