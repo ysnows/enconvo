@@ -221,7 +221,7 @@ export function Hero() {
                                 target="_blank"
                                 className="border-2 border-purple-300  rounded-xl px-16 py-3 sm:px-24 sm:py-4 lg:text-base sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
                                 rel="noreferrer"
-                                href="https://file.enconvo.com/EnConvo.dmg"
+                                href="https://file.enconvo.com/distribution/Enconvo.dmg"
                             >
                                 Download For Mac
                             </Link>
@@ -229,7 +229,7 @@ export function Hero() {
 
                             <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
                                 <span
-                                    className=" pb-3  pl-1">v1.3.0</span>
+                                    className=" pb-3  pl-1">v1.3.1</span>
                                 <span className="pb-3  pl-1 text-xs">|</span>
                                 <span
                                     className=" pb-3  pl-1">macOS 13+</span>
