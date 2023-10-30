@@ -33,8 +33,8 @@ export function Hero() {
         },
         { name: 'Discord', href: 'https://discord.gg/7Rh5M9vS' },
         {
-            name: 'Developer',
-            href: '/developer'
+            name: 'Store',
+            href: 'https://store.enconvo.com/'
         },
         {
             name: 'Log in',
@@ -58,8 +58,8 @@ export function Hero() {
                     },
                     { name: 'Discord', href: 'https://discord.gg/7Rh5M9vS' },
                     {
-                        name: 'Developer',
-                        href: '/developer'
+                        name: 'Store',
+                        href: 'https://store.enconvo.com/'
                     },
                     {
                         name: data.session.user.user_metadata.name,
