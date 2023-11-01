@@ -223,13 +223,13 @@ export function Hero() {
                                 rel="noreferrer"
                                 href="https://api.enconvo.com/app/download"
                             >
-                                Download For Mac
+                               Start Free Trial 
                             </Link>
 
 
                             <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
                                 <span
-                                    className=" pb-3  pl-1">v1.3.1</span>
+                                    className=" pb-3  pl-1">v1.3.5</span>
                                 <span className="pb-3  pl-1 text-xs">|</span>
                                 <span
                                     className=" pb-3  pl-1">macOS 13+</span>
