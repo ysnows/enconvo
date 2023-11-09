@@ -1,9 +1,9 @@
 import clsx from 'clsx'
 
-import {Button} from '@/components/Button'
-import {Container} from '@/components/Container'
+import { Button } from '@/components/Button'
+import { Container } from '@/components/Container'
 
-function SwirlyDoodle({className}) {
+function SwirlyDoodle({ className }) {
     return (
         <svg
             aria-hidden="true"
@@ -20,7 +20,7 @@ function SwirlyDoodle({className}) {
     )
 }
 
-function CheckIcon({className}) {
+function CheckIcon({ className }) {
     return (
         <svg
             aria-hidden="true"
@@ -47,14 +47,15 @@ function CheckIcon({className}) {
 }
 
 function Plan({
-                  name,
-                  price,
-                  description,
-                  href,
-                  startText = "Get started",
-                  features,
-                  featured = false
-              }) {
+    name,
+    price,
+    originPrice,
+    description,
+    href,
+    startText = "Get started",
+    features,
+    featured = false
+}) {
     return (
         <section
             className={clsx(
@@ -72,6 +73,13 @@ function Plan({
                 {description}
             </p>
             <p className="order-first font-display text-5xl font-light tracking-tight text-white">
+                {originPrice &&
+                    <>
+                        <span className='line-through text-gray-700'>{originPrice}</span>
+                        &nbsp;
+                    </>
+                }
+
                 {price}
             </p>
             <ul
@@ -83,7 +91,7 @@ function Plan({
             >
                 {features.map((feature) => (
                     <li key={feature} className="flex">
-                        <CheckIcon className={featured ? 'text-white' : 'text-slate-400'}/>
+                        <CheckIcon className={featured ? 'text-white' : 'text-slate-400'} />
                         <span className="ml-4">{feature}</span>
                     </li>
                 ))}
@@ -112,11 +120,11 @@ export function Pricing() {
             <Container>
                 <div className="md:text-center">
                     <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
-            <span className="relative whitespace-nowrap">
-              <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400"/>
-              <span className="relative">Simple pricing,</span>
+                        <span className="relative whitespace-nowrap">
+                            <SwirlyDoodle className="absolute left-0 top-1/2 h-[1em] w-full fill-blue-400" />
+                            <span className="relative">Simple pricing,</span>
 
-            </span>
+                        </span>
                         {' '}
                         for everyone.
                     </h2>
@@ -126,42 +134,49 @@ export function Pricing() {
                 </div>
                 <div
                     className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
+
                     <Plan
-                        name="Free"
-                        price="Free"
-                        description="Good for anyone who is self-employed and just getting started."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/1baaf4ba-fcbf-4452-bfc0-2f46d054bd4b"
+                        name="Stardard"
+                        price="$29"
+                        originPrice={'$49'}
+                        description="Lifetime access to all features."
+                        href="https://enconvo.lemonsqueezy.com/checkout/buy/5f2579af-4175-4539-a04f-65c4cb274aed"
                         features={[
-                            'Using limited count of plugins',
-                            '10 times per day'
+                            '1 macOS devices',
+                            'Rich plug-in ecosystem',
+                            'Ultimate Use of OCR',
+                            'Text To Speech',
+                            'PopBar for selected text',
+                            'Seamless Access To Power Of AI'
                         ]}
                     />
 
                     <Plan
                         featured
                         name="Premium"
-                        price="$29"
-                        description="Lifetime access to all features."
+                        price="$49"
+                        originPrice={'$99'}
+                        description="Most popular."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
                         features={[
-                            'Use & Create Prompt',
-                            'Ultimate Use Ocr',
-                            'Chat With Document',
+                            '3 macOS devices',
+                            'Rich plug-in ecosystem',
+                            'Ultimate Use of OCR',
                             'Text To Speech',
-                            'Ultimate Use of Plugins',
+                            'PopBar for selected text',
                             'Seamless Access To Power Of AI'
                         ]}
                     />
                     <Plan
-                        name="Subscription"
-                        price="$8/mo"
-                        description="get acess to all the features without an openai key."
-                        href=""
-                        startText={'Coming Soon'}
+                        name="Get in touch"
+                        price="Team"
+                        description="Improved team productivity. More revenue."
+                        href="mailto:yong531315@gmail.com"
+                        startText={'Contact Us'}
                         features={[
+                            'Unlimited macOS devices',
                             'All Premium Features',
-                            'Access Without OpenAI Key',
-                            'Seamless Access to All Features'
+                            'Rich plug-in ecosystem'
                         ]}
                     />
                 </div>
