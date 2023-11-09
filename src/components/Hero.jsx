@@ -13,6 +13,7 @@ import {
     createClientComponentClient
 } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/router'
+import { Video } from 'lucide-react'
 
 
 function classNames(...classes) {
@@ -241,11 +242,21 @@ export function Hero() {
                         </div>
 
                     </div>
-                    <Image
+                    {/* <Image
                         src={appScreeShot}
                         alt="App screenshot"
                         className="mt-16 rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
-                    />
+                    /> */}
+
+                    {/* <Video src={appVideo}
+                        className="mt-16 rounded-md bg-white/5 shadow-2xl ring-1 ring-white/10 sm:mt-24"
+                    >
+
+                    </Video> */}
+
+                    <video className="mt-16 rounded-md bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
+                        <source src="https://file.enconvo.com/enconvo.mp4" type="video/mp4" />
+                    </video>
                 </div>
             </div>
             <div
