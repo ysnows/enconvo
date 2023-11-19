@@ -32,7 +32,7 @@ export function Hero() {
             name: 'Pricing',
             href: '#pricing'
         },
-        { name: 'Discord', href: 'https://discord.gg/7Rh5M9vS' },
+        { name: 'Discord', href: 'https://discord.gg/jYsdVRRK2k' },
         {
             name: 'Store',
             href: 'https://store.enconvo.com/'
