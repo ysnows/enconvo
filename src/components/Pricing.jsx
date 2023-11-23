@@ -137,7 +137,7 @@ export function Pricing() {
 
                     <Plan
                         name="Stardard"
-                        price="$29"
+                        price="$18"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/5f2579af-4175-4539-a04f-65c4cb274aed"
@@ -145,7 +145,7 @@ export function Pricing() {
                             '1 macOS devices',
                             'Rich plug-in ecosystem',
                             'Ultimate Use of OCR',
-                            'Text To Speech',
+                            'Ultimate Use of Azure TTS',
                             'PopBar for selected text',
                             'Seamless Access To Power Of AI'
                         ]}
@@ -154,7 +154,7 @@ export function Pricing() {
                     <Plan
                         featured
                         name="Premium"
-                        price="$49"
+                        price="$39"
                         originPrice={'$99'}
                         description="Most popular."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
@@ -162,21 +162,22 @@ export function Pricing() {
                             '3 macOS devices',
                             'Rich plug-in ecosystem',
                             'Ultimate Use of OCR',
-                            'Text To Speech',
+                            'Ultimate Use of Azure TTS',
                             'PopBar for selected text',
                             'Seamless Access To Power Of AI'
                         ]}
                     />
                     <Plan
-                        name="Get in touch"
-                        price="Team"
-                        description="Improved team productivity. More revenue."
+                        name="Cloud"
+                        price="$10/Monthly"
+                        description="All Premium feathers, No need your own apikeys"
                         href="mailto:yong531315@gmail.com"
                         startText={'Contact Us'}
                         features={[
                             'Unlimited macOS devices',
                             'All Premium Features',
-                            'Rich plug-in ecosystem'
+                            'Rich plug-in ecosystem',
+                            'No need your own apikeys'
                         ]}
                     />
                 </div>
