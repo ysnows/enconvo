@@ -137,7 +137,7 @@ export function Pricing() {
 
                     <Plan
                         name="Stardard"
-                        price="$18"
+                        price="$19"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/5f2579af-4175-4539-a04f-65c4cb274aed"
