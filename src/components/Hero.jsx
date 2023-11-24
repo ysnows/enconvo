@@ -93,6 +93,7 @@ export function Hero() {
                         <Bars3Icon className="h-6 w-6" aria-hidden="true" />
                     </button>
                 </div>
+
                 <div className="mr-32 hidden lg:flex lg:gap-x-12">
                     {navigation.map((item) => (
                         <a key={item.name} href={item.href === 'menu' ? null : item.href}
@@ -144,6 +145,8 @@ export function Hero() {
                 </div>
             </nav>
 
+
+
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen}
                 onClose={setMobileMenuOpen}>
                 <div className="fixed inset-0 z-50" />
@@ -188,7 +191,23 @@ export function Hero() {
             </Dialog>
         </header>
 
+
         <div className="relative isolate pt-14">
+            <div class='mt-4 w-full flex justify-center'>
+
+                <div class='mt-4 px-10 py-px flex items-center justify-center border  border-purple-200 rounded-md'>
+                    <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
+                    <span class="ml-2 py-px px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
+                        60% off
+                    </span>
+                    &nbsp;
+
+                    <a href="#pricing" class="text-red-600 font-bold py-2 px-4 rounded  transition-colors duration-300">
+                        Check it now
+                    </a>
+                </div>
+            </div>
+
             <div
                 className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
                 aria-hidden="true"
@@ -202,6 +221,7 @@ export function Hero() {
             </div>
 
             <div className=" py-28 sm:py-48 lg:pb-40">
+
                 <div className="mx-auto max-w-7xl  px-6 lg:px-8 ">
 
                     <div className="mx-auto max-w-5xl   text-center">
