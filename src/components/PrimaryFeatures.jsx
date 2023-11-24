@@ -1,13 +1,14 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import {Tab} from '@headlessui/react'
+import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
 
-import {Container} from '@/components/Container'
+import { Container } from '@/components/Container'
 import comingSoon from '@/images/coming soon.png'
 import writing from '@/images/features/writing.gif'
 import plugin from '@/images/features/plugin.gif'
 import chain from '@/images/features/chain.gif'
+import { ArchiveIcon, Component1Icon, CubeIcon, FileIcon, FileTextIcon, MixIcon } from "@radix-ui/react-icons";
 
 const features = [
     {
@@ -45,7 +46,7 @@ export function PrimaryFeatures() {
     useEffect(() => {
         let lgMediaQuery = window.matchMedia('(min-width: 1024px)')
 
-        function onMediaQueryChange({matches}) {
+        function onMediaQueryChange({ matches }) {
             setTabOrientation(matches ? 'vertical' : 'horizontal')
         }
 
@@ -80,19 +81,19 @@ export function PrimaryFeatures() {
                     className="flex flex-col sm:flex-row lg:flex-row  text-white font-mono sm:mt-28 mt-18 ">
 
                     <div className="pr-20 mt-16 flex flex-col "
-                         style={{
-                             flexGrow: 0.6,
-                             flexBasis: 0,
-                             flexShrink: 1,
-                         }}
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
                     >
 
                         <div
                             className="bg-gradient-to-tr from-red-500  to-blue-900  w-14 h-14 flex items-center justify-center rounded-xl ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                                strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                                 <path strokeLinecap="round" strokeLinejoin="round"
-                                      d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z"/>
+                                    d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 19.5V21M12 3v1.5m0 15V21m3.75-18v1.5m0 15V21m-9-1.5h10.5a2.25 2.25 0 002.25-2.25V6.75a2.25 2.25 0 00-2.25-2.25H6.75A2.25 2.25 0 004.5 6.75v10.5a2.25 2.25 0 002.25 2.25zm.75-12h9v9h-9v-9z" />
                             </svg>
                         </div>
 
@@ -112,7 +113,7 @@ export function PrimaryFeatures() {
                         <Image
                             className="basis-0 rounded-xl "
                             src={writing}
-                            alt={""}/>
+                            alt={""} />
                     </div>
 
                 </div>
@@ -121,19 +122,19 @@ export function PrimaryFeatures() {
                     className="flex text-white font-mono sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row  ">
 
                     <div className="pr-20 mt-16 flex flex-col  "
-                         style={{
-                             flexGrow: 0.6,
-                             flexBasis: 0,
-                             flexShrink: 1,
-                         }}
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
                     >
 
                         <div
                             className="bg-gradient-to-bl from-cyan-950 to-emerald-200  w-14 h-14 flex items-center justify-center rounded-xl ">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round"
-                                      d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z"/>
+                                    d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z" />
                             </svg>
                         </div>
 
@@ -151,7 +152,7 @@ export function PrimaryFeatures() {
                         <Image
                             className="basis-0 rounded-xl "
                             src={plugin}
-                            alt={""}/>
+                            alt={""} />
                     </div>
 
                 </div>
@@ -159,38 +160,159 @@ export function PrimaryFeatures() {
                     className="flex text-white font-mono  sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row ">
 
                     <div className="pr-20 mt-16 flex flex-col  "
-                         style={{
-                             flexGrow: 0.6,
-                             flexBasis: 0,
-                             flexShrink: 1,
-                         }}
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
                     >
                         <div
                             className="bg-gradient-to-l from-purple-800 to-cyan-300  w-14 h-14 flex items-center justify-center rounded-xl ">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                                <path strokeLinecap="round" strokeLinejoin="round"
-                                      d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"/>
-                            </svg>
-
+                            <FileTextIcon />
                         </div>
 
                         <p className="font-bold text-4xl mt-6">
                             <span
-                                className="bg-gradient-to-tr from-purple-800 to-cyan-300 text-transparent bg-clip-text">Chain </span> Flow
+                                className="bg-gradient-to-tr from-purple-800 to-cyan-300 text-transparent bg-clip-text">Chat </span> With Document
                         </p>
                         <p className="mt-6">
-                            Combine the power of plugin with other plugins again and again to
-                            customize
-                            your own powerful workflow </p>
-                    </div>
-                    <div className="flex-1 mt-6 sm:mt-0">
-                        <Image
-                            className="basis-0 rounded-xl "
-                            src={chain}
-                            alt={""}/>
+                            Easily and elegantly drag and drop to interact with your document. </p>
                     </div>
 
+                    <div className="flex-1 mt-6 sm:mt-0">
+
+                        <video className="mt-16 basis-0 rounded-xl  bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
+                            <source src="https://file.enconvo.com/usecases/chat_with_doc.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+
+                </div>
+
+                <div
+                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row ">
+
+                    <div className="pr-20 mt-16 flex flex-col  "
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
+                    >
+                        <div
+                            className="bg-gradient-to-l from-yellow-800 to-cyan-300  w-14 h-14 flex items-center justify-center rounded-xl ">
+                            <Component1Icon />
+                        </div>
+
+                        <p className="font-bold text-4xl mt-6">
+                            <span
+                                className="bg-gradient-to-tr from-yellow-800 to-cyan-300 text-transparent bg-clip-text">PopBar </span>
+                        </p>
+                        <p className="mt-6">
+                            With Popbar, you can conveniently interact with any selected text in any software on your MacOS. </p>
+                    </div>
+
+                    <div className="flex-1 mt-6 sm:mt-0">
+
+                        <video className="mt-16 basis-0 rounded-xl  bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
+                            <source src="https://file.enconvo.com/usecases/popbar.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+
+                </div>
+
+                <div
+                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row ">
+
+                    <div className="pr-20 mt-16 flex flex-col  "
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
+                    >
+                        <div
+                            className="bg-gradient-to-l from-blue-800 to-cyan-300  w-14 h-14 flex items-center justify-center rounded-xl ">
+                            <CubeIcon />
+                        </div>
+
+                        <p className="font-bold text-4xl mt-6">
+                            <span
+                                className="bg-gradient-to-tr from-blue-800 to-cyan-300 text-transparent bg-clip-text">Local </span> Models
+                        </p>
+                        <p className="mt-6">
+                            Chat with every model supported locally by Ollama. Take advantage of all the powerful plugins offered by Enconvo in a private and secure manner. </p>
+                    </div>
+
+                    <div className="flex-1 mt-6 sm:mt-0">
+
+                        <video className="mt-16 basis-0 rounded-xl  bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
+                            <source src="https://file.enconvo.com/usecases/chat_with_local_models.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+
+                </div>
+
+                <div
+                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row ">
+
+                    <div className="pr-20 mt-16 flex flex-col  "
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
+                    >
+                        <div
+                            className="bg-gradient-to-l from-green-800 to-cyan-300  w-14 h-14 flex items-center justify-center rounded-xl ">
+                            <ArchiveIcon />
+                        </div>
+
+                        <p className="font-bold text-4xl mt-6">
+                            <span
+                                className="bg-gradient-to-tr from-green-800 to-cyan-300 text-transparent bg-clip-text">Compress </span> Images
+                        </p>
+                        <p className="mt-6">
+                            Easily compress images in a chat-like manner, powered by TinyPNG. </p>
+                    </div>
+
+                    <div className="flex-1 mt-6 sm:mt-0">
+
+                        <video className="mt-16 basis-0 rounded-xl  bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
+                            <source src="https://file.enconvo.com/usecases/tinypng.mp4" type="video/mp4" />
+                        </video>
+                    </div>
+
+                </div>
+
+                <div
+                    className="flex text-white font-mono  sm:mt-60 mt-6  flex-col sm:flex-row lg:flex-row ">
+
+                    <div className="pr-20 mt-16 flex flex-col  "
+                        style={{
+                            flexGrow: 0.6,
+                            flexBasis: 0,
+                            flexShrink: 1,
+                        }}
+                    >
+                        <div
+                            className="bg-gradient-to-l from-indigo-800 to-cyan-300  w-14 h-14 flex items-center justify-center rounded-xl ">
+                            <MixIcon />
+                        </div>
+
+                        <p className="font-bold text-4xl mt-6">
+                            <span
+                                className="bg-gradient-to-tr from-indigo-800 to-cyan-300 text-transparent bg-clip-text">Translate </span> Engines
+                        </p>
+                        <p className="mt-6">
+                            Translate text easily with the power of OpenAI, DeepL, and Google Translate. More to come. </p>
+                    </div>
+
+                    <div className="flex-1 mt-6 sm:mt-0">
+
+                        <video className="mt-16 basis-0 rounded-xl  bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
+                            <source src="https://file.enconvo.com/usecases/translate.mp4" type="video/mp4" />
+                        </video>
+                    </div>
 
                 </div>
             </Container>

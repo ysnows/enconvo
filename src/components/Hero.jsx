@@ -45,8 +45,6 @@ export function Hero() {
 
     const supabase = createClientComponentClient()
 
-
-
     useEffect(() => {
         supabase.auth.getSession().then(({ data, error }) => {
             if (data.session) {

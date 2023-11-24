@@ -131,6 +131,16 @@ export function Pricing() {
                     <p className="mt-4 text-lg text-slate-400">
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
+
+                    <div class='mt-4'>
+                        <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
+                        <span class="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
+                            60% off
+                        </span>
+                        <span class="text-white font-semibold"> if you buy today.</span>
+                    </div>
+
+
                 </div>
                 <div
                     className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
