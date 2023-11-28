@@ -98,6 +98,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
                                     label="Name"
                                     id="name"
                                     name="name"
+                                    placeholder="UserName"
                                     type="name"
                                     autoComplete="name"
                                     onChange={(e) => setName(e.target.value)} value={name}
@@ -115,6 +116,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
                                     id="password"
                                     name="password"
                                     type="password"
+                                    placeholder="Password"
                                     autoComplete="current-password"
                                     onChange={(e) => setPassword(e.target.value)} value={password}
                                     required
