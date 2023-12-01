@@ -132,13 +132,13 @@ export function Pricing() {
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
 
-                    <div class='mt-4'>
+                    {/* <div class='mt-4'>
                         <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
                         <span class="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
                             60% off
                         </span>
                         <span class="text-white font-semibold"> if you buy today.</span>
-                    </div>
+                    </div> */}
 
 
                 </div>
@@ -147,7 +147,7 @@ export function Pricing() {
 
                     <Plan
                         name="Stardard"
-                        price="$19"
+                        price="$29"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/5f2579af-4175-4539-a04f-65c4cb274aed"
@@ -164,7 +164,7 @@ export function Pricing() {
                     <Plan
                         featured
                         name="Premium"
-                        price="$39"
+                        price="$49"
                         originPrice={'$99'}
                         description="Most popular."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
