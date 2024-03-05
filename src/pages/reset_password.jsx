@@ -28,10 +28,10 @@ export default function ResetPassword() {
      * ask the user to reset their password.
      */
     useEffect(() => {
+
         supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log("event", event,session)
             if (event == "PASSWORD_RECOVERY") {
-                const newPassword = prompt("What would you like your new password to be?");
-                console.log("newPassword", newPassword)
                 // const { data, error } = await supabase.auth
                 //     .updateUser({ password: newPassword })
 
@@ -42,18 +42,14 @@ export default function ResetPassword() {
     }, [])
 
 
-    // useEffect(() => {
-    //     supabase.auth.getSession().then(({ data, error }) => {
-    //         if (data.session) {
-    //             console.log("session", data)
-    //             setSession(data.session)
-    //             setRegisterState("success")
-    //             if (router.query['from'] === "app") {
-    //                 handleOpenApp()
-    //             }
-    //         }
-    //     })
-    // }, [])
+    useEffect(() => {
+        supabase.auth.getSession().then(({ data, error }) => {
+            if (data.session) {
+                console.log("session", data)
+                setSession(data.session)
+            }
+        })
+    }, [])
 
     return <>
         {registerState === "success" ? <Login /> :

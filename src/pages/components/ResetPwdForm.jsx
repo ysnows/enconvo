@@ -34,6 +34,7 @@ export default function ResetPwdForm({ setLoginState }) {
 
         setEmailIsLoading(true)
 
+
         const { data, error } = await supabase.auth
             .updateUser({ password: password })
 
