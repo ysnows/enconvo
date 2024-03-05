@@ -1,21 +1,21 @@
 import Head from 'next/head'
 import Link from 'next/link'
 
-import {ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon} from "@radix-ui/react-icons"
+import { ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
-import {Button} from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 
-import {Logo} from '@/components/Logo'
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {Input} from "@/components/ui/input";
+import { Logo } from '@/components/Logo'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 import * as React from "react";
-import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
-import {NativeRouter} from "@/utils/app/native_router";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { NativeRouter } from "@/utils/app/native_router";
 
-export default function LoginForm({loginState, setLoginState}) {
+export default function LoginForm({ loginState, setLoginState }) {
 
     const supabase = createClientComponentClient()
 
@@ -38,7 +38,7 @@ export default function LoginForm({loginState, setLoginState}) {
         }
 
         setEmailIsLoading(true)
-        const {data, error} = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password
         })
@@ -75,7 +75,7 @@ export default function LoginForm({loginState, setLoginState}) {
         }
 
         setEmailIsLoading(true)
-        const {data, error} = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password
         })
@@ -107,7 +107,7 @@ export default function LoginForm({loginState, setLoginState}) {
                 <div className="">
                     <div className="flex flex-col items-center">
                         <Link className="mt-28" href="/" aria-label="Home">
-                            <Logo className="h-20 w-auto"/>
+                            <Logo className="h-20 w-auto" />
                         </Link>
                         <div className="mt-10 flex flex-col items-center">
                             <h3 className="text-xl font-semibold tracking-tight">
@@ -125,9 +125,9 @@ export default function LoginForm({loginState, setLoginState}) {
                                     !continueLogin &&
 
                                     <Input type="email" placeholder="Email"
-                                           required
-                                           autoComplete="email"
-                                           onChange={(e) => setEmail(e.target.value)} value={email}
+                                        required
+                                        autoComplete="email"
+                                        onChange={(e) => setEmail(e.target.value)} value={email}
                                     />
                                 }
 
@@ -135,6 +135,7 @@ export default function LoginForm({loginState, setLoginState}) {
                                     label="Password"
                                     id="password"
                                     name="password"
+                                    placeholder="Password"
                                     type="password"
                                     autoComplete="current-password"
                                     onChange={(e) => setPassword(e.target.value)} value={password}
@@ -144,7 +145,7 @@ export default function LoginForm({loginState, setLoginState}) {
                                 {error &&
                                     <Alert variant="destructive">
                                         <AlertDescription className="flex items-center">
-                                            <ExclamationTriangleIcon className="h-4 w-4 mr-2"/>
+                                            <ExclamationTriangleIcon className="h-4 w-4 mr-2" />
                                             {error}
                                         </AlertDescription>
                                     </Alert>
@@ -153,12 +154,12 @@ export default function LoginForm({loginState, setLoginState}) {
                                 <Button onClick={signIn} disabled={emailIsLoading}
                                 >
                                     {emailIsLoading &&
-                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
+                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
 
                                     {emailIsLoading ? "Signing in" : (continueLogin ? "Check Link in your Email" : "Sign In")}
 
                                     {continueLogin &&
-                                        <ArrowTopRightIcon className="mr-2 h-4 w-4 ml-2"/>}
+                                        <ArrowTopRightIcon className="mr-2 h-4 w-4 ml-2" />}
                                 </Button>
 
                             </div>
@@ -168,36 +169,20 @@ export default function LoginForm({loginState, setLoginState}) {
 
                                 <>
 
-                                    {/*                          <div className="relative">*/}
-                                    {/*                              <div className="absolute inset-0 flex items-center">*/}
-                                    {/*                                  <span className="w-full border-t"/>*/}
-                                    {/*                              </div>*/}
-                                    {/*                              <div*/}
-                                    {/*                                  className="relative flex justify-center text-xs uppercase">*/}
-                                    {/*<span className="bg-background px-2 text-muted-foreground">*/}
-                                    {/*  Or*/}
-                                    {/*</span>*/}
-                                    {/*                              </div>*/}
-                                    {/*                          </div>*/}
-                                    {/*                          <Button variant="outline" type="button"*/}
-                                    {/*                                  disabled={googleIsLoading}>*/}
-                                    {/*                              {googleIsLoading ? (*/}
-                                    {/*                                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>*/}
-                                    {/*                              ) : (*/}
-                                    {/*                                  <Icons.google className="mr-2 h-4 w-4"/>*/}
-                                    {/*                              )}{" "}*/}
-                                    {/*                              Sign in with Google*/}
-                                    {/*                          </Button>*/}
-
-                                    <p className="mt-2 ml-1 text-sm text-gray-700">
-                                        Don’t have an account?{' '}
+                                    <p className="mt-2 ml-1 text-sm text-gray-700 flex justify-between ">
                                         <Link
                                             href="/register"
                                             className="font-medium text-blue-600 hover:underline"
                                         >
                                             Sign up
-                                        </Link>{' '}
-                                        for a free trial.
+                                        </Link>
+
+                                        <Link
+                                            href="/reset_password_send"
+                                            className="font-medium text-blue-600 hover:underline"
+                                        >
+                                            Forgot Password
+                                        </Link>
                                     </p>
 
                                     <p className="px-8 text-center text-sm text-muted-foreground">
