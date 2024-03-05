@@ -45,7 +45,8 @@ export default function ResetPasswordStepOne() {
         setEmailIsLoading(true)
 
         const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'https://www.enconvo.com/reset_password'
+            redirectTo: 'http://localhost:3000/reset_password'
+            // redirectTo: 'https://www.enconvo.com/reset_password'
         })
 
         if (error) {
