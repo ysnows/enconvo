@@ -146,6 +146,20 @@ export function Pricing() {
                     className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
 
                     <Plan
+                        name="Free"
+                        price="FREE"
+                        description="Lifetime access to all basic features."
+                        href="https://api.enconvo.com/app/download"
+                        startText={'Download'}
+                        features={[
+                            '1 macOS devices',
+                            '1000 Points/Day',
+                            'Rich plug-in ecosystem',
+                            'PopBar for selected text',
+                            'Seamless Access To Power Of AI'
+                        ]}
+                    />
+                    <Plan
                         name="Stardard"
                         price="$29"
                         originPrice={'$49'}
@@ -154,8 +168,10 @@ export function Pricing() {
                         features={[
                             '1 macOS devices',
                             'Rich plug-in ecosystem',
+                            '1000 Points/Day',
                             'Ultimate Use of OCR',
                             'Ultimate Use of Azure TTS',
+                            'Chat With Documents',
                             'PopBar for selected text',
                             'Seamless Access To Power Of AI'
                         ]}
@@ -172,19 +188,37 @@ export function Pricing() {
                             '3 macOS devices',
                             'Rich plug-in ecosystem',
                             'Ultimate Use of OCR',
+                            '1000 Points/Day',
                             'Ultimate Use of Azure TTS',
+                            'Chat With Documents',
                             'PopBar for selected text',
                             'Seamless Access To Power Of AI'
                         ]}
                     />
                     <Plan
-                        name="Cloud"
+                        name="Cloud Premium"
                         price="$10/Monthly"
                         description="All Premium feathers, No need your own apikeys"
-                        href="mailto:yong531315@gmail.com"
-                        startText={'Contact Us'}
+                        href="https://enconvo.lemonsqueezy.com/checkout/buy/419cc13a-3158-4d63-86c4-278db84c1e21?enabled=143163"
+                        startText={'Get started'}
                         features={[
                             'Unlimited macOS devices',
+                            '50000 Points/Month',
+                            'All Premium Features',
+                            'Rich plug-in ecosystem',
+                            'No need your own apikeys'
+                        ]}
+                    />
+                    <Plan
+                        featured
+                        name="Cloud Premium"
+                        price="$96/Yearly"
+                        description="All Premium feathers, No need your own apikeys"
+                        href="https://enconvo.lemonsqueezy.com/checkout/buy/15bb9cee-1d2b-4971-baa3-9e2d7c560517?enabled=148928"
+                        startText={'Get started'}
+                        features={[
+                            'Unlimited macOS devices',
+                            '50000 Points/Month',
                             'All Premium Features',
                             'Rich plug-in ecosystem',
                             'No need your own apikeys'
