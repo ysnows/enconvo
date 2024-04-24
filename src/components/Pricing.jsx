@@ -155,6 +155,7 @@ export function Pricing() {
                             '1 Knowledge Base',
                             '500 Points/Day',
                             'Rich Plug-In Ecosystem',
+                            'Plugin As Tool & Be Used By AI',
                             'PopBar For Selected Text',
                             'Seamless Access To Power Of AI',
                             'Convert Whole Website To Knowledge Base',
