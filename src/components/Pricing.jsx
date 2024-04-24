@@ -181,7 +181,21 @@ export function Pricing() {
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
                             '1 MacOS Devices',
-                            'All The Other Features ',
+                            'Rich Plug-In Ecosystem',
+                            'Plugin As Tool & Be Used By AI',
+                            'PopBar For Selected Text',
+                            'Seamless Access To Power Of AI',
+                            'Convert Whole Website To Knowledge Base',
+                            'Internet Browsing Powered By AI',
+                            'Code Interpreter',
+                            'Text-to-Speech (TTS)',
+                            'Context Awareness',
+                            'Chat With Documents',
+                            'Chat With Webpage',
+                            'Use Local LLM (Ollama,LMStudio) For Privacy',
+                            'All Function Providers',
+                            'Ultimate Use of OCR',
+                            'More Than 100+ Features',
                         ]}
                     />
 
@@ -196,7 +210,21 @@ export function Pricing() {
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
                             '3 MacOS Devices',
-                            'All The Other Features',
+                            'Rich Plug-In Ecosystem',
+                            'Plugin As Tool & Be Used By AI',
+                            'PopBar For Selected Text',
+                            'Seamless Access To Power Of AI',
+                            'Convert Whole Website To Knowledge Base',
+                            'Internet Browsing Powered By AI',
+                            'Code Interpreter',
+                            'Text-to-Speech (TTS)',
+                            'Context Awareness',
+                            'Chat With Documents',
+                            'Chat With Webpage',
+                            'Use Local LLM (Ollama,LMStudio) For Privacy',
+                            'All Function Providers',
+                            'Ultimate Use of OCR',
+                            'More Than 100+ Features',
                         ]}
                     />
                     <Plan
@@ -210,7 +238,21 @@ export function Pricing() {
                             'Unlimited Knowledge Bases',
                             '3 MacOS Devices',
                             'No Need Your Own ApiKey',
-                            'All The Other Features'
+                            'Rich Plug-In Ecosystem',
+                            'Plugin As Tool & Be Used By AI',
+                            'PopBar For Selected Text',
+                            'Seamless Access To Power Of AI',
+                            'Convert Whole Website To Knowledge Base',
+                            'Internet Browsing Powered By AI',
+                            'Code Interpreter',
+                            'Text-to-Speech (TTS)',
+                            'Context Awareness',
+                            'Chat With Documents',
+                            'Chat With Webpage',
+                            'Use Local LLM (Ollama,LMStudio) For Privacy',
+                            'All Function Providers',
+                            'Ultimate Use of OCR',
+                            'More Than 100+ Features',
                         ]}
                     />
                     <Plan
@@ -225,7 +267,21 @@ export function Pricing() {
                             'Unlimited Knowledge Bases',
                             '3 MacOS Devices',
                             'No Need Your Own ApiKey',
-                            'All The Other Features'
+                            'Rich Plug-In Ecosystem',
+                            'Plugin As Tool & Be Used By AI',
+                            'PopBar For Selected Text',
+                            'Seamless Access To Power Of AI',
+                            'Convert Whole Website To Knowledge Base',
+                            'Internet Browsing Powered By AI',
+                            'Code Interpreter',
+                            'Text-to-Speech (TTS)',
+                            'Context Awareness',
+                            'Chat With Documents',
+                            'Chat With Webpage',
+                            'Use Local LLM (Ollama,LMStudio) For Privacy',
+                            'All Function Providers',
+                            'Ultimate Use of OCR',
+                            'More Than 100+ Features',
                         ]}
                     />
                 </div>
