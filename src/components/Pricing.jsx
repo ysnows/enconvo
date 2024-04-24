@@ -152,11 +152,22 @@ export function Pricing() {
                         href="https://api.enconvo.com/app/download"
                         startText={'Download'}
                         features={[
-                            '1 macOS devices',
-                            '1000 Points/Day',
-                            'Rich plug-in ecosystem',
-                            'PopBar for selected text',
-                            'Seamless Access To Power Of AI'
+                            '1 Knowledge Base',
+                            '500 Points/Day',
+                            'Rich Plug-In Ecosystem',
+                            'PopBar For Selected Text',
+                            'Seamless Access To Power Of AI',
+                            'Convert Whole Website To Knowledge Base',
+                            'Internet Browsing Powered By AI',
+                            'Code Interpreter',
+                            'Text-to-Speech (TTS)',
+                            'Context Awareness',
+                            'Chat With Documents',
+                            'Chat With Webpage',
+                            'Use Local LLM (Ollama,LMStudio) For Privacy',
+                            'All Function Providers',
+                            'Ultimate Use of OCR',
+                            'More Than 100+ Features',
                         ]}
                     />
                     <Plan
@@ -166,14 +177,10 @@ export function Pricing() {
                         description="Lifetime access to all features."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/5f2579af-4175-4539-a04f-65c4cb274aed"
                         features={[
-                            '1 macOS devices',
-                            'Rich plug-in ecosystem',
+                            'Unlimited Knowledge Bases',
                             '1000 Points/Day',
-                            'Ultimate Use of OCR',
-                            'Ultimate Use of Azure TTS',
-                            'Chat With Documents',
-                            'PopBar for selected text',
-                            'Seamless Access To Power Of AI'
+                            '1 MacOS Devices',
+                            'All The Other Features ',
                         ]}
                     />
 
@@ -185,14 +192,10 @@ export function Pricing() {
                         description="Most popular."
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
                         features={[
-                            '3 macOS devices',
-                            'Rich plug-in ecosystem',
-                            'Ultimate Use of OCR',
+                            'Unlimited Knowledge Bases',
                             '1000 Points/Day',
-                            'Ultimate Use of Azure TTS',
-                            'Chat With Documents',
-                            'PopBar for selected text',
-                            'Seamless Access To Power Of AI'
+                            '3 MacOS Devices',
+                            'All The Other Features',
                         ]}
                     />
                     <Plan
@@ -202,11 +205,11 @@ export function Pricing() {
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/419cc13a-3158-4d63-86c4-278db84c1e21?enabled=143163"
                         startText={'Get started'}
                         features={[
-                            'Unlimited macOS devices',
                             '50000 Points/Month',
-                            'All Premium Features',
-                            'Rich plug-in ecosystem',
-                            'No need your own apikeys'
+                            'Unlimited Knowledge Bases',
+                            '3 MacOS Devices',
+                            'No Need Your Own ApiKey',
+                            'All The Other Features'
                         ]}
                     />
                     <Plan
@@ -217,11 +220,11 @@ export function Pricing() {
                         href="https://enconvo.lemonsqueezy.com/checkout/buy/15bb9cee-1d2b-4971-baa3-9e2d7c560517?enabled=148928"
                         startText={'Get started'}
                         features={[
-                            'Unlimited macOS devices',
                             '50000 Points/Month',
-                            'All Premium Features',
-                            'Rich plug-in ecosystem',
-                            'No need your own apikeys'
+                            'Unlimited Knowledge Bases',
+                            '3 MacOS Devices',
+                            'No Need Your Own ApiKey',
+                            'All The Other Features'
                         ]}
                     />
                 </div>
