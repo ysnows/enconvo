@@ -15,7 +15,7 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { NativeRouter } from "@/utils/app/native_router";
 
-export default function LoginForm({ loginState, setLoginState }) {
+export default function LoginForm({ loginState, setLoginState, setUser }) {
 
     const supabase = createClientComponentClient()
 
@@ -48,7 +48,15 @@ export default function LoginForm({ loginState, setLoginState }) {
             setEmailIsLoading(false)
             return
         }
-        console.log(data)
+        console.log("session login :", data)
+
+        setUser(data.user)
+
+        await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token
+        })
+
 
         NativeRouter.login(data.session.access_token, data.session.refresh_token)
         setLoginState("success")

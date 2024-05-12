@@ -1,20 +1,20 @@
 import Head from 'next/head'
 import Link from 'next/link'
 
-import {ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon} from "@radix-ui/react-icons"
+import { ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
-import {Button} from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 
 
-import {Logo} from '@/components/Logo'
-import {useState} from "react";
-import {useRouter} from "next/navigation";
-import {Input} from "@/components/ui/input";
+import { Logo } from '@/components/Logo'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 import * as React from "react";
-import {createClientComponentClient} from "@supabase/auth-helpers-nextjs";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-export default function RegisterForm({loginState, setLoginState, email, setEmail}) {
+export default function RegisterForm({ loginState, setLoginState, email, setEmail }) {
 
     const supabase = createClientComponentClient()
 
@@ -37,7 +37,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
         }
 
         setEmailIsLoading(true)
-        const {data, error} = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
@@ -54,9 +54,8 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
             return
         }
 
-        console.log(data)
+        console.log("kk",data)
 
-        // NativeRouter.login(data.session.access_token, data.session.refresh_token)
         setLoginState("success")
 
         setEmailIsLoading(false)
@@ -79,7 +78,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
                 <div className="">
                     <div className="flex flex-col items-center">
                         <Link className="mt-28" href="/" aria-label="Home">
-                            <Logo className="h-20 w-auto"/>
+                            <Logo className="h-20 w-auto" />
                         </Link>
                         <div className="mt-10 flex flex-col items-center">
                             <h3 className="text-xl font-semibold tracking-tight">
@@ -106,9 +105,9 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
                                 />
 
                                 <Input type="email" placeholder="Email"
-                                       required
-                                       autoComplete="email"
-                                       onChange={(e) => setEmail(e.target.value)} value={email}
+                                    required
+                                    autoComplete="email"
+                                    onChange={(e) => setEmail(e.target.value)} value={email}
                                 />
 
                                 <Input
@@ -125,7 +124,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
                                 {error &&
                                     <Alert variant="destructive">
                                         <AlertDescription className="flex items-center">
-                                            <ExclamationTriangleIcon className="h-4 w-4 mr-2"/>
+                                            <ExclamationTriangleIcon className="h-4 w-4 mr-2" />
                                             {error}
                                         </AlertDescription>
                                     </Alert>
@@ -134,7 +133,7 @@ export default function RegisterForm({loginState, setLoginState, email, setEmail
                                 <Button onClick={signUp} disabled={emailIsLoading}
                                 >
                                     {emailIsLoading &&
-                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>}
+                                        <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
 
                                     {emailIsLoading ? "Signing Up" : "Sign Up"}
 
