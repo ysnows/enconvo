@@ -50,22 +50,34 @@ export function Hero() {
         supabase.auth.getSession().then(({ data, error }) => {
             if (data.session) {
 
-                setNavigation([
-                    { name: 'Features', href: '#features' },
-                    {
-                        name: 'Pricing',
-                        href: '#pricing'
-                    },
-                    { name: 'Discord', href: 'https://discord.gg/7Rh5M9vS' },
-                    {
-                        name: 'Store',
-                        href: 'https://store.enconvo.com/'
-                    },
-                    {
-                        name: data.session.user.user_metadata.name,
-                        href: '/login'
-                    },
-                ])
+                setNavigation(
+
+
+                    [
+                        { name: 'Features', href: '#features' },
+                        {
+                            name: 'Pricing',
+                            href: '#pricing'
+                        },
+                        {
+                            name: 'Store',
+                            href: 'https://store.enconvo.com/'
+                        },
+                        {
+                            name: 'Guides',
+                            href: 'https://docs.enconvo.com/docs/intro'
+                        },
+                        {
+                            name: 'Changelog',
+                            href: 'https://docs.enconvo.com/changelog'
+                        },
+                        { name: 'Discord', href: 'https://discord.gg/jYsdVRRK2k' },
+                        {
+                            name: data.session.user.user_metadata.name,
+                            href: '/login'
+                        }
+                    ]
+                )
 
             }
         })

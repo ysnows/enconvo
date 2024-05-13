@@ -54,7 +54,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
             return
         }
 
-        console.log("kk",data)
+        console.log("kk--",data)
 
         setLoginState("success")
 
