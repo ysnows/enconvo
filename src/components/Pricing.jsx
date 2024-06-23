@@ -176,7 +176,7 @@ export function Pricing() {
                         price="$29"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
-                        href="https://buy.stripe.com/fZe4hM0CN2kZfJu28a"
+                        href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
                         features={[
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
@@ -205,7 +205,7 @@ export function Pricing() {
                         price="$49"
                         originPrice={'$99'}
                         description="Most popular."
-                        href="https://buy.stripe.com/9AQ01wgBL4t7bte8wB"
+                        href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
                         features={[
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
@@ -231,7 +231,7 @@ export function Pricing() {
                         name="Cloud Premium"
                         price="$10/Monthly"
                         description="All Premium feathers, No need your own apikeys"
-                        href="https://buy.stripe.com/bIY5lQfxHf7LapabIM"
+                        href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
                         features={[
                             '50000 Points/Month',
@@ -260,7 +260,7 @@ export function Pricing() {
                         name="Cloud Premium"
                         price="$96/Yearly"
                         description="All Premium feathers, No need your own apikeys"
-                        href="https://buy.stripe.com/8wMaGabhr3p3gNy147"
+                        href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}
                         features={[
                             '50000 Points/Month',
