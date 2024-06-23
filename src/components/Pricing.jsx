@@ -176,7 +176,7 @@ export function Pricing() {
                         price="$29"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/5f2579af-4175-4539-a04f-65c4cb274aed"
+                        href="https://buy.stripe.com/fZe4hM0CN2kZfJu28a"
                         features={[
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
@@ -205,7 +205,7 @@ export function Pricing() {
                         price="$49"
                         originPrice={'$99'}
                         description="Most popular."
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/682a4fd4-cd4d-49a1-a8f5-1aef47d4d37a?disabled=71251"
+                        href="https://buy.stripe.com/9AQ01wgBL4t7bte8wB"
                         features={[
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
@@ -231,7 +231,7 @@ export function Pricing() {
                         name="Cloud Premium"
                         price="$10/Monthly"
                         description="All Premium feathers, No need your own apikeys"
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/419cc13a-3158-4d63-86c4-278db84c1e21?enabled=143163"
+                        href="https://buy.stripe.com/bIY5lQfxHf7LapabIM"
                         startText={'Get started'}
                         features={[
                             '50000 Points/Month',
@@ -260,7 +260,7 @@ export function Pricing() {
                         name="Cloud Premium"
                         price="$96/Yearly"
                         description="All Premium feathers, No need your own apikeys"
-                        href="https://enconvo.lemonsqueezy.com/checkout/buy/15bb9cee-1d2b-4971-baa3-9e2d7c560517?enabled=148928"
+                        href="https://buy.stripe.com/8wMaGabhr3p3gNy147"
                         startText={'Get started'}
                         features={[
                             '50000 Points/Month',
