@@ -234,7 +234,7 @@ export function Pricing() {
                         href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
                         features={[
-                            '50000 Points/Month',
+                            '1000000 Points/Month',
                             'Unlimited Knowledge Bases',
                             '3 MacOS Devices',
                             'No Need Your Own ApiKey',
@@ -263,7 +263,7 @@ export function Pricing() {
                         href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}
                         features={[
-                            '50000 Points/Month',
+                            '1000000 Points/Month',
                             'Unlimited Knowledge Bases',
                             '3 MacOS Devices',
                             'No Need Your Own ApiKey',
