@@ -230,7 +230,7 @@ export function Pricing() {
                     <Plan
                         name="Cloud Premium"
                         price="$10/Monthly"
-                        description="All Premium feathers, No need your own apikeys"
+                        description="All Premium features, No need your own apikeys"
                         href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
                         features={[
@@ -259,7 +259,7 @@ export function Pricing() {
                         featured
                         name="Cloud Premium"
                         price="$96/Yearly"
-                        description="All Premium feathers, No need your own apikeys"
+                        description="All Premium features, No need your own apikeys"
                         href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}
                         features={[
