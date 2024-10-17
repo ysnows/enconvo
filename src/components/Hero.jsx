@@ -169,7 +169,7 @@ export function Hero() {
         <div className="relative isolate pt-14">
             <div class='mt-4 w-full flex justify-center'>
 
-                {/* 
+                
                 <div class='mt-4 px-10 py-px flex items-center justify-center border  border-purple-200 rounded-md'>
                     <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
                     <span class="ml-2 py-px px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
@@ -180,7 +180,7 @@ export function Hero() {
                     <a href="#pricing" class="text-red-600 font-bold py-2 px-4 rounded  transition-colors duration-300">
                         Check it now
                     </a>
-                </div> */}
+                </div>
 
             </div>
 

@@ -132,13 +132,13 @@ export function Pricing() {
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
 
-                    {/* <div class='mt-4'>
+                    <div class='mt-4'>
                         <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
                         <span class="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
                             60% off
                         </span>
                         <span class="text-white font-semibold"> if you buy today.</span>
-                    </div> */}
+                    </div>
 
 
                 </div>
@@ -173,7 +173,7 @@ export function Pricing() {
                     />
                     <Plan
                         name="Stardard"
-                        price="$29"
+                        price="$19"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
                         href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
@@ -202,7 +202,7 @@ export function Pricing() {
                     <Plan
                         featured
                         name="Premium"
-                        price="$49"
+                        price="$39"
                         originPrice={'$99'}
                         description="Most popular."
                         href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
@@ -234,9 +234,9 @@ export function Pricing() {
                         href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
                         features={[
-                            '1000000 Points/Month',
+                            '50000 Points/Month',
                             'Unlimited Knowledge Bases',
-                            '3 MacOS Devices',
+                            '5 MacOS Devices',
                             'No Need Your Own ApiKey',
                             'Rich Plug-In Ecosystem',
                             'Plugin As Tool & Be Used By AI',
@@ -263,9 +263,9 @@ export function Pricing() {
                         href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}
                         features={[
-                            '1000000 Points/Month',
+                            '50000 Points/Month',
                             'Unlimited Knowledge Bases',
-                            '3 MacOS Devices',
+                            '5 MacOS Devices',
                             'No Need Your Own ApiKey',
                             'Rich Plug-In Ecosystem',
                             'Plugin As Tool & Be Used By AI',
