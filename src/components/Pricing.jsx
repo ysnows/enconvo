@@ -176,7 +176,7 @@ export function Pricing() {
                         price="$19"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
-                        href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
+                        href="https://buy.stripe.com/8wMeWq4T38Jnapa14g"
                         features={[
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
@@ -205,7 +205,7 @@ export function Pricing() {
                         price="$39"
                         originPrice={'$99'}
                         description="Most popular."
-                        href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
+                        href="https://buy.stripe.com/7sI5lQ99j0cRbtefZb"
                         features={[
                             'Unlimited Knowledge Bases',
                             '1000 Points/Day',
