@@ -173,13 +173,13 @@ export function Pricing() {
                     />
                     <Plan
                         name="Stardard"
-                        price="$19"
+                        price="$29"
                         originPrice={'$49'}
                         description="Lifetime access to all features."
-                        href="https://buy.stripe.com/8wMeWq4T38Jnapa14g"
+                        href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
                         features={[
                             'Unlimited Knowledge Bases',
-                            '1000 Points/Day',
+                            '50,000 Points',
                             '1 MacOS Devices',
                             'Rich Plug-In Ecosystem',
                             'Plugin As Tool & Be Used By AI',
@@ -202,13 +202,13 @@ export function Pricing() {
                     <Plan
                         featured
                         name="Premium"
-                        price="$39"
+                        price="$49"
                         originPrice={'$99'}
                         description="Most popular."
-                        href="https://buy.stripe.com/7sI5lQ99j0cRbtefZb"
+                        href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
                         features={[
                             'Unlimited Knowledge Bases',
-                            '1000 Points/Day',
+                            '150,000 Points',
                             '3 MacOS Devices',
                             'Rich Plug-In Ecosystem',
                             'Plugin As Tool & Be Used By AI',
@@ -234,7 +234,7 @@ export function Pricing() {
                         href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
                         features={[
-                            '500000 Points/Month',
+                            '500,000 Points/Month',
                             'Unlimited Knowledge Bases',
                             '5 MacOS Devices',
                             'No Need Your Own ApiKey',
@@ -263,7 +263,7 @@ export function Pricing() {
                         href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}
                         features={[
-                            '500000 Points/Month',
+                            '500,000 Points/Month',
                             'Unlimited Knowledge Bases',
                             '5 MacOS Devices',
                             'No Need Your Own ApiKey',
