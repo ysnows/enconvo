@@ -144,7 +144,7 @@
               }
             },
             "then": {
-              "required": ["data", "dataProxy"],
+              "required": [],
               "oneOf": [
                 {
                   "required": ["data"],
