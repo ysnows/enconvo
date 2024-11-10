@@ -173,7 +173,7 @@
               }
             },
             "then": {
-              "required": ["label"],
+              "required": [],
               "properties": {
                 "label": {
                   "type": "string",
