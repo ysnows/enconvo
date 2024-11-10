@@ -58,7 +58,8 @@
       "type": "array",
       "items": {
         "type": "object"
-      }
+      },
+      "uniqueItems": true
     },
     "preferences": {
       "type": "array",
