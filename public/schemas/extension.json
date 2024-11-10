@@ -88,8 +88,24 @@
                 }
               }
             }
-          },  
-                    {
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "hotkey"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "default": {
+                  "type": "string",
+                  "title": "The optional default value for the hotkey"
+                }
+              }
+            }
+          },          {
             "if": {
               "properties": {
                 "type": {
@@ -111,7 +127,7 @@
                 }
               }
             }
-          },  
+          },
           {
             "if": {
               "properties": {
@@ -204,7 +220,7 @@
               ],
               "properties": {
                 "data": {
-                  "type": "array", 
+                  "type": "array",
                   "items": {
                     "type": "object",
                     "required": ["title", "value"],
@@ -242,7 +258,7 @@
                 "dataProxy": {
                   "type": "string",
                   "pattern": "^[a-zA-Z0-9-._~]*|[a-zA-Z0-9-._~]*$",
-                  "title": "The optional data proxy for the dropdown", 
+                  "title": "The optional data proxy for the dropdown",
                   "description": "The data proxy is a command key that will be used to fetch the dropdown data. The command must return an array of objects with 'title' and 'value' properties."
                 },
                 "multiple": {
@@ -348,7 +364,9 @@
               "directory",
               "extension",
               "number",
-              "multiline_textfield"
+              "hotkey",
+              "multiline_textfield",
+              "multiline_dropdown"
             ],
             "type": "string",
             "title": "The preference type",
