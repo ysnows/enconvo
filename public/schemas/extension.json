@@ -76,11 +76,6 @@
             },
             "then": {
               "properties": {
-                "multiline": {
-                  "type": "boolean",
-                  "title": "The optional multiline flag for the textfield",
-                  "description": "If true, the textfield will be rendered with a multiline text area."
-                },
                 "default": {
                   "type": "string",
                   "title": "The optional default value for the textfield"
@@ -89,6 +84,29 @@
                   "type": "string",
                   "pattern": "^[a-zA-Z0-9-._~]*$",
                   "title": "The optional default value proxy for the textfield",
+                  "description": "The default value proxy is a key all over the application"
+                }
+              }
+            }
+          },  
+                    {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "multiline_textfield"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "default": {
+                  "type": "string",
+                  "title": "The optional default value for the multiline textfield"
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the multiline textfield",
                   "description": "The default value proxy is a key all over the application"
                 }
               }
@@ -329,7 +347,8 @@
               "file",
               "directory",
               "extension",
-              "number"
+              "number",
+              "multiline_textfield"
             ],
             "type": "string",
             "title": "The preference type",
