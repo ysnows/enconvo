@@ -138,7 +138,7 @@
               }
             },
             "then": {
-              "required": ["data"],
+              "required": [],
               "properties": {
                 "data": {
                   "type": "array",
@@ -269,7 +269,16 @@
             "description": "The slugged property's name used internally."
           },
           "type": {
-            "enum": ["textfield", "password", "checkbox", "dropdown", "appPicker", "file", "directory","extension"],
+            "enum": [
+              "textfield",
+              "password",
+              "checkbox",
+              "dropdown",
+              "appPicker",
+              "file",
+              "directory",
+              "extension"
+            ],
             "type": "string",
             "title": "The preference type",
             "description": "Currently only 'textfield', 'password' (for secure entry), 'checkbox', 'dropdown', 'appPicker', 'file', and 'directory' are supported."
@@ -314,12 +323,22 @@
         "Security",
         "System",
         "Web",
-        "Other"
+        "Other",
+        "Provider"
       ]
     }
   },
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "required": ["name", "title", "description", "icon", "author", "license", "commands", "dependencies"],
+  "required": [
+    "name",
+    "title",
+    "description",
+    "icon",
+    "author",
+    "license",
+    "commands",
+    "dependencies"
+  ],
   "properties": {
     "icon": {
       "type": "string",
@@ -420,7 +439,7 @@
             "contentMediaType": "image/png"
           },
           "mode": {
-            "enum": ["view", "no-view", "menu-bar","provider"],
+            "enum": ["view", "no-view", "menu-bar", "provider"],
             "type": "string",
             "title": "The type of run-time command",
             "description": "A value of 'view' indicates that the command will show a main view when performed. 'no-view' means that the command does not push a view to the main navigation stack in Raycast. The latter is handy for directly opening URL or other API functionality that doesn't require a user interface. 'menu-bar' renders an extra item in the macOS system menu bar at the top of the screen."
@@ -440,6 +459,12 @@
             "maxLength": 255,
             "minLength": 2,
             "description": "The command title will be displayed in the Store, Preferences, and in Raycast's root search."
+          },
+          "targetCommand": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9-._~]*|[a-zA-Z0-9-._~]*$",
+            "title": "The target command",
+            "description": "The target command is the command that will be executed when the command is run. If not provided, the command will be executed directly."
           },
           "keywords": {
             "$ref": "#/$defs/keywords"
