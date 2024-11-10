@@ -55,11 +55,84 @@
       "uniqueItems": true
     },
     "parameters": {
-      "type": "array",
-      "items": {
-        "type": "object"
+      "type": "object",
+      "properties": {
+        "input_text": {
+          "type": "string",
+          "title": "Input text parameter",
+          "description": "Text input from the user"
+        },
+        "selection_text": {
+          "type": "string", 
+          "title": "Selected text parameter",
+          "description": "Currently selected text"
+        },
+        "current_browser_tab": {
+          "type": "object",
+          "title": "Current browser tab parameter", 
+          "description": "Information about the currently active browser tab",
+          "properties": {
+            "title": {
+              "type": "string",
+              "title": "Tab title",
+              "description": "The title of the browser tab"
+            },
+            "url": {
+              "type": "string", 
+              "title": "Tab URL",
+              "description": "The URL of the browser tab"
+            },
+            "source": {
+              "type": "string",
+              "title": "Page source",
+              "description": "The HTML source of the browser tab"
+            },
+            "text": {
+              "type": "string",
+              "title": "Page text",
+              "description": "The text content of the browser tab"
+            }
+          },
+          "required": ["url"]
+        },
+        "context_files": {
+          "type": "array",
+          "title": "Context files parameter", 
+          "description": "Files from the current context"
+        },
+        "context_screen": {
+          "type": "string",
+          "title": "Screen context parameter",
+          "description": "Information about the current screen context"
+        },
+        "context_camera": {
+          "type": "string",
+          "title": "Camera context parameter",
+          "description": "Information from the camera context"
+        },
+        "date": {
+          "type": "string",
+          "title": "Date parameter",
+          "description": "Current date"
+        },
+        "time": {
+          "type": "string",
+          "title": "Time parameter", 
+          "description": "Current time"
+        },
+        "clipboard": {
+          "type": "string",
+          "title": "Clipboard parameter",
+          "description": "Current clipboard contents"
+        },
+        "finder_selection_files": {
+          "type": "array",
+          "title": "Finder selection files parameter",
+          "description": "Currently selected files in Finder"
+        }
+
       },
-      "uniqueItems": true
+      "additionalProperties": true
     },
     "preferences": {
       "type": "array",
