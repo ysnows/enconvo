@@ -72,6 +72,12 @@
                 "default": {
                   "type": "string",
                   "title": "The optional default value for the textfield"
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the textfield",
+                  "description": "The default value proxy is a key all over the application"
                 }
               }
             }
@@ -152,7 +158,7 @@
                         "title": "The dropdown item value"
                       }
                     },
-                    "additionalProperties": false
+                    "additionalProperties": true
                   },
                   "title": "Dropdown values",
                   "minItems": 1,
@@ -163,6 +169,18 @@
                   "type": "string",
                   "title": "The optional default value for the dropdown",
                   "description": "This value must be one of the values specified within 'data'."
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the dropdown",
+                  "description": "The default value proxy is a key all over the application"
+                },
+                "dataProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$|^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional data proxy for the dropdown",
+                  "description": "The data proxy is a command key that will be used to fetch the dropdown data. The command must return an array of objects with 'title' and 'value' properties."
                 }
               }
             }
@@ -181,6 +199,12 @@
                   "type": "string",
                   "title": "The optional default value for the appPicker",
                   "description": "This value must be an application name, a bundle ID or a path"
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the appPicker",
+                  "description": "The default value proxy is a key all over the application"
                 }
               }
             }
@@ -199,6 +223,12 @@
                   "type": "string",
                   "title": "The optional default value for the file picker",
                   "description": "This value must be a path to a file"
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the file picker",
+                  "description": "The default value proxy is a key all over the application"
                 }
               }
             }
@@ -215,8 +245,14 @@
               "properties": {
                 "default": {
                   "type": "string",
-                  "title": "The optional default value for the file picker",
+                  "title": "The optional default value for the directory picker",
                   "description": "This value must be a path to a directory"
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the directory picker",
+                  "description": "The default value proxy is a key all over the application"
                 }
               }
             }
@@ -384,7 +420,7 @@
             "contentMediaType": "image/png"
           },
           "mode": {
-            "enum": ["view", "no-view", "menu-bar"],
+            "enum": ["view", "no-view", "menu-bar","provider"],
             "type": "string",
             "title": "The type of run-time command",
             "description": "A value of 'view' indicates that the command will show a main view when performed. 'no-view' means that the command does not push a view to the main navigation stack in Raycast. The latter is handy for directly opening URL or other API functionality that doesn't require a user interface. 'menu-bar' renders an extra item in the macOS system menu bar at the top of the screen."
