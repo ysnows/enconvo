@@ -274,7 +274,7 @@
             }
           }
         ],
-        "required": ["name", "description", "type", "required"],
+        "required": ["name", "description", "type"],
         "properties": {
           "name": {
             "type": "string",
@@ -303,6 +303,12 @@
             "type": "boolean",
             "title": "Preference existence requirement",
             "description": "Indicates whether the value is required and must be entered by the user before the extension is usable"
+          },
+          "visibility": {
+            "enum": ["hidden", "show"],
+            "type": "string",
+            "title": "The preference visibility",
+            "description": "Controls whether this preference is visible in the UI"
           },
           "description": {
             "type": "string",
