@@ -13,7 +13,7 @@
       "title": "Searchable terms",
       "maxItems": 12,
       "minItems": 0,
-      "description": "String values helping Raycast display the extension's commands when such terms are typed in root search or the Store.",
+      "description": "String values helping EnConvo display the extension's commands when such terms are typed in root search or the Store.",
       "uniqueItems": true
     },
     "arguments": {
@@ -37,7 +37,7 @@
             "pattern": "^[^\\s]+(?: [^\\s]+)*$",
             "maxLength": 255,
             "minLength": 1,
-            "description": "The placeholder will be shown in the Raycast search bar argument field."
+            "description": "The placeholder will be shown in the EnConvo search bar argument field."
           },
           "type": {
             "enum": ["text", "password"],
@@ -53,6 +53,12 @@
         }
       },
       "uniqueItems": true
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     },
     "preferences": {
       "type": "array",
@@ -394,7 +400,7 @@
               "uniqueItems": true
             }
           },
-          "description": "Keyboard shortcut used to refresh/reload a command while the Raycast window is focused.",
+          "description": "Keyboard shortcut used to refresh/reload a command while the EnConvo window is focused.",
           "additionalProperties": false
         }
       },
@@ -445,14 +451,14 @@
             "type": "string",
             "title": "The command's icon",
             "pattern": "^[^\\s]+(?:[ ]*[^\\s]+)*$",
-            "description": "A 512x512 icon representing the command. It will be displayed in Preferences and Raycast root search. If a command doesn't have an icon, it will 'inherit' the extension's icon. Please note that light and dark themes are supported; just append '@dark' or '@light' to the icons name and the correct icon will be picked at run-time. For example, write for this property 'icon.png' and have in the assets folder the 'icon@light.png' and 'icon@dark.png' assets.",
+            "description": "A 512x512 icon representing the command. It will be displayed in Preferences and EnConvo root search. If a command doesn't have an icon, it will 'inherit' the extension's icon. Please note that light and dark themes are supported; just append '@dark' or '@light' to the icons name and the correct icon will be picked at run-time. For example, write for this property 'icon.png' and have in the assets folder the 'icon@light.png' and 'icon@dark.png' assets.",
             "contentMediaType": "image/png"
           },
           "mode": {
             "enum": ["view", "no-view", "menu-bar", "provider"],
             "type": "string",
             "title": "The type of run-time command",
-            "description": "A value of 'view' indicates that the command will show a main view when performed. 'no-view' means that the command does not push a view to the main navigation stack in Raycast. The latter is handy for directly opening URL or other API functionality that doesn't require a user interface. 'menu-bar' renders an extra item in the macOS system menu bar at the top of the screen."
+            "description": "A value of 'view' indicates that the command will show a main view when performed. 'no-view' means that the command does not push a view to the main navigation stack in EnConvo. The latter is handy for directly opening URL or other API functionality that doesn't require a user interface. 'menu-bar' renders an extra item in the macOS system menu bar at the top of the screen."
           },
           "name": {
             "type": "string",
@@ -468,7 +474,7 @@
             "pattern": "^[^\\s]+(?: [^\\s]+)*$",
             "maxLength": 255,
             "minLength": 2,
-            "description": "The command title will be displayed in the Store, Preferences, and in Raycast's root search."
+            "description": "The command title will be displayed in the Store, Preferences, and in EnConvo's root search."
           },
           "targetCommand": {
             "type": "string",
@@ -556,8 +562,8 @@
       "properties": {
         "@enconvo/api": {
           "type": "string",
-          "title": "Raycast API dependency",
-          "description": "The Raycast API version used by this extension."
+          "title": "EnConvo API dependency",
+          "description": "The EnConvo API version used by this extension."
         }
       },
       "description": "Source dependencies following the npm package.json dependency format."
