@@ -178,7 +178,7 @@
                 },
                 "dataProxy": {
                   "type": "string",
-                  "pattern": "^[a-zA-Z0-9-._~]*$|^[a-zA-Z0-9-._~]*$",
+                  "pattern": "^[a-zA-Z0-9-._~]*|[a-zA-Z0-9-._~]*$",
                   "title": "The optional data proxy for the dropdown",
                   "description": "The data proxy is a command key that will be used to fetch the dropdown data. The command must return an array of objects with 'title' and 'value' properties."
                 }
