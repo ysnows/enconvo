@@ -233,7 +233,7 @@
             "description": "The slugged property's name used internally."
           },
           "type": {
-            "enum": ["textfield", "password", "checkbox", "dropdown", "appPicker", "file", "directory"],
+            "enum": ["textfield", "password", "checkbox", "dropdown", "appPicker", "file", "directory","extension"],
             "type": "string",
             "title": "The preference type",
             "description": "Currently only 'textfield', 'password' (for secure entry), 'checkbox', 'dropdown', 'appPicker', 'file', and 'directory' are supported."
