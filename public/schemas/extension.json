@@ -75,6 +75,11 @@
             },
             "then": {
               "properties": {
+                "multiline": {
+                  "type": "boolean",
+                  "title": "The optional multiline flag for the textfield",
+                  "description": "If true, the textfield will be rendered with a multiline text area."
+                },
                 "default": {
                   "type": "string",
                   "title": "The optional default value for the textfield"
@@ -88,7 +93,7 @@
               }
             }
           },  
-                  {
+          {
             "if": {
               "properties": {
                 "type": {
@@ -220,6 +225,12 @@
                   "pattern": "^[a-zA-Z0-9-._~]*|[a-zA-Z0-9-._~]*$",
                   "title": "The optional data proxy for the dropdown", 
                   "description": "The data proxy is a command key that will be used to fetch the dropdown data. The command must return an array of objects with 'title' and 'value' properties."
+                },
+                "multiple": {
+                  "type": "boolean",
+                  "title": "Allow multiple selections",
+                  "description": "Whether multiple values can be selected in the dropdown",
+                  "default": false
                 }
               }
             }
