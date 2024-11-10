@@ -87,6 +87,29 @@
                 }
               }
             }
+          },  
+                  {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "number"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "default": {
+                  "type": "number",
+                  "title": "The optional default value for the number"
+                },
+                "defaultProxy": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9-._~]*$",
+                  "title": "The optional default value proxy for the number",
+                  "description": "The default value proxy is a key all over the application"
+                }
+              }
+            }
           },
           {
             "if": {
@@ -281,7 +304,7 @@
             "title": "The property's name/identifier",
             "pattern": "^[a-zA-Z0-9-._~]*$",
             "maxLength": 255,
-            "minLength": 2,
+            "minLength": 1,
             "description": "The slugged property's name used internally."
           },
           "type": {
@@ -293,7 +316,8 @@
               "appPicker",
               "file",
               "directory",
-              "extension"
+              "extension",
+              "number"
             ],
             "type": "string",
             "title": "The preference type",
