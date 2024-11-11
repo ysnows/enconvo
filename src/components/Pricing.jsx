@@ -180,6 +180,7 @@ export function Pricing() {
                         features={[
                             'Unlimited Knowledge Bases',
                             '50,000 Points',
+                            '2 years free updates',
                             '1 MacOS Devices',
                             'Rich Plug-In Ecosystem',
                             'Plugin As Tool & Be Used By AI',
@@ -210,6 +211,7 @@ export function Pricing() {
                             'Unlimited Knowledge Bases',
                             '150,000 Points',
                             '3 MacOS Devices',
+                            'Lifetime free updates',
                             'Rich Plug-In Ecosystem',
                             'Plugin As Tool & Be Used By AI',
                             'PopBar For Selected Text',
