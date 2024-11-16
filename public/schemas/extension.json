@@ -10,7 +10,7 @@
         "maxLength": 25,
         "minLength": 1
       },
-      "title": "Searchable terms", 
+      "title": "Searchable terms",
       "maxItems": 12,
       "minItems": 0,
       "description": "String values helping EnConvo display the extension's commands when such terms are typed in root search or the Store.",
@@ -30,7 +30,7 @@
               "default": "string"
             },
             "description": {
-              "type": "string", 
+              "type": "string",
               "description": "The description of the input text",
               "default": "The text input from the user"
             }
@@ -49,7 +49,7 @@
             },
             "description": {
               "type": "string",
-              "description": "The description of the selected text", 
+              "description": "The description of the selected text",
               "default": "The text currently selected in the application"
             }
           },
@@ -575,7 +575,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "required": [
     "name",
-    "title", 
+    "title",
     "description",
     "icon",
     "author",
@@ -662,7 +662,7 @@
       "pattern": "^[a-zA-Z0-9-*~][a-zA-Z0-9-*._~]*$",
       "maxLength": 75,
       "minLength": 2,
-      "description": "User currently contributing the most to the extension's commands."
+      "description": "User currently contributing the most to the extension."
     },
     "license": {
       "const": "MIT",
@@ -740,80 +740,6 @@
           },
           "parameters": {
             "$ref": "#/$defs/parameters"
-          },
-          "flow": {
-            "type": "object",
-            "title": "The command's flow configuration",
-            "required": ["id", "title", "head"],
-            "properties": {
-              "id": {
-                "type": "string",
-                "title": "The flow's unique identifier",
-                "pattern": "^[a-zA-Z0-9-]*$",
-                "description": "A unique identifier for the flow"
-              },
-              "title": {
-                "type": "string",
-                "title": "The flow's title",
-                "description": "A human-readable title for the flow"
-              },
-              "head": {
-                "type": "object",
-                "title": "The flow's head node",
-                "required": ["id", "command", "title"],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "title": "The head node's unique identifier",
-                    "pattern": "^[a-zA-Z0-9-]*$"
-                  },
-                  "command": {
-                    "type": "string",
-                    "title": "The command to execute",
-                    "pattern": "^[a-zA-Z0-9-_|]*$"
-                  },
-                  "title": {
-                    "type": "string",
-                    "title": "The head node's title"
-                  },
-                  "preferences": {
-                    "$ref": "#/$defs/preferences"
-                  },
-                  "children": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "required": ["id", "title", "command"],
-                      "properties": {
-                        "id": {
-                          "type": "string",
-                          "title": "The child node's unique identifier",
-                          "pattern": "^[a-zA-Z0-9-]*$"
-                        },
-                        "title": {
-                          "type": "string",
-                          "title": "The child node's title"
-                        },
-                        "command": {
-                          "type": "string",
-                          "title": "The command to execute",
-                          "pattern": "^[a-zA-Z0-9-_|]*$"
-                        },
-                        "preferences": {
-                          "$ref": "#/$defs/preferences"
-                        },
-                        "children": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/$defs/flow"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         },
         "additionalProperties": true
