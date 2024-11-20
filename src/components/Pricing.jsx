@@ -135,7 +135,7 @@ export function Pricing() {
                     <div class='mt-4'>
                         <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
                         <span class="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
-                            60% off
+                            50% off
                         </span>
                         <span class="text-white font-semibold"> if you buy today.</span>
                     </div>

@@ -173,7 +173,7 @@ export function Hero() {
                 <div class='mt-4 px-10 py-px flex items-center justify-center border  border-purple-200 rounded-md'>
                     <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
                     <span class="ml-2 py-px px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
-                        60% off
+                        50% off
                     </span>
                     &nbsp;
 
