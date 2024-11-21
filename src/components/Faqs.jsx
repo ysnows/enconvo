@@ -46,7 +46,7 @@ export function Faqs() {
       className="bg-slate-900 py-20 sm:py-32"
     >
       <Container className="relative">
-        <div className="mx-auto max-w-2xl lg:mx-0">
+        <div className="mx-auto max-w-2xl text-center">
           <h2
             id="faq-title"
             className="font-display text-3xl tracking-tight text-white sm:text-4xl"
@@ -66,11 +66,11 @@ export function Faqs() {
             <li key={columnIndex}>
               <ul role="list" className="flex flex-col gap-y-8">
                 {column.map((faq, faqIndex) => (
-                  <li key={faqIndex}>
-                    <h3 className="font-display text-lg leading-7 text-white">
+                  <li key={faqIndex} className="group relative rounded-2xl bg-slate-800/50 p-6 hover:bg-slate-800/75 transition-colors duration-300">
+                    <h3 className="font-display text-lg leading-7 text-white group-hover:text-sky-300 transition-colors duration-300">
                       {faq.question}
                     </h3>
-                    <p className="mt-4 text-sm text-slate-400">{faq.answer}</p>
+                    <p className="mt-4 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">{faq.answer}</p>
                   </li>
                 ))}
               </ul>
