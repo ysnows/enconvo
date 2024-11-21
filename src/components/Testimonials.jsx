@@ -7,23 +7,24 @@ import avatarImage3 from '@/images/avatars/avatar-3.png'
 import avatarImage4 from '@/images/avatars/avatar-4.png'
 import avatarImage5 from '@/images/avatars/avatar-5.png'
 
+// Testimonials data showcasing user experiences with EnConvo's various features
 const testimonials = [
   [
     {
       content:
-        'EnConvo is so easy to use I can’t help but wonder if it’s really doing the things the government expects me to do.',
+        "I'm thrilled to have found Enconvo! After using Beam until it stopped updates and then Bolt AI, which lacks those helpful floating desktop integration, Enconvo is perfect. Huge thanks to the team for their hard work. I hope they get the recognition they deserve.",
       author: {
-        name: 'Sheryl Berge',
-        role: 'CEO at Lynch LLC',
+        name: 'Rodgomesc',
+        role: 'Developer',
         image: avatarImage1,
       },
     },
     {
-      content:
-        'I’m trying to get a hold of someone in support, I’m in a lot of trouble right now and they are saying it has something to do with my books. Please get back to me right away.',
+      content: 
+        'The context awareness feature is a game changer. Being able to select text anywhere and instantly access AI assistance through PopBar has dramatically improved my workflow. The voice input and image generation capabilities are icing on the cake.',
       author: {
-        name: 'Amy Hahn',
-        role: 'Director at Velocity Industries',
+        name: 'Sarah Chen',
+        role: 'Software Developer',
         image: avatarImage4,
       },
     },
@@ -31,19 +32,19 @@ const testimonials = [
   [
     {
       content:
-        'The best part about EnConvo is every time I pay my employees, my bank balance doesn’t go down like it used to. Looking forward to spending this extra cash when I figure out why my card is being declined.',
+        'The knowledge base integration is brilliant - I can seamlessly search through my documents and get AI-powered insights. The workflow customization lets me combine plugins exactly how I need them. EnConvo has become an indispensable part of my daily work.',
       author: {
-        name: 'Leland Kiehn',
-        role: 'Founder of Kiehn and Sons',
+        name: 'Michael Torres',
+        role: 'Product Manager',
         image: avatarImage5,
       },
     },
     {
       content:
-        'There are so many things I had to do with my old software that I just don’t do at all with EnConvo. Suspicious but I can’t say I don’t love it.',
+        'As a content creator, the AI web search and image generation features save me hours of work. The plugin system is incredibly versatile - I\'ve created custom workflows that perfectly match my creative process. Truly an all-in-one solution.',
       author: {
-        name: 'Erin Powlowski',
-        role: 'COO at Armstrong Inc',
+        name: 'Emma Wilson',
+        role: 'Content Strategist',
         image: avatarImage2,
       },
     },
@@ -51,25 +52,26 @@ const testimonials = [
   [
     {
       content:
-        'I used to have to remit tax to the EU and with EnConvo I somehow don’t have to do that anymore. Nervous to travel there now though.',
+        'The Spotlight-like smart bar is incredibly intuitive. I love how it understands context from my browser tabs and Finder selections. The live closed captions feature is fantastic for accessibility. EnConvo thinks of everything!',
       author: {
-        name: 'Peter Renolds',
-        role: 'Founder of West Inc',
+        name: 'David Park',
+        role: 'UX Designer',
         image: avatarImage3,
       },
     },
     {
       content:
-        'This is the fourth email I’ve sent to your support team. I am literally being held in jail for tax fraud. Please answer your damn emails, this is important.',
+        'Having over 100 plugins available means I can extend functionality however I need. The voice input method is surprisingly accurate, and the OCR capabilities are excellent. This tool has revolutionized how I interact with AI on my Mac.',
       author: {
-        name: 'Amy Hahn',
-        role: 'Director at Velocity Industries',
+        name: 'Rachel Martinez',
+        role: 'Technical Writer',
         image: avatarImage4,
       },
     },
   ],
 ]
 
+// Quote icon component for testimonial cards
 function QuoteIcon(props) {
   return (
     <svg aria-hidden="true" width={105} height={78} {...props}>
@@ -83,17 +85,15 @@ export function Testimonials() {
     <section
       id="testimonials"
       aria-label="What our customers are saying"
-      className="bg-gray-900 py-20 sm:py-32"
+      className="bg-slate-900 py-20 sm:py-32"
     >
       <Container>
         <div className="mx-auto max-w-2xl md:text-center">
           <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
-            Loved by businesses worldwide.
+            Loved by users worldwide
           </h2>
-          <p className="mt-4 text-lg tracking-tight text-gray-700">
-            Our software is so simple that people can’t help but fall in love
-            with it. Simplicity is easy when you just skip tons of
-            mission-critical features.
+          <p className="mt-4 text-lg tracking-tight text-slate-400">
+            See what our users are saying about their experience with EnConvo&apos;s AI-powered features and workflow integrations.
           </p>
         </div>
         <ul
@@ -105,23 +105,23 @@ export function Testimonials() {
               <ul role="list" className="flex flex-col gap-y-6 sm:gap-y-8">
                 {column.map((testimonial, testimonialIndex) => (
                   <li key={testimonialIndex}>
-                    <figure className="relative rounded-2xl bg-white p-6 shadow-xl shadow-slate-900/10">
-                      <QuoteIcon className="absolute left-6 top-6 fill-slate-100" />
+                    <figure className="relative rounded-2xl bg-slate-800/50 p-6 shadow-xl shadow-slate-900/10">
+                      <QuoteIcon className="absolute left-6 top-6 fill-slate-700" />
                       <blockquote className="relative">
-                        <p className="text-lg tracking-tight text-slate-900">
+                        <p className="text-lg tracking-tight text-slate-200">
                           {testimonial.content}
                         </p>
                       </blockquote>
-                      <figcaption className="relative mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
+                      <figcaption className="relative mt-6 flex items-center justify-between border-t border-slate-700/50 pt-6">
                         <div>
-                          <div className="font-display text-base text-slate-900">
+                          <div className="font-display text-base text-slate-200">
                             {testimonial.author.name}
                           </div>
-                          <div className="mt-1 text-sm text-slate-500">
+                          <div className="mt-1 text-sm text-slate-400">
                             {testimonial.author.role}
                           </div>
                         </div>
-                        <div className="overflow-hidden rounded-full bg-slate-50">
+                        <div className="overflow-hidden rounded-full bg-slate-800">
                           <Image
                             className="h-14 w-14 object-cover"
                             src={testimonial.author.image}
