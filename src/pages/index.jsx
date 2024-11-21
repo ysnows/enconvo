@@ -27,11 +27,11 @@ export default function Home() {
 
         <Hero />
         <PrimaryFeatures />
-        {/*<SecondaryFeatures />*/}
-        {/*<CallToAction />*/}
-        {/*<Testimonials />*/}
+        {/* <SecondaryFeatures /> */}
+        {/* <CallToAction /> */}
+        {/* <Testimonials /> */}
         <Pricing />
-        {/*<Faqs />*/}
+        <Faqs />
       </main>
       <Footer />
     </>

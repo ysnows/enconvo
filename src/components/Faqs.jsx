@@ -1,59 +1,40 @@
-import Image from 'next/image'
-
 import { Container } from '@/components/Container'
-import backgroundImage from '@/images/background-faqs.jpg'
 
+// FAQ data with questions and answers
 const faqs = [
   [
     {
-      question: 'Does EnConvo handle VAT?',
-      answer:
-        'Well no, but if you move your company offshore you can probably ignore it.',
+      question: 'Is EnConvo an Electron app?',
+      answer: 'No, EnConvo is a native macOS application built for optimal performance and system integration.',
     },
     {
-      question: 'Can I pay for my subscription via purchase order?',
-      answer: 'Absolutely, we are happy to take your money in all forms.',
+      question: 'Is EnConvo free to use?', 
+      answer: 'EnConvo offers a free trial with 10 uses per day. We also provide lifetime licenses and subscription plans for full access.',
     },
     {
-      question: 'How do I apply for a job at EnConvo?',
-      answer:
-        'We only hire our customers, so subscribe for a minimum of 6 months and then let’s talk.',
+      question: 'Does EnConvo use my data for training?',
+      answer: 'No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.',
     },
   ],
   [
     {
-      question: 'What was that testimonial about tax fraud all about?',
-      answer:
-        'EnConvo is just a software application, ultimately your books are your responsibility.',
+      question: 'What is your refund policy?',
+      answer: 'We offer a 7-day no-questions-asked refund policy. Your satisfaction is our priority.',
     },
     {
-      question:
-        'EnConvo sounds horrible but why do I still feel compelled to purchase?',
-      answer:
-        'This is the power of excellent visual design. You just can’t resist it, no matter how poorly it actually functions.',
-    },
-    {
-      question:
-        'I found other companies called EnConvo, are you sure you can use this name?',
-      answer:
-        'Honestly not sure at all. We haven’t actually incorporated or anything, we just thought it sounded cool and made this website.',
+      question: 'What platforms does EnConvo support?',
+      answer: 'EnConvo currently only supports macOS, and has been optimized for native macOS performance and system integration.',
     },
   ],
   [
     {
-      question: 'How do you generate reports?',
-      answer:
-        'You just tell us what data you need a report for, and we get our kids to create beautiful charts for you using only the finest crayons.',
+      question: 'Do you offer technical support?',
+      answer: 'Yes, you can join our Discord community for technical support. Our team and community members are there to help you get the most out of EnConvo.',
     },
     {
-      question: 'Can we expect more inventory features?',
-      answer: 'In life it’s really better to never expect anything at all.',
-    },
-    {
-      question: 'I lost my password, how do I get into my account?',
-      answer:
-        'Send us an email and we will send you a copy of our latest password spreadsheet so you can find your information.',
-    },
+      question: 'How often do you release updates?',
+      answer: 'We regularly release updates with new features, improvements, and bug fixes. All updates are free for existing users within their license period.',
+    }
   ],
 ]
 
@@ -62,27 +43,19 @@ export function Faqs() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="relative overflow-hidden bg-slate-50 py-20 sm:py-32"
+      className="bg-slate-900 py-20 sm:py-32"
     >
-      <Image
-        className="absolute left-1/2 top-0 max-w-none -translate-y-1/4 translate-x-[-30%]"
-        src={backgroundImage}
-        alt=""
-        width={1558}
-        height={946}
-        unoptimized
-      />
       <Container className="relative">
         <div className="mx-auto max-w-2xl lg:mx-0">
           <h2
             id="faq-title"
-            className="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl"
+            className="font-display text-3xl tracking-tight text-white sm:text-4xl"
           >
             Frequently asked questions
           </h2>
-          <p className="mt-4 text-lg tracking-tight text-slate-700">
-            If you can’t find what you’re looking for, email our support team
-            and if you’re lucky someone will get back to you.
+          <p className="mt-4 text-lg tracking-tight text-slate-400">
+            If you can't find what you're looking for, email our support team
+            and if you're lucky someone will get back to you.
           </p>
         </div>
         <ul
@@ -94,10 +67,10 @@ export function Faqs() {
               <ul role="list" className="flex flex-col gap-y-8">
                 {column.map((faq, faqIndex) => (
                   <li key={faqIndex}>
-                    <h3 className="font-display text-lg leading-7 text-slate-900">
+                    <h3 className="font-display text-lg leading-7 text-white">
                       {faq.question}
                     </h3>
-                    <p className="mt-4 text-sm text-slate-700">{faq.answer}</p>
+                    <p className="mt-4 text-sm text-slate-400">{faq.answer}</p>
                   </li>
                 ))}
               </ul>
