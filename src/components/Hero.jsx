@@ -167,22 +167,15 @@ export function Hero() {
 
 
         <div className="relative isolate pt-14">
-            <div class='mt-4 w-full flex justify-center'>
-
-                
-                <div class='mt-4 px-10 py-px flex items-center justify-center border  border-purple-200 rounded-md'>
-                    <span class="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
-                    <span class="ml-2 py-px px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
+            <div className='mt-4 w-full flex justify-center'>
+                {/* Promotional banner with enhanced styling and glass morphism effect */}
+                <a href="#pricing" className='mt-4 px-24 py-4 flex items-center justify-center space-x-6 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
+                    <span className="text-white/90 font-bold text-xl">Happy Early Black Friday. Enjoy</span>
+                    <span className="py-1.5 px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse">
                         50% off
                     </span>
-                    &nbsp;
-
-                    <a href="#pricing" class="text-red-600 font-bold py-2 px-4 rounded  transition-colors duration-300">
-                        Check it now
-                    </a>
-                </div>
-
-            </div>
+                </a>
+        </div>
 
             <div
                 className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
