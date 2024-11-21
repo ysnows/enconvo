@@ -170,7 +170,7 @@ export function Hero() {
             <div className='mt-4 w-full flex justify-center'>
                 {/* Promotional banner with enhanced styling and glass morphism effect */}
                 <a href="#pricing" className='mt-4 px-24 py-4 flex items-center justify-center space-x-6 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
-                    <span className="text-white/90 font-bold text-xl">Happy Early Black Friday. Enjoy</span>
+                    <span className="text-white/90 font-bold text-xl">Happy Black Friday. Enjoy</span>
                     <span className="py-1.5 px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse">
                         50% off
                     </span>
