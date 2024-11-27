@@ -253,5 +253,6 @@ export function Hero() {
             </div>
 
         </div>
+
     </div>)
 }
