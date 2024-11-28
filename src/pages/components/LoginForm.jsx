@@ -106,7 +106,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/auth/callback`
+                    redirectTo: `${window.location.origin}/auth/callback`,
                 }
             })
             if (error) throw error
@@ -139,7 +139,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                     </div>
 
                     {/* Google Login Button */}
-                    {/* <div className="mt-8">
+                    <div className="mt-8">
                         <Button
                             variant="outline"
                             onClick={signInWithGoogle}
@@ -164,7 +164,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                         <div className="relative flex justify-center text-sm">
                             <span className="bg-gray-50 px-4 text-gray-500">Or continue with email</span>
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Email Login Form */}
                     <div className="mt-6 space-y-6">

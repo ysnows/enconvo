@@ -105,7 +105,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                     </div>
 
                     {/* Google Sign Up Button */}
-                    {/* <div className="mt-8">
+                    <div className="mt-8">
                         <Button
                             variant="outline"
                             onClick={signInWithGoogle}
@@ -130,7 +130,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                         <div className="relative flex justify-center text-sm">
                             <span className="bg-gray-50 px-4 text-gray-500">Or continue with email</span>
                         </div>
-                    </div> */}
+                    </div>
 
                     {/* Email Registration Form */}
                     <div className="mt-6 space-y-6">
