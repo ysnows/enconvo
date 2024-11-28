@@ -96,11 +96,11 @@ export function Hero() {
             <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div className="ml-32 flex lg:flex-1 items-center ">
                     <Link href="/" aria-label="Home">
-                        <Logo className="h-10 w-auto" />
+                        <Logo className="h-8 w-auto" />
                     </Link>
 
                     <div className="ml-3">
-                        <span className="text-white font-bold">Enconvo</span>
+                        <span className="text-white font-bold">EnConvo</span>
                     </div>
                 </div>
                 <div className="flex lg:hidden">
