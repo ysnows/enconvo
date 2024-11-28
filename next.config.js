@@ -5,7 +5,7 @@ const nextConfig = {
         scrollRestoration: true,
     },
     images: {
-        domains: ['raw.githubusercontent.com','github.com'],
+        domains: ['raw.githubusercontent.com', 'github.com', 'file.enconvo.com'],
     },
 }
 
