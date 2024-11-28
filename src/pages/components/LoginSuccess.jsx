@@ -24,26 +24,26 @@ export default function LoginSuccess({ handleOpenApp, user }) {
                 />
             </Head>
 
-            <main className="mt-52">
-
-                <div className="flex flex-col  items-center justify-center">
-                    <Logo className="h-20 w-auto" />
-                    <div className="mt-10 flex text-center flex-col items-center max-w-md">
-                        <h3 className="text-4xl  font-semibold tracking-tight">
-                            Hi , you have successfully connected to Enconvo Account
-                        </h3>
-                        <div className="text-base  text-gray-600 mt-10">
-                            You have successfully connected to Enconvo Account. Now it’s time to
-                            open Enconvo to use the new commands of the extension.
-
+            <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
+                <div className="w-full max-w-[480px] space-y-8 px-4">
+                    <div className="flex flex-col items-center space-y-8">
+                        <Logo className="h-16 w-auto" />
+                        <div className="text-center space-y-4">
+                            <h3 className="text-3xl font-medium tracking-tight text-white">
+                                Hi, you have successfully connected to Enconvo
+                            </h3>
+                            <p className="text-base text-[#888888]">
+                                You have successfully connected to Enconvo Account. Now it's time to
+                                open Enconvo to use the new commands of the extension.
+                            </p>
                         </div>
 
-
-                        <div className="flex">
-                            <Button onClick={handleOpenApp} className="mt-10 border-2">
-                                Open Enconvo
-                            </Button>
-                        </div>
+                        <Button 
+                            onClick={handleOpenApp} 
+                            className="w-full max-w-[200px] bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
+                        >
+                            Open Enconvo
+                        </Button>
                     </div>
                 </div>
             </main>

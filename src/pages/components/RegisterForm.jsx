@@ -93,13 +93,13 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                 />
             </Head>
 
-            <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
+            <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
                 <div className="w-full max-w-[320px] space-y-8 px-4">
                     <div className="flex flex-col items-center space-y-6">
                         <Link href="/" aria-label="Home">
                             <Logo className="h-16 w-auto" />
                         </Link>
-                        <h2 className="text-center text-2xl font-semibold tracking-tight text-gray-900">
+                        <h2 className="text-center text-3xl font-medium tracking-tight text-white">
                             Create your Enconvo account
                         </h2>
                     </div>
@@ -110,7 +110,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                             variant="outline"
                             onClick={signInWithGoogle}
                             disabled={googleIsLoading}
-                            className="relative w-full bg-white hover:bg-gray-50 text-gray-700 font-medium border border-gray-300 shadow-sm hover:shadow transition-all duration-200 h-10"
+                            className="relative w-full bg-[#242424] hover:bg-[#2C2C2C] text-[#888888] hover:text-[#999999] font-medium border-[#333333] shadow-sm hover:shadow transition-all duration-200 h-10 rounded-xl"
                         >
                             {googleIsLoading ? (
                                 <ReloadIcon className="mr-2 h-5 w-5 animate-spin" />
@@ -125,10 +125,10 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
 
                     <div className="relative">
                         <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200" />
+                            <div className="w-full border-t border-[#333333]" />
                         </div>
                         <div className="relative flex justify-center text-sm">
-                            <span className="bg-gray-50 px-4 text-gray-500">Or continue with email</span>
+                            <span className="bg-[#1A1A1A] px-4 text-[#666666]">Or continue with email</span>
                         </div>
                     </div>
 
@@ -143,7 +143,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                                     autoComplete="name"
                                     onChange={(e) => setName(e.target.value)}
                                     value={name}
-                                    className="h-10 bg-white"
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
                                 />
                             </div>
 
@@ -155,7 +155,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                                     autoComplete="email"
                                     onChange={(e) => setEmail(e.target.value)} 
                                     value={email}
-                                    className="h-10 bg-white"
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
                                 />
                             </div>
 
@@ -166,12 +166,12 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                                     required
                                     onChange={(e) => setPassword(e.target.value)}
                                     value={password}
-                                    className="h-10 bg-white"
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
                                 />
                             </div>
 
                             {error &&
-                                <Alert variant="destructive" className="bg-red-50 text-red-700 border-red-200">
+                                <Alert variant="destructive" className="bg-red-900/20 text-red-400 border-red-900/30">
                                     <ExclamationTriangleIcon className="h-4 w-4" />
                                     <AlertTitle>Error</AlertTitle>
                                     <AlertDescription>
@@ -183,7 +183,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                             <Button 
                                 onClick={signUp} 
                                 disabled={emailIsLoading}
-                                className="w-full bg-gray-900 text-white hover:bg-gray-800 h-10"
+                                className="w-full bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
                             >
                                 {emailIsLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                                 {emailIsLoading ? "Creating account..." : "Create account"}
@@ -191,20 +191,20 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                         </div>
 
                         <div className="space-y-4 text-sm">
-                            <p className="text-center text-gray-600">
+                            <p className="text-center text-[#666666]">
                                 Already have an account?{' '}
-                                <Link href="/login" className="font-medium text-gray-900 hover:text-gray-700">
+                                <Link href="/login" className="font-medium text-[#888888] hover:text-[#999999]">
                                     Log in
                                 </Link>
                             </p>
 
-                            <p className="text-center text-gray-500 text-xs">
+                            <p className="text-center text-[#666666] text-xs">
                                 By continuing, you agree to our{' '}
-                                <Link href="/terms" className="text-gray-600 hover:text-gray-900 underline underline-offset-2">
+                                <Link href="/terms" className="text-[#888888] hover:text-[#999999] underline underline-offset-2">
                                     Terms of Service
                                 </Link>{' '}
                                 and{' '}
-                                <Link href="/privacy" className="text-gray-600 hover:text-gray-900 underline underline-offset-2">
+                                <Link href="/privacy" className="text-[#888888] hover:text-[#999999] underline underline-offset-2">
                                     Privacy Policy
                                 </Link>
                             </p>

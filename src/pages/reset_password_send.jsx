@@ -45,8 +45,7 @@ export default function ResetPasswordStepOne() {
         setEmailIsLoading(true)
 
         const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-            // redirectTo: 'http://localhost:3000/reset_password'
-            redirectTo: 'https://www.enconvo.com/reset_password'
+            redirectTo: `${window.location.origin}/reset_password`
         })
 
         if (error) {
@@ -76,81 +75,74 @@ export default function ResetPasswordStepOne() {
             </Head>
 
             {pageState === "success" &&
-
-                <main className="mt-52">
-
-                    <div className="flex flex-col  items-center justify-center">
-                        <Logo className="h-20 w-auto" />
-                        <div className="mt-10 flex text-center flex-col items-center max-w-md">
-                            <h3 className="text-4xl  font-semibold tracking-tight">
-                                Check your email
-                            </h3>
-                            <div className="text-base  text-gray-600 mt-10">
-                                We&apos;ve sent you a reset password link.
-
-                                Check your inbox to reset your password.
+                <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
+                    <div className="w-full max-w-[480px] space-y-8 px-4">
+                        <div className="flex flex-col items-center space-y-8">
+                            <Logo className="h-16 w-auto" />
+                            <div className="text-center space-y-4">
+                                <h3 className="text-3xl font-medium tracking-tight text-white">
+                                    Check your email
+                                </h3>
+                                <p className="text-base text-[#888888]">
+                                    We&apos;ve sent you a reset password link.
+                                    Check your inbox to reset your password.
+                                </p>
                             </div>
 
-                            <Button onClick={openEmail} className="mt-10 border-2 ">Open
-                                Email</Button>
+                            <Button 
+                                onClick={openEmail}
+                                className="w-full max-w-[200px] bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
+                            >
+                                Open Email
+                            </Button>
                         </div>
                     </div>
                 </main>
             }
 
             {pageState === "send" &&
-
-                <main>
-
-                    <div className="">
-                        <div className="flex flex-col items-center">
-                            <Link className="mt-28" href="/" aria-label="Home">
-                                <Logo className="h-20 w-auto" />
+                <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
+                    <div className="w-full max-w-[320px] space-y-8 px-4">
+                        <div className="flex flex-col items-center space-y-6">
+                            <Link href="/" aria-label="Home">
+                                <Logo className="h-16 w-auto" />
                             </Link>
-                            <div className="mt-10 flex flex-col items-center">
-                                <h3 className="text-xl font-semibold tracking-tight">
-                                    Reset Your Enconvo Password
-                                </h3>
-                            </div>
+                            <h3 className="text-center text-3xl font-medium tracking-tight text-white">
+                                Reset Your Password
+                            </h3>
                         </div>
 
-                        <div className="lg:p-8 ">
-                            <div
-                                className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+                        <div className="space-y-6">
+                            <div className="space-y-4">
+                                <Input 
+                                    type="email" 
+                                    placeholder="Email"
+                                    required
+                                    autoComplete="email"
+                                    onChange={(e) => setEmail(e.target.value)} 
+                                    value={email}
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
+                                />
 
-                                <div className="mt-10 grid grid-cols-1 gap-y-8">
+                                {error &&
+                                    <Alert variant="destructive" className="bg-red-900/20 text-red-400 border-red-900/30">
+                                        <AlertDescription className="flex items-center">
+                                            <ExclamationTriangleIcon className="h-4 w-4 mr-2" />
+                                            {error}
+                                        </AlertDescription>
+                                    </Alert>
+                                }
 
-                                    <Input type="email" placeholder="Email"
-                                        required
-                                        autoComplete="email"
-                                        onChange={(e) => setEmail(e.target.value)} value={email}
-                                    />
-
-                                    {error &&
-                                        <Alert variant="destructive">
-                                            <AlertDescription className="flex items-center">
-                                                <ExclamationTriangleIcon className="h-4 w-4 mr-2" />
-                                                {error}
-                                            </AlertDescription>
-                                        </Alert>
-                                    }
-
-                                    <Button onClick={signUp} disabled={emailIsLoading}
-                                    >
-                                        {emailIsLoading &&
-                                            <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-
-                                        {emailIsLoading ? "Sending" : "Send Reset Email"}
-
-                                    </Button>
-
-                                </div>
-
-
+                                <Button 
+                                    onClick={signUp} 
+                                    disabled={emailIsLoading}
+                                    className="w-full bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
+                                >
+                                    {emailIsLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
+                                    {emailIsLoading ? "Sending" : "Send Reset Email"}
+                                </Button>
                             </div>
                         </div>
-
-
                     </div>
                 </main>
             }
