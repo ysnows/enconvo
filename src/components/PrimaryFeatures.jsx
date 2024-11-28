@@ -11,34 +11,6 @@ import chain from '@/images/features/chain.gif'
 import { ArchiveIcon, Component1Icon, CubeIcon, EyeOpenIcon, FileIcon, FileTextIcon, ImageIcon, MixIcon,CardStackIcon } from "@radix-ui/react-icons";
 import { ViewColumnsIcon } from '@heroicons/react/24/outline'
 
-const features = [
-    {
-        title: 'Seamless Acess',
-        description:
-            "Get to your prompts&tools in anywhere&anytime with only one entrance",
-        image: "https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/378shots_so.png",
-    },
-    {
-        title: 'Plugin System',
-        description:
-            "Combine the power of AI with your existing tools.",
-        image: "https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/581shots_so.png",
-        video: undefined
-    },
-    {
-        title: 'Plugin Chain',
-        description:
-            "Combine the power of plugin with other plugins again and again",
-        image: "https://raw.githubusercontent.com/ysnows/sparkle/main/media/images/787shots_so.png",
-    },
-    {
-        title: 'Chat With Data (Coming Soon)',
-        description:
-            "Chat with your own private data, such as PDFs, Word documents, videos, images, Markdown files, and more, in a convenient and engaging way.",
-        image: "https://github.com/ysnows/sparkle/blob/main/media/images/coming%20soon.png?raw=true",
-        video: undefined
-    }
-]
 
 export function PrimaryFeatures() {
     let [tabOrientation, setTabOrientation] = useState('horizontal')

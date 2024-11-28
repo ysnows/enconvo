@@ -127,13 +127,13 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                 />
             </Head>
 
-            <main className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
+            <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
                 <div className="w-full max-w-[320px] space-y-8 px-4">
                     <div className="flex flex-col items-center space-y-6">
                         <Link href="/" aria-label="Home">
                             <Logo className="h-16 w-auto" />
                         </Link>
-                        <h2 className="text-center text-2xl font-semibold tracking-tight text-gray-900">
+                        <h2 className="text-center text-2xl font-semibold tracking-tight text-white">
                             Log in to your Enconvo account
                         </h2>
                     </div>
@@ -144,7 +144,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                             variant="outline"
                             onClick={signInWithGoogle}
                             disabled={googleIsLoading}
-                            className="relative w-full bg-white hover:bg-gray-50 text-gray-700 font-medium border border-gray-300 shadow-sm hover:shadow transition-all duration-200 h-10"
+                            className="relative w-full bg-white/10 hover:bg-white/20 text-white font-medium border-gray-700 shadow-sm hover:shadow transition-all duration-200 h-10"
                         >
                             {googleIsLoading ? (
                                 <ReloadIcon className="mr-2 h-5 w-5 animate-spin" />
@@ -157,14 +157,6 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                         </Button>
                     </div>
 
-                    <div className="relative">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-200" />
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="bg-gray-50 px-4 text-gray-500">Or continue with email</span>
-                        </div>
-                    </div>
 
                     {/* Email Login Form */}
                     <div className="mt-6 space-y-6">
@@ -178,7 +170,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                                         autoComplete="email"
                                         onChange={(e) => setEmail(e.target.value)} 
                                         value={email}
-                                        className="h-10 bg-white"
+                                        className="h-10 bg-white/10 border-gray-700 text-white placeholder:text-gray-400"
                                     />
                                 </div>
                             }
@@ -191,7 +183,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                                         required
                                         onChange={(e) => setPassword(e.target.value)}
                                         value={password}
-                                        className="h-10 bg-white"
+                                        className="h-10 bg-white/10 border-gray-700 text-white placeholder:text-gray-400"
                                     />
                                 </div>
                             }
@@ -209,7 +201,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                             <Button 
                                 onClick={signIn} 
                                 disabled={emailIsLoading}
-                                className="w-full bg-gray-900 text-white hover:bg-gray-800 h-10"
+                                className="w-full bg-blue-600 text-white hover:bg-blue-700 h-10"
                             >
                                 {emailIsLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
                                 {emailIsLoading ? "Logging in..." : (continueLogin ? "Check email for link" : "Continue with email")}
@@ -221,13 +213,13 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                             <div className="flex items-center justify-between text-sm">
                                 <Link
                                     href="/register"
-                                    className="font-medium text-gray-600 hover:text-gray-900"
+                                    className="font-medium text-gray-300 hover:text-white"
                                 >
                                     Create an account
                                 </Link>
                                 <Link
                                     href="/reset_password"
-                                    className="font-medium text-gray-600 hover:text-gray-900"
+                                    className="font-medium text-gray-300 hover:text-white"
                                 >
                                     Forgot password?
                                 </Link>
