@@ -91,26 +91,36 @@ function MobileNavigation() {
 
 export function Header() {
   return (
-    <header className="py-10">
+    <header className="py-4 bg-[#1A1A1A] sticky top-0 backdrop-blur-xl bg-opacity-80">
       <Container>
-        <nav className="relative z-50 flex justify-between">
-          <div className="flex items-center md:gap-x-12">
+        <nav className="relative z-50 flex justify-between items-center px-6 py-2 rounded-xl border border-[#333333] bg-[#1C1C1C] shadow-lg hover:border-[#444444] transition-all duration-300">
+          <div className="flex items-center md:gap-x-8">
             <Link href="#" aria-label="Home">
-              <Logo className="h-10 w-auto" />
+              <Logo className="h-8 w-auto" />
             </Link>
             <div className="hidden md:flex md:gap-x-6">
-              <NavLink href="#features">Features</NavLink>
-              <NavLink href="#testimonials">Testimonials</NavLink>
-              <NavLink href="#pricing">Pricing</NavLink>
+              <NavLink href="/features" className="text-[#888888] hover:text-white transition-colors">Features</NavLink>
+              <NavLink href="/pricing" className="text-[#888888] hover:text-white transition-colors">Pricing</NavLink>
+              <NavLink href="/guides" className="text-[#888888] hover:text-white transition-colors">Guides</NavLink>
+              <NavLink href="/changelog" className="text-[#888888] hover:text-white transition-colors">Changelog</NavLink>
+              <NavLink href="/privacy" className="text-[#888888] hover:text-white transition-colors">Privacy</NavLink>
             </div>
           </div>
-          <div className="flex items-center gap-x-5 md:gap-x-8">
+          <div className="flex items-center gap-x-4">
             <div className="hidden md:block">
-              <NavLink href="/login">Sign in</NavLink>
+              <NavLink href="/login" className="text-[#888888] hover:text-white transition-colors">Log in</NavLink>
             </div>
-            <Button href="/register" color="blue">
-              <span>
-                Get started <span className="hidden lg:inline">today</span>
+            <Button
+              href="/download"
+              className="bg-white hover:bg-gray-100 text-black rounded-lg px-4 py-1.5 text-sm font-medium transition-colors shadow-sm hover:shadow-md"
+            >
+              <span className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Download
               </span>
             </Button>
             <div className="-mr-1 md:hidden">
