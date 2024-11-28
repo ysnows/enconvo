@@ -38,6 +38,7 @@ export function Hero() {
             href: 'https://docs.enconvo.com/changelog'
         },
         { name: 'Discord', href: 'https://discord.gg/jYsdVRRK2k' },
+        { name: 'Privacy', href: '/privacy' },
         {
             name: 'Log in',
             href: '/login'
@@ -72,6 +73,7 @@ export function Hero() {
                             href: 'https://docs.enconvo.com/changelog'
                         },
                         { name: 'Discord', href: 'https://discord.gg/jYsdVRRK2k' },
+                        { name: 'Privacy', href: '/privacy' },
                         {
                             name: data.session.user.user_metadata.name,
                             href: '/login'
@@ -167,15 +169,15 @@ export function Hero() {
 
 
         <div className="relative isolate pt-14">
-            <div className='mt-4 w-full flex justify-center'>
-                {/* Promotional banner with enhanced styling and glass morphism effect */}
-                <a href="#pricing" className='mt-4 px-24 py-4 flex items-center justify-center space-x-6 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
-                    <span className="text-white/90 font-bold text-xl">Happy Black Friday. Enjoy</span>
-                    <span className="py-1.5 px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse">
+            <div className='mt-4 w-full flex justify-center px-4 sm:px-0'>
+                {/* Responsive promotional banner with glass morphism effect */}
+                <a href="#pricing" className='mt-4 px-6 sm:px-12 md:px-24 py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-center sm:space-x-6 space-y-2 sm:space-y-0 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
+                    <span className="text-white/90 font-bold text-lg sm:text-xl text-center sm:text-left">Happy Black Friday. Enjoy</span>
+                    <span className="py-1.5 px-6 sm:px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-xl sm:text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse whitespace-nowrap">
                         50% off
                     </span>
                 </a>
-        </div>
+            </div>
 
             <div
                 className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
