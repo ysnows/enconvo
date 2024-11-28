@@ -207,7 +207,7 @@ export function Hero() {
                 <a href="#pricing" className='mt-4 px-6 sm:px-12 md:px-24 py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-center sm:space-x-6 space-y-2 sm:space-y-0 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
                     <span className="text-white/90 font-bold text-lg sm:text-xl text-center sm:text-left">Happy Black Friday. Enjoy</span>
                     <span className="py-1.5 px-6 sm:px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-xl sm:text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse whitespace-nowrap">
-                        50% off
+                        50% OFF
                     </span>
                 </a>
             </div>
