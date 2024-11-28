@@ -228,16 +228,16 @@ export function Hero() {
 
                 <div className="mx-auto max-w-7xl  px-6 lg:px-8 ">
 
-                    <div className="mx-auto max-w-5xl   text-center">
-                        <h1 className="bg-gradient-to-r from-red-500  to-blue-500 text-transparent bg-clip-text text-3xl font-bold tracking-tight sm:text-6xl">
+                    <div className="mx-auto max-w-5xl text-center">
+                        <h1 className="bg-gradient-to-r from-red-500 to-blue-500 text-transparent bg-clip-text text-3xl font-bold tracking-tight sm:text-6xl pb-2">
                             Productivity Powered by AI
                         </h1>
 
-                        <p className="mt-8 text-sm sm:text-base leading-8 text-gray-300">EnConvo
-                            allows you
-                            to access AI at any time, within any software. It can assist you
+                        <p className="mt-10 text-sm sm:text-base leading-8 text-gray-300">
+                            EnConvo allows you to access AI at any time, within any software. It can assist you
                             with convenient and efficient writing, coding, or any other task
-                            beyond imagination.</p>
+                            beyond imagination.
+                        </p>
                         <div className="mt-10 sm:mt-20 flex flex-col items-center  gap-x-6">
 
                             <Link
