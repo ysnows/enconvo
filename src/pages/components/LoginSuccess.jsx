@@ -33,7 +33,7 @@ export default function LoginSuccess({ handleOpenApp, user }) {
                                 Hi, you have successfully connected to Enconvo
                             </h3>
                             <p className="text-base text-[#888888]">
-                                You have successfully connected to Enconvo Account. Now it's time to
+                                You have successfully connected to Enconvo Account. Now it&apos;s time to
                                 open Enconvo to use the new commands of the extension.
                             </p>
                         </div>
