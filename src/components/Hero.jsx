@@ -3,7 +3,8 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
-
+import Image from 'next/image';
+import allInOne from '@/images/all-in-one.png'
 import {
     createClientComponentClient
 } from '@supabase/auth-helpers-nextjs'
@@ -13,6 +14,7 @@ function classNames(...classes) {
 }
 
 export function Hero() {
+    const [isVideoLoaded, setIsVideoLoaded] = useState(false)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const [loginState, setLoginState] = useState("login")
@@ -276,9 +278,50 @@ export function Hero() {
 
                     </Video> */}
 
-                    <video className="mt-16 rounded-md bg-white/5 w-full  shadow-2xl ring-1 ring-white/10 sm:mt-24" controls autoPlay muted>
-                        <source src="https://file.enconvo.com/enconvo.mp4" type="video/mp4" />
-                    </video>
+                    <div className="relative mt-16 sm:mt-24">
+                        {!isVideoLoaded ? (
+                            <>
+                                <Image 
+                                    src={allInOne} 
+                                    alt="EnConvo Preview" 
+                                    className="rounded-md bg-white/5 w-full shadow-2xl ring-1 ring-white/10"
+                                    width={1200}  
+                                    height={800}  
+                                    priority      
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    {/* Play button with pulsing glow effect */}
+                                    <button 
+                                        onClick={() => setIsVideoLoaded(true)}
+                                        className="relative w-20 h-20 bg-purple-600/80 rounded-full flex items-center justify-center group hover:bg-purple-500/90 transition-all duration-300 backdrop-blur-sm"
+                                    >
+                                        {/* Outer pulsing glow */}
+                                        <div className="absolute w-full h-full rounded-full bg-purple-500/30 animate-pulse-slow"></div>
+                                        <div className="absolute w-[120%] h-[120%] rounded-full bg-purple-400/20 animate-pulse-slower"></div>
+                                        
+                                        {/* Inner circle with play icon */}
+                                        <div className="w-16 h-16 bg-purple-800/80 rounded-full flex items-center justify-center transform group-hover:scale-90 transition-all duration-300">
+                                            <svg 
+                                                className="w-8 h-8 text-white fill-current transform translate-x-0.5" 
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path d="M8 5v14l11-7z"/>
+                                            </svg>
+                                        </div>
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <video 
+                                className="rounded-md bg-white/5 w-full shadow-2xl ring-1 ring-white/10" 
+                                controls
+                                autoPlay
+                                muted
+                            >
+                                <source src="https://file.enconvo.com/enconvo.mp4" type="video/mp4" />
+                            </video>
+                        )}
+                    </div>
                 </div>
             </div>
             <div
