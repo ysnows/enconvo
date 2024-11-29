@@ -1,0 +1,229 @@
+1
+00:00:00,000 --> 00:00:05,000
+Enconvo - Where AI Meets Human Ingenuity
+
+2
+00:00:05,500 --> 00:00:10,000
+In this era of explosive AI advancement, 
+we still lack a seamless way to harness this revolutionary power in our daily work.
+
+3
+00:00:10,000 --> 00:00:15,000
+Enter Enconvo - the AI Operating System 
+that brings the full potential of artificial intelligence to your fingertips.
+
+4
+00:00:15,500 --> 00:00:20,000
+SmartBar - Your Universal Entry Point
+
+5
+00:00:20,000 --> 00:00:24,000
+Type @ to instantly access any tool you need. 
+Your gateway to over 100 AI features, available anywhere in your system.
+
+6
+00:00:24,000 --> 00:00:27,000
+One entry point, endless possibilities - 
+this is the future of workflow efficiency.
+
+7
+00:00:27,500 --> 00:00:32,000
+Context Awareness - Intelligence That Understands
+
+8
+00:00:32,000 --> 00:00:35,000
+Your screen, your apps, your actions - 
+Enconvo sees and understands it all.
+
+9
+00:00:35,000 --> 00:00:39,000
+Adaptive AI that knows what you're going to  do 
+and suggests the perfect tools for your current task.
+
+10
+00:00:39,000 --> 00:00:42,000
+Contextual intelligence that makes work feel magical.
+
+11
+00:00:42,500 --> 00:00:47,000
+Extension System - Limitless Possibilities
+
+12
+00:00:47,000 --> 00:00:50,000
+Build and integrate your own AI-powered tools seamlessly.
+
+13
+00:00:50,000 --> 00:00:54,000
+A robust extension system that lets you create, 
+share, and discover new features.
+
+14
+00:00:54,000 --> 00:00:57,000
+Transform Enconvo into your perfect workspace 
+with endless customization options.
+
+15
+00:00:57,500 --> 00:01:02,000
+Knowledge Base - Your Digital Memory
+
+16
+00:01:02,000 --> 00:01:06,000
+Every document and webpage you encounter 
+becomes actionable intelligence.
+
+17
+00:01:06,000 --> 00:01:09,000
+Our AI doesn't just store - it understands, connects, 
+and delivers precisely what you need, when you need it.
+
+18
+00:01:09,500 --> 00:01:14,000
+PopBar - Power at Your Fingertips
+
+19
+00:01:14,000 --> 00:01:17,000
+Select text, and watch magic unfold.
+
+20
+00:01:17,000 --> 00:01:21,000
+Like a master craftsman's toolbelt, PopBar presents exactly the right tools for your task. 
+Customizable, intuitive, transforming complexity into elegance.
+
+21
+00:01:21,500 --> 00:01:26,000
+Workflow - Your Personal Symphony
+
+22
+00:01:26,000 --> 00:01:30,000
+Your work style is unique - your tools should match.
+
+23
+00:01:30,000 --> 00:01:33,000
+Create perfect workflows that flow like music, 
+accessible through SmartBar, PopBar, or hotkeys. Your rhythm, your rules.
+
+24
+00:01:33,500 --> 00:01:38,000
+Voice Input Method - Type With Your Voice
+
+25
+00:01:38,000 --> 00:01:41,000
+A system-wide voice-to-text solution.
+
+26
+00:01:41,000 --> 00:01:45,000
+Speak naturally in any app, any text field, anywhere in your system. 
+Transform your voice into text with unprecedented accuracy and speed.
+
+27
+00:01:45,500 --> 00:01:50,000
+Writing Tools - Where Words Flow
+
+28
+00:01:50,000 --> 00:01:53,000
+AI-powered writing assistance that understands context and nuance.
+
+29
+00:01:53,000 --> 00:01:57,000
+From emails to documents, 
+elevate your words with intelligent suggestions that feel natural.
+
+30
+00:01:57,500 --> 00:02:02,000
+Live Screen & Camera - Your Window to AI's Understanding
+
+31
+00:02:02,000 --> 00:02:05,000
+Share your perspective, and AI becomes your silent observer.
+
+32
+00:02:05,000 --> 00:02:09,000
+Through your screen and camera, AI glimpses your world, 
+understands your context, and weaves digital intelligence into your reality.
+
+33
+00:02:09,500 --> 00:02:14,000
+AI Web Search - Search Refined
+
+34
+00:02:14,000 --> 00:02:17,000
+Search the internet with AI precision.
+
+35
+00:02:17,000 --> 00:02:21,000
+Find exactly what you need, 
+presented in ways that make complex information instantly accessible.
+
+36
+00:02:21,500 --> 00:02:26,000
+Image Generation - Imagination to Reality
+
+37
+00:02:26,000 --> 00:02:29,000
+Transform your ideas into stunning visuals 
+with a single prompt.
+
+38
+00:02:29,000 --> 00:02:32,000
+Create, edit, and enhance images 
+right within your workflow.
+
+39
+00:02:32,000 --> 00:02:35,000
+From concept art to marketing materials, 
+bring your vision to life instantly.
+
+40
+00:02:35,500 --> 00:02:40,000
+Live Closed Captions - Breaking Sound Barriers
+
+41
+00:02:40,000 --> 00:02:43,000
+Transform every sound into visible words, instantly.
+
+42
+00:02:43,000 --> 00:02:47,000
+AI captures and translates across languages in real-time. 
+Let sound flow freely across linguistic boundaries.
+
+43
+00:02:47,500 --> 00:02:52,000
+Privacy Mode - AI Power, Locally Secured
+
+44
+00:02:52,000 --> 00:02:55,000
+Experience powerful AI while keeping your data private.
+
+45
+00:02:55,000 --> 00:02:59,000
+With local processing capabilities, all operations remain securely on your device. 
+Complete privacy, uncompromised performance.
+
+46
+00:02:59,500 --> 00:03:04,000
+Agent Mode - The Future of AI Assistance
+
+47
+00:03:04,000 --> 00:03:07,000
+Imagine an AI that remembers, understands context, 
+and masterfully orchestrates all Enconvo features.
+
+48
+00:03:07,000 --> 00:03:11,000
+Armed with your knowledge base, it tackles complex tasks with unprecedented intelligence. 
+Coming soon - the next evolution of AI assistance.
+
+49
+00:03:11,500 --> 00:03:16,000
+Enconvo isn't just another tool - 
+it's your gateway to the AI revolution.
+
+50
+00:03:16,000 --> 00:03:21,000
+Where efficiency meets elegance, 
+where technology understands humanity. 
+Welcome to the future of work.
+
+51
+00:03:21,500 --> 00:03:26,000
+Enconvo - Amplifying Human Potential.
