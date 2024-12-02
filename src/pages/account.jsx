@@ -11,14 +11,12 @@ export default function Account() {
 
     const fetchUserInfo = async (token) => {
         try {
-            const response = await fetch('https://api.enconvo.com/user/info', {
+            const response = await fetch('/api/user-info', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'client_id': '6',
                     'Authorization': `Bearer ${token}`,
                 },
-                body: JSON.stringify({}),
             })
             const data = await response.json()
             if (data.code === 200) {
@@ -109,7 +107,7 @@ export default function Account() {
                                             <div>
                                                 <label className="block text-sm text-gray-400">Plan Type</label>
                                                 <div className="mt-1 p-3 bg-gray-800 rounded-md capitalize">
-                                                    {userInfo.subscription.type} {userInfo.subscription.subscription}
+                                                    {userInfo.subscription.type} 
                                                 </div>
                                             </div>
                                             <div>
