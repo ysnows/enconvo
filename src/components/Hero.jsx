@@ -9,9 +9,6 @@ import {
     createClientComponentClient
 } from '@supabase/auth-helpers-nextjs'
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-}
 
 export function Hero() {
     const [isVideoLoaded, setIsVideoLoaded] = useState(false)
@@ -63,9 +60,8 @@ export function Hero() {
     const supabase = createClientComponentClient()
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data, error }) => {
+        supabase.auth.getSession().then(({ data }) => {
             if (data.session) {
-
                 setNavigation(
                     [
                         { name: 'Features', href: '#features' },
@@ -84,11 +80,10 @@ export function Hero() {
                         { name: 'Privacy', href: '/privacy' },
                         {
                             name: data.session.user.user_metadata.name,
-                            href: '/login'
+                            href: '/account'
                         }
                     ]
                 )
-
             }
         })
     }, [])

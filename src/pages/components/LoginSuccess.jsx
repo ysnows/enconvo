@@ -13,6 +13,12 @@ import { User } from "@supabase/supabase-js";
 
 
 export default function LoginSuccess({ handleOpenApp, user }) {
+    const supabase = createClientComponentClient()
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut()
+        window.location.href = '/'
+    }
 
     return (
         <>
@@ -38,8 +44,8 @@ export default function LoginSuccess({ handleOpenApp, user }) {
                             </p>
                         </div>
 
-                        <Button 
-                            onClick={handleOpenApp} 
+                        <Button
+                            onClick={handleOpenApp}
                             className="w-full max-w-[200px] bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
                         >
                             Open Enconvo

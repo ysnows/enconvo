@@ -1,15 +1,13 @@
-import {
-    createClientComponentClient
-} from '@supabase/auth-helpers-nextjs'
-import LoginForm from './components/LoginForm'
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
-import LoginSuccess from "@/pages/components/LoginSuccess";
-import { NativeRouter } from "@/utils/app/native_router";
+import { supabase } from '@/lib/supabase'
+import LoginForm from './components/LoginForm'
+import LoginSuccess from "@/pages/components/LoginSuccess"
+import { NativeRouter } from "@/utils/app/native_router"
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Button } from "@/components/ui/button"
-import PaySuccess from './components/PaySucess';
+import PaySuccess from './components/PaySucess'
 
 export default function Login() {
     // 获取url参数
@@ -23,8 +21,6 @@ export default function Login() {
 
     const [navigation, setNavigation] = useState([
     ])
-
-    const supabase = createClientComponentClient()
 
     const handleOpenApp = () => {
         // NativeRouter.login(session.access_token, session.refresh_token)
@@ -54,11 +50,16 @@ export default function Login() {
 
                     <div className="mr-32 hidden lg:flex lg:gap-x-12">
                         {loginState === "success" &&
-                            <Button variant="outline" onClick={handleLogout} className="mt-10 border-2">
-                                Logout
-                            </Button>
+                            <button
+                                onClick={handleLogout}
+                                className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-4 py-2 rounded-md transition-all duration-200"
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                <span>Log Out</span>
+                            </button>
                         }
-
                     </div>
                 </nav>
 

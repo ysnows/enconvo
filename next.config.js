@@ -5,7 +5,24 @@ const nextConfig = {
         scrollRestoration: true,
     },
     images: {
-        domains: ['raw.githubusercontent.com', 'github.com', 'file.enconvo.com'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: '*.googleusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.githubusercontent.com',
+            },
+            {
+                protocol: 'https',
+                hostname: 'github.com',
+            },
+            {
+                protocol: 'https',
+                hostname: '*.enconvo.com',
+            },
+        ],
     },
 }
 
