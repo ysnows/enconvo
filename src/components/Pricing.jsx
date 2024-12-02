@@ -58,7 +58,7 @@ function Plan({
     const handleClick = async () => {
         try {
             const planKey = `${name.toLowerCase()}-${featured ? 'premium' : 'standard'}`;
-            const response = await fetch('/api/checkout_sessions', {
+            const response = await fetch('/api/subscription/checkout_sessions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
