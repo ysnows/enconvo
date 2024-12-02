@@ -8,6 +8,7 @@ export default function Account() {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
     const [userInfo, setUserInfo] = useState(null)
+    const [managingSubscription, setManagingSubscription] = useState(false)
 
     const fetchUserInfo = async (token) => {
         try {
@@ -24,6 +25,48 @@ export default function Account() {
             }
         } catch (error) {
             console.error('Error fetching user info:', error)
+        }
+    }
+
+    const handleManageSubscription = async (action) => {
+        if (!user) return
+        
+        setManagingSubscription(true)
+        try {
+            const response = await fetch('/api/subscription/manage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${user.access_token}`,
+                },
+                body: JSON.stringify({ action }),
+            })
+            
+            const data = await response.json()
+            if (data.code === 200) {
+                // Refresh user info after successful action
+                await fetchUserInfo(user.access_token)
+            }
+        } catch (error) {
+            console.error('Error managing subscription:', error)
+        } finally {
+            setManagingSubscription(false)
+        }
+    }
+
+    const getSubscriptionInfo = (type, subscriptionType) => {
+        if (type === 'lifetime') {
+            return {
+                label: type === 'standard' ? 'Lifetime Standard' : 'Lifetime Premium',
+                canRefund: true, // You'll need to check the actual purchase date
+                action: 'Request Refund',
+            }
+        } else {
+            return {
+                label: `${subscriptionType} Subscription`,
+                canCancel: true,
+                action: 'Cancel Subscription',
+            }
         }
     }
 
@@ -107,7 +150,11 @@ export default function Account() {
                                             <div>
                                                 <label className="block text-sm text-gray-400">Plan Type</label>
                                                 <div className="mt-1 p-3 bg-gray-800 rounded-md capitalize">
-                                                    {userInfo.subscription.type} 
+                                                    {userInfo.subscription.type === 'lifetime' ? (
+                                                        <>Lifetime {userInfo.subscription.subscription}</>
+                                                    ) : (
+                                                        <>{userInfo.subscription.type} Subscription</>
+                                                    )}
                                                 </div>
                                             </div>
                                             <div>
@@ -131,6 +178,29 @@ export default function Account() {
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            {/* Subscription Management */}
+                                            {userInfo.subscription.type === 'lifetime' ? (
+                                                <div className="mt-4">
+                                                    <button
+                                                        onClick={() => handleManageSubscription('refund')}
+                                                        disabled={managingSubscription}
+                                                        className="text-red-400 hover:text-red-300 text-sm underline disabled:opacity-50"
+                                                    >
+                                                        Request Refund (Available within 14 days of purchase)
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <div className="mt-4">
+                                                    <button
+                                                        onClick={() => handleManageSubscription('cancel')}
+                                                        disabled={managingSubscription}
+                                                        className="text-red-400 hover:text-red-300 text-sm underline disabled:opacity-50"
+                                                    >
+                                                        Cancel Subscription
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
-import LoginForm from './components/LoginForm'
-import LoginSuccess from "@/pages/components/LoginSuccess"
-import { NativeRouter } from "@/utils/app/native_router"
-import { Dialog } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Button } from "@/components/ui/button"
 import PaySuccess from './components/PaySucess'
 
 export default function Login() {
@@ -37,7 +31,16 @@ export default function Login() {
 
 
     useEffect(() => {
-    }, [])
+        // Check to see if this is a redirect back from Checkout
+        const query = new URLSearchParams(window.location.search);
+        if (query.get('success')) {
+            console.log('Order placed! You will receive an email confirmation.');
+        }
+
+        if (query.get('canceled')) {
+            console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+        }
+    }, []);
 
     return <>
 

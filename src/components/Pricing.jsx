@@ -51,11 +51,39 @@ function Plan({
     price,
     originPrice,
     description,
-    href,
     startText = "Get started",
     features,
     featured = false
 }) {
+    const handleClick = async () => {
+        try {
+            const planKey = `${name.toLowerCase()}-${featured ? 'premium' : 'standard'}`;
+            const response = await fetch('/api/checkout_sessions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    plan: planKey,
+                    price: price 
+                }),
+            });
+            console.log("response.status",response.status);
+
+            if (response.status === 200) {
+                const data = await response.json()
+                if (data.url) {
+                    window.location.href = data.url;
+                }
+            } else {
+                const error = await response.json();
+                console.error('Payment error:', error);
+            }
+        } catch (error) {
+            console.error('Error initiating checkout:', error);
+        }
+    };
+
     return (
         <section
             className={clsx(
@@ -79,7 +107,6 @@ function Plan({
                         &nbsp;
                     </>
                 }
-
                 {price}
             </p>
             <ul
@@ -97,17 +124,16 @@ function Plan({
                 ))}
             </ul>
             <Button
-                href={href}
+                onClick={handleClick}
                 variant={featured ? 'solid' : 'outline'}
                 color="white"
                 className="mt-8"
-                target="_blank"
                 aria-label={`Get started with the ${name} plan for ${price}`}
             >
                 {startText}
             </Button>
         </section>
-    )
+    );
 }
 
 export function Pricing() {
