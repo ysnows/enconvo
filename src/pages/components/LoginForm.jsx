@@ -102,7 +102,7 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
         try {
             setGoogleIsLoading(true)
             let redirectUrl = `${window.location.origin}/auth/callback`
-            if (router.query.returnUrl) {
+            if (router?.query?.returnUrl) {
                 redirectUrl = window.location
             }
 
@@ -114,7 +114,7 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             })
             if (error) throw error
         } catch (error) {
-            setError(error.message)
+            console.error('Error:', error)
         } finally {
             setGoogleIsLoading(false)
         }
@@ -214,8 +214,8 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
                         {!continueLogin &&
                             <div className="flex items-center justify-between text-sm">
                                 <Link
-                                    href={`/register${router.query.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
-                                    className="font-medium text-[#666666] hover:text-[#888888]"
+                                    href={`/register${router?.query?.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
+                                    className="font-medium text-[#888888] hover:text-[#999999]"
                                 >
                                     Create an account
                                 </Link>

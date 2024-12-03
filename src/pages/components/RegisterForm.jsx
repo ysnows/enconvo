@@ -36,7 +36,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
 
         setEmailIsLoading(true)
 
-        const returnUrlParams = `${router.query.returnUrl ? `$returnUrl=${router.query.returnUrl}` : ''}`;
+        const returnUrlParams = router?.query?.returnUrl ? `?returnUrl=${router.query.returnUrl}` : '';
 
         const { data, error } = await supabase.auth.signUp({
             email: email,
@@ -199,9 +199,10 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                             <p className="text-center text-[#666666]">
                                 Already have an account?{' '}
                                 <Link
-                                    href={`/login${router.query.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
+                                    href={`/login${router?.query?.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
 
-                                    className="font-medium text-[#888888] hover:text-[#999999]">
+                                    className="font-medium text-[#888888] hover:text-[#999999]"
+                                >
                                     Log in
                                 </Link>
                             </p>
