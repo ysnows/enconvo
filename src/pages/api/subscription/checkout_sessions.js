@@ -4,11 +4,11 @@ import { withAuth } from '@/utils/auth';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
-  'standard': 'price_1PUW7FP5mwiRKlICsPPMLgB4',
-  'premium': 'price_1PUW8sP5mwiRKlICu3jOnFRR',
+  'standard': 'price_1PUnQhP5mwiRKlICpgeJUKFx',
+  'premium': 'price_1PUnVqP5mwiRKlICIJJ5Z9kG',
 
-  'monthly': 'price_1PU2qFP5mwiRKlICLgcGWQXD',
-  'yearly': 'price_1PU2qFP5mwiRKlICvOCDQOLw',
+  'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
+  'yearly': 'price_1PUnbcP5mwiRKlICBAdbINOS',
 };
 
 async function handler(req, res) {
