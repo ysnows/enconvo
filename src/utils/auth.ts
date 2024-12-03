@@ -69,13 +69,11 @@ export const verifyAuth = (authorization: string | undefined): UserData => {
 
     // Remove 'Bearer ' prefix if present
     let token = authorization;
-    if (authorization.startsWith('Bearer ')) {
-        token = authorization.slice(7);
-    }
+
 
     try {
         const jwt = jose.decodeJwt(token) as JWTPayload;
-        
+
         // Check if token is expired
         const currentTime = Math.floor(Date.now() / 1000);
         if (jwt.exp && jwt.exp < currentTime) {
@@ -124,17 +122,33 @@ type ApiHandler = (
 export const withAuth = (handler: ApiHandler) => {
     return async (req: NextApiRequest, res: NextApiResponse) => {
         try {
-            const userData = verifyAuth(req.headers.authorization);
+            let authToken = req.headers.authorization
+
+            if (!authToken || authToken.length === 0) {
+                try {
+                    const authTokenCookie = req.cookies['sb-uihahglfncxadigplxnw-auth-token'];
+                    const token = JSON.parse(authTokenCookie)[0];
+                    authToken = token;
+                } catch (error) {
+                    console.log("authToken error", error);
+                }
+            }
+
+            if (authToken.startsWith('Bearer ')) {
+                authToken = authToken.slice(7);
+            }
+
+            const userData = verifyAuth(authToken);
             (req as AuthenticatedRequest).user = userData;
             return await handler(req as AuthenticatedRequest, res);
         } catch (error) {
             if (error instanceof AuthError) {
-                return res.status(error.statusCode).json({ 
-                    error: error.message 
+                return res.status(error.statusCode).json({
+                    error: error.message
                 });
             }
-            return res.status(500).json({ 
-                error: 'Internal server error' 
+            return res.status(500).json({
+                error: 'Internal server error'
             });
         }
     };

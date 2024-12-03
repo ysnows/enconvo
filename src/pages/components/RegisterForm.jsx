@@ -4,11 +4,10 @@ import Link from 'next/link'
 import { ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
-
+import { useRouter } from 'next/router'
 
 import { Logo } from '@/components/Logo'
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import * as React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -17,7 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 export default function RegisterForm({ loginState, setLoginState, email, setEmail }) {
 
     const supabase = createClientComponentClient()
-
+    const router = useRouter()
 
     // const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -26,7 +25,6 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
     const [emailIsLoading, setEmailIsLoading] = React.useState(false)
     const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
 
-    const router = useRouter()
 
 
     async function signUp() {
@@ -37,11 +35,14 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
         }
 
         setEmailIsLoading(true)
+
+        const returnUrlParams = `${router.query.returnUrl ? `$returnUrl=${router.query.returnUrl}` : ''}`;
+
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
-                emailRedirectTo: 'https://www.enconvo.com/login?from=app',
+                emailRedirectTo: `${window.location.origin}/login?from=app${returnUrlParams}`,
                 data: {
                     name: name,
                 }
@@ -54,7 +55,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
             return
         }
 
-        console.log("kk--",data)
+        console.log("kk--", data)
 
         setLoginState("success")
 
@@ -65,10 +66,14 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
     async function signInWithGoogle() {
         try {
             setGoogleIsLoading(true)
+            let redirectUrl = `${window.location.origin}/auth/callback`
+            if (router.query.returnUrl) {
+                redirectUrl = window.location
+            }
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/auth/callback`,
+                    redirectTo: redirectUrl,
                     queryParams: {
                         access_type: 'offline',
                         prompt: 'consent',
@@ -148,12 +153,12 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                             </div>
 
                             <div className="space-y-1">
-                                <Input 
-                                    type="email" 
+                                <Input
+                                    type="email"
                                     placeholder="Email address"
                                     required
                                     autoComplete="email"
-                                    onChange={(e) => setEmail(e.target.value)} 
+                                    onChange={(e) => setEmail(e.target.value)}
                                     value={email}
                                     className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
                                 />
@@ -180,8 +185,8 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                                 </Alert>
                             }
 
-                            <Button 
-                                onClick={signUp} 
+                            <Button
+                                onClick={signUp}
                                 disabled={emailIsLoading}
                                 className="w-full bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
                             >
@@ -193,7 +198,10 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                         <div className="space-y-4 text-sm">
                             <p className="text-center text-[#666666]">
                                 Already have an account?{' '}
-                                <Link href="/login" className="font-medium text-[#888888] hover:text-[#999999]">
+                                <Link
+                                    href={`/login${router.query.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
+
+                                    className="font-medium text-[#888888] hover:text-[#999999]">
                                     Log in
                                 </Link>
                             </p>

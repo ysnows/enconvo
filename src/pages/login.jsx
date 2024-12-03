@@ -4,9 +4,6 @@ import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 import LoginSuccess from "@/pages/components/LoginSuccess"
 import { NativeRouter } from "@/utils/app/native_router"
-import { Dialog } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Button } from "@/components/ui/button"
 
 export default function Login() {
     // 获取url参数
@@ -34,6 +31,9 @@ export default function Login() {
 
 
     useEffect(() => {
+
+
+
         supabase.auth.getSession().then(async ({ data, error }) => {
             if (data.session) {
                 setSession(data.session)
@@ -61,6 +61,38 @@ export default function Login() {
         })
     }, [])
 
+    useEffect(() => {
+        const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN') {
+                const returnUrl = router.query.returnUrl || '/';
+                if (returnUrl.startsWith('/pricing?plan=')) {
+                    // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
+                    const plan = returnUrl.split('plan=')[1];
+                    const response = await fetch('/api/subscription/checkout_sessions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            lookupKey: plan
+                        }),
+                    });
+
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        window.location.href = data.url;
+                    }
+                } else {
+                    router.push(returnUrl);
+                }
+            }
+        });
+
+        return () => {
+            authListener.subscription.unsubscribe();
+        };
+    }, [router]);
+
     return <>
 
         <div >
@@ -69,6 +101,7 @@ export default function Login() {
                     <div className="ml-32 flex lg:flex-1 items-center ">
 
                     </div>
+
 
                     <div className="mr-32 hidden lg:flex lg:gap-x-12">
                         {loginState === "success" &&
@@ -90,7 +123,16 @@ export default function Login() {
 
 
             {loginState === "success" ? <LoginSuccess handleOpenApp={handleOpenApp} user={user} /> :
-                <LoginForm setLoginState={setLoginState} loginState={loginState} setUser={setUser} />}
+
+
+                <LoginForm
+                    setLoginState={setLoginState}
+                    loginState={loginState}
+                    setUser={setUser}
+                    router={router}
+                >
+                </LoginForm>
+            }
         </div>
     </>
 }

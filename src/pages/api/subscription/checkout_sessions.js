@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
-
+import * as jose from 'jose';
+import { withAuth } from '@/utils/auth';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
@@ -10,7 +11,7 @@ const PRICE_IDS = {
   'yearly': 'price_1PU2qFP5mwiRKlICvOCDQOLw',
 };
 
-export default async function handler(req, res) {
+async function handler(req, res) {
 
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -19,6 +20,7 @@ export default async function handler(req, res) {
   }
 
   const { lookupKey } = req.body;
+  const email = req.user.email
 
   try {
     // Create Checkout Sessions from body params.
@@ -35,6 +37,7 @@ export default async function handler(req, res) {
       cancel_url: `${req.headers.origin}/pay_success?canceled=true`,
       automatic_tax: { enabled: true },
       allow_promotion_codes: true,
+      client_reference_id: email
     });
 
     res.json({ url: session.url });
@@ -44,3 +47,5 @@ export default async function handler(req, res) {
     res.status(500).json({ statusCode: 500, message: err.message });
   }
 }
+
+export default withAuth(handler);

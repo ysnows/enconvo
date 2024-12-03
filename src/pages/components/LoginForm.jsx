@@ -1,21 +1,20 @@
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { ReloadIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
 
 
 import { Logo } from '@/components/Logo'
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import * as React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { NativeRouter } from "@/utils/app/native_router";
 
-export default function LoginForm({ loginState, setLoginState, setUser }) {
+export default function LoginForm({ loginState, setLoginState, setUser, router }) {
 
     const supabase = createClientComponentClient()
 
@@ -26,7 +25,6 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
     const [emailIsLoading, setEmailIsLoading] = React.useState(false)
     const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
 
-    const router = useRouter()
 
 
 
@@ -103,10 +101,15 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
     async function signInWithGoogle() {
         try {
             setGoogleIsLoading(true)
+            let redirectUrl = `${window.location.origin}/auth/callback`
+            if (router.query.returnUrl) {
+                redirectUrl = window.location
+            }
+
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: `${window.location.origin}/auth/callback`,
+                    redirectTo: redirectUrl,
                 }
             })
             if (error) throw error
@@ -163,12 +166,12 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                         <div className="space-y-4">
                             {!continueLogin &&
                                 <div className="space-y-1">
-                                    <Input 
-                                        type="email" 
+                                    <Input
+                                        type="email"
                                         placeholder="Email address"
                                         required
                                         autoComplete="email"
-                                        onChange={(e) => setEmail(e.target.value)} 
+                                        onChange={(e) => setEmail(e.target.value)}
                                         value={email}
                                         className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
                                     />
@@ -198,8 +201,8 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                                 </Alert>
                             }
 
-                            <Button 
-                                onClick={signIn} 
+                            <Button
+                                onClick={signIn}
                                 disabled={emailIsLoading}
                                 className="w-full bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
                             >
@@ -211,7 +214,7 @@ export default function LoginForm({ loginState, setLoginState, setUser }) {
                         {!continueLogin &&
                             <div className="flex items-center justify-between text-sm">
                                 <Link
-                                    href="/register"
+                                    href={`/register${router.query.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
                                     className="font-medium text-[#666666] hover:text-[#888888]"
                                 >
                                     Create an account

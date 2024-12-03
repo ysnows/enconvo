@@ -97,7 +97,7 @@ export default function Privacy() {
                     <p className="mt-6">
                         If you have any questions or suggestions about our privacy policy, please
                         contact us at: &nbsp; <Link className="text-indigo-600"
-                                                    href={'mailto:yong531315@gmail.com'}>yong531315@gmail.com</Link>
+                                                    href={'mailto:support@enconvo.com.com'}>support@enconvo.com.com</Link>
                     </p>
 
 

@@ -1,4 +1,4 @@
-import {CheckCircleIcon, InformationCircleIcon} from '@heroicons/react/20/solid'
+import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
 import Link from "next/link";
 
 export default function Downloads() {
@@ -30,17 +30,17 @@ export default function Downloads() {
                     <ul role="list" className="mt-8 max-w-xl space-y-8 text-gray-600">
                         <li className="flex gap-x-3">
                             <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
-                                             aria-hidden="true"/>
+                                aria-hidden="true" />
                             <span>
-                <strong className="font-semibold text-gray-900">Accessibility permission. </strong> Obtain the currently selected text through accessibility permission, which is used to implement functions related to word translation. Enconvo will only request this permission when you use the relevant functions.
-              </span>
+                                <strong className="font-semibold text-gray-900">Accessibility permission. </strong> Obtain the currently selected text through accessibility permission, which is used to implement functions related to word translation. Enconvo will only request this permission when you use the relevant functions.
+                            </span>
                         </li>
                         <li className="flex gap-x-3">
                             <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
-                                             aria-hidden="true"/>
+                                aria-hidden="true" />
                             <span>
-                <strong className="font-semibold text-gray-900">Clipboard read and write. </strong> Obtain the currently selected text through the clipboard, or write specified text to the clipboard.
-              </span>
+                                <strong className="font-semibold text-gray-900">Clipboard read and write. </strong> Obtain the currently selected text through the clipboard, or write specified text to the clipboard.
+                            </span>
                         </li>
                     </ul>
 
@@ -61,7 +61,7 @@ export default function Downloads() {
                         In addition, when you use certain service provider services, you may need
                         to enter your own key into the Enconvo main program to use them normally.
                         Enconvo only saves your key locally and does not upload it to the server.
-                        <br/> However, to provide a better user experience, Enconvo may collect the
+                        <br /> However, to provide a better user experience, Enconvo may collect the
                         following data:
                     </p>
 
@@ -69,10 +69,10 @@ export default function Downloads() {
 
                         <li className="flex gap-x-3">
                             <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
-                                             aria-hidden="true"/>
+                                aria-hidden="true" />
                             <span>
-                <strong className="font-semibold text-gray-900">Crash data. </strong> To improve program stability, we collect information on program crashes.
-              </span>
+                                <strong className="font-semibold text-gray-900">Crash data. </strong> To improve program stability, we collect information on program crashes.
+                            </span>
                         </li>
                     </ul>
 
@@ -85,7 +85,7 @@ export default function Downloads() {
                         situation of Enconvo. Therefore, we recommend that you regularly check this
                         page for the latest content.
 
-                        <br/>
+                        <br />
                         We will notify you of any changes by posting a new privacy policy on this
                         page. All changes take effect immediately after being posted on this page.
                     </p>
@@ -97,7 +97,7 @@ export default function Downloads() {
                     <p className="mt-6">
                         If you have any questions or suggestions about our privacy policy, please
                         contact us at: &nbsp; <Link className="text-indigo-600"
-                                                    href={'mailto:yong531315@gmail.com'}>yong531315@gmail.com</Link>
+                            href={'mailto:support@enconvo.com.com'}>support@enconvo.com.com</Link>
                     </p>
 
 

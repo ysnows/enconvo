@@ -2,6 +2,8 @@ import clsx from 'clsx'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { supabase } from '@/lib/supabase'
+
 
 function SwirlyDoodle({ className }) {
     return (
@@ -58,13 +60,26 @@ function Plan({
 }) {
     const handleClick = async () => {
         try {
+            // 检查用户是否已登录
+            const { data: { session } } = await supabase.auth.getSession();
+
+
+            if (!session) {
+                // 如果未登录，保存当前的 lookupKey 到 URL 参数，并重定向到登录页面
+                const returnUrl = `/pricing?plan=${lookupKey}`;
+                window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
+                return;
+            }
+            console.log("user email", session.user.email)
+
             const response = await fetch('/api/subscription/checkout_sessions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    lookupKey
+                    lookupKey,
+                    email: session.user.email
                 }),
             });
 

@@ -93,9 +93,9 @@ async function handleCheckoutComplete(event: Stripe.Event) {
     throw new Error('No price found for line item');
   }
 
-  console.log("session.customer_details", session.customer_details);
+  console.log("client_reference_id", session.client_reference_id);
   // Extract necessary information
-  const email = session.customer_details?.email;
+  const email = session.client_reference_id || session.customer_details?.email;
 
   if (!email) {
     throw new Error('No email found in session');
@@ -112,19 +112,19 @@ async function handleCheckoutComplete(event: Stripe.Event) {
 
   // Determine subscription type
   let type = price.lookup_key as string;
-  if (type === "test") {
-    type = "yearly";
+  if (type.includes("test")) {
+    type = "standard";
   }
 
   // Add subscription
-  // return addSubscription(email, type, {
-  //   event: {
-  //     id: event.id,
-  //     type: event.type,
-  //     livemode: event.livemode,
-  //   },
-  //   line_items: line_items.data,
-  // });
+  return addSubscription(email, type, {
+    event: {
+      id: event.id,
+      type: event.type,
+      livemode: event.livemode,
+    },
+    line_items: line_items.data,
+  });
 }
 
 
