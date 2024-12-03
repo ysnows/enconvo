@@ -49,6 +49,7 @@ function CheckIcon({ className }) {
 function Plan({
     name,
     price,
+    lookupKey,
     originPrice,
     description,
     startText = "Get started",
@@ -57,18 +58,17 @@ function Plan({
 }) {
     const handleClick = async () => {
         try {
-            const planKey = `${name.toLowerCase()}-${featured ? 'premium' : 'standard'}`;
             const response = await fetch('/api/subscription/checkout_sessions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    plan: planKey,
-                    price: price 
+                body: JSON.stringify({
+                    lookupKey
                 }),
             });
-            console.log("response.status",response.status);
+
+            console.log("response.status", response.status);
 
             if (response.status === 200) {
                 const data = await response.json()
@@ -174,6 +174,7 @@ export function Pricing() {
                     <Plan
                         name="Free"
                         price="FREE"
+                        lookupKey={'free'}
                         description="Lifetime access to all basic features."
                         href="https://api.enconvo.com/app/download"
                         startText={'Download'}
@@ -200,6 +201,7 @@ export function Pricing() {
                     <Plan
                         name="Stardard"
                         price="$29"
+                        lookupKey={'standard'}
                         originPrice={'$49'}
                         description="Lifetime access to all features."
                         href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
@@ -230,6 +232,7 @@ export function Pricing() {
                         featured
                         name="Premium"
                         price="$49"
+                        lookupKey={'premium'}
                         originPrice={'$99'}
                         description="Most popular."
                         href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
@@ -258,6 +261,7 @@ export function Pricing() {
                     <Plan
                         name="Cloud Premium"
                         price="$10/Monthly"
+                        lookupKey={'monthly'}
                         description="All Premium features, No need your own apikeys"
                         href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
@@ -288,6 +292,7 @@ export function Pricing() {
                         featured
                         name="Cloud Premium"
                         price="$96/Yearly"
+                        lookupKey={'yearly'}
                         description="All Premium features, No need your own apikeys"
                         href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}

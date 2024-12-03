@@ -42,13 +42,13 @@ async function handler(
       webhookSecret
     );
 
-    console.log('Webhook received:', event.type);
 
     let result;
 
     // Handle different event types
     switch (event.type) {
       case 'checkout.session.completed':
+        console.log(`handled checkout.session.completed`);
         result = await handleCheckoutComplete(event);
         break;
       // Add other event types as needed
