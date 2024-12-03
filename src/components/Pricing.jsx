@@ -61,8 +61,14 @@ function Plan({
     const handleClick = async () => {
         try {
             // 检查用户是否已登录
-            const { data: { session } } = await supabase.auth.getSession();
+            if (lookupKey === "free") {
+                window.location.href = "https://api.enconvo.com/app/download";
+                return;
+            }
 
+
+
+            const { data: { session } } = await supabase.auth.getSession();
 
             if (!session) {
                 // 如果未登录，保存当前的 lookupKey 到 URL 参数，并重定向到登录页面
