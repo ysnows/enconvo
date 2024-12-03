@@ -21,7 +21,6 @@ const webhookHandler = async (req, res) => {
   if (req.method === 'POST') {
     const buf = await buffer(req);
     const signature = req.headers['stripe-signature'];
-    console.log("signature", signature);
 
     let event;
     try {
@@ -38,7 +37,7 @@ const webhookHandler = async (req, res) => {
     }
 
     // Successfully constructed event.
-    console.log('✅ Success:', event.id);
+    console.log('✅ Success:', event.type);
 
     switch (event.type) {
       case 'payment_intent.succeeded': {
@@ -71,5 +70,8 @@ const webhookHandler = async (req, res) => {
     res.status(405).end('Method Not Allowed');
   }
 };
+
+
+
 
 export default cors(webhookHandler);
