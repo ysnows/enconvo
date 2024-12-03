@@ -13,11 +13,6 @@ const PRICE_IDS = {
 
 async function handler(req, res) {
 
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    res.status(405).end('Method Not Allowed');
-    return;
-  }
 
   const { lookupKey } = req.body;
   const email = req.user.email
