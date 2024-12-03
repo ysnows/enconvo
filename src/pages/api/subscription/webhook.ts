@@ -93,8 +93,10 @@ async function handleCheckoutComplete(event: Stripe.Event) {
     throw new Error('No price found for line item');
   }
 
+  console.log("session.customer_details", session.customer_details);
   // Extract necessary information
   const email = session.customer_details?.email;
+
   if (!email) {
     throw new Error('No email found in session');
   }

@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/pay_success?canceled=true`,
       automatic_tax: { enabled: true },
-      allow_promotion_codes: true
+      allow_promotion_codes: true,
     });
 
     res.json({ url: session.url });
