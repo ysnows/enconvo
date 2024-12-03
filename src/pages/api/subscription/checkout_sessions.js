@@ -22,6 +22,13 @@ async function handler(req, res) {
   const { lookupKey } = req.body;
   const email = req.user.email
 
+  let mode = 'payment'; 
+  if (lookupKey === 'standard' || lookupKey === 'premium') {
+    mode = 'payment';
+  }else if (lookupKey === 'monthly' || lookupKey === 'yearly') {
+    mode = 'subscription';
+  }
+
   try {
     // Create Checkout Sessions from body params.
     const priceId = PRICE_IDS[lookupKey];
@@ -32,7 +39,7 @@ async function handler(req, res) {
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode: mode,
       success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/pay_success?canceled=true`,
       automatic_tax: { enabled: true },

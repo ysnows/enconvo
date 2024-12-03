@@ -180,7 +180,7 @@ export default function Account() {
                                             </div>
 
                                             {/* Subscription Management */}
-                                            {userInfo.subscription.type === 'lifetime' ? (
+                                            {/* {userInfo.subscription.type === 'lifetime' ? (
                                                 <div className="mt-4">
                                                     <button
                                                         onClick={() => handleManageSubscription('refund')}
@@ -200,7 +200,7 @@ export default function Account() {
                                                         Cancel Subscription
                                                     </button>
                                                 </div>
-                                            )}
+                                            )} */}
                                         </div>
                                     </div>
                                 </div>
