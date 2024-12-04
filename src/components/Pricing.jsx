@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-
+import { useState } from 'react';
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { supabase } from '@/lib/supabase'
@@ -58,8 +58,11 @@ function Plan({
     features,
     featured = false
 }) {
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleClick = async () => {
         try {
+            setIsLoading(true);
             // 检查用户是否已登录
             if (lookupKey === "free") {
                 window.location.href = "https://api.enconvo.com/app/download";
@@ -102,6 +105,8 @@ function Plan({
             }
         } catch (error) {
             console.error('Error initiating checkout:', error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -149,9 +154,9 @@ function Plan({
                 variant={featured ? 'solid' : 'outline'}
                 color="white"
                 className="mt-8"
-                aria-label={`Get started with the ${name} plan for ${price}`}
+                disabled={isLoading}
             >
-                {startText}
+                {isLoading ? 'Going to checkout...' : startText}
             </Button>
         </section>
     );
