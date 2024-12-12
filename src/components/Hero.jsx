@@ -249,7 +249,7 @@ export function Hero() {
 
                             <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
                                 <span
-                                    className=" pb-3  pl-1">v2.0.1</span>
+                                    className=" pb-3  pl-1">v2.0.2</span>
                                 <span className="pb-3  pl-1 text-xs">|</span>
                                 <span
                                     className=" pb-3  pl-1">macOS 13+</span>
