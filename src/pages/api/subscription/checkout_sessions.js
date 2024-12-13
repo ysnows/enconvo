@@ -4,7 +4,7 @@ import { withAuth } from '@/utils/auth';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
-  'standard': 'price_1PUnQhP5mwiRKlICpgeJUKFx',
+  'standard': 'price_1QVP9VP5mwiRKlICCifMKEDK',
   'premium': 'price_1PUnVqP5mwiRKlICIJJ5Z9kG',
 
   'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
