@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
   'standard': 'price_1QVP9VP5mwiRKlICCifMKEDK',
-  'premium': 'price_1PUnVqP5mwiRKlICIJJ5Z9kG',
+  'premium': 'price_1QVPBWP5mwiRKlICa2MFNaR7',
 
   'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
   'yearly': 'price_1PUnbcP5mwiRKlICBAdbINOS',
