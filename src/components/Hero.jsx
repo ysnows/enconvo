@@ -199,17 +199,16 @@ export function Hero() {
 
 
         <div className="relative isolate pt-14">
-            <div className='mt-4 w-full flex justify-center px-4 sm:px-0'>
-                {/* Responsive promotional banner with glass morphism effect */}
+            {/* <div className='mt-4 w-full flex justify-center px-4 sm:px-0'>
                 <a href="#pricing" className='mt-4 px-6 sm:px-12 md:px-24 py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-center sm:space-x-6 space-y-2 sm:space-y-0 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
                     <span className="text-white/90 font-bold text-lg sm:text-xl text-center sm:text-left">Happy Black Friday. Enjoy</span>
                     <span className="py-1.5 px-6 sm:px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-xl sm:text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse whitespace-nowrap">
                         50% OFF
                     </span>
                 </a>
-            </div>
+            </div> */}
 
-            <div
+            {/* <div
                 className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
                 aria-hidden="true"
             >
@@ -219,7 +218,7 @@ export function Hero() {
                         clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
                     }}
                 />
-            </div>
+            </div> */}
 
             <div className=" py-28 sm:py-48 lg:pb-40">
 

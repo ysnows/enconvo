@@ -184,13 +184,13 @@ export function Pricing() {
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
 
-                    <div className='mt-4'>
+                    {/* <div className='mt-4'>
                         <span className="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
                         <span className="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
                             30% OFF
                         </span>
                         <span className="text-white font-semibold"> if you buy today.</span>
-                    </div>
+                    </div> */}
 
 
                 </div>
@@ -226,9 +226,8 @@ export function Pricing() {
                     />
                     <Plan
                         name="Stardard"
-                        price="$29"
+                        price="$49"
                         lookupKey={'standard'}
-                        originPrice={'$49'}
                         description="Lifetime access to all features."
                         href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
                         features={[
@@ -257,9 +256,8 @@ export function Pricing() {
                     <Plan
                         featured
                         name="Premium"
-                        price="$49"
+                        price="$99"
                         lookupKey={'premium'}
-                        originPrice={'$99'}
                         description="Most popular."
                         href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
                         features={[

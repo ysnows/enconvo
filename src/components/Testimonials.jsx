@@ -6,6 +6,7 @@ import avatarImage2 from '@/images/avatars/avatar-2.png'
 import avatarImage3 from '@/images/avatars/avatar-3.png'
 import avatarImage4 from '@/images/avatars/avatar-4.png'
 import avatarImage5 from '@/images/avatars/avatar-5.png'
+import avatarImage6 from '@/images/avatars/avatar-6.png'
 
 // Testimonials data showcasing user experiences with EnConvo's various features
 const testimonials = [
@@ -65,7 +66,7 @@ const testimonials = [
       author: {
         name: 'Rachel Martinez',
         role: 'Technical Writer',
-        image: avatarImage4,
+        image: avatarImage6,
       },
     },
   ],
