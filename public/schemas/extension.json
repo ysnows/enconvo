@@ -471,6 +471,22 @@
             "if": {
               "properties": {
                 "type": {
+                  "const": "group"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "preferences": {
+                  "$ref": "#/$defs/preferences"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
                   "const": "directory"
                 }
               }
@@ -515,11 +531,13 @@
               "number",
               "hotkey",
               "multiline_textfield",
-              "multiline_dropdown"
+              "multiline_dropdown",
+              "tools",
+              "group"
             ],
             "type": "string",
             "title": "The preference type",
-            "description": "Currently only 'textfield', 'password' (for secure entry), 'checkbox', 'dropdown', 'appPicker', 'file', and 'directory' are supported."
+            "description": "Currently only 'textfield', 'password' (for secure entry), 'checkbox', 'dropdown', 'appPicker', 'file', 'tools','group', and 'directory' are supported."
           },
           "required": {
             "type": "boolean",
@@ -545,6 +563,14 @@
             "title": "Optional placeholder text",
             "pattern": "^[^\\s]+(?: [^\\s]+)*$",
             "description": "Text displayed in the preference's field when no value has been input."
+          },
+          "group": {
+            "type": "string",
+            "title": "The property's group name/identifier",
+            "pattern": "^[a-zA-Z0-9-._~]*$",
+            "maxLength": 255,
+            "minLength": 1,
+            "description": "The slugged property's group name used internally."
           }
         }
       },
