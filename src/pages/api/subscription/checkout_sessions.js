@@ -44,7 +44,8 @@ async function handler(req, res) {
       cancel_url: `${req.headers.origin}/pay_success?canceled=true`,
       automatic_tax: { enabled: true },
       allow_promotion_codes: false,
-      client_reference_id: email
+      client_reference_id: email,
+      customer_email: email
     });
 
     res.json({ url: session.url });
