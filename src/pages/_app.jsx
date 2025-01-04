@@ -11,6 +11,11 @@ const App = ({Component, pageProps}) => {
     return (
         <>
             <Script
+                src="https://js.stripe.com/v3/"
+                strategy="afterInteractive"
+            />
+
+            <Script
                 src="https://www.googletagmanager.com/gtag/js?id=G-X7999CT0H3"
                 strategy="afterInteractive"
             />
