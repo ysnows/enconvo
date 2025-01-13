@@ -16,199 +16,6 @@
       "description": "String values helping EnConvo display the extension's commands when such terms are typed in root search or the Store.",
       "uniqueItems": true
     },
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "input_text": {
-          "type": "object",
-          "description": "Text input from the user",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of input text",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the input text",
-              "default": "The text input from the user"
-            }
-          },
-          "required": ["type", "description"]
-        },
-        "selection_text": {
-          "type": "object",
-          "description": "Currently selected text",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of selected text",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the selected text",
-              "default": "The text currently selected in the application"
-            }
-          },
-          "required": ["type", "description"]
-        },
-        "current_browser_tab": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["object"],
-              "description": "The type of browser tab information",
-              "default": "object"
-            },
-            "properties": {
-              "type": "object",
-              "description": "The properties of the browser tab information",
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "description": "The current browser tab url"
-                },
-                "title": {
-                  "type": "string",
-                  "description": "The current browser tab title"
-                },
-                "text": {
-                  "type": "string",
-                  "description": "The current browser tab text"
-                }
-              },
-              "required": ["url"]
-            }
-          },
-          "required": ["type", "properties"]
-        },
-        "context_files": {
-          "type": "object",
-          "description": "Files from the current context",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["array"],
-              "description": "The type of context files",
-              "default": "array"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the context files",
-              "default": "The files from the current context"
-            },
-            "items": {
-              "type": "object",
-              "description": "The items of the context files",
-              "properties": {
-                "type": {
-                  "type": "string",
-                  "enum": ["string"],
-                  "description": "The path of the file",
-                  "default": "string"
-                }
-              }
-            }
-          },
-          "required": ["type", "description", "items"]
-        },
-        "context_screen": {
-          "type": "object",
-          "description": "Information about the current screen context",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of screen context",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the screen context",
-              "default": "Information about the current screen context"
-            }
-          },
-          "required": ["type", "description"]
-        },
-        "context_camera": {
-          "type": "object",
-          "description": "Information from the camera context",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of camera context",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the camera context",
-              "default": "Information from the camera context"
-            }
-          },
-          "required": ["type", "description"]
-        },
-        "date": {
-          "type": "object",
-          "description": "Current date",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of date",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the date",
-              "default": "The current date"
-            }
-          },
-          "required": ["type", "description"]
-        },
-        "time": {
-          "type": "object",
-          "description": "Current time",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of time",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the time",
-              "default": "The current time"
-            }
-          },
-          "required": ["type", "description"]
-        },
-        "clipboard": {
-          "type": "object",
-          "description": "Current clipboard contents",
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": ["string"],
-              "description": "The type of clipboard content",
-              "default": "string"
-            },
-            "description": {
-              "type": "string",
-              "description": "The description of the clipboard content",
-              "default": "The current clipboard contents"
-            }
-          },
-          "required": ["type", "description"]
-        }
-      },
-      "additionalProperties": true
-    },
     "preferences": {
       "type": "array",
       "items": {
@@ -598,7 +405,7 @@
       ]
     }
   },
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "required": [
     "name",
     "title",
@@ -765,7 +572,9 @@
             "$ref": "#/$defs/preferences"
           },
           "parameters": {
-            "$ref": "#/$defs/parameters"
+            "$ref": "http://json-schema.org/draft-07/schema#",
+            "description": "The command's parameters",
+            "title": "Command parameters"
           }
         },
         "additionalProperties": true
