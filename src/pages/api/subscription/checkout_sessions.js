@@ -45,7 +45,8 @@ async function handler(req, res) {
       automatic_tax: { enabled: true },
       allow_promotion_codes: false,
       client_reference_id: email,
-      customer_email: email
+      customer_email: email,
+      allow_promotion_codes: true
     });
 
     res.json({ url: session.url });
