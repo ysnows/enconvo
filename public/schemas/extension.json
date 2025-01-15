@@ -575,6 +575,12 @@
             "$ref": "http://json-schema.org/draft-07/schema#",
             "description": "The command's parameters",
             "title": "Command parameters"
+          },
+          "showInCommandList": {
+            "type": "boolean",
+            "title": "Show in command list",
+            "description": "Controls whether this command appears in the main command list. Set to false to hide from the main list while still allowing the command to be triggered programmatically.",
+            "default": true
           }
         },
         "additionalProperties": true
