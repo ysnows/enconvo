@@ -374,7 +374,7 @@
           "group": {
             "type": "string",
             "title": "The property's group name/identifier",
-            "pattern": "^[a-zA-Z0-9-._~]*$",
+            "pattern": "^[^\\s]+(\\s+[^\\s]+)*$",
             "maxLength": 255,
             "minLength": 1,
             "description": "The slugged property's group name used internally."
