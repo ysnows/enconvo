@@ -43,10 +43,9 @@ async function handler(req, res) {
       success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/pay_success?canceled=true`,
       automatic_tax: { enabled: true },
-      allow_promotion_codes: false,
+      allow_promotion_codes: true,
       client_reference_id: email,
       customer_email: email,
-      allow_promotion_codes: true
     });
 
     res.json({ url: session.url });
