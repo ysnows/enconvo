@@ -427,7 +427,7 @@
     "name": {
       "type": "string",
       "title": "The extension's name/identifier",
-      "pattern": "^[a-z0-9~][a-zA-Z0-9._~]*$",
+      "pattern": "^[a-z0-9~][a-zA-Z0-9-~]*$",
       "maxLength": 255,
       "minLength": 2,
       "description": "The slugged extension's name used internally as identifier and in the store as part of the URL."
@@ -524,7 +524,7 @@
           "name": {
             "type": "string",
             "title": "The command's name/identifier",
-            "pattern": "^[a-z0-9~][a-zA-Z0-9._~]*$",
+            "pattern": "^[a-z0-9~][a-zA-Z0-9-~]*$",
             "maxLength": 255,
             "minLength": 2,
             "description": "The name directly maps to the entry point file for the command. So a command named 'index' would map to 'index.ts' (or any other supported TypeScript or JavaScript file extension such as .tsx, .js, .jsx)."
