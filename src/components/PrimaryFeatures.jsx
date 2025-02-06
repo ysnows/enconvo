@@ -33,7 +33,7 @@ export function PrimaryFeatures() {
                         New Real AI Agent!
                     </h2>
                     <p className="mt-6 text-lg tracking-tight text-blue-100">
-                        Experience the future with our revolutionary AI Agent - an intelligent system that learns, adapts, and works autonomously. By combining advanced AI capabilities with an intuitive operating system, we're transforming how you interact with technology. Let our AI Agent handle your routine tasks while you focus on what matters most, unlocking new levels of productivity and innovation.
+                        Experience the future with our revolutionary AI Agent - an intelligent system that learns, adapts, and works autonomously. By combining advanced AI capabilities with an intuitive operating system, we&apos;re transforming how you interact with technology. Let our AI Agent handle your routine tasks while you focus on what matters most, unlocking new levels of productivity and innovation.
                     </p>
                 </div>
 
