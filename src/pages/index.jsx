@@ -11,12 +11,13 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>EnConvo - Seamless Ai Assistant</title>
+        <title>EnConvo - AI Agent Launcher for macOS</title>
         <meta
           name="description"
-          content="ou can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."
+          content="Discover EnConvo - your AI Agent Launcher that revolutionizes productivity. With instant access, automate your daily tasks effortlessly. Our intelligent AI Agent system, powered by 150+ built-in tools and MCP support, learns and adapts to your workflow. Experience seamless automation and enhanced productivity with the most versatile AI assistant for macOS."
         />
       </Head>
+
       {/* <Header /> */}
       <main>
 
