@@ -27,7 +27,7 @@ const faqs = [
     },
     {
       question: 'Is Enconvo open source?',
-      answer: 'While Enconvo itself is not open source, all Enconvo extensions are open source and can be found on <a href="https://github.com/enconvo" target="_blank" rel="noopener noreferrer">GitHub</a>.',
+      answer: 'While Enconvo itself is not open source, all Enconvo extensions are open source and can be found on https://github.com/enconvo',
     },
   ],
   [
