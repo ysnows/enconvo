@@ -7,8 +7,9 @@ async function handler(req, res) {
 
   try {
     // 通过email获取customer_id
+    const email = req.user.email;
     const customer = await stripe.customers.list({
-      email: req.user.email,
+      email: email,
     });
     console.log(customer);
 
