@@ -160,5 +160,16 @@ export const features = [
         gradient: 'from-violet-500 to-fuchsia-500',
         media: 'https://file.enconvo.com/usecases/agent.mp4',
         mediaType: 'video'
+    }, {
+        title: 'Open Source',
+        description: 'All Enconvo extensions are open source and available on <a href="https://github.com/enconvo" target="_blank" rel="noopener noreferrer">GitHub</a>, You can contribute to the project by submitting pull requests or reporting issues.',
+        icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+            </svg>
+        ),
+        gradient: 'from-violet-500 to-fuchsia-500',
+        media: 'https://file.enconvo.com/usecases/opensource.png',
+        mediaType: 'image'
     },
 ]

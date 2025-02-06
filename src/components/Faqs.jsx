@@ -8,7 +8,7 @@ const faqs = [
       answer: 'No, EnConvo is a native macOS application built for optimal performance and system integration.',
     },
     {
-      question: 'Is EnConvo free to use?', 
+      question: 'Is EnConvo free to use?',
       answer: 'EnConvo offers a free trial with 10 uses per day. We also provide lifetime licenses and subscription plans for full access.',
     },
     {
@@ -19,11 +19,15 @@ const faqs = [
   [
     {
       question: 'What is your refund policy?',
-      answer: 'We offer a 7-day no-questions-asked refund policy. Your satisfaction is our priority.',
+      answer: 'We offer a 7-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time .',
     },
     {
       question: 'What platforms does EnConvo support?',
       answer: 'EnConvo currently only supports macOS, and has been optimized for native macOS performance and system integration.',
+    },
+    {
+      question: 'Is Enconvo open source?',
+      answer: 'While Enconvo itself is not open source, all Enconvo extensions are open source and can be found on <a href="https://github.com/enconvo" target="_blank" rel="noopener noreferrer">GitHub</a>.',
     },
   ],
   [
@@ -34,6 +38,10 @@ const faqs = [
     {
       question: 'How often do you release updates?',
       answer: 'We regularly release updates with new features, improvements, and bug fixes. All updates are free for existing users within their license period.',
+    },
+    {
+      question: 'Student Discount?',
+      answer: 'We offer a 30% discount for students. Please contact us by sending an email to support@enconvo.com to get your discount code.',
     }
   ],
 ]

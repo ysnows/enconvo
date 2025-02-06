@@ -30,9 +30,9 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
                     </span>{' '}
                     {title.split(' ').slice(1).join(' ')}
                 </p>
-                <p className="mt-6">
-                    {description}
-                </p>
+                <p className="mt-6 [&_a]:underline"
+                    dangerouslySetInnerHTML={{ __html: description }}
+                />
             </div>
 
             <div className="flex-1 mt-6 sm:mt-0">
