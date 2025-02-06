@@ -30,10 +30,10 @@ export function PrimaryFeatures() {
             <Container className="relative">
                 <div className="max-w-2xl md:mx-auto md:text-center xl:max-w-none">
                     <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl md:text-5xl">
-                        Revolutionizing Human-Computer Interaction
+                        New Real AI Agent!
                     </h2>
                     <p className="mt-6 text-lg tracking-tight text-blue-100">
-                        We are dedicated to creating an AI OS, developing core capabilities and diverse tools centered around artificial intelligence. Our ultimate goal is to enable AI to autonomously operate computers, liberating humans from routine tasks and unlocking unprecedented potential.
+                        Experience the future with our revolutionary AI Agent - an intelligent system that learns, adapts, and works autonomously. By combining advanced AI capabilities with an intuitive operating system, we're transforming how you interact with technology. Let our AI Agent handle your routine tasks while you focus on what matters most, unlocking new levels of productivity and innovation.
                     </p>
                 </div>
 

@@ -226,13 +226,11 @@ export function Hero() {
 
                     <div className="mx-auto max-w-5xl text-center">
                         <h1 className="bg-gradient-to-r from-red-500 to-blue-500 text-transparent bg-clip-text text-3xl font-bold tracking-tight sm:text-6xl pb-2">
-                            Productivity Powered by AI
+                            The AI Agent Launcher
                         </h1>
 
                         <p className="mt-10 text-sm sm:text-base leading-8 text-gray-300">
-                            EnConvo allows you to access AI at any time, within any software. It can assist you
-                            with convenient and efficient writing, coding, or any other task
-                            beyond imagination.
+                            Discover EnConvo - your AI Agent Launcher that revolutionizes productivity. With instant access, automate your daily tasks effortlessly. Our intelligent AI Agent system, powered by 150+ built-in tools and MCP support, learns and adapts to your workflow. Experience seamless automation and enhanced productivity with the most versatile AI assistant for macOS.
                         </p>
                         <div className="mt-10 sm:mt-20 flex flex-col items-center  gap-x-6">
 
