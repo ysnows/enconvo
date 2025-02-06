@@ -427,7 +427,7 @@
     "name": {
       "type": "string",
       "title": "The extension's name/identifier",
-      "pattern": "^[a-z0-9~][a-zA-Z0-9._~]*$",
+      "pattern": "^[a-z0-9][a-zA-Z0-9_]*$",
       "maxLength": 255,
       "minLength": 2,
       "description": "The slugged extension's name used internally as identifier and in the store as part of the URL."

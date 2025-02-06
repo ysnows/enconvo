@@ -158,7 +158,7 @@ export const features = [
             </svg>
         ),
         gradient: 'from-violet-500 to-fuchsia-500',
-        media: 'https://file.enconvo.com/usecases/agent_mode.png',
-        mediaType: 'image'
+        media: 'https://file.enconvo.com/usecases/agent.mp4',
+        mediaType: 'video'
     },
 ]
