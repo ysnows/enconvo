@@ -68,6 +68,10 @@ function Plan({
                 window.location.href = "https://api.enconvo.com/app/download";
                 return;
             }
+            if (lookupKey === "teams") {
+                window.location.href = "mailto:support@enconvo.com";
+                return;
+            }
 
 
 
@@ -224,34 +228,6 @@ export function Pricing() {
                             'More Than 100+ Features',
                         ]}
                     />
-                    <Plan
-                        name="Stardard"
-                        price="$49"
-                        lookupKey={'standard'}
-                        description="Lifetime access to all features."
-                        href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
-                        features={[
-                            '50,000 Points one-time bonus', // One-time bonus points for new users
-                            '2 years free updates',
-                            '1 MacOS Devices',
-                            'Knowledge Base',
-                            'Workflow',
-                            'Voice Input Method',
-                            'Context Awareness',
-                            'Live closed captions',
-                            'Seamless access AI via SmartBar',
-                            'PopBar',
-                            'AI Web Search',
-                            'Image Generation',
-                            'Text-to-Speech (TTS)',
-                            'Chat With Documents',
-                            'Chat With Webpage',
-                            'Use Local LLM (Ollama,LMStudio) For Privacy',
-                            'Ultimate Use of OCR',
-                            'Extension system',
-                            'More Than 100+ Features',
-                        ]}
-                    />
 
                     <Plan
                         featured
@@ -282,6 +258,36 @@ export function Pricing() {
                             'More Than 100+ Features',
                         ]}
                     />
+
+                    <Plan
+                        name="Stardard"
+                        price="$49"
+                        lookupKey={'standard'}
+                        description="Lifetime access to all features."
+                        href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
+                        features={[
+                            '50,000 Points one-time bonus', // One-time bonus points for new users
+                            '2 years free updates',
+                            '1 MacOS Devices',
+                            'Knowledge Base',
+                            'Workflow',
+                            'Voice Input Method',
+                            'Context Awareness',
+                            'Live closed captions',
+                            'Seamless access AI via SmartBar',
+                            'PopBar',
+                            'AI Web Search',
+                            'Image Generation',
+                            'Text-to-Speech (TTS)',
+                            'Chat With Documents',
+                            'Chat With Webpage',
+                            'Use Local LLM (Ollama,LMStudio) For Privacy',
+                            'Ultimate Use of OCR',
+                            'Extension system',
+                            'More Than 100+ Features',
+                        ]}
+                    />
+
                     <Plan
                         name="Cloud Premium"
                         price="$10/Monthly"
@@ -343,6 +349,29 @@ export function Pricing() {
                             'More Than 100+ Features',
                         ]}
                     />
+
+
+                    <Plan
+                        name="Teams"
+                        price="Teams"
+                        description="Custom solutions for organizations with advanced needs"
+                        href="mailto:support@enconvo.com"
+                        lookupKey={'teams'}
+                        startText={'Contact Sales'}
+                        features={[
+                            // Core features from Premium
+                            'All Premium Features',
+                            // Enterprise specific features
+                            'Private Deployment Options',
+                            'Custom Tool & Agent Deployment',
+                            'Custom Workflow Development',
+                            'Priority Support',
+                            'Advanced Security Controls',
+                            'Team Management Features'
+                        ]}
+                    />
+
+
                 </div>
             </Container>
         </section>
