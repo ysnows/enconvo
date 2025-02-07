@@ -4,7 +4,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import Image from 'next/image';
-import allInOne from '@/images/all-in-one.png'
+import allInOne from '@/images/ai_launcher.png'
 import {
     createClientComponentClient
 } from '@supabase/auth-helpers-nextjs'
@@ -246,7 +246,7 @@ export function Hero() {
 
                             <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
                                 <span
-                                    className=" pb-3  pl-1">v2.0.2</span>
+                                    className=" pb-3  pl-1">v2.0.6</span>
                                 <span className="pb-3  pl-1 text-xs">|</span>
                                 <span
                                     className=" pb-3  pl-1">macOS 13+</span>
