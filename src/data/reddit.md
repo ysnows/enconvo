@@ -1,4 +1,6 @@
-# Introducing EnConvo: Your AI-Powered Productivity Launcher for the New AI Era
+# Introducing EnConvo: The AI Tool/Agent Launcher for the New AI Era on MacOS
+
+# Introducing EnConvo: The AI Tool/Agent Launcher for the New AI Era on MacOS
 
 Hey Reddit! I'm excited to share EnConvo with you - an AI launcher I built to supercharge your daily life and work. Let me tell you about our latest feature: Agent Mode.
 

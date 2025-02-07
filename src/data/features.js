@@ -161,6 +161,17 @@ export const features = [
         media: 'https://file.enconvo.com/usecases/agent.mp4',
         mediaType: 'video'
     }, {
+        title: 'Deep Research',
+        description: 'A powerful AI assistant that analyzes and integrates massive online information to help you complete multi-step research tasks. Now available to all users and compatible with all LLM providers.',
+        icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+        ),
+        gradient: 'from-emerald-500 to-teal-500',
+        media: 'https://file.enconvo.com/usecases/deep_research.png',
+        mediaType: 'image'
+    }, {
         title: 'Open Source',
         description: 'All Enconvo extensions are open source and available on <a href="https://github.com/enconvo" target="_blank" rel="noopener noreferrer">GitHub</a>, You can contribute to the project by submitting pull requests or reporting issues.',
         icon: () => (
