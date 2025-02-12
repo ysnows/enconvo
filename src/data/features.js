@@ -169,8 +169,8 @@ export const features = [
             </svg>
         ),
         gradient: 'from-emerald-500 to-teal-500',
-        media: 'https://file.enconvo.com/usecases/deep_research.png',
-        mediaType: 'image'
+        media: 'https://www.youtube.com/watch?v=PMpzCbdysjQ',
+        mediaType: 'youtube'
     }, {
         title: 'Open Source',
         description: 'All Enconvo extensions are open source and available on <a href="https://github.com/enconvo" target="_blank" rel="noopener noreferrer">GitHub</a>, You can contribute to the project by submitting pull requests or reporting issues.',

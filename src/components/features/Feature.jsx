@@ -74,6 +74,16 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
                             </div>
                         )}
                     </div>
+                ) : mediaType === 'youtube' ? (
+                    <div className="relative mt-16 sm:mt-24 w-full aspect-video">
+                        <iframe
+                            className="absolute top-0 left-0 w-full h-full rounded-xl bg-white/5 shadow-2xl ring-1 ring-white/10" 
+                            // Show player controls but hide other UI elements
+                            src={`${media.replace('watch?v=', 'embed/')}?controls=1&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3`}
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        />
+                    </div>
                 ) : (
                     <Image
                         className="basis-0 rounded-xl"
