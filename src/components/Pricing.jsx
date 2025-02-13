@@ -188,13 +188,13 @@ export function Pricing() {
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
 
-                    {/* <div className='mt-4'>
-                        <span className="text-white font-semibold">Happy Early Black Friday. Enjoy</span>
+                    <div className='mt-4'>
+                        <span className="text-white font-semibold">DeepSeek R1、DeepSeek V3</span>
                         <span className="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
-                            30% OFF
+                            Free Unlimited Use
                         </span>
-                        <span className="text-white font-semibold"> if you buy today.</span>
-                    </div> */}
+                        {/* <span className="text-white font-semibold"> if you buy today.</span> */}
+                    </div>
 
 
                 </div>
