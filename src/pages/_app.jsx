@@ -15,6 +15,8 @@ const App = ({Component, pageProps}) => {
                 strategy="afterInteractive"
             />
 
+           <script async src="https://assets.endorsely.com/endorsely.js" data-endorsely="2006ac68-b1bd-4140-ab76-aa957e3c2016"></script>
+
             <Script
                 src="https://www.googletagmanager.com/gtag/js?id=G-X7999CT0H3"
                 strategy="afterInteractive"

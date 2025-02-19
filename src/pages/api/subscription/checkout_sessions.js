@@ -19,7 +19,7 @@ async function handler(req, res) {
     return;
   }
 
-  const { lookupKey } = req.body;
+  const { lookupKey, endorsely_referral } = req.body;
   const email = req.user.email
 
   let mode = 'payment'; 
@@ -46,6 +46,9 @@ async function handler(req, res) {
       allow_promotion_codes: true,
       client_reference_id: email,
       customer_email: email,
+      metadata: {
+        endorsely_referral: endorsely_referral
+      }
     });
 
     res.json({ url: session.url });

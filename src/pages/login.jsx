@@ -74,7 +74,8 @@ export default function Login() {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            lookupKey: plan
+                            lookupKey: plan,
+                            endorsely_referral: window.endorsely_referral
                         }),
                     });
 

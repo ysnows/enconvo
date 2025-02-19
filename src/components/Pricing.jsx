@@ -92,7 +92,8 @@ function Plan({
                 },
                 body: JSON.stringify({
                     lookupKey,
-                    email: session.user.email
+                    email: session.user.email,
+                    endorsely_referral: window.endorsely_referral
                 }),
             });
 
