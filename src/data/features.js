@@ -160,7 +160,20 @@ export const features = [
         gradient: 'from-violet-500 to-fuchsia-500',
         media: 'https://file.enconvo.com/usecases/agent.mp4',
         mediaType: 'video'
-    }, {
+    },
+    {
+        title: 'Online Video Downloader',
+        description: 'Online Video Downloader tool, supporting platforms (TikTok, YouTube, Twitter, Instagram, Reddit, Vimeo, Pornhub, XVideos, etc.)',
+        icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+        ),
+        gradient: 'from-pink-500 to-rose-500',
+        media: 'https://www.youtube.com/watch?v=5SsVIPtTTCA',
+        mediaType: 'youtube'
+    },
+    {
         title: 'Deep Research',
         description: 'A powerful AI assistant that analyzes and integrates massive online information to help you complete multi-step research tasks. Now available to all users and compatible with all LLM providers.',
         icon: () => (
@@ -171,7 +184,8 @@ export const features = [
         gradient: 'from-emerald-500 to-teal-500',
         media: 'https://www.youtube.com/watch?v=PMpzCbdysjQ',
         mediaType: 'youtube'
-    }, {
+    },
+    {
         title: 'Open Source',
         description: 'All Enconvo extensions are open source and available on <a href="https://github.com/enconvo" target="_blank" rel="noopener noreferrer">GitHub</a>, You can contribute to the project by submitting pull requests or reporting issues.',
         icon: () => (
