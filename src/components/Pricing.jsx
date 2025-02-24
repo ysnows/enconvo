@@ -239,6 +239,7 @@ export function Pricing() {
                         href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
                         features={[
                             '150,000 Points one-time bonus', // One-time bonus points for new users
+                            'Unlimited AI use with your API key',
                             '3 MacOS Devices',
                             'Lifetime free updates',
                             'Knowledge Base',
@@ -268,6 +269,7 @@ export function Pricing() {
                         href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
                         features={[
                             '50,000 Points one-time bonus', // One-time bonus points for new users
+                            'Unlimited AI use with your API key',
                             '2 years free updates',
                             '1 MacOS Devices',
                             'Knowledge Base',
