@@ -98,7 +98,7 @@ export default function PaySuccess({ handleOpenApp }) {
                                         <Button onClick={() => router.push('/')} className="border-2">
                                             Return to Home
                                         </Button>
-                                        <Button onClick={() => router.push('/#pricing')} className="bg-indigo-600 hover:bg-indigo-500">
+                                        <Button onClick={() => router.push(isTopUpPoints ? '/cloud-points' : '/#pricing')} className="bg-indigo-600 hover:bg-indigo-500">
                                             Try Again
                                         </Button>
                                     </>
