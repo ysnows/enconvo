@@ -20,6 +20,7 @@ async function handler(req, res) {
   }
 
   const { lookupKey, endorsely_referral } = req.body;
+  console.log("endorsely_referral", endorsely_referral,lookupKey)
   const email = req.user.email
 
   let mode = 'payment'; 

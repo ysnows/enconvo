@@ -83,7 +83,7 @@ function Plan({
                 window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
                 return;
             }
-            console.log("user email", session.user.email)
+            console.log("user email", session.user.email, window.endorsely_referral)
 
             const response = await fetch('/api/subscription/checkout_sessions', {
                 method: 'POST',

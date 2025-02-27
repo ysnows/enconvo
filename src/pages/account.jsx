@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Image from 'next/image'
 import { NativeRouter } from "@/utils/app/native_router"
+
 export default function Account() {
     const router = useRouter()
     const [user, setUser] = useState(null)
@@ -10,6 +11,21 @@ export default function Account() {
     const [loading, setLoading] = useState(true)
     const [userInfo, setUserInfo] = useState(null)
     const [managingSubscription, setManagingSubscription] = useState(false)
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+
+    // Check for success query parameter from Stripe redirect
+    useEffect(() => {
+        if (router.query.success === 'cloud_points') {
+            setShowSuccessMessage(true)
+            
+            // Hide success message after 5 seconds
+            const timer = setTimeout(() => {
+                setShowSuccessMessage(false)
+            }, 5000)
+            
+            return () => clearTimeout(timer)
+        }
+    }, [router.query])
 
     const fetchUserInfo = async (token) => {
         try {
@@ -124,6 +140,26 @@ export default function Account() {
                     </button>
                 </div>
 
+                {/* Success notification */}
+                {showSuccessMessage && (
+                    <div className="mt-4 p-4 rounded-md bg-green-800 text-white flex items-center justify-between">
+                        <div className="flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Cloud Points purchased successfully! Your points have been added to your account.</span>
+                        </div>
+                        <button 
+                            onClick={() => setShowSuccessMessage(false)}
+                            className="text-white hover:text-gray-200"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
+
                 <div className="mt-8">
                     <h1 className="text-2xl font-bold mb-8">Account</h1>
 
@@ -223,7 +259,15 @@ export default function Account() {
                                                 </div>
                                             </div>
                                             <div>
-                                                <label className="block text-sm text-gray-400">Points Usage</label>
+                                                <div className="flex items-center justify-between">
+                                                    <label className="block text-sm text-gray-400">Points Usage</label>
+                                                    <button
+                                                        onClick={() => router.push('/cloud-points')}
+                                                        className="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded-md text-white transition-colors"
+                                                    >
+                                                        Top Up
+                                                    </button>
+                                                </div>
                                                 <div className="mt-1">
                                                     <div className="flex items-center justify-between mb-2">
                                                         <span className="text-sm text-gray-400">

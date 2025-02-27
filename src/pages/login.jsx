@@ -67,6 +67,7 @@ export default function Login() {
                 const returnUrl = router.query.returnUrl || '/';
                 if (returnUrl.startsWith('/pricing?plan=')) {
                     // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
+                    console.log("window.endorsely_referral", window.endorsely_referral)
                     const plan = returnUrl.split('plan=')[1];
                     const response = await fetch('/api/subscription/checkout_sessions', {
                         method: 'POST',
