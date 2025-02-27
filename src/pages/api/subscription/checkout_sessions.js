@@ -23,15 +23,20 @@ async function handler(req, res) {
   }
 
   const { lookupKey, endorsely_referral } = req.body;
-  console.log("endorsely_referral", endorsely_referral,lookupKey)
+  console.log("endorsely_referral", endorsely_referral, lookupKey)
   const email = req.user.email
 
-  let mode = 'payment'; 
+  let mode = 'payment';
   if (lookupKey === 'standard' || lookupKey === 'premium') {
     mode = 'payment';
-  }else if (lookupKey === 'monthly' || lookupKey === 'yearly') {
+  } else if (lookupKey === 'monthly' || lookupKey === 'yearly') {
     mode = 'subscription';
   }
+
+  const isTopUpPoints = lookupKey === '250000_points' || lookupKey === '1500000_points' || lookupKey === '3000000_points';
+
+  const from = isTopUpPoints ? 'points_top_up' : 'subscription';
+
 
   try {
     // Create Checkout Sessions from body params.
@@ -44,8 +49,8 @@ async function handler(req, res) {
         },
       ],
       mode: mode,
-      success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.origin}/pay_success?canceled=true`,
+      success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}&from=${from}`,
+      cancel_url: `${req.headers.origin}/pay_success?canceled=true&from=${from}`,
       automatic_tax: { enabled: true },
       allow_promotion_codes: true,
       client_reference_id: email,

@@ -18,6 +18,9 @@ export default function PaySuccess({ handleOpenApp }) {
     const router = useRouter();
     const isSuccess = router.query.success === 'true';
     const isCanceled = router.query.canceled === 'true';
+    const from = router.query.from;
+    const isTopUpPoints = from === 'points_top_up';
+    const successTipText = isTopUpPoints ? 'Thank you for your purchase! You will receive your points in your account shortly.' : 'Thank you for your purchase! You can now start using Enconvo premium features.';
 
     useEffect(() => {
         if (isSuccess) {
@@ -82,7 +85,7 @@ export default function PaySuccess({ handleOpenApp }) {
                             </h1>
                             <p className="mt-6 text-lg leading-8 text-gray-300">
                                 {isSuccess 
-                                    ? 'Your payment has been processed successfully. You can now start using Enconvo premium features.' 
+                                    ? successTipText
                                     : 'Your payment was cancelled. If you experienced any issues, please try again or contact our support team.'}
                             </p>
                             <div className="flex gap-4 mt-10">
