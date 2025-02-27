@@ -116,6 +116,19 @@ async function handleCheckoutComplete(event: Stripe.Event) {
     type = "standard";
   }
 
+  // is topup points
+  const isTopUpPoints = type === "250000_points" || type === "1500000_points" || type === "3000000_points";
+  if (isTopUpPoints) {
+    return addTopupPoints(email, type, {
+      event: {
+        id: event.id,
+        type: event.type,
+        livemode: event.livemode,
+      },
+    });
+  }
+
+
   // Add subscription
   return addSubscription(email, type, {
     event: {
@@ -129,6 +142,33 @@ async function handleCheckoutComplete(event: Stripe.Event) {
 
 
 
+async function addTopupPoints(email: string, type: string, info: any) {
+
+  // Call external API to update subscription
+  const amount = type === "250000_points" ? 250000 : type === "1500000_points" ? 1500000 : 3000000;
+  try {
+    const params = {
+      "tinqun_wuvxi6_zUkwev": email,
+      "wAdcoj_nazpeb_vedja7": amount,
+    };
+
+    const resp = await fetch("https://api.enconvo.com/jizcaH_merqi4_bedqar/sakKox_qucqu2_pebwac", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params)
+    });
+
+    if (!resp.ok) {
+      console.error('External API error:', await resp.text());
+    }
+  } catch (error) {
+    console.error('Error calling external API:', error);
+  }
+
+  return "Purchase successful";
+}
 async function addSubscription(email: string, type: string = "premium", info: any) {
   const supabase = await createSuperClient();
 

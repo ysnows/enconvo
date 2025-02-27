@@ -49,28 +49,33 @@ export default function CloudPoints() {
   }, [router])
 
   const handlePurchase = async (packageId) => {
-    if (!user) return
-    
+    const { data: { session } } = await supabase.auth.getSession();
+
     setPurchaseLoading(true)
     try {
       // Call API to create checkout session
-      const response = await fetch('/api/subscription/checkout', {
+      const response = await fetch('/api/subscription/checkout_sessions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           lookupKey: packageId,
-          successUrl: `${window.location.origin}/account?success=cloud_points`,
-          cancelUrl: `${window.location.origin}/cloud-points?canceled=true`,
+          email: session.user.email
         }),
-      })
+      });
 
-      const data = await response.json()
-      
-      // Redirect to Stripe checkout
-      if (data.url) {
-        window.location.href = data.url
+      console.log("response.status", response.status);
+
+      if (response.status === 200) {
+        const data = await response.json()
+        if (data.url) {
+          window.location.href = data.url
+        }
+      } else {
+        const error = await response.json();
+        console.error('Payment error:', error);
+        alert('Failed to create checkout session. Please try again.')
       }
     } catch (error) {
       console.error('Error creating checkout session:', error)
@@ -79,7 +84,7 @@ export default function CloudPoints() {
       setPurchaseLoading(false)
     }
   }
-  
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -89,10 +94,10 @@ export default function CloudPoints() {
       <Head>
         <title>Enconvo Cloud Points</title>
       </Head>
-      
+
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <button 
-          onClick={() => router.back()} 
+        <button
+          onClick={() => router.back()}
           className="flex items-center text-gray-400 hover:text-white mb-8"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -100,27 +105,26 @@ export default function CloudPoints() {
           </svg>
           Back to Account
         </button>
-        
+
         <h1 className="text-3xl font-bold mb-4">Enconvo Cloud Points</h1>
-        
+
         <div className="mb-8">
-          <p className="text-gray-300">
+          <p className="text-gray-300 mb-4">
             Enconvo Cloud points can be used for services like LLM, TTS, Speech-to-Text, Image generation, and more.
           </p>
           <p className="text-gray-300 mt-2">
-            <span className="text-blue-400">*</span> Points never expire until they're used.
+            <span className="text-blue-400">*</span> Points never expire until they&apos;re used.
           </p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {pointsPackages.map((pkg) => (
-            <div 
+            <div
               key={pkg.id}
-              className={`border rounded-lg p-6 transition-all ${
-                selectedPackage === pkg.id 
-                  ? 'border-blue-500 bg-gray-800' 
+              className={`border rounded-lg p-6 transition-all ${selectedPackage === pkg.id
+                  ? 'border-blue-500 bg-gray-800'
                   : 'border-gray-700 bg-gray-800 hover:border-gray-500'
-              }`}
+                }`}
               onClick={() => setSelectedPackage(pkg.id)}
             >
               <div className="mb-4">
@@ -132,10 +136,10 @@ export default function CloudPoints() {
                   className="rounded-full"
                 />
               </div>
-              
+
               <h3 className="text-xl font-semibold mb-2">{pkg.points} Points</h3>
               <p className="text-gray-300 mb-4">{pkg.price}</p>
-              
+
               <button
                 onClick={() => handlePurchase(pkg.lookupKey)}
                 disabled={purchaseLoading}

@@ -9,6 +9,9 @@ const PRICE_IDS = {
 
   'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
   'yearly': 'price_1PUnbcP5mwiRKlICBAdbINOS',
+  '250000_points': 'price_1Qx9GDP5mwiRKlICDn53Og5c',
+  '1500000_points': 'price_1Qx9NTP5mwiRKlIC8vIK1Ym1',
+  '3000000_points': 'price_1Qx9QYP5mwiRKlICzdVj9Nx3',
 };
 
 async function handler(req, res) {
