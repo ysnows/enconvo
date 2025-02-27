@@ -259,11 +259,11 @@ export default function Account() {
                                                 </div>
                                             </div>
                                             <div>
-                                                <div className="flex items-center justify-between">
+                                                <div className="flex items-center">
                                                     <label className="block text-sm text-gray-400">Points Usage</label>
                                                     <button
                                                         onClick={() => router.push('/cloud-points')}
-                                                        className="px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded-md text-white transition-colors"
+                                                        className="ml-4 px-3 py-1 text-sm bg-blue-500 hover:bg-blue-600 rounded-md text-white transition-colors"
                                                     >
                                                         Top Up
                                                     </button>
