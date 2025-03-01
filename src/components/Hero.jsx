@@ -230,7 +230,7 @@ export function Hero() {
                                 rel="noreferrer"
                                 href="https://api.enconvo.com/app/download"
                             >
-                                Download For Free Trial
+                                Download For MacOS
                             </Link>
 
 
