@@ -19,7 +19,7 @@ const faqs = [
   [
     {
       question: 'What is your refund policy?',
-      answer: 'We offer a 30-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time .',
+      answer: 'We offer a 14-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time .',
     },
     {
       question: 'What platforms does EnConvo support?',
