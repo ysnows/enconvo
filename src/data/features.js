@@ -54,8 +54,8 @@ export const features = [
             </svg>
         ),
         gradient: 'from-red-500 to-orange-300',
-        media: 'https://file.enconvo.com/usecases/voice_input.mp4',
-        mediaType: 'video'
+        media: 'https://www.youtube.com/watch?v=SB-zzuQY9eU',
+        mediaType: 'youtube'
     },
     {
         title: 'Writing Tools',
