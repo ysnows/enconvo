@@ -41,6 +41,8 @@ async function handler(req, res) {
   try {
     // Create Checkout Sessions from body params.
     const priceId = PRICE_IDS[lookupKey];
+    // Create a checkout session with Stripe
+    // For one-time payments, we enable invoice creation to ensure customers receive an invoice
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
@@ -55,6 +57,8 @@ async function handler(req, res) {
       allow_promotion_codes: true,
       client_reference_id: email,
       customer_email: email,
+      // Send invoice for one-time payments (when mode is 'payment')
+      invoice_creation: { enabled: true },
       metadata: {
         endorsely_referral: endorsely_referral
       }
