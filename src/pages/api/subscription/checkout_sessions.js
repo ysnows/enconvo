@@ -58,7 +58,7 @@ async function handler(req, res) {
       client_reference_id: email,
       customer_email: email,
       // Send invoice for one-time payments (when mode is 'payment')
-      invoice_creation: { enabled: true },
+      invoice_creation: mode === 'payment' ? { enabled: true } : undefined,
       metadata: {
         endorsely_referral: endorsely_referral
       }
