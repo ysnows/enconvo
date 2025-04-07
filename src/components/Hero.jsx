@@ -16,6 +16,7 @@ export function Hero() {
 
     const [loginState, setLoginState] = useState("login")
     const [navigation, setNavigation] = useState([
+        { name: 'Store', href: 'https://app.enconvo.ai/mcp_store' },
         { name: 'Features', href: '#features' },
         {
             name: 'Pricing',
@@ -29,7 +30,6 @@ export function Hero() {
             name: 'Changelog',
             href: 'https://docs.enconvo.com/changelog'
         },
-        { name: 'Privacy', href: '/privacy' },
         {
             name: 'Log in',
             href: '/login'
