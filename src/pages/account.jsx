@@ -273,15 +273,22 @@ export default function Account() {
                                                         <span className="text-sm text-gray-400">
                                                             {userInfo.subscription.points} / {userInfo.subscription.maxPoints}
                                                         </span>
-                                                        <span className="text-sm text-gray-400">
-                                                            {Math.round((userInfo.subscription.points / userInfo.subscription.maxPoints) * 100)}%
-                                                        </span>
+                                                        {/* Only show percentage if not standard/premium and points don't exceed max */}
+                                                        {userInfo.subscription.type !== 'standard' && 
+                                                         userInfo.subscription.type !== 'premium' && 
+                                                         userInfo.subscription.points <= userInfo.subscription.maxPoints && (
+                                                            <span className="text-sm text-gray-400">
+                                                                {Math.round((userInfo.subscription.points / userInfo.subscription.maxPoints) * 100)}%
+                                                            </span>
+                                                        )}
                                                     </div>
                                                     <div className="w-full bg-gray-700 rounded-full h-2">
                                                         <div
                                                             className="bg-blue-500 h-2 rounded-full transition-all duration-300"
                                                             style={{
-                                                                width: `${(userInfo.subscription.points / userInfo.subscription.maxPoints) * 100}%`
+                                                                width: `${userInfo.subscription.points > userInfo.subscription.maxPoints ? 
+                                                                    '100' : 
+                                                                    (userInfo.subscription.points / userInfo.subscription.maxPoints) * 100}%`
                                                             }}
                                                         />
                                                     </div>
