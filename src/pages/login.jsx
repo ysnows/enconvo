@@ -31,10 +31,8 @@ export default function Login() {
 
 
     useEffect(() => {
-
-
-
         supabase.auth.getSession().then(async ({ data, error }) => {
+            console.log("data--", data)
             if (data.session) {
                 setSession(data.session)
                 const expires_at = data.session.expires_at
@@ -63,6 +61,7 @@ export default function Login() {
 
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+            console.log("event--", event, session)
             if (event === 'SIGNED_IN') {
                 const returnUrl = router.query.returnUrl || '/';
                 if (returnUrl.startsWith('/pricing?plan=')) {
@@ -85,7 +84,19 @@ export default function Login() {
                         window.location.href = data.url;
                     }
                 } else {
-                    router.push(returnUrl);
+                    if (returnUrl === '/') {
+                        console.log('router.query', router.query)
+                        if (router.query === 'app') {
+                            setLoginState("success")
+                            setNavigation([
+                                { name: "Logout", href: "/" },
+                            ])
+                        } else {
+                            router.push('account');
+                        }
+                    } else {
+                        router.push(returnUrl);
+                    }
                 }
             }
         });
