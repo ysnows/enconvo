@@ -262,7 +262,7 @@ export function Pricing() {
                     />
 
                     <Plan
-                        name="Stardard"
+                        name="Standard"
                         price="$49"
                         lookupKey={'standard'}
                         description="Lifetime access to all features."
