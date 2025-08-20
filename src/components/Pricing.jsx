@@ -270,7 +270,7 @@ export function Pricing() {
                         features={[
                             '50,000 Points one-time bonus', // One-time bonus points for new users
                             'Unlimited AI use with your API key',
-                            '2 years free updates',
+                            '1 years free updates',
                             '1 MacOS Devices',
                             'Knowledge Base',
                             'Workflow',
