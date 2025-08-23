@@ -1,14 +1,18 @@
 import Link from 'next/link'
 import clsx from 'clsx'
+import { ComponentPropsWithoutRef } from 'react'
 
-const baseStyles = {
+type Variant = 'solid' | 'outline'
+type Color = 'slate' | 'blue' | 'white'
+
+const baseStyles: Record<Variant, string> = {
   solid:
     'group inline-flex items-center justify-center rounded-full py-2 px-4 text-sm font-semibold focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2',
   outline:
     'group inline-flex ring-1 items-center justify-center rounded-full py-2 px-4 text-sm focus:outline-none',
 }
 
-const variantStyles = {
+const variantStyles: Record<Variant, Record<Color, string>> = {
   solid: {
     slate:
       'bg-slate-900 text-white hover:bg-slate-700 hover:text-slate-100 active:bg-slate-800 active:text-slate-300 focus-visible:outline-slate-900',
@@ -19,9 +23,19 @@ const variantStyles = {
   outline: {
     slate:
       'ring-slate-200 text-slate-700 hover:text-slate-900 hover:ring-slate-300 active:bg-slate-100 active:text-slate-600 focus-visible:outline-blue-600 focus-visible:ring-slate-300',
+    blue:
+      'ring-blue-200 text-blue-700 hover:text-blue-900 hover:ring-blue-300 active:bg-blue-100 active:text-blue-600 focus-visible:outline-blue-600 focus-visible:ring-blue-300',
     white:
       'ring-slate-700 text-white hover:ring-slate-500 active:ring-slate-700 active:text-slate-400 focus-visible:outline-white',
   },
+}
+
+export interface ButtonProps {
+  variant?: Variant
+  color?: Color
+  className?: string
+  href?: string
+  [key: string]: any
 }
 
 export function Button({
@@ -30,7 +44,7 @@ export function Button({
   className,
   href,
   ...props
-}) {
+}: ButtonProps) {
   className = clsx(
     baseStyles[variant],
     variantStyles[variant][color],

@@ -1,11 +1,12 @@
 import {
     createClientComponentClient
 } from '@supabase/auth-helpers-nextjs'
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
-import { NativeRouter } from "@/utils/app/native_router";
-import RegisterForm from "@/pages/components/RegisterForm";
-import RegisterSuccess from "@/pages/components/RegisterSuccess";
+import { NativeRouter } from "@/utils/app/native_router"
+import RegisterForm from "@/pages/components/RegisterForm"
+import RegisterSuccess from "@/pages/components/RegisterSuccess"
+import type { Session, AuthChangeEvent } from '@supabase/supabase-js'
 
 
 export default function Register() {
@@ -14,20 +15,22 @@ export default function Register() {
     const router = useRouter()
 
     const [registerState, setRegisterState] = useState("register")
-    const [session, setSession] = useState({})
+    const [session, setSession] = useState<Session | null>(null)
     const [email, setEmail] = useState('')
 
     const supabase = createClientComponentClient()
 
     const handleOpenApp = () => {
-        NativeRouter.login(session.access_token, session.refresh_token)
+        if (session) {
+            NativeRouter.login(session.access_token, session.refresh_token)
+        }
     }
 
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_UP' || event === 'SIGNED_IN') {
-                const returnUrl = router.query.returnUrl || '/';
-                if (returnUrl.startsWith('/pricing?plan=')) {
+            if (event === 'SIGNED_UP' as AuthChangeEvent || event === 'SIGNED_IN' as AuthChangeEvent) {
+                const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : (router.query.returnUrl || '/');
+                if (typeof returnUrl === 'string' && returnUrl.startsWith('/pricing?plan=')) {
                     // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
                     console.log("window.endorsely_referral", window.endorsely_referral)
                     const plan = returnUrl.split('plan=')[1];

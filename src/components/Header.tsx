@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, ReactNode } from 'react'
 import Link from 'next/link'
 import { Popover, Transition } from '@headlessui/react'
 import clsx from 'clsx'
@@ -8,7 +8,12 @@ import { Container } from '@/components/Container'
 import { Logo } from '@/components/Logo'
 import { NavLink } from '@/components/NavLink'
 
-function MobileNavLink({ href, children }) {
+interface MobileNavLinkProps {
+  href: string
+  children: ReactNode
+}
+
+function MobileNavLink({ href, children }: MobileNavLinkProps) {
   return (
     <Popover.Button as={Link} href={href} className="block w-full p-2">
       {children}
@@ -16,7 +21,11 @@ function MobileNavLink({ href, children }) {
   )
 }
 
-function MobileNavIcon({ open }) {
+interface MobileNavIconProps {
+  open: boolean
+}
+
+function MobileNavIcon({ open }: MobileNavIconProps) {
   return (
     <svg
       aria-hidden="true"

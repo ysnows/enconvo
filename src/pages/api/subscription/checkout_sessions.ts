@@ -26,7 +26,7 @@ async function handler(req, res) {
   console.log("endorsely_referral", endorsely_referral, lookupKey)
   const email = req.user.email
 
-  let mode = 'payment';
+  let mode: 'payment' | 'subscription' = 'payment';
   if (lookupKey === 'standard' || lookupKey === 'premium') {
     mode = 'payment';
   } else if (lookupKey === 'monthly' || lookupKey === 'yearly') {

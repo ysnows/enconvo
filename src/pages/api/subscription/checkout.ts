@@ -86,7 +86,7 @@ export default async function handler(req, res) {
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode: 'payment' as const,
       success_url: successUrl || `${process.env.NEXT_PUBLIC_SITE_URL}/account?success=cloud_points`,
       cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_SITE_URL}/cloud-points?canceled=true`,
       metadata: {

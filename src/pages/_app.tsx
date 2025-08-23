@@ -1,13 +1,10 @@
 import 'focus-visible'
 import '@/styles/tailwind.css'
+import React from 'react'
+import Script from 'next/script'
+import { AppProps } from 'next/app'
 
-// export default function App({ Component, pageProps }) {
-//   return <Component {...pageProps} />
-// }
-import React from 'react';
-import Script from 'next/script';
-
-const App = ({Component, pageProps}) => {
+const App = ({ Component, pageProps }: AppProps) => {
     return (
         <>
             <Script

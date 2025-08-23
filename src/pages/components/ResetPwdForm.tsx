@@ -13,7 +13,11 @@ import * as React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export default function ResetPwdForm({ setLoginState }) {
+interface ResetPwdFormProps {
+  setLoginState: (state: string) => void
+}
+
+export default function ResetPwdForm({ setLoginState }: ResetPwdFormProps) {
 
     const supabase = createClientComponentClient()
 

@@ -1,6 +1,16 @@
 import { Component1Icon, EyeOpenIcon, FileTextIcon, ImageIcon, MixIcon, CardStackIcon } from "@radix-ui/react-icons"
+import { ReactElement, ComponentType } from "react"
 
-export const features = [
+export interface Feature {
+  title: string
+  description: string
+  icon: (() => ReactElement) | ComponentType<any>
+  gradient: string
+  media: string
+  mediaType: 'video' | 'youtube' | 'image'
+}
+
+export const features: Feature[] = [
     {
         title: 'SmartBar',
         description: 'A unified entry point for all functionalities. Access AI features and 100+ plugins seamlessly from any application across the who system, streamlining your workflow with a simple @ command.',

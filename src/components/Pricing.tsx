@@ -5,7 +5,11 @@ import { Container } from '@/components/Container'
 import { supabase } from '@/lib/supabase'
 
 
-function SwirlyDoodle({ className }) {
+interface SwirlyDoodleProps {
+    className: string
+}
+
+function SwirlyDoodle({ className }: SwirlyDoodleProps) {
     return (
         <svg
             aria-hidden="true"
@@ -22,7 +26,11 @@ function SwirlyDoodle({ className }) {
     )
 }
 
-function CheckIcon({ className }) {
+interface CheckIconProps {
+    className: string
+}
+
+function CheckIcon({ className }: CheckIconProps) {
     return (
         <svg
             aria-hidden="true"
@@ -48,6 +56,17 @@ function CheckIcon({ className }) {
     )
 }
 
+interface PlanProps {
+    name: string
+    price: string
+    lookupKey: string
+    originPrice?: string
+    description: string
+    startText?: string
+    features: string[]
+    featured?: boolean
+}
+
 function Plan({
     name,
     price,
@@ -57,7 +76,7 @@ function Plan({
     startText = "Get started",
     features,
     featured = false
-}) {
+}: PlanProps) {
     const [isLoading, setIsLoading] = useState(false);
 
     const handleClick = async () => {
@@ -207,7 +226,6 @@ export function Pricing() {
                         price="FREE"
                         lookupKey={'free'}
                         description="Lifetime access to all basic features."
-                        href="https://api.enconvo.com/app/download"
                         startText={'Download'}
                         features={[
                             '10 uses/day',
@@ -236,7 +254,6 @@ export function Pricing() {
                         price="$99"
                         lookupKey={'premium'}
                         description="Most popular."
-                        href="https://buy.stripe.com/5kAdSm99j0cRgNycMV"
                         features={[
                             '150,000 Points one-time bonus', // One-time bonus points for new users
                             'Unlimited AI use with your API key',
@@ -266,7 +283,6 @@ export function Pricing() {
                         price="$49"
                         lookupKey={'standard'}
                         description="Lifetime access to all features."
-                        href="https://buy.stripe.com/aEU6pUbhrf7L0OAfZ6"
                         features={[
                             '50,000 Points one-time bonus', // One-time bonus points for new users
                             'Unlimited AI use with your API key',
@@ -296,7 +312,6 @@ export function Pricing() {
                         price="$10/Monthly"
                         lookupKey={'monthly'}
                         description="All Premium features, No need your own apikeys"
-                        href="https://buy.stripe.com/00g15A2KVcZDbteaEO"
                         startText={'Get started'}
                         features={[
                             '500,000 Points/Month',
@@ -327,7 +342,6 @@ export function Pricing() {
                         price="$96/Yearly"
                         lookupKey={'yearly'}
                         description="All Premium features, No need your own apikeys"
-                        href="https://buy.stripe.com/bIY4hM5X71gVfJu4gr"
                         startText={'Get started'}
                         features={[
                             '500,000 Points/Month',
@@ -358,7 +372,6 @@ export function Pricing() {
                         name="Teams"
                         price="Teams"
                         description="Custom solutions for organizations with advanced needs"
-                        href="mailto:support@enconvo.com"
                         lookupKey={'teams'}
                         startText={'Contact Sales'}
                         features={[

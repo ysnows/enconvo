@@ -1,13 +1,28 @@
 import { useEffect, useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import Link from "next/link";
-import { Logo } from "@/components/Logo";
-import Image from 'next/image';
+import Link from "next/link"
+import { Logo } from "@/components/Logo"
+import Image from 'next/image'
 import allInOne from '@/images/all-in-one.png'
-import {
-    createClientComponentClient
-} from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+
+declare global {
+  interface Window {
+    endorsely_referral?: any
+  }
+}
+
+interface NavigationItem {
+  name: string
+  href: string
+}
+
+interface SocialLink {
+  name: string
+  href: string
+  icon: (props: any) => JSX.Element
+}
 
 
 export function Hero() {
@@ -15,7 +30,7 @@ export function Hero() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const [loginState, setLoginState] = useState("login")
-    const [navigation, setNavigation] = useState([
+    const [navigation, setNavigation] = useState<NavigationItem[]>([
         { name: 'Store', href: 'https://app.enconvo.ai/mcp_store' },
         { name: 'Features', href: '#features' },
         {
@@ -36,7 +51,7 @@ export function Hero() {
         },
     ])
 
-    const socialLinks = [
+    const socialLinks: SocialLink[] = [
         {
             name: 'Discord',
             href: 'https://discord.gg/jYsdVRRK2k',
@@ -236,7 +251,7 @@ export function Hero() {
 
                             <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
                                 <span
-                                    className=" pb-3  pl-1">v2.2.1</span>
+                                    className=" pb-3  pl-1">v2.2.10</span>
                                 <span className="pb-3  pl-1 text-xs">|</span>
                                 <span
                                     className=" pb-3  pl-1">macOS 13+ (Intel & Apple Silicon)</span>

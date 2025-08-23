@@ -3,11 +3,12 @@ import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Image from 'next/image'
 import { NativeRouter } from "@/utils/app/native_router"
+import type { Session } from '@supabase/supabase-js'
 
 export default function Account() {
     const router = useRouter()
     const [user, setUser] = useState(null)
-    const [session, setSession] = useState({})
+    const [session, setSession] = useState<Session | null>(null)
     const [loading, setLoading] = useState(true)
     const [userInfo, setUserInfo] = useState(null)
     const [managingSubscription, setManagingSubscription] = useState(false)
@@ -107,7 +108,9 @@ export default function Account() {
     }
 
     const handleOpenApp = () => {
-        NativeRouter.login(session.access_token, session.refresh_token)
+        if (session) {
+            NativeRouter.login(session.access_token, session.refresh_token)
+        }
     }
 
     if (loading) {
@@ -172,8 +175,9 @@ export default function Account() {
                                     fill
                                     className="rounded-full object-cover bg-gray-800"
                                     onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = 'https://file.enconvo.com/circle_logo.png';
+                                        const target = e.target as HTMLImageElement;
+                                        target.onerror = null;
+                                        target.src = 'https://file.enconvo.com/circle_logo.png';
                                     }}
                                 />
                             </div>
@@ -218,9 +222,9 @@ export default function Account() {
                                             <h3 className="text-xl font-semibold">Subscription</h3>
                                             {(userInfo.subscription.type === "monthly" || userInfo.subscription.type === "yearly") && (
                                                 <button
-                                                    onClick={async () => {
+                                                    onClick={async (event) => {
                                                         // Add loading state
-                                                        const btn = event.target;
+                                                        const btn = event.target as HTMLButtonElement;
                                                         const originalText = btn.innerText;
                                                         btn.innerHTML = `${originalText} <svg class="inline-block ml-1 h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

@@ -1,9 +1,16 @@
-import Stripe from 'stripe';
-import { withAuth } from '@/utils/auth';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+import Stripe from 'stripe'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { withAuth } from '@/utils/auth'
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
-async function handler(req, res) {
+interface AuthenticatedRequest extends NextApiRequest {
+  user: {
+    email: string
+  }
+}
+
+async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
 
   try {
     // 通过email获取customer_id
@@ -23,7 +30,8 @@ async function handler(req, res) {
     res.end();
   } catch (err) {
     console.error('Stripe error:', err);
-    res.status(500).json({ statusCode: 500, message: err.message });
+    const error = err as Error
+    res.status(500).json({ statusCode: 500, message: error.message });
   }
 }
 

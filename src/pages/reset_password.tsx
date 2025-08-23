@@ -53,6 +53,6 @@ export default function ResetPassword() {
 
     return <>
         {registerState === "success" ? <Login /> :
-            <ResetPwdForm setLoginState={setRegisterState} loginState={registerState} />}
+            <ResetPwdForm setLoginState={setRegisterState} />}
     </>
 }

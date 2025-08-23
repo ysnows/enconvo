@@ -29,9 +29,9 @@ export default function PaySuccess({ handleOpenApp }) {
             const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-            function randomInRange(min, max) {
+            const randomInRange = (min: number, max: number): number => {
                 return Math.random() * (max - min) + min;
-            }
+            };
 
             const interval = setInterval(function() {
                 const timeLeft = animationEnd - Date.now();

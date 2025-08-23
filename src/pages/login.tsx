@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 import LoginSuccess from "@/pages/components/LoginSuccess"
 import { NativeRouter } from "@/utils/app/native_router"
+import type { Session } from '@supabase/supabase-js'
 
 export default function Login() {
     // 获取url参数
@@ -11,7 +12,7 @@ export default function Login() {
     const router = useRouter()
 
     const [loginState, setLoginState] = useState("login")
-    const [session, setSession] = useState({})
+    const [session, setSession] = useState<Session | null>(null)
     const [user, setUser] = useState({})
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -19,7 +20,9 @@ export default function Login() {
     ])
 
     const handleOpenApp = () => {
-        NativeRouter.login(session.access_token, session.refresh_token)
+        if (session) {
+            NativeRouter.login(session.access_token, session.refresh_token)
+        }
     }
     const handleLogout = () => {
         supabase.auth.signOut().then(() => {
@@ -64,8 +67,8 @@ export default function Login() {
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log("event--", event, session)
             if (event === 'SIGNED_IN') {
-                const returnUrl = router.query.returnUrl || '/';
-                if (returnUrl.startsWith('/pricing?plan=')) {
+                const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : (router.query.returnUrl || '/');
+                if (typeof returnUrl === 'string' && returnUrl.startsWith('/pricing?plan=')) {
                     // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
                     console.log("window.endorsely_referral", window.endorsely_referral)
                     const plan = returnUrl.split('plan=')[1];

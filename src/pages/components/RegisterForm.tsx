@@ -1,10 +1,10 @@
 import Head from 'next/head'
 import Link from 'next/link'
 
-import { ReloadIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import { ReloadIcon, ArrowTopRightIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
-
+import { useRouter } from 'next/router'
 
 import { Logo } from '@/components/Logo'
 import { useState } from "react";
@@ -12,23 +12,22 @@ import { Input } from "@/components/ui/input";
 import * as React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { NativeRouter } from "@/utils/app/native_router";
 
-export default function LoginForm({ loginState, setLoginState, setUser, router }) {
+export default function RegisterForm({ loginState, setLoginState, email, setEmail }) {
 
     const supabase = createClientComponentClient()
+    const router = useRouter()
 
-    const [email, setEmail] = useState('')
-    const [continueLogin, setContinueLogin] = useState(false)
+    // const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [name, setName] = useState('')
     const [error, setError] = useState('')
     const [emailIsLoading, setEmailIsLoading] = React.useState(false)
     const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
 
 
 
-
-    async function signIn() {
+    async function signUp() {
         // check if email is valid
         if (!email || !email.includes('@')) {
             alert('Please enter a valid email')
@@ -36,54 +35,18 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
         }
 
         setEmailIsLoading(true)
-        const { data, error } = await supabase.auth.signInWithPassword({
+
+        const returnUrlParams = router?.query?.returnUrl ? `?returnUrl=${router.query.returnUrl}` : '';
+
+        const { data, error } = await supabase.auth.signUp({
             email: email,
-            password: password
-        })
-
-        if (error) {
-            setError(error.message)
-            setEmailIsLoading(false)
-            return
-        }
-        console.log("session login :", data)
-
-        setUser(data.user)
-
-        await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token
-        })
-
-
-        NativeRouter.login(data.session.access_token, data.session.refresh_token)
-        setLoginState("success")
-
-        setEmailIsLoading(false)
-        // setContinueLogin(true)
-    }
-
-    async function signInWithEmail() {
-
-        if (continueLogin) {
-            const emailAddress = getEmailProvider(email);
-            if (emailAddress) {
-                window.location.href = emailAddress;
-            } else {
-
+            password: password,
+            options: {
+                emailRedirectTo: `${window.location.origin}/login?from=app${returnUrlParams}`,
+                data: {
+                    name: name,
+                }
             }
-            return
-        }
-        // check if email is valid
-        if (!email || !email.includes('@')) {
-            alert('Please enter a valid email')
-            return
-        }
-
-        setEmailIsLoading(true)
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
         })
 
         if (error) {
@@ -91,8 +54,10 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             setEmailIsLoading(false)
             return
         }
-        console.log(data)
-        alert('open enconvo app')
+
+        console.log("kk--", data)
+
+        setLoginState("success")
 
         setEmailIsLoading(false)
         // setContinueLogin(true)
@@ -102,19 +67,22 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
         try {
             setGoogleIsLoading(true)
             let redirectUrl = `${window.location.origin}/auth/callback`
-            if (router?.query?.returnUrl) {
-                redirectUrl = window.location
+            if (router.query.returnUrl) {
+                redirectUrl = router.query.returnUrl as string
             }
-
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
                     redirectTo: redirectUrl,
+                    queryParams: {
+                        access_type: 'offline',
+                        prompt: 'consent',
+                    }
                 }
             })
             if (error) throw error
         } catch (error) {
-            console.error('Error:', error)
+            setError(error.message)
         } finally {
             setGoogleIsLoading(false)
         }
@@ -123,7 +91,7 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
     return (
         <>
             <Head>
-                <title>Log In - EnConvo</title>
+                <title>Sign Up - EnConvo</title>
                 <meta
                     name="description"
                     content="you can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."
@@ -137,11 +105,11 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
                             <Logo className="h-16 w-auto" />
                         </Link>
                         <h2 className="text-center text-3xl font-medium tracking-tight text-white">
-                            Log in to Enconvo
+                            Create your Enconvo account
                         </h2>
                     </div>
 
-                    {/* Google Login Button */}
+                    {/* Google Sign Up Button */}
                     <div className="mt-8">
                         <Button
                             variant="outline"
@@ -160,39 +128,55 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
                         </Button>
                     </div>
 
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-[#333333]" />
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="bg-[#1A1A1A] px-4 text-[#666666]">Or continue with email</span>
+                        </div>
+                    </div>
 
-                    {/* Email Login Form */}
+                    {/* Email Registration Form */}
                     <div className="mt-6 space-y-6">
                         <div className="space-y-4">
-                            {!continueLogin &&
-                                <div className="space-y-1">
-                                    <Input
-                                        type="email"
-                                        placeholder="Email address"
-                                        required
-                                        autoComplete="email"
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        value={email}
-                                        className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
-                                    />
-                                </div>
-                            }
+                            <div className="space-y-1">
+                                <Input
+                                    type="text"
+                                    placeholder="Username"
+                                    required
+                                    autoComplete="name"
+                                    onChange={(e) => setName(e.target.value)}
+                                    value={name}
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
+                                />
+                            </div>
 
-                            {!continueLogin &&
-                                <div className="space-y-1">
-                                    <Input
-                                        type="password"
-                                        placeholder="Password"
-                                        required
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        value={password}
-                                        className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
-                                    />
-                                </div>
-                            }
+                            <div className="space-y-1">
+                                <Input
+                                    type="email"
+                                    placeholder="Email address"
+                                    required
+                                    autoComplete="email"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
+                                />
+                            </div>
+
+                            <div className="space-y-1">
+                                <Input
+                                    type="password"
+                                    placeholder="Password"
+                                    required
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={password}
+                                    className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
+                                />
+                            </div>
 
                             {error &&
-                                <Alert variant="destructive" className="bg-red-50 text-red-700 border-red-200">
+                                <Alert variant="destructive" className="bg-red-900/20 text-red-400 border-red-900/30">
                                     <ExclamationTriangleIcon className="h-4 w-4" />
                                     <AlertTitle>Error</AlertTitle>
                                     <AlertDescription>
@@ -202,31 +186,38 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
                             }
 
                             <Button
-                                onClick={signIn}
+                                onClick={signUp}
                                 disabled={emailIsLoading}
                                 className="w-full bg-[#E5E5E5] hover:bg-[#D4D4D4] text-[#1A1A1A] font-medium h-10 rounded-xl transition-all duration-200"
                             >
                                 {emailIsLoading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
-                                {emailIsLoading ? "Logging in..." : "Log in"}
+                                {emailIsLoading ? "Creating account..." : "Create account"}
                             </Button>
                         </div>
 
-                        {!continueLogin &&
-                            <div className="flex items-center justify-between text-sm">
+                        <div className="space-y-4 text-sm">
+                            <p className="text-center text-[#666666]">
+                                Already have an account?{' '}
                                 <Link
-                                    href={`/register${router?.query?.returnUrl ? `?returnUrl=${encodeURIComponent(router.query.returnUrl)}` : ''}`}
+                                    href={`/login${router?.query?.returnUrl ? `?returnUrl=${encodeURIComponent(Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : router.query.returnUrl)}` : ''}`}
+
                                     className="font-medium text-[#888888] hover:text-[#999999]"
                                 >
-                                    Create an account
+                                    Log in
                                 </Link>
-                                <Link
-                                    href="/reset_password_send"
-                                    className="font-medium text-[#666666] hover:text-[#888888]"
-                                >
-                                    Forgot password?
+                            </p>
+
+                            <p className="text-center text-[#666666] text-xs">
+                                By continuing, you agree to our{' '}
+                                <Link href="/terms" className="text-[#888888] hover:text-[#999999] underline underline-offset-2">
+                                    Terms of Service
+                                </Link>{' '}
+                                and{' '}
+                                <Link href="/privacy" className="text-[#888888] hover:text-[#999999] underline underline-offset-2">
+                                    Privacy Policy
                                 </Link>
-                            </div>
-                        }
+                            </p>
+                        </div>
                     </div>
                 </div>
             </main>

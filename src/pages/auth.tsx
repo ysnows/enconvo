@@ -15,7 +15,8 @@ export default function Login() {
 
     const [loginState, setLoginState] = useState("login")
     const handleOpenApp = () => {
-        NativeRouter.login(session.access_token, session.refresh_token)
+        // TODO: Get session from context or prop
+        // NativeRouter.login(session.access_token, session.refresh_token)
     }
 
     // console.log("router", window.location.href)
