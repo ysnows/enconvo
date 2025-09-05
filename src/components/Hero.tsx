@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Dialog } from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Dialog, Menu } from '@headlessui/react'
+import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import Link from "next/link"
 import { Logo } from "@/components/Logo"
 import Image from 'next/image'
@@ -229,34 +229,158 @@ export function Hero() {
 
                 <div className="mx-auto max-w-7xl  px-6 lg:px-8 ">
 
-                    <div className="mx-auto max-w-5xl text-center">
-                        <h1 className="bg-gradient-to-r from-red-500 to-blue-500 text-transparent bg-clip-text text-3xl font-bold tracking-tight sm:text-6xl pb-2">
-                            The AI Launcher
-                        </h1>
+                    <div className="mx-auto max-w-6xl text-center">
+                        {/* 主标题优化 */}
+                        <div className="relative">
+                            <h1 className="relative text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+                                <span className="block">
+                                    <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
+                                        The AI Agent
+                                    </span>
+                                </span>
+                                <span className="block mt-2">
+                                    <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                                        Launcher
+                                    </span>
+                                </span>
+                                
+                                {/* 背景光效 */}
+                                <div className="absolute inset-0 blur-3xl opacity-30">
+                                    <span className="block bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
+                                        The AI Launcher
+                                    </span>
+                                </div>
+                            </h1>
+                            
+                            {/* 下标签 */}
+                            <div className="mt-6 flex justify-center">
+                                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                                    ✨ Powered by AI • macOS Exclusive
+                                </span>
+                            </div>
+                        </div>
 
-                        <p className="mt-10 text-sm sm:text-base leading-8 text-gray-300">
-                            Discover EnConvo - your AI Launcher that revolutionizes productivity. With instant access, automate your daily tasks effortlessly. Our intelligent AI system, powered by 150+ built-in tools and MCP support, learns and adapts to your workflow. Experience seamless automation and enhanced productivity with the most versatile AI assistant for macOS.
+                        {/* 描述文字优化 */}
+                        <p className="mt-8 sm:mt-12 text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-300 max-w-4xl mx-auto">
+                            <span className="text-white font-semibold">Revolutionize your productivity</span> with EnConvo - the intelligent AI launcher that adapts to your workflow. 
+                            <br className="hidden sm:block" />
+                            Featuring <span className="text-purple-300 font-medium">150+ built-in tools</span>, <span className="text-blue-300 font-medium">MCP support</span>, and <span className="text-pink-300 font-medium">AI Agent mode</span> for seamless automation.
                         </p>
-                        <div className="mt-10 sm:mt-20 flex flex-col items-center  gap-x-6">
+                        <div className="mt-12 sm:mt-16 flex flex-col items-center space-y-6">
+                            {/* 主要下载按钮 */}
+                            <Menu as="div" className="relative">
+                                <Menu.Button className="group relative inline-flex items-center justify-center px-8 py-4 sm:px-12 sm:py-5 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-out bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900">
+                                    {/* 光芒效果 */}
+                                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
+                                    
+                                    {/* 下载图标 */}
+                                    <svg className="w-6 h-6 mr-3 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                    </svg>
+                                    
+                                    <span className="relative z-10 mr-2">Download v0.9.10</span>
+                                    
+                                    {/* 下拉箭头 */}
+                                    <ChevronDownIcon className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:rotate-180" />
+                                    
+                                    {/* 内部光效 */}
+                                    <div className="absolute inset-0.5 rounded-2xl bg-gradient-to-r from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                </Menu.Button>
 
-                            <Link
-                                target="_blank"
-                                className="border-2 border-purple-300  rounded-xl px-16 py-3 sm:px-24 sm:py-4 lg:text-base sm:text-xs font-semibold text-white shadow-sm bg-gradient-to-br from-purple-500 to-purple-900 hover:from-purple-700 hover:to-purple-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-400 disabled truncate"
-                                rel="noreferrer"
-                                href="https://api.enconvo.com/app/download"
-                            >
-                                Download For MacOS
-                            </Link>
+                                <Menu.Items className="absolute top-full mt-2 w-80 bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl ring-1 ring-white/10 focus:outline-none z-50">
+                                    <div className="p-4">
+                                        <div className="text-center mb-4">
+                                            <div className="inline-flex items-center px-4 py-2 bg-green-500/10 text-green-400 rounded-full text-sm font-medium border border-green-500/20">
+                                                Download v0.9.10
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="space-y-2">
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <a
+                                                        href="https://api.enconvo.com/app/download?arch=arm64&platform=darwin"
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className={`${
+                                                            active ? 'bg-purple-600/20 ring-1 ring-purple-500/40' : ''
+                                                        } group flex items-center w-full px-4 py-3 text-sm font-medium text-white rounded-xl transition-all duration-200 hover:bg-purple-600/20 hover:ring-1 hover:ring-purple-500/40`}
+                                                    >
+                                                        <div className="flex items-center justify-between w-full">
+                                                            <div className="flex items-center">
+                                                                <svg className="w-5 h-5 mr-3 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                                                    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+                                                                </svg>
+                                                                <div>
+                                                                    <div className="text-white font-medium">macOS (Apple Silicon)</div>
+                                                                    <div className="text-gray-400 text-xs">For M1, M2, M3, M4 Macs</div>
+                                                                </div>
+                                                            </div>
+                                                            <svg className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3" />
+                                                            </svg>
+                                                        </div>
+                                                    </a>
+                                                )}
+                                            </Menu.Item>
+                                            
+                                            <Menu.Item>
+                                                {({ active }) => (
+                                                    <a
+                                                        href="https://api.enconvo.com/app/download?arch=x64&platform=darwin"
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        className={`${
+                                                            active ? 'bg-purple-600/20 ring-1 ring-purple-500/40' : ''
+                                                        } group flex items-center w-full px-4 py-3 text-sm font-medium text-white rounded-xl transition-all duration-200 hover:bg-purple-600/20 hover:ring-1 hover:ring-purple-500/40`}
+                                                    >
+                                                        <div className="flex items-center justify-between w-full">
+                                                            <div className="flex items-center">
+                                                                <svg className="w-5 h-5 mr-3 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
+                                                                    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+                                                                </svg>
+                                                                <div>
+                                                                    <div className="text-white font-medium">macOS (Intel)</div>
+                                                                    <div className="text-gray-400 text-xs">For Intel-based Macs</div>
+                                                                </div>
+                                                            </div>
+                                                            <svg className="w-4 h-4 text-gray-400 group-hover:text-purple-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3" />
+                                                            </svg>
+                                                        </div>
+                                                    </a>
+                                                )}
+                                            </Menu.Item>
+                                        </div>
+                                    </div>
+                                </Menu.Items>
+                            </Menu>
 
-
-                            <div className="mt-4 text-sm font-normal text-gray-500 space-x-4">
-                                <span
-                                    className=" pb-3  pl-1">v2.2.10</span>
-                                <span className="pb-3  pl-1 text-xs">|</span>
-                                <span
-                                    className=" pb-3  pl-1">macOS 13+ (Intel & Apple Silicon)</span>
+                            {/* 版本信息 */}
+                            <div className="flex items-center space-x-6 text-sm text-gray-400">
+                                <div className="flex items-center space-x-2">
+                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                    <span className="font-medium text-gray-300">v2.2.13</span>
+                                </div>
+                                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
+                                <span>macOS 13+ (Intel & Apple Silicon)</span>
                             </div>
 
+                            {/* 功能亮点 */}
+                            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-gray-400">
+                                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                                    <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
+                                    <span>150+ Built-in Tools</span>
+                                </div>
+                                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                                    <span>MCP Support</span>
+                                </div>
+                                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-lg border border-gray-700/50">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                                    <span>AI Agent Mode</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div>

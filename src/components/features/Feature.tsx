@@ -13,40 +13,57 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
     };
 
     return (
-        <div className="flex text-white font-mono sm:mt-60 mt-6 flex-col sm:flex-row lg:flex-row">
-            <div className="pr-20 mt-16 flex flex-col"
-                style={{
-                    flexGrow: 0.6,
-                    flexBasis: 0,
-                    flexShrink: 1,
-                }}>
-                <div className={`bg-gradient-to-l ${gradient} w-14 h-14 flex items-center justify-center rounded-xl`}>
-                    <Icon />
+        <div className="flex text-white sm:mt-32 mt-16 flex-col lg:flex-row items-center lg:items-start gap-12 lg:gap-16">
+            {/* 左侧内容 */}
+            <div className="flex-1 lg:max-w-lg">
+                {/* 图标优化 */}
+                <div className="relative inline-block">
+                    <div className={`bg-gradient-to-br ${gradient} w-16 h-16 flex items-center justify-center rounded-2xl shadow-xl`}>
+                        <Icon />
+                    </div>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradient} rounded-2xl opacity-20 blur-xl`}></div>
                 </div>
 
-                <p className="font-bold text-4xl mt-6">
-                    <span className={`bg-gradient-to-tr ${gradient} text-transparent bg-clip-text`}>
+                {/* 标题优化 */}
+                <h3 className="font-bold text-3xl sm:text-4xl lg:text-5xl mt-8 leading-tight">
+                    <span className={`bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
                         {title.split(' ')[0]}
-                    </span>{' '}
-                    {title.split(' ').slice(1).join(' ')}
-                </p>
-                <p className="mt-6 [&_a]:underline"
+                    </span>
+                    {title.split(' ').length > 1 && (
+                        <span className="text-white ml-2">
+                            {title.split(' ').slice(1).join(' ')}
+                        </span>
+                    )}
+                </h3>
+                
+                {/* 描述文字优化 */}
+                <div className="mt-6 text-lg leading-relaxed text-gray-300 [&_a]:text-blue-400 [&_a]:underline [&_a]:underline-offset-2 [&_a]:decoration-blue-400/50 hover:[&_a]:decoration-blue-400"
                     dangerouslySetInnerHTML={{ __html: description }}
                 />
             </div>
 
-            <div className="flex-1 mt-6 sm:mt-0">
+            {/* 右侧媒体内容 */}
+            <div className="flex-1 max-w-2xl">
                 {mediaType === 'video' ? (
-                    <div className="relative mt-16 sm:mt-24">
-                        <video
-                            ref={videoRef}
-                            className="rounded-xl bg-white/5 w-full shadow-2xl ring-1 ring-white/10"
-                            controls={isPlaying}
-                            muted
-                        // poster={`https://file.enconvo.com/thumbnails/${media.split('/').pop().replace('.mp4', '.jpg')}`}
-                        >
-                            <source src={media} type="video/mp4" />
-                        </video>
+                    <div className="relative group">
+                        {/* 视频容器 */}
+                        <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl ring-1 ring-white/10">
+                            <video
+                                ref={videoRef}
+                                className="w-full h-auto transition-transform duration-500 group-hover:scale-[1.02]"
+                                controls={isPlaying}
+                                muted
+                                playsInline
+                            >
+                                <source src={media} type="video/mp4" />
+                            </video>
+                            
+                            {/* 反光效果 */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        </div>
+                        
+                        {/* 底部阴影 */}
+                        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-3/4 h-6 bg-gradient-to-r from-transparent via-purple-500/20 to-transparent blur-xl"></div>
 
                         {!isPlaying && (
                             <div

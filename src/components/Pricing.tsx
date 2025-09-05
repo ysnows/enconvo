@@ -137,51 +137,126 @@ function Plan({
     return (
         <section
             className={clsx(
-                'flex flex-col rounded-3xl px-6 sm:px-8',
-                featured ? 'order-first bg-blue-600 py-8 lg:order-none' : 'lg:py-8'
+                'group relative flex flex-col rounded-3xl px-6 sm:px-8 transition-all duration-300',
+                featured
+                    ? 'order-first bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 py-8 lg:order-none scale-105 shadow-2xl shadow-blue-500/25 ring-2 ring-blue-400/20'
+                    : 'bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-900/50 py-8 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 hover:shadow-xl hover:shadow-gray-900/20 hover:-translate-y-1'
             )}
         >
-            <h3 className="mt-5 font-display text-lg text-white">{name}</h3>
-            <p
-                className={clsx(
-                    'mt-2 text-base',
-                    featured ? 'text-white' : 'text-slate-400'
+            {/* 装饰元素 */}
+            <div className={clsx(
+                "absolute -top-4 -right-4 w-8 h-8 rounded-full opacity-20 blur-xl",
+                featured ? "bg-white" : "bg-blue-500"
+            )}></div>
+
+            {/* 价格展示 */}
+            <div className={clsx(
+                "order-first relative",
+                featured && originPrice ? "pt-6" : ""
+            )}>
+                {featured && (
+                    <div className="absolute -top-2 -right-2">
+                        <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
+                            Most Popular
+                        </div>
+                    </div>
                 )}
-            >
-                {description}
-            </p>
-            <p className="order-first font-display text-5xl font-light tracking-tight text-white">
-                {originPrice &&
-                    <>
-                        <span className='line-through text-gray-700'>{originPrice}</span>
-                        &nbsp;
-                    </>
-                }
-                {price}
-            </p>
-            <ul
-                role="list"
-                className={clsx(
-                    'order-last mt-10 flex flex-col gap-y-3 text-sm',
-                    featured ? 'text-white' : 'text-slate-200'
-                )}
-            >
-                {features.map((feature) => (
-                    <li key={feature} className="flex">
-                        <CheckIcon className={featured ? 'text-white' : 'text-slate-400'} />
-                        <span className="ml-4">{feature}</span>
-                    </li>
-                ))}
-            </ul>
-            <Button
-                onClick={handleClick}
-                variant={featured ? 'solid' : 'outline'}
-                color="white"
-                className="mt-8"
-                disabled={isLoading}
-            >
-                {isLoading ? 'Going to checkout...' : startText}
-            </Button>
+                <div className={clsx(
+                    "space-y-2",
+                    originPrice ? "mt-2" : ""
+                )}>
+                    {originPrice && (
+                        <p className="font-display text-3xl font-bold line-through text-gray-500 leading-tight">
+                            {originPrice}
+                        </p>
+                    )}
+                    <p className="font-display text-5xl font-bold tracking-tight text-white leading-tight">
+                        <span className={clsx(
+                            "bg-gradient-to-r bg-clip-text text-transparent",
+                            featured
+                                ? "from-white to-blue-100"
+                                : "from-blue-400 to-purple-400"
+                        )}>
+                            {price}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            {/* 标题和描述 */}
+            <div className="mt-6">
+                <h3 className="font-display text-2xl font-bold text-white">{name}</h3>
+                <p className={clsx(
+                    'mt-2 text-base leading-relaxed',
+                    featured ? 'text-blue-100' : 'text-gray-400'
+                )}>
+                    {description}
+                </p>
+            </div>
+            {/* 功能列表 */}
+            <div className="mt-8 flex-1">
+                <ul
+                    role="list"
+                    className="space-y-4"
+                >
+                    {features.map((feature) => (
+                        <li key={feature} className="flex items-start group/item">
+                            <div className={clsx(
+                                "flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 transition-all duration-200",
+                                featured
+                                    ? "bg-blue-400/20 group-hover/item:bg-blue-400/30"
+                                    : "bg-gray-700/50 group-hover/item:bg-blue-500/20"
+                            )}>
+                                <CheckIcon className={clsx(
+                                    "w-3 h-3 transition-colors duration-200",
+                                    featured
+                                        ? 'text-blue-200 group-hover/item:text-white'
+                                        : 'text-blue-400 group-hover/item:text-blue-300'
+                                )} />
+                            </div>
+                            <span className={clsx(
+                                "ml-4 text-sm leading-relaxed transition-colors duration-200",
+                                featured
+                                    ? 'text-blue-100 group-hover/item:text-white'
+                                    : 'text-gray-300 group-hover/item:text-white'
+                            )}>
+                                {feature}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+            {/* 按钮区域 */}
+            <div className="mt-8">
+                <Button
+                    onClick={handleClick}
+                    variant={featured ? 'solid' : 'outline'}
+                    color="white"
+                    className={clsx(
+                        "w-full py-4 text-base font-semibold transition-all duration-300 transform",
+                        featured
+                            ? "bg-white text-blue-700 hover:bg-blue-50 hover:scale-105 shadow-xl shadow-white/10"
+                            : "border-2 border-blue-500 text-white hover:bg-blue-500 hover:border-blue-400 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20"
+                    )}
+                    disabled={isLoading}
+                >
+                    <span className="flex items-center justify-center gap-2">
+                        {isLoading ? (
+                            <>
+                                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+                                Going to checkout...
+                            </>
+                        ) : (
+                            <>
+                                {startText}
+                                <svg className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                            </>
+                        )}
+                    </span>
+                </Button>
+            </div>
         </section>
     );
 }
@@ -208,186 +283,194 @@ export function Pricing() {
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
 
-                    <div className='mt-4'>
-                        <span className="text-white font-semibold">DeepSeek R1、DeepSeek V3</span>
-                        <span className="ml-2 py-1 px-3 bg-red-600 font-bold text-white rounded-sm border-1 border-dashed border-red-600">
+                    {/* DeepSeek 特别提示 */}
+                    <div className="mt-8 inline-flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-red-500/10 to-pink-500/10 border border-red-500/20">
+                        <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                            <span className="text-white font-bold text-lg">DeepSeek R1 & V3</span>
+                        </div>
+                        <div className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-xl shadow-lg animate-bounce">
                             Free Unlimited Use
-                        </span>
-                        {/* <span className="text-white font-semibold"> if you buy today.</span> */}
+                        </div>
+                    </div>
+                </div>
+
+                {/* 主要价格卡片区域 */}
+                <div className="mt-16 ">
+                    <div className="grid max-w-7xl mx-auto grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-8">
+
+                        <Plan
+                            name="Free"
+                            price="FREE"
+                            lookupKey={'free'}
+                            description="Lifetime access to all basic features."
+                            startText={'Download'}
+                            features={[
+                                '10 uses/day',
+                                'Knowledge Base',
+                                'Workflow',
+                                'Voice Input Method',
+                                'Context Awareness',
+                                'Live closed captions',
+                                'Seamless access AI via SmartBar',
+                                'PopBar',
+                                'AI Web Search',
+                                'Image Generation',
+                                'Text-to-Speech (TTS)',
+                                'Chat With Documents',
+                                'Chat With Webpage',
+                                'Use Local LLM (Ollama,LMStudio) For Privacy',
+                                'Ultimate Use of OCR',
+                                'Extension system',
+                                'More Than 100+ Features',
+                            ]}
+                        />
+
+                        <Plan
+                            name="Premium"
+                            price="$99"
+                            lookupKey={'premium'}
+                            description="Most popular."
+                            features={[
+                                '150,000 Points one-time bonus', // One-time bonus points for new users
+                                'Unlimited AI use with your API key',
+                                '3 MacOS Devices',
+                                'Lifetime free updates',
+                                'Knowledge Base',
+                                'Workflow',
+                                'Voice Input Method',
+                                'Context Awareness',
+                                'Live closed captions',
+                                'Seamless access AI via SmartBar',
+                                'PopBar',
+                                'AI Web Search',
+                                'Image Generation',
+                                'Text-to-Speech (TTS)',
+                                'Chat With Documents',
+                                'Chat With Webpage',
+                                'Use Local LLM (Ollama,LMStudio) For Privacy',
+                                'Ultimate Use of OCR',
+                                'Extension system',
+                                'More Than 100+ Features',
+                            ]}
+                        />
+
+                        <Plan
+                            name="Standard"
+                            price="$49"
+                            lookupKey={'standard'}
+                            description="Lifetime access to all features."
+                            features={[
+                                '50,000 Points one-time bonus', // One-time bonus points for new users
+                                'Unlimited AI use with your API key',
+                                '1 years free updates',
+                                '1 MacOS Devices',
+                                'Knowledge Base',
+                                'Workflow',
+                                'Voice Input Method',
+                                'Context Awareness',
+                                'Live closed captions',
+                                'Seamless access AI via SmartBar',
+                                'PopBar',
+                                'AI Web Search',
+                                'Image Generation',
+                                'Text-to-Speech (TTS)',
+                                'Chat With Documents',
+                                'Chat With Webpage',
+                                'Use Local LLM (Ollama,LMStudio) For Privacy',
+                                'Ultimate Use of OCR',
+                                'Extension system',
+                                'More Than 100+ Features',
+                            ]}
+                        />
+
+
                     </div>
 
+                    <div className="grid max-w-7xl mx-auto grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-8 mt-20">
 
-                </div>
-                <div
-                    className="-mx-4 mt-16 grid max-w-2xl grid-cols-1 gap-y-10 sm:mx-auto lg:-mx-8 lg:max-w-none lg:grid-cols-3 xl:mx-0 xl:gap-x-8">
-
-                    <Plan
-                        name="Free"
-                        price="FREE"
-                        lookupKey={'free'}
-                        description="Lifetime access to all basic features."
-                        startText={'Download'}
-                        features={[
-                            '10 uses/day',
-                            'Knowledge Base',
-                            'Workflow',
-                            'Voice Input Method',
-                            'Context Awareness',
-                            'Live closed captions',
-                            'Seamless access AI via SmartBar',
-                            'PopBar',
-                            'AI Web Search',
-                            'Image Generation',
-                            'Text-to-Speech (TTS)',
-                            'Chat With Documents',
-                            'Chat With Webpage',
-                            'Use Local LLM (Ollama,LMStudio) For Privacy',
-                            'Ultimate Use of OCR',
-                            'Extension system',
-                            'More Than 100+ Features',
-                        ]}
-                    />
-
-                    <Plan
-                        featured
-                        name="Premium"
-                        price="$99"
-                        lookupKey={'premium'}
-                        description="Most popular."
-                        features={[
-                            '150,000 Points one-time bonus', // One-time bonus points for new users
-                            'Unlimited AI use with your API key',
-                            '3 MacOS Devices',
-                            'Lifetime free updates',
-                            'Knowledge Base',
-                            'Workflow',
-                            'Voice Input Method',
-                            'Context Awareness',
-                            'Live closed captions',
-                            'Seamless access AI via SmartBar',
-                            'PopBar',
-                            'AI Web Search',
-                            'Image Generation',
-                            'Text-to-Speech (TTS)',
-                            'Chat With Documents',
-                            'Chat With Webpage',
-                            'Use Local LLM (Ollama,LMStudio) For Privacy',
-                            'Ultimate Use of OCR',
-                            'Extension system',
-                            'More Than 100+ Features',
-                        ]}
-                    />
-
-                    <Plan
-                        name="Standard"
-                        price="$49"
-                        lookupKey={'standard'}
-                        description="Lifetime access to all features."
-                        features={[
-                            '50,000 Points one-time bonus', // One-time bonus points for new users
-                            'Unlimited AI use with your API key',
-                            '1 years free updates',
-                            '1 MacOS Devices',
-                            'Knowledge Base',
-                            'Workflow',
-                            'Voice Input Method',
-                            'Context Awareness',
-                            'Live closed captions',
-                            'Seamless access AI via SmartBar',
-                            'PopBar',
-                            'AI Web Search',
-                            'Image Generation',
-                            'Text-to-Speech (TTS)',
-                            'Chat With Documents',
-                            'Chat With Webpage',
-                            'Use Local LLM (Ollama,LMStudio) For Privacy',
-                            'Ultimate Use of OCR',
-                            'Extension system',
-                            'More Than 100+ Features',
-                        ]}
-                    />
-
-                    <Plan
-                        name="Cloud Premium"
-                        price="$10/Monthly"
-                        lookupKey={'monthly'}
-                        description="All Premium features, No need your own apikeys"
-                        startText={'Get started'}
-                        features={[
-                            '500,000 Points/Month',
-                            'Unlimited Knowledge Bases',
-                            '5 MacOS Devices',
-                            'No Need Your Own ApiKey',
-                            'Knowledge Base',
-                            'Workflow',
-                            'Voice Input Method',
-                            'Context Awareness',
-                            'Live closed captions',
-                            'Seamless access AI via SmartBar',
-                            'PopBar',
-                            'AI Web Search',
-                            'Image Generation',
-                            'Text-to-Speech (TTS)',
-                            'Chat With Documents',
-                            'Chat With Webpage',
-                            'Use Local LLM (Ollama,LMStudio) For Privacy',
-                            'Ultimate Use of OCR',
-                            'Extension system',
-                            'More Than 100+ Features',
-                        ]}
-                    />
-                    <Plan
-                        featured
-                        name="Cloud Premium"
-                        price="$96/Yearly"
-                        lookupKey={'yearly'}
-                        description="All Premium features, No need your own apikeys"
-                        startText={'Get started'}
-                        features={[
-                            '500,000 Points/Month',
-                            'Unlimited Knowledge Bases',
-                            '5 MacOS Devices',
-                            'No Need Your Own ApiKey',
-                            'Knowledge Base',
-                            'Workflow',
-                            'Voice Input Method',
-                            'Context Awareness',
-                            'Live closed captions',
-                            'Seamless access AI via SmartBar',
-                            'PopBar',
-                            'AI Web Search',
-                            'Image Generation',
-                            'Text-to-Speech (TTS)',
-                            'Chat With Documents',
-                            'Chat With Webpage',
-                            'Use Local LLM (Ollama,LMStudio) For Privacy',
-                            'Ultimate Use of OCR',
-                            'Extension system',
-                            'More Than 100+ Features',
-                        ]}
-                    />
+                        <Plan
+                            name="Cloud Premium"
+                            price="$10/Monthly"
+                            lookupKey={'monthly'}
+                            description="All Premium features, No need your own apikeys"
+                            startText={'Get started'}
+                            features={[
+                                '500,000 Points/Month',
+                                'Unlimited Knowledge Bases',
+                                '5 MacOS Devices',
+                                'No Need Your Own ApiKey',
+                                'Knowledge Base',
+                                'Workflow',
+                                'Voice Input Method',
+                                'Context Awareness',
+                                'Live closed captions',
+                                'Seamless access AI via SmartBar',
+                                'PopBar',
+                                'AI Web Search',
+                                'Image Generation',
+                                'Text-to-Speech (TTS)',
+                                'Chat With Documents',
+                                'Chat With Webpage',
+                                'Use Local LLM (Ollama,LMStudio) For Privacy',
+                                'Ultimate Use of OCR',
+                                'Extension system',
+                                'More Than 100+ Features',
+                            ]}
+                        />
+                        <Plan
+                            featured
+                            name="Cloud Premium"
+                            price="$96/Yearly"
+                            lookupKey={'yearly'}
+                            description="All Premium features, No need your own apikeys"
+                            startText={'Get started'}
+                            features={[
+                                '500,000 Points/Month',
+                                'Unlimited Knowledge Bases',
+                                '5 MacOS Devices',
+                                'No Need Your Own ApiKey',
+                                'Knowledge Base',
+                                'Workflow',
+                                'Voice Input Method',
+                                'Context Awareness',
+                                'Live closed captions',
+                                'Seamless access AI via SmartBar',
+                                'PopBar',
+                                'AI Web Search',
+                                'Image Generation',
+                                'Text-to-Speech (TTS)',
+                                'Chat With Documents',
+                                'Chat With Webpage',
+                                'Use Local LLM (Ollama,LMStudio) For Privacy',
+                                'Ultimate Use of OCR',
+                                'Extension system',
+                                'More Than 100+ Features',
+                            ]}
+                        />
 
 
-                    <Plan
-                        name="Teams"
-                        price="Teams"
-                        description="Custom solutions for organizations with advanced needs"
-                        lookupKey={'teams'}
-                        startText={'Contact Sales'}
-                        features={[
-                            // Core features from Premium
-                            'All Premium Features',
-                            // Enterprise specific features
-                            'Private Deployment Options',
-                            'Custom Tool & Agent Deployment',
-                            'Custom Workflow Development',
-                            'Priority Support',
-                            'Advanced Security Controls',
-                            'Team Management Features'
-                        ]}
-                    />
+                        <Plan
+                            name="Teams"
+                            price="Teams"
+                            description="Custom solutions for organizations with advanced needs"
+                            lookupKey={'teams'}
+                            startText={'Contact Sales'}
+                            features={[
+                                // Core features from Premium
+                                'All Premium Features',
+                                // Enterprise specific features
+                                'Private Deployment Options',
+                                'Custom Tool & Agent Deployment',
+                                'Custom Workflow Development',
+                                'Priority Support',
+                                'Advanced Security Controls',
+                                'Team Management Features'
+                            ]}
+                        />
 
 
+                    </div>
                 </div>
             </Container>
         </section>

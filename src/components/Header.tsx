@@ -100,31 +100,50 @@ function MobileNavigation() {
 
 export function Header() {
   return (
-    <header className="py-4 bg-[#1A1A1A] sticky top-0 backdrop-blur-xl bg-opacity-80">
+    <header className="py-4 bg-gradient-to-r from-gray-900/95 via-gray-800/95 to-gray-900/95 sticky top-0 backdrop-blur-xl border-b border-gray-700/50 z-50">
       <Container>
-        <nav className="relative z-50 flex justify-between items-center px-6 py-2 rounded-xl border border-[#333333] bg-[#1C1C1C] shadow-lg hover:border-[#444444] transition-all duration-300">
+        <nav className="relative z-50 flex justify-between items-center px-6 py-3 rounded-2xl border border-gray-700/50 bg-gradient-to-r from-gray-800/80 via-gray-900/80 to-gray-800/80 shadow-2xl hover:border-gray-600/50 hover:shadow-blue-500/10 transition-all duration-300 backdrop-blur-sm">
           <div className="flex items-center md:gap-x-8">
             <Link href="#" aria-label="Home">
               <Logo className="h-8 w-auto" />
             </Link>
-            <div className="hidden md:flex md:gap-x-6">
-              <NavLink href="/features" className="text-[#888888] hover:text-white transition-colors">Features</NavLink>
-              <NavLink href="/pricing" className="text-[#888888] hover:text-white transition-colors">Pricing</NavLink>
-              <NavLink href="/guides" className="text-[#888888] hover:text-white transition-colors">Guides</NavLink>
-              <NavLink href="/changelog" className="text-[#888888] hover:text-white transition-colors">Changelog</NavLink>
-              <NavLink href="/privacy" className="text-[#888888] hover:text-white transition-colors">Privacy</NavLink>
+            <div className="hidden md:flex md:gap-x-1">
+              <NavLink href="/features" className="relative px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-gray-700/30 group">
+                <span className="relative z-10">Features</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-200"></div>
+              </NavLink>
+              <NavLink href="/pricing" className="relative px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-gray-700/30 group">
+                <span className="relative z-10">Pricing</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-200"></div>
+              </NavLink>
+              <NavLink href="/guides" className="relative px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-gray-700/30 group">
+                <span className="relative z-10">Guides</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-200"></div>
+              </NavLink>
+              <NavLink href="/changelog" className="relative px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-gray-700/30 group">
+                <span className="relative z-10">Changelog</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-200"></div>
+              </NavLink>
+              <NavLink href="/privacy" className="relative px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-gray-700/30 group">
+                <span className="relative z-10">Privacy</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-200"></div>
+              </NavLink>
             </div>
           </div>
           <div className="flex items-center gap-x-4">
             <div className="hidden md:block">
-              <NavLink href="/login" className="text-[#888888] hover:text-white transition-colors">Log in</NavLink>
+              <NavLink href="/login" className="relative px-4 py-2 text-gray-300 hover:text-white transition-all duration-200 rounded-lg hover:bg-gray-700/30 group">
+                <span className="relative z-10">Log in</span>
+                <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/10 group-hover:to-purple-500/10 transition-all duration-200"></div>
+              </NavLink>
             </div>
             <Button
               href="/download"
-              className="bg-white hover:bg-gray-100 text-black rounded-lg px-4 py-1.5 text-sm font-medium transition-colors shadow-sm hover:shadow-md"
+              className="relative group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl px-6 py-2.5 text-sm font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl hover:shadow-blue-500/25 overflow-hidden"
             >
-              <span className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 group-hover:translate-y-0.5">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                   <polyline points="7 10 12 15 17 10"/>
                   <line x1="12" y1="15" x2="12" y2="3"/>
