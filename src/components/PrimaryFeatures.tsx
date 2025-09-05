@@ -4,7 +4,7 @@ import { Feature } from './features/Feature'
 import { features } from '@/data/features'
 
 export function PrimaryFeatures() {
-    let [tabOrientation, setTabOrientation] = useState('horizontal')
+    let [_, setTabOrientation] = useState('horizontal')
 
     useEffect(() => {
         let lgMediaQuery = window.matchMedia('(min-width: 1024px)')
@@ -58,7 +58,7 @@ export function PrimaryFeatures() {
                     <p className="mt-8 text-xl sm:text-2xl leading-relaxed text-gray-300 max-w-5xl mx-auto">
                         Experience the future with our <span className="text-white font-semibold">revolutionary AI Agent</span> - an intelligent system that learns, adapts, and works autonomously. 
                         <br className="hidden lg:block" />
-                        By combining advanced AI capabilities with an intuitive operating system, we're transforming how you interact with technology.
+                        By combining advanced AI capabilities with an intuitive operating system, we&apos;re transforming how you interact with technology.
                     </p>
                     
                     {/* 亮点特性 */}
