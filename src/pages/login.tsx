@@ -120,7 +120,7 @@ export default function Login() {
 
                     </div>
 
-                    <div className="mr-32 hidden lg:flex lg:gap-x-12">
+                    <div className="mr-32  lg:flex lg:gap-x-12">
                         {loginState === "success" &&
                             <div className="flex items-center space-x-2">
                             <button
