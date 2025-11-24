@@ -2,15 +2,30 @@ import { Component1Icon, EyeOpenIcon, FileTextIcon, ImageIcon, MixIcon, CardStac
 import { ReactElement, ComponentType } from "react"
 
 export interface Feature {
-  title: string
-  description: string
-  icon: (() => ReactElement) | ComponentType<any>
-  gradient: string
-  media: string
-  mediaType: 'video' | 'youtube' | 'image'
+    title: string
+    description: string
+    icon: (() => ReactElement) | ComponentType<any>
+    gradient: string
+    media: string
+    mediaType: 'video' | 'youtube' | 'image'
 }
 
 export const features: Feature[] = [
+    {
+        title: 'App Side Bar',
+        description: 'Transform all your installed apps into AI Agents. Always within reach, they empower your workflow instantly, right at your fingertips.',
+        icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                {/* Mac app windows */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.25V18a3 3 0 003 3h12a3 3 0 003-3V8.25m-18 0V6a3 3 0 013-3h12a3 3 0 013 3v2.25m-18 0h18M6.75 6.75h.008v.008H6.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm2.625 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                {/* AI sparkle */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 12.904L9 15.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 9l2.846-.813a4.5 4.5 0 003.09-3.09L9 2.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 9l-2.846.813a4.5 4.5 0 00-3.09 3.09z" transform="translate(6, 6) scale(0.6)" />
+            </svg>
+        ),
+        gradient: 'from-cyan-400 to-teal-500',
+        media: 'https://www.youtube.com/watch?v=uzfm32lKzKk',
+        mediaType: 'youtube'
+    },
     {
         title: 'SmartBar',
         description: 'A unified entry point for all functionalities. Access AI features and 100+ plugins seamlessly from any application across the who system, streamlining your workflow with a simple @ command.',
