@@ -149,6 +149,15 @@ function Plan({
                 featured ? "bg-white" : "bg-blue-500"
             )}></div>
 
+            {/* SAVE 角标 */}
+            {originPrice && (
+                <div className="absolute right-0 top-0 overflow-hidden w-28 h-28 pointer-events-none rounded-tr-3xl z-10">
+                    <div className="absolute rotate-45 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold py-2 w-40 text-center shadow-lg -right-10 top-6">
+                        SAVE 50%
+                    </div>
+                </div>
+            )}
+
             {/* 价格展示 */}
             <div className={clsx(
                 "order-first relative overflow-hidden",
@@ -161,14 +170,7 @@ function Plan({
                         </div>
                     </div>
                 )}
-                {/* SAVE 角标 */}
-                {originPrice && (
-                    <div className="absolute right-0 top-0 overflow-hidden w-28 h-28 pointer-events-none">
-                        <div className="absolute rotate-45 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold py-2 w-40 text-center shadow-lg -right-10 top-6">
-                            SAVE 50%
-                        </div>
-                    </div>
-                )}
+
                 <div className={clsx(
                     "flex items-baseline gap-3",
                     originPrice ? "mt-2" : ""
