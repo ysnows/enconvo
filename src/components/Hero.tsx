@@ -106,7 +106,7 @@ export function Hero() {
     }, [])
 
     return (<div className="bg-gray-900">
-        <header className="absolute inset-x-0 top-0 z-50">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800/50">
             <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div className="flex lg:flex-1 items-center">
                     <Link href="/" aria-label="Home" className="flex items-center gap-3">
@@ -215,7 +215,7 @@ export function Hero() {
         </header>
 
 
-        <div className="relative isolate pt-14">
+        <div className="relative isolate pt-20">
 
 
             <div className="py-20 sm:py-32 lg:py-40">
