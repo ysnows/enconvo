@@ -182,6 +182,7 @@ export function Hero() {
                                     <a
                                         key={item.name}
                                         href={item.href}
+                                        onClick={() => setMobileMenuOpen(false)}
                                         className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                                     >
                                         {item.name}
@@ -193,6 +194,7 @@ export function Hero() {
                                         href={item.href}
                                         target="_blank"
                                         rel="noreferrer"
+                                        onClick={() => setMobileMenuOpen(false)}
                                         className="-mx-3 flex items-center rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                                     >
                                         <item.icon className="h-5 w-5 mr-3" aria-hidden="true" />
@@ -203,6 +205,7 @@ export function Hero() {
                             <div className="py-6">
                                 <a
                                     href="#"
+                                    onClick={() => setMobileMenuOpen(false)}
                                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                                 >
                                     Log in
@@ -216,14 +219,7 @@ export function Hero() {
 
 
         <div className="relative isolate pt-14">
-            <div className='mt-4 w-full flex justify-center px-4 sm:px-0'>
-                <a href="#pricing" className='mt-4 px-6 sm:px-12 md:px-24 py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-center sm:space-x-6 space-y-2 sm:space-y-0 border border-orange-400/30 rounded-2xl bg-gradient-to-r from-orange-950/60 to-red-800/60 backdrop-blur-md shadow-xl hover:shadow-orange-500/30 transition-all duration-500 cursor-pointer'>
-                    <span className="text-white/90 font-bold text-lg sm:text-xl text-center sm:text-left">🔥 Black Friday Sale</span>
-                    <span className="py-1.5 px-6 sm:px-10 bg-gradient-to-r from-orange-500 to-red-500 font-bold text-white text-xl sm:text-2xl rounded-xl shadow-lg shadow-orange-500/20 animate-pulse whitespace-nowrap">
-                        50% OFF - Limited Time!
-                    </span>
-                </a>
-            </div>
+
 
             <div className=" py-28 sm:py-48 lg:pb-40">
 
@@ -232,39 +228,24 @@ export function Hero() {
                     <div className="mx-auto max-w-6xl text-center">
                         {/* 主标题优化 */}
                         <div className="relative">
-                            <h1 className="relative text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-                                <span className="block">
-                                    <span className="bg-gradient-to-r from-purple-400 via-pink-500 to-blue-500 bg-clip-text text-transparent animate-pulse">
-                                        The AI Agent
-                                    </span>
-                                </span>
-                                <span className="block mt-2">
-                                    <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-                                        Launcher
-                                    </span>
-                                </span>
-
-                                {/* 背景光效 */}
-                                <div className="absolute inset-0 blur-3xl opacity-30">
-                                    <span className="block bg-gradient-to-r from-purple-400 to-blue-500 bg-clip-text text-transparent">
-                                        The AI Launcher
-                                    </span>
-                                </div>
+                            <h1 className="relative text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+                                The Best AI Companion For Mac
                             </h1>
 
-                            {/* 下标签 */}
-                            <div className="mt-6 flex justify-center">
-                                <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                                    ✨ Powered by AI • macOS Exclusive
-                                </span>
+                            {/* Black Friday Button */}
+                            <div className="mt-8 flex justify-center">
+                                <a href="#pricing" className="group inline-flex items-center px-6 py-2 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white font-bold text-base shadow-lg hover:shadow-red-500/30 hover:scale-105 transition-all duration-300">
+                                    <svg className="w-5 h-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.45-.412-1.725a1 1 0 00-1.457-.895c-.33.183-.65.411-.918.68-.45.45-.86 1.018-1.15 1.68-.57 1.3-1.02 3.086-1.02 5.346 0 3.86 3.13 7 7 7s7-3.14 7-7c0-1.926-.784-3.664-2.048-4.915a9.13 9.13 0 00-1.897-1.453 4.99 4.99 0 01-.25-2.213 31.21 31.21 0 00-.608-3.366zM8 9a1 1 0 00-2 0v.016a1 1 0 00.006.11c.01.12.03.272.067.447.073.348.196.81.368 1.346.336 1.048.835 2.306 1.559 3.394.362.544.922.544 1.284 0 .724-1.088 1.223-2.346 1.559-3.394.172-.536.295-.998.368-1.346.037-.175.057-.327.067-.447a1 1 0 00-1.006-1.126H8z" clipRule="evenodd" />
+                                    </svg>
+                                    Black Friday Deals - 50% OFF
+                                </a>
                             </div>
                         </div>
 
                         {/* 描述文字优化 */}
-                        <p className="mt-8 sm:mt-12 text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-300 max-w-4xl mx-auto">
-                            <span className="text-white font-semibold">Revolutionize your productivity</span> with EnConvo - the intelligent AI launcher that adapts to your workflow.
-                            <br className="hidden sm:block" />
-                            Featuring <span className="text-purple-300 font-medium">150+ built-in tools</span>, <span className="text-blue-300 font-medium">MCP support</span>, and <span className="text-pink-300 font-medium">AI Agent mode</span> for seamless automation.
+                        <p className="mt-8 sm:mt-10 text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-400 max-w-3xl mx-auto">
+                            Contextually aware of your screen and apps, delivering the perfect response to automate your complex tasks.
                         </p>
                         <div className="mt-12 sm:mt-16 flex flex-col items-center space-y-6">
                             {/* 主要下载按钮 */}
