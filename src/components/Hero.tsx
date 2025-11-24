@@ -108,14 +108,11 @@ export function Hero() {
     return (<div className="bg-gray-900">
         <header className="absolute inset-x-0 top-0 z-50">
             <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
-                <div className="ml-32 flex lg:flex-1 items-center ">
-                    <Link href="/" aria-label="Home">
+                <div className="flex lg:flex-1 items-center">
+                    <Link href="/" aria-label="Home" className="flex items-center gap-3">
                         <Logo className="h-8 w-auto" />
+                        <span className="text-white font-bold text-lg">EnConvo</span>
                     </Link>
-
-                    <div className="ml-3">
-                        <span className="text-white font-bold">EnConvo</span>
-                    </div>
                 </div>
                 <div className="flex lg:hidden">
                     <button
@@ -128,7 +125,7 @@ export function Hero() {
                     </button>
                 </div>
 
-                <div className="mr-32 hidden lg:flex lg:gap-x-12 items-center">
+                <div className="hidden lg:flex lg:gap-x-8 items-center">
                     {navigation.map((item) => (
                         <a key={item.name} href={item.href === 'menu' ? null : item.href}
                             target={item.href.startsWith('http') ? '_blank' : '_self'}
@@ -221,51 +218,41 @@ export function Hero() {
         <div className="relative isolate pt-14">
 
 
-            <div className=" py-28 sm:py-48 lg:pb-40">
+            <div className="py-20 sm:py-32 lg:py-40">
 
                 <div className="mx-auto max-w-7xl  px-6 lg:px-8 ">
 
-                    <div className="mx-auto max-w-6xl text-center">
+                    <div className="mx-auto max-w-5xl text-center">
                         {/* 主标题优化 */}
                         <div className="relative">
-                            <h1 className="relative text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white">
+                            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
                                 The Best AI Companion For Mac
                             </h1>
 
                             {/* Black Friday Button */}
-                            <div className="mt-8 flex justify-center">
-                                <a href="#pricing" className="group inline-flex items-center px-6 py-2 rounded-full bg-gradient-to-r from-red-600 to-red-500 text-white font-bold text-base shadow-lg hover:shadow-red-500/30 hover:scale-105 transition-all duration-300">
-                                    <svg className="w-5 h-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <div className="mt-6 flex justify-center">
+                                <a href="#pricing" className="inline-flex items-center px-5 py-2.5 rounded-full bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition-colors duration-200">
+                                    <svg className="w-4 h-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                         <path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.45-.412-1.725a1 1 0 00-1.457-.895c-.33.183-.65.411-.918.68-.45.45-.86 1.018-1.15 1.68-.57 1.3-1.02 3.086-1.02 5.346 0 3.86 3.13 7 7 7s7-3.14 7-7c0-1.926-.784-3.664-2.048-4.915a9.13 9.13 0 00-1.897-1.453 4.99 4.99 0 01-.25-2.213 31.21 31.21 0 00-.608-3.366zM8 9a1 1 0 00-2 0v.016a1 1 0 00.006.11c.01.12.03.272.067.447.073.348.196.81.368 1.346.336 1.048.835 2.306 1.559 3.394.362.544.922.544 1.284 0 .724-1.088 1.223-2.346 1.559-3.394.172-.536.295-.998.368-1.346.037-.175.057-.327.067-.447a1 1 0 00-1.006-1.126H8z" clipRule="evenodd" />
                                     </svg>
-                                    Black Friday Deals - 50% OFF
+                                    Black Friday - 50% OFF
                                 </a>
                             </div>
                         </div>
 
                         {/* 描述文字优化 */}
-                        <p className="mt-8 sm:mt-10 text-lg sm:text-xl lg:text-2xl leading-relaxed text-gray-400 max-w-3xl mx-auto">
+                        <p className="mt-6 text-xl sm:text-2xl leading-relaxed text-gray-400 max-w-3xl mx-auto">
                             Contextually aware of your screen and apps, delivering the perfect response to automate your complex tasks.
                         </p>
-                        <div className="mt-12 sm:mt-16 flex flex-col items-center space-y-6">
+                        <div className="mt-10 flex flex-col items-center space-y-6">
                             {/* 主要下载按钮 */}
                             <Menu as="div" className="relative">
-                                <Menu.Button className="group relative inline-flex items-center justify-center px-8 py-4 sm:px-12 sm:py-5 text-base sm:text-lg font-semibold text-white transition-all duration-300 ease-out bg-gradient-to-r from-purple-600 via-purple-700 to-indigo-700 hover:from-purple-700 hover:via-purple-800 hover:to-indigo-800 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900">
-                                    {/* 光芒效果 */}
-                                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"></div>
-
-                                    {/* 下载图标 */}
-                                    <svg className="w-6 h-6 mr-3 transition-transform duration-300 group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <Menu.Button className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-white/10 hover:bg-white/15 rounded-xl transition-all duration-200">
+                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                                     </svg>
-
-                                    <span className="relative z-10 mr-2">Download v2.2.20</span>
-
-                                    {/* 下拉箭头 */}
-                                    <ChevronDownIcon className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:rotate-180" />
-
-                                    {/* 内部光效 */}
-                                    <div className="absolute inset-0.5 rounded-2xl bg-gradient-to-r from-purple-500/20 to-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                    <span>Download v2.2.20</span>
+                                    <ChevronDownIcon className="w-4 h-4 ml-2" />
                                 </Menu.Button>
 
                                 <Menu.Items className="absolute top-full mt-2 w-80 bg-gray-800/95 backdrop-blur-md rounded-2xl shadow-2xl ring-1 ring-white/10 focus:outline-none z-50">
