@@ -155,6 +155,18 @@ export const cloudModels: CloudModel[] = [
         maxTokens: 64000
     },
     {
+        title: "Claude Opus 4.5",
+        value: "anthropic/claude-opus-4-5-20251101",
+        context: 200000,
+        perRequestPrice: 250000,
+        perRequestUnit: "1M input tokens , 1,250,000 points / 1M output tokens",
+        providerName: "anthropic",
+        toolUse: true,
+        visionEnable: true,
+        searchToolSupported: true,
+        maxTokens: 32000
+    },
+    {
         title: "Claude Sonnet 4",
         value: "anthropic/claude-sonnet-4-20250514",
         context: 200000,
