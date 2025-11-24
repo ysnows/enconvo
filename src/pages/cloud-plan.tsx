@@ -46,37 +46,37 @@ function ModelCard({ model }: { model: CloudModel }) {
     const pricing = parsePrice(model.perRequestUnit, model.perRequestPrice);
 
     return (
-        <div className="group relative bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl p-6 hover:border-gray-600/50 hover:shadow-xl hover:shadow-gray-900/20 transition-all duration-300">
+        <div className="group relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 hover:bg-white/8 hover:border-white/20 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1">
             {/* Free badge */}
             {isFree && (
-                <div className="absolute -top-3 -right-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                <div className="absolute -top-2 -right-2 bg-gradient-to-r from-green-400 to-emerald-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg">
                     FREE
                 </div>
             )}
 
             {/* Model name */}
-            <h3 className="text-lg font-bold text-white mb-4">{model.title}</h3>
+            <h3 className="text-lg font-semibold text-white mb-5">{model.title}</h3>
 
             {/* Specs */}
-            <div className="space-y-2.5 mb-4">
+            <div className="space-y-3 mb-5">
                 <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Context</span>
+                    <span className="text-gray-500">Context</span>
                     <span className="text-white font-medium">{model.context.toLocaleString()} tokens</span>
                 </div>
                 {model.maxTokens && (
                     <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-400">Max Output</span>
+                        <span className="text-gray-500">Max Output</span>
                         <span className="text-white font-medium">{model.maxTokens.toLocaleString()} tokens</span>
                     </div>
                 )}
                 <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Input Price</span>
+                    <span className="text-gray-500">Input Price</span>
                     <span className={`font-medium ${isFree ? 'text-green-400' : 'text-blue-400'}`}>
                         {pricing.input}
                     </span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-400">Output Price</span>
+                    <span className="text-gray-500">Output Price</span>
                     <span className={`font-medium ${isFree ? 'text-green-400' : 'text-blue-400'}`}>
                         {pricing.output}
                     </span>
@@ -84,7 +84,7 @@ function ModelCard({ model }: { model: CloudModel }) {
             </div>
 
             {/* Features */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 pt-4 border-t border-white/10">
                 {model.toolUse && <FeatureBadge>Tool Use</FeatureBadge>}
                 {model.visionEnable && <FeatureBadge>Vision</FeatureBadge>}
                 {model.audioEnable && <FeatureBadge>Audio</FeatureBadge>}
@@ -112,32 +112,32 @@ function ProviderSection({ providerKey, models }: { providerKey: string, models:
     const logo = providerLogos[providerKey];
 
     return (
-        <div className="mb-16">
+        <div className="mb-20">
             {/* Provider header */}
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-5 mb-10">
                 {logo ? (
-                    <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center overflow-hidden">
+                    <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-xl flex items-center justify-center overflow-hidden border border-white/10 shadow-lg">
                         <Image
                             src={logo}
                             alt={providerName}
-                            width={40}
-                            height={40}
+                            width={36}
+                            height={36}
                             className="object-contain"
                         />
                     </div>
                 ) : (
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-500 to-gray-600 flex items-center justify-center">
-                        <span className="text-white font-bold text-xl">{providerName[0]}</span>
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-600 to-gray-700 flex items-center justify-center shadow-lg">
+                        <span className="text-white font-bold text-2xl">{providerName[0]}</span>
                     </div>
                 )}
                 <div>
-                    <h2 className="text-3xl font-bold text-white">{providerName}</h2>
-                    <p className="text-gray-400 text-sm">{models.length} model{models.length > 1 ? 's' : ''} available</p>
+                    <h2 className="text-4xl font-bold text-white tracking-tight">{providerName}</h2>
+                    <p className="text-gray-500 text-sm mt-1">{models.length} model{models.length > 1 ? 's' : ''} available</p>
                 </div>
             </div>
 
             {/* Models grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {models.map((model) => (
                     <ModelCard key={model.value} model={model} />
                 ))}
