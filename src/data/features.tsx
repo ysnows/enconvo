@@ -27,6 +27,22 @@ export const features: Feature[] = [
         mediaType: 'youtube'
     },
     {
+        title: 'Context Awareness',
+        description: 'Enconvo intelligently perceives and utilizes your current context, including active applications, selected text, Finder files, and open web pages. This enables a smarter, more intuitive AI experience tailored to your workflow.',
+        icon: () => (
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+                {/* Eye for perception */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                {/* AI sparkle overlay */}
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 7.904L9 10.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 4l2.846-.813a4.5 4.5 0 003.09-3.09L9 -2.75l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 4l-2.846.813a4.5 4.5 0 00-3.09 3.09z" transform="translate(8, 2) scale(0.35)" opacity="0.8" />
+            </svg>
+        ),
+        gradient: 'from-amber-500 to-rose-500',
+        media: 'https://www.youtube.com/watch?v=v1PKaUBq_1g',
+        mediaType: 'youtube'
+    },
+    {
         title: 'SmartBar',
         description: 'A unified entry point for all functionalities. Access AI features and 100+ plugins seamlessly from any application across the who system, streamlining your workflow with a simple @ command.',
         icon: () => (
@@ -99,14 +115,6 @@ export const features: Feature[] = [
         gradient: 'from-orange-500 to-pink-500',
         media: 'https://file.enconvo.com/usecases/workflow.mp4',
         mediaType: 'video',
-    },
-    {
-        title: 'Context Awareness',
-        description: 'Automatically detect and utilize contextual information when invoking SmartBar, PopBar, or hotkeys. This includes currently active applications, selected text, Finder-selected files, and open web pages, which can be used to provide context for the next features to be invoked. The system can recommend relevant tools and plugins based on this context, streamlining your workflow and enhancing productivity.',
-        icon: EyeOpenIcon,
-        gradient: 'from-teal-400 to-blue-500',
-        media: 'https://file.enconvo.com/usecases/context_awareness.mp4',
-        mediaType: 'video'
     },
     {
         title: 'Voice Input Method',

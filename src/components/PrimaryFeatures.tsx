@@ -32,7 +32,6 @@ export function PrimaryFeatures() {
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
 
             <Container className="relative">
-
                 {features.map((feature, index) => (
                     <Feature key={index} {...feature} />
                 ))}
