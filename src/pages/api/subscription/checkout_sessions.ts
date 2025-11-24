@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import * as jose from 'jose';
 import { withAuth } from '@/utils/auth';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -43,7 +42,7 @@ async function handler(req, res) {
     const priceId = PRICE_IDS[lookupKey];
     // Create a checkout session with Stripe
     // For one-time payments, we enable invoice creation to ensure customers receive an invoice
-    const session = await stripe.checkout.sessions.create({
+    const session_data: Stripe.Checkout.SessionCreateParams = {
       line_items: [
         {
           price: priceId,
@@ -54,7 +53,6 @@ async function handler(req, res) {
       success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}&from=${from}`,
       cancel_url: `${req.headers.origin}/pay_success?canceled=true&from=${from}`,
       automatic_tax: { enabled: true },
-      allow_promotion_codes: true,
       client_reference_id: email,
       customer_email: email,
       // Send invoice for one-time payments (when mode is 'payment')
@@ -62,7 +60,16 @@ async function handler(req, res) {
       metadata: {
         endorsely_referral: endorsely_referral
       }
-    });
+    }
+    if (lookupKey === 'standard' || lookupKey === 'premium') {
+      session_data.discounts = [{
+        coupon: 'Tk3jnTqN',
+      }];
+    } else {
+      session_data.allow_promotion_codes = true;
+    }
+
+    const session = await stripe.checkout.sessions.create(session_data);
 
     res.json({ url: session.url });
     res.end();

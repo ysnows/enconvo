@@ -151,7 +151,7 @@ function Plan({
 
             {/* 价格展示 */}
             <div className={clsx(
-                "order-first relative",
+                "order-first relative overflow-hidden",
                 featured && originPrice ? "pt-6" : ""
             )}>
                 {featured && (
@@ -161,25 +161,33 @@ function Plan({
                         </div>
                     </div>
                 )}
+                {/* SAVE 角标 */}
+                {originPrice && (
+                    <div className="absolute right-0 top-0 overflow-hidden w-28 h-28 pointer-events-none">
+                        <div className="absolute rotate-45 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold py-2 w-40 text-center shadow-lg -right-10 top-6">
+                            SAVE 50%
+                        </div>
+                    </div>
+                )}
                 <div className={clsx(
-                    "space-y-2",
+                    "flex items-baseline gap-3",
                     originPrice ? "mt-2" : ""
                 )}>
                     {originPrice && (
-                        <p className="font-display text-3xl font-bold line-through text-gray-500 leading-tight">
+                        <span className="font-display text-3xl font-bold line-through text-gray-500">
                             {originPrice}
-                        </p>
-                    )}
-                    <p className="font-display text-5xl font-bold tracking-tight text-white leading-tight">
-                        <span className={clsx(
-                            "bg-gradient-to-r bg-clip-text text-transparent",
-                            featured
-                                ? "from-white to-blue-100"
-                                : "from-blue-400 to-purple-400"
-                        )}>
-                            {price}
                         </span>
-                    </p>
+                    )}
+                    <span className={clsx(
+                        "font-display text-5xl font-bold tracking-tight",
+                        originPrice
+                            ? "text-red-500"
+                            : featured
+                                ? "text-white"
+                                : "bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                    )}>
+                        {price}
+                    </span>
                 </div>
             </div>
 
@@ -187,7 +195,7 @@ function Plan({
             <div className="mt-6">
                 <h3 className="font-display text-2xl font-bold text-white">{name}</h3>
                 <p className={clsx(
-                    'mt-2 text-base leading-relaxed',
+                    'mt-1 text-xs leading-relaxed',
                     featured ? 'text-blue-100' : 'text-gray-400'
                 )}>
                     {description}
@@ -283,14 +291,14 @@ export function Pricing() {
                         No matter who you are, our software is designed to meet your requirements.
                     </p>
 
-                    {/* DeepSeek 特别提示 */}
-                    <div className="mt-8 inline-flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-red-500/10 to-pink-500/10 border border-red-500/20">
+                    {/* Black Friday 活动提示 */}
+                    <div className="mt-8 inline-flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20">
                         <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                            <span className="text-white font-bold text-lg">DeepSeek R1 & V3</span>
+                            <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
+                            <span className="text-white font-bold text-lg">🔥 Black Friday Sale</span>
                         </div>
-                        <div className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded-xl shadow-lg animate-bounce">
-                            Free Unlimited Use
+                        <div className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow-lg animate-bounce">
+                            50% OFF - Limited Time!
                         </div>
                     </div>
                 </div>
@@ -328,9 +336,11 @@ export function Pricing() {
 
                         <Plan
                             name="Premium"
-                            price="$99"
+                            originPrice="$99"
+                            price="$49.5"
                             lookupKey={'premium'}
-                            description="Most popular."
+                            description="30-day Money Back Guarantee"
+                            startText="Buy License"
                             features={[
                                 '150,000 Points one-time bonus', // One-time bonus points for new users
                                 'Unlimited AI use with your API key',
@@ -357,9 +367,11 @@ export function Pricing() {
 
                         <Plan
                             name="Standard"
-                            price="$49"
+                            originPrice="$49"
+                            price="$24.5"
                             lookupKey={'standard'}
-                            description="Lifetime access to all features."
+                            description="30-day Money Back Guarantee"
+                            startText="Buy License"
                             features={[
                                 '50,000 Points one-time bonus', // One-time bonus points for new users
                                 'Unlimited AI use with your API key',

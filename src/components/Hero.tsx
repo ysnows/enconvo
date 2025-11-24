@@ -216,14 +216,14 @@ export function Hero() {
 
 
         <div className="relative isolate pt-14">
-            {/* <div className='mt-4 w-full flex justify-center px-4 sm:px-0'>
-                <a href="#pricing" className='mt-4 px-6 sm:px-12 md:px-24 py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-center sm:space-x-6 space-y-2 sm:space-y-0 border border-purple-400/30 rounded-2xl bg-gradient-to-r from-purple-950/60 to-purple-800/60 backdrop-blur-md shadow-xl hover:shadow-purple-500/30 transition-all duration-500 cursor-pointer'>
-                    <span className="text-white/90 font-bold text-lg sm:text-xl text-center sm:text-left">DeepSeek R1、DeepSeek V3</span>
-                    <span className="py-1.5 px-6 sm:px-10 bg-gradient-to-r from-red-500 to-pink-500 font-bold text-white text-xl sm:text-2xl rounded-xl shadow-lg shadow-red-500/20 animate-pulse whitespace-nowrap">
-                        Free Unlimited Use
+            <div className='mt-4 w-full flex justify-center px-4 sm:px-0'>
+                <a href="#pricing" className='mt-4 px-6 sm:px-12 md:px-24 py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-center sm:space-x-6 space-y-2 sm:space-y-0 border border-orange-400/30 rounded-2xl bg-gradient-to-r from-orange-950/60 to-red-800/60 backdrop-blur-md shadow-xl hover:shadow-orange-500/30 transition-all duration-500 cursor-pointer'>
+                    <span className="text-white/90 font-bold text-lg sm:text-xl text-center sm:text-left">🔥 Black Friday Sale</span>
+                    <span className="py-1.5 px-6 sm:px-10 bg-gradient-to-r from-orange-500 to-red-500 font-bold text-white text-xl sm:text-2xl rounded-xl shadow-lg shadow-orange-500/20 animate-pulse whitespace-nowrap">
+                        50% OFF - Limited Time!
                     </span>
                 </a>
-            </div> */}
+            </div>
 
             <div className=" py-28 sm:py-48 lg:pb-40">
 
@@ -278,7 +278,7 @@ export function Hero() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                                     </svg>
 
-                                    <span className="relative z-10 mr-2">Download v2.2.13</span>
+                                    <span className="relative z-10 mr-2">Download v2.2.20</span>
 
                                     {/* 下拉箭头 */}
                                     <ChevronDownIcon className="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:rotate-180" />
@@ -347,7 +347,7 @@ export function Hero() {
                                             </Menu.Item>
 
 
-                                            <Menu.Item>
+                                            {/* <Menu.Item>
                                                 {({ active }) => (
                                                     <div
                                                         className={`${active ? 'bg-purple-600/20 ring-1 ring-purple-500/40' : ''
@@ -366,7 +366,7 @@ export function Hero() {
                                                         </div>
                                                     </div>
                                                 )}
-                                            </Menu.Item>
+                                            </Menu.Item> */}
                                         </div>
                                     </div>
                                 </Menu.Items>
@@ -374,11 +374,6 @@ export function Hero() {
 
                             {/* 版本信息 */}
                             <div className="flex items-center space-x-6 text-sm text-gray-400">
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                    <span className="font-medium text-gray-300">v2.2.13</span>
-                                </div>
-                                <div className="w-1 h-1 bg-gray-600 rounded-full"></div>
                                 <span>macOS 13+ (Intel & Apple Silicon)</span>
                             </div>
 
