@@ -39,7 +39,7 @@ export const features: Feature[] = [
             </svg>
         ),
         gradient: 'from-amber-500 to-rose-500',
-        media: 'https://www.youtube.com/watch?v=v1PKaUBq_1g',
+        media: 'https://www.youtube.com/watch?v=VKhyKibToAw',
         mediaType: 'youtube'
     },
     {
