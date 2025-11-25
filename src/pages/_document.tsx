@@ -21,7 +21,7 @@ export default function Document(props) {
         />
       </Head>
       <body className="flex h-full flex-col">
-        <Main {...pageProps}/>
+        <Main {...pageProps} />
         <NextScript />
       </body>
     </Html>

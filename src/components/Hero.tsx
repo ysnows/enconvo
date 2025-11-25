@@ -225,7 +225,7 @@ export function Hero() {
                     <div className="mx-auto max-w-5xl text-center">
                         {/* 主标题优化 */}
                         <div className="relative">
-                            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
+                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
                                 The Best AI Companion For Mac
                             </h1>
 
@@ -343,22 +343,6 @@ export function Hero() {
                             {/* 版本信息 */}
                             <div className="flex items-center space-x-6 text-sm text-gray-400">
                                 <span>macOS 13+ (Intel & Apple Silicon)</span>
-                            </div>
-
-                            {/* 功能亮点 */}
-                            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-gray-400">
-                                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-lg border border-gray-700/50">
-                                    <div className="w-1.5 h-1.5 bg-purple-500 rounded-full"></div>
-                                    <span>150+ Built-in Tools</span>
-                                </div>
-                                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-lg border border-gray-700/50">
-                                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
-                                    <span>MCP Support</span>
-                                </div>
-                                <div className="flex items-center space-x-2 px-3 py-1.5 bg-gray-800/50 rounded-lg border border-gray-700/50">
-                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                                    <span>AI Agent Mode</span>
-                                </div>
                             </div>
                         </div>
 

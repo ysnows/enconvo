@@ -21,7 +21,7 @@ const testimonials = [
       },
     },
     {
-      content: 
+      content:
         'The context awareness feature is a game changer. Being able to select text anywhere and instantly access AI assistance through PopBar has dramatically improved my workflow. The voice input and image generation capabilities are icing on the cake.',
       author: {
         name: 'Sarah Chen',

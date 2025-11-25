@@ -43,8 +43,16 @@ export const features: Feature[] = [
         mediaType: 'youtube'
     },
     {
+        title: 'Instant PopBar',
+        description: 'Display a toolbar for selected text, providing quick access to AI features to efficiently complete your tasks. Customize the tools shown in PopBar to suit your workflow.',
+        icon: Component1Icon,
+        gradient: 'from-yellow-800 to-cyan-300',
+        media: 'https://www.youtube.com/watch?v=Vky72-N0qQM',
+        mediaType: 'youtube',
+    },
+    {
         title: 'SmartBar',
-        description: 'A unified entry point for all functionalities. Access AI features and 100+ plugins seamlessly from any application across the who system, streamlining your workflow with a simple @ command.',
+        description: 'The SmartBar is your unified command center for AI, applications, and tools. Streamline your workflow by instantly accessing AI conversations, launching apps, and invoking powerful tools. Use `@` for quick commands, `#` for contextual interactions, and `>` to navigate recent chats for enhanced productivity.',
         icon: () => (
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
@@ -98,14 +106,6 @@ export const features: Feature[] = [
         icon: CardStackIcon,
         gradient: 'from-emerald-600 to-sky-400',
         media: 'https://file.enconvo.com/usecases/knowledge_base.mp4',
-        mediaType: 'video',
-    },
-    {
-        title: 'PopBar',
-        description: 'Display a toolbar for selected text, providing quick access to 100+ features and plugins to efficiently complete your tasks. Customize the tools shown in PopBar and their order to suit your workflow.',
-        icon: Component1Icon,
-        gradient: 'from-yellow-800 to-cyan-300',
-        media: 'https://file.enconvo.com/usecases/popbar.mp4',
         mediaType: 'video',
     },
     {
