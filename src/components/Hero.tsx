@@ -4,7 +4,7 @@ import { Bars3Icon, XMarkIcon, ChevronDownIcon } from '@heroicons/react/24/outli
 import Link from "next/link"
 import { Logo } from "@/components/Logo"
 import Image from 'next/image'
-import allInOne from '@/images/all-in-one.png'
+import allInOne from '@/images/main.jpg'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 declare global {
@@ -31,7 +31,6 @@ export function Hero() {
 
     const [loginState, setLoginState] = useState("login")
     const [navigation, setNavigation] = useState<NavigationItem[]>([
-        { name: 'Store', href: 'https://app.enconvo.ai/mcp_store' },
         { name: 'Features', href: '#features' },
         {
             name: 'Pricing',
@@ -226,7 +225,7 @@ export function Hero() {
                         {/* 主标题优化 */}
                         <div className="relative">
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-tight">
-                                The Best AI Companion For Mac
+                                The Always‑Online AI Companion That Knows You Best
                             </h1>
 
                             {/* Black Friday Button */}
@@ -396,14 +395,15 @@ export function Hero() {
                                 </div>
                             </>
                         ) : (
-                            <video
-                                className="rounded-md bg-white/5 w-full shadow-2xl ring-1 ring-white/10"
-                                controls
-                                autoPlay
-                                muted
-                            >
-                                <source src="https://file.enconvo.com/enconvo.mp4" type="video/mp4" />
-                            </video>
+                            <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                                <iframe
+                                    className="absolute top-0 left-0 w-full h-full rounded-md shadow-2xl ring-1 ring-white/10"
+                                    src="https://www.youtube.com/embed/QucptiybwVk?autoplay=1&mute=1"
+                                    title="EnConvo Demo"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                />
+                            </div>
                         )}
                     </div>
                 </div>
