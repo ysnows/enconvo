@@ -6,6 +6,7 @@ import { Logo } from "@/components/Logo"
 import Image from 'next/image'
 import allInOne from '@/images/main.jpg'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { ParticleBackground } from '@/components/ParticleBackground'
 
 declare global {
     interface Window {
@@ -104,8 +105,9 @@ export function Hero() {
         })
     }, [])
 
-    return (<div className="bg-gray-900">
-        <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800/50">
+    return (<div className="bg-black relative overflow-hidden">
+        <ParticleBackground />
+        <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800/50">
             <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
                 <div className="flex lg:flex-1 items-center">
                     <Link href="/" aria-label="Home" className="flex items-center gap-3">
@@ -149,8 +151,6 @@ export function Hero() {
                     </div>
                 </div>
             </nav>
-
-
 
             <Dialog as="div" className="lg:hidden" open={mobileMenuOpen}
                 onClose={setMobileMenuOpen}>
@@ -214,7 +214,7 @@ export function Hero() {
         </header>
 
 
-        <div className="relative isolate pt-20">
+        <div className="relative isolate pt-20 z-10">
 
 
             <div className="py-20 sm:py-32 lg:py-40">

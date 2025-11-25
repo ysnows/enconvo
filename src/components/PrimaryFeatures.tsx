@@ -25,7 +25,7 @@ export function PrimaryFeatures() {
         <section
             id="features"
             aria-label="Features for running your books"
-            className="relative overflow-hidden bg-gray-900 pb-28 sm:pt-20 pt-6 sm:py-32"
+            className="relative overflow-hidden bg-black pb-28 sm:pt-20 pt-6 sm:py-32"
         >
             <Container className="relative">
                 {features.map((feature, index) => (
