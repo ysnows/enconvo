@@ -25,8 +25,12 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
 
     const getYouTubeThumbnail = (url) => {
         const videoId = getYouTubeVideoId(url);
-        return videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : null;
+        if (!videoId) return null;
+        // maxresdefault.jpg is the highest quality, but not always available.
+        // hqdefault.jpg is a reliable fallback.
+        return `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
     };
+
 
     // Alternate layout: even indices = image on left, odd indices = image on right
     const isReversed = index % 2 === 1;
