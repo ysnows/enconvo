@@ -65,6 +65,14 @@ async function handler(req, res) {
       session_data.discounts = [{
         coupon: 'Tk3jnTqN',
       }];
+    } else if (lookupKey === 'monthly') {
+      session_data.discounts = [{
+        coupon: 'qUM6wdRb',
+      }];
+    } else if (lookupKey === 'yearly') {
+      session_data.discounts = [{
+        coupon: 'NdNP006S',
+      }];
     } else {
       session_data.allow_promotion_codes = true;
     }

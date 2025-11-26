@@ -61,6 +61,7 @@ interface PlanProps {
     price: string
     lookupKey: string
     originPrice?: string
+    savePercent?: string
     description: string
     startText?: string
     features: string[]
@@ -72,6 +73,7 @@ function Plan({
     price,
     lookupKey,
     originPrice,
+    savePercent = "50%",
     description,
     startText = "Get started",
     features,
@@ -136,57 +138,33 @@ function Plan({
 
     return (
         <section
-            className={clsx(
-                'group relative flex flex-col rounded-3xl px-6 sm:px-8 transition-all duration-300',
-                featured
-                    ? 'order-first bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 py-8 lg:order-none scale-105 shadow-2xl shadow-blue-500/25 ring-2 ring-blue-400/20'
-                    : 'bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-900/50 py-8 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 hover:shadow-xl hover:shadow-gray-900/20 hover:-translate-y-1'
-            )}
+            className="group relative flex flex-col rounded-3xl px-6 sm:px-8 py-8 transition-all duration-300 bg-gradient-to-br from-gray-800/50 via-gray-800/30 to-gray-900/50 backdrop-blur-sm border border-gray-700/50 hover:border-gray-600/50 hover:shadow-xl hover:shadow-gray-900/20 hover:-translate-y-1"
         >
             {/* 装饰元素 */}
-            <div className={clsx(
-                "absolute -top-4 -right-4 w-8 h-8 rounded-full opacity-20 blur-xl",
-                featured ? "bg-white" : "bg-blue-500"
-            )}></div>
+            <div className="absolute -top-4 -right-4 w-8 h-8 rounded-full opacity-20 blur-xl bg-blue-500"></div>
 
             {/* SAVE 角标 */}
             {originPrice && (
                 <div className="absolute right-0 top-0 overflow-hidden w-28 h-28 pointer-events-none rounded-tr-3xl z-10">
                     <div className="absolute rotate-45 bg-gradient-to-r from-orange-500 to-red-500 text-white text-sm font-bold py-2 w-40 text-center shadow-lg -right-10 top-6">
-                        SAVE 50%
+                        SAVE {savePercent}
                     </div>
                 </div>
             )}
 
             {/* 价格展示 */}
-            <div className={clsx(
-                "order-first relative overflow-hidden",
-                featured && originPrice ? "pt-6" : ""
-            )}>
-                {featured && (
-                    <div className="absolute -top-2 -right-2">
-                        <div className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
-                            Most Popular
-                        </div>
-                    </div>
-                )}
-
-                <div className={clsx(
-                    "flex items-baseline gap-3",
-                    originPrice ? "mt-2" : ""
-                )}>
+            <div className="order-first relative">
+                <div className="flex flex-col gap-2">
                     {originPrice && (
-                        <span className="font-display text-3xl font-bold line-through text-gray-500">
+                        <span className="font-display text-xl font-bold line-through text-gray-500">
                             {originPrice}
                         </span>
                     )}
                     <span className={clsx(
-                        "font-display text-5xl font-bold tracking-tight",
+                        "font-display text-4xl font-bold tracking-tight",
                         originPrice
                             ? "text-red-500"
-                            : featured
-                                ? "text-white"
-                                : "bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
+                            : "bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"
                     )}>
                         {price}
                     </span>
@@ -196,10 +174,7 @@ function Plan({
             {/* 标题和描述 */}
             <div className="mt-6">
                 <h3 className="font-display text-2xl font-bold text-white">{name}</h3>
-                <p className={clsx(
-                    'mt-1 text-xs leading-relaxed',
-                    featured ? 'text-blue-100' : 'text-gray-400'
-                )}>
+                <p className="mt-1 text-xs leading-relaxed text-gray-400">
                     {description}
                 </p>
             </div>
@@ -211,25 +186,10 @@ function Plan({
                 >
                     {features.map((feature) => (
                         <li key={feature} className="flex items-start group/item">
-                            <div className={clsx(
-                                "flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 transition-all duration-200",
-                                featured
-                                    ? "bg-blue-400/20 group-hover/item:bg-blue-400/30"
-                                    : "bg-gray-700/50 group-hover/item:bg-blue-500/20"
-                            )}>
-                                <CheckIcon className={clsx(
-                                    "w-3 h-3 transition-colors duration-200",
-                                    featured
-                                        ? 'text-blue-200 group-hover/item:text-white'
-                                        : 'text-blue-400 group-hover/item:text-blue-300'
-                                )} />
+                            <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 transition-all duration-200 bg-gray-700/50 group-hover/item:bg-blue-500/20">
+                                <CheckIcon className="w-3 h-3 transition-colors duration-200 text-blue-400 group-hover/item:text-blue-300" />
                             </div>
-                            <span className={clsx(
-                                "ml-4 text-sm leading-relaxed transition-colors duration-200",
-                                featured
-                                    ? 'text-blue-100 group-hover/item:text-white'
-                                    : 'text-gray-300 group-hover/item:text-white'
-                            )}>
+                            <span className="ml-4 text-sm leading-relaxed transition-colors duration-200 text-gray-300 group-hover/item:text-white">
                                 {feature}
                             </span>
                         </li>
@@ -240,14 +200,9 @@ function Plan({
             <div className="mt-8">
                 <Button
                     onClick={handleClick}
-                    variant={featured ? 'solid' : 'outline'}
+                    variant="outline"
                     color="white"
-                    className={clsx(
-                        "w-full py-4 text-base font-semibold transition-all duration-300 transform",
-                        featured
-                            ? "bg-white text-blue-700 hover:bg-blue-50 hover:scale-105 shadow-xl shadow-white/10"
-                            : "border-2 border-blue-500 text-white hover:bg-blue-500 hover:border-blue-400 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20"
-                    )}
+                    className="w-full py-4 text-base font-semibold transition-all duration-300 transform border-2 border-blue-500 text-white hover:bg-blue-500 hover:border-blue-400 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/20"
                     disabled={isLoading}
                 >
                     <span className="flex items-center justify-center gap-2">
@@ -306,8 +261,8 @@ export function Pricing() {
                 </div>
 
                 {/* 主要价格卡片区域 */}
-                <div className="mt-16 ">
-                    <div className="grid max-w-7xl mx-auto grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-8">
+                <div className="mt-16">
+                    <div className="grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-10">
 
                         <Plan
                             name="Free"
@@ -401,12 +356,14 @@ export function Pricing() {
 
                     </div>
 
-                    <div className="grid max-w-7xl mx-auto grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-8 mt-20">
+                    <div className="grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-10 mt-20">
 
                         <Plan
                             name="Cloud Premium"
-                            price="$10/Monthly"
+                            originPrice="$10/Monthly"
+                            price="$7/Monthly"
                             lookupKey={'monthly'}
+                            savePercent="30%"
                             description="All Premium features, No need your own apikeys"
                             startText={'Get started'}
                             features={[
@@ -433,10 +390,11 @@ export function Pricing() {
                             ]}
                         />
                         <Plan
-                            featured
                             name="Cloud Premium"
-                            price="$96/Yearly"
+                            originPrice="$96/Yearly"
+                            price="$67.2/Yearly"
                             lookupKey={'yearly'}
+                            savePercent="30%"
                             description="All Premium features, No need your own apikeys"
                             startText={'Get started'}
                             features={[
