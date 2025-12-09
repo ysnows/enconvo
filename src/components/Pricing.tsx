@@ -249,15 +249,7 @@ export function Pricing() {
                     </p>
 
                     {/* Black Friday 活动提示 */}
-                    <div className="mt-8 inline-flex items-center space-x-4 p-4 rounded-2xl bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20">
-                        <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse"></div>
-                            <span className="text-white font-bold text-lg">🔥 Black Friday Sale</span>
-                        </div>
-                        <div className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow-lg animate-bounce">
-                            50% OFF - Limited Time!
-                        </div>
-                    </div>
+
                 </div>
 
                 {/* 主要价格卡片区域 */}
@@ -293,8 +285,7 @@ export function Pricing() {
 
                         <Plan
                             name="Premium"
-                            originPrice="$99"
-                            price="$49.5"
+                            price="$99"
                             lookupKey={'premium'}
                             description="30-day Money Back Guarantee"
                             startText="Buy License"
@@ -324,8 +315,7 @@ export function Pricing() {
 
                         <Plan
                             name="Standard"
-                            originPrice="$49"
-                            price="$24.5"
+                            price="$49"
                             lookupKey={'standard'}
                             description="30-day Money Back Guarantee"
                             startText="Buy License"
@@ -360,10 +350,8 @@ export function Pricing() {
 
                         <Plan
                             name="Cloud Premium"
-                            originPrice="$10/Monthly"
-                            price="$7/Monthly"
+                            price="$10/Monthly"
                             lookupKey={'monthly'}
-                            savePercent="30%"
                             description="All Premium features, No need your own apikeys"
                             startText={'Get started'}
                             features={[
@@ -391,10 +379,8 @@ export function Pricing() {
                         />
                         <Plan
                             name="Cloud Premium"
-                            originPrice="$96/Yearly"
-                            price="$67.2/Yearly"
+                            price="$96/Yearly"
                             lookupKey={'yearly'}
-                            savePercent="30%"
                             description="All Premium features, No need your own apikeys"
                             startText={'Get started'}
                             features={[
