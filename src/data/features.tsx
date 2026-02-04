@@ -63,7 +63,7 @@ export const features: Feature[] = [
         mediaType: 'youtube'
     },
     {
-        title: 'Companion Bar',
+        title: 'Companion Orb',
         description: 'Your always-on companion, providing instant access to essential features and real-time updates on your active tasks.',
         icon: () => (
             // Mini SmartBar icon - a smaller, simplified version of the SmartBar icon
