@@ -334,7 +334,7 @@ export function Hero() {
 
                             {/* 版本信息 */}
                             <div className="flex items-center space-x-6 text-sm text-gray-400">
-                                <span>macOS 13+ (Intel & Apple Silicon)</span>
+                                <span>macOS 14+ (Intel & Apple Silicon)</span>
                             </div>
                         </div>
 
