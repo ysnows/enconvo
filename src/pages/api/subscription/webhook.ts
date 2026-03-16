@@ -51,7 +51,10 @@ async function handler(
         console.log(`handled checkout.session.completed`);
         result = await handleCheckoutComplete(event);
         break;
-      // Add other event types as needed
+      case 'invoice.payment_succeeded':
+        console.log(`handled invoice.payment_succeeded`);
+        result = await handleInvoicePaymentSucceeded(event);
+        break;
       default:
         console.log(`Unhandled event type: ${event.type}`);
         return res.status(200).json({ received: true });
@@ -169,6 +172,56 @@ async function addTopupPoints(email: string, type: string, info: any) {
 
   return "Purchase successful";
 }
+async function handleInvoicePaymentSucceeded(event: Stripe.Event) {
+  const invoice = event.data.object as Stripe.Invoice;
+
+  // Only handle subscription renewal (recurring) payments, not the first payment
+  if (invoice.billing_reason !== 'subscription_cycle') {
+    console.log(`Skipping invoice with billing_reason: ${invoice.billing_reason}`);
+    return 'skipped';
+  }
+
+  const email = invoice.customer_email;
+  if (!email) {
+    throw new Error('No email found in invoice');
+  }
+
+  // Determine subscription type from the invoice line items
+  let subscriptionType = 'monthly';
+  const lineItem = invoice.lines?.data?.[0];
+  if (lineItem?.price?.lookup_key) {
+    subscriptionType = lineItem.price.lookup_key;
+  } else if (lineItem?.price?.recurring?.interval === 'year') {
+    subscriptionType = 'yearly';
+  }
+
+  console.log(`Subscription renewal for ${email}, type: ${subscriptionType}`);
+
+  // Call monthly renewal callback API
+  try {
+    const params = {
+      "tinqun_wuvxi6_zUkwev": email,
+      "wawkE2_tabpin_kevwog": subscriptionType,
+    };
+
+    const resp = await fetch("https://api.enconvo.com/zosrob_zoTqe0_fycsyx/vyrwik_3hogba_Rutmef", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(params)
+    });
+
+    if (!resp.ok) {
+      console.error('Monthly renewal callback API error:', await resp.text());
+    }
+  } catch (error) {
+    console.error('Error calling monthly renewal callback API:', error);
+  }
+
+  return "Renewal processed";
+}
+
 async function addSubscription(email: string, type: string = "premium", info: any) {
   const supabase = await createSuperClient();
 
