@@ -71,7 +71,7 @@ export default function Downloads() {
                             <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
                                 aria-hidden="true" />
                             <span>
-                                <strong className="font-semibold text-gray-900">Crash data. </strong> To improve program stability, we collect information on program crashes.
+                                <strong className="font-semibold text-gray-900">Product analytics. </strong> If enabled, we collect anonymous product metadata such as app version, macOS version, extension identifiers, command identifiers, command status, and duration.
                             </span>
                         </li>
                     </ul>

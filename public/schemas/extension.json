@@ -158,7 +158,7 @@
             "if": {
               "properties": {
                 "type": {
-                  "const": "dropdown"
+                  "enum": ["dropdown", "clone_voice"]
                 }
               }
             },
@@ -331,6 +331,7 @@
               "password",
               "checkbox",
               "dropdown",
+              "clone_voice",
               "appPicker",
               "file",
               "directory",
@@ -344,7 +345,7 @@
             ],
             "type": "string",
             "title": "The preference type",
-            "description": "Currently only 'textfield', 'password' (for secure entry), 'checkbox', 'dropdown', 'appPicker', 'file', 'tools','group', and 'directory' are supported."
+            "description": "Currently only 'textfield', 'password' (for secure entry), 'checkbox', 'dropdown', 'clone_voice', 'appPicker', 'file', 'tools','group', and 'directory' are supported."
           },
           "required": {
             "type": "boolean",

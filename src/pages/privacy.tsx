@@ -61,8 +61,8 @@ export default function Privacy() {
                         In addition, when you use certain service provider services, you may need
                         to enter your own key into the Enconvo main program to use them normally.
                         Enconvo only saves your key locally and does not upload it to the server.
-                        <br/> However, to provide a better user experience, Enconvo may collect the
-                        following data:
+                        <br/> If you explicitly enable anonymous product analytics, Enconvo may
+                        collect the following product event data:
                     </p>
 
                     <ul role="list" className="mt-8 max-w-xl space-y-8 text-gray-600">
@@ -71,7 +71,7 @@ export default function Privacy() {
                             <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
                                              aria-hidden="true"/>
                             <span>
-                <strong className="font-semibold text-gray-900">Crash data. </strong> To improve program stability, we collect information on program crashes.
+                <strong className="font-semibold text-gray-900">Product analytics. </strong> We collect anonymous metadata such as app version, macOS version, extension identifiers, command identifiers, command status, and duration. We do not collect prompts, selected text, clipboard contents, file contents, API keys, recognized images, model responses, or credentials.
               </span>
                         </li>
                     </ul>
