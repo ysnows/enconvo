@@ -42,6 +42,10 @@ export function Hero() {
             href: 'https://docs.enconvo.ai/'
         },
         {
+            name: 'Releases',
+            href: '/changelog'
+        },
+        {
             name: 'Affiliate',
             href: 'https://affiliate.enconvo.com/'
         },
@@ -89,6 +93,10 @@ export function Hero() {
                         {
                             name: 'Docs',
                             href: 'https://docs.enconvo.ai/'
+                        },
+                        {
+                            name: 'Releases',
+                            href: '/changelog'
                         },
                         {
                             name: 'Affiliate',
