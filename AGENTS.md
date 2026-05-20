@@ -5,6 +5,14 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 This is a Next.js website for Enconvo, built with Tailwind CSS and deployed as a static site. The site includes authentication, payment processing via Stripe, and user management features.
 
+## Design System
+
+UI changes must read [`../DESIGN.md`](../DESIGN.md) first and keep marketing,
+auth, payment, and account surfaces aligned with the Enconvo Crystal language.
+Continue using Tailwind and the existing CSS variables, but map new colors,
+radius, spacing, controls, and interaction states back to `DESIGN.md` instead of
+introducing one-off page palettes.
+
 ## Commands
 
 ### Development
