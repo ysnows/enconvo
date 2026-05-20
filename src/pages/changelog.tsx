@@ -246,9 +246,9 @@ const sectionAccentClasses = [
     title: 'text-emerald-50',
   },
   {
-    marker: 'bg-fuchsia-200',
-    bar: 'from-fuchsia-200/80 via-fuchsia-200/30 to-transparent',
-    title: 'text-fuchsia-50',
+    marker: 'bg-[#ff6161]',
+    bar: 'from-[#ff6161]/80 via-[#ff6161]/30 to-transparent',
+    title: 'text-rose-50',
   },
 ]
 
@@ -281,7 +281,7 @@ function ReleaseHeader() {
         </nav>
         <a
           href="https://api.enconvo.com/app/download?arch=arm64&platform=darwin"
-          className="inline-flex items-center gap-2 rounded-md border border-cyan-200/30 bg-cyan-100/10 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:border-cyan-100/60 hover:bg-cyan-100/20"
+          className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-[#e8e8e8]"
         >
           <Download className="h-4 w-4" aria-hidden="true" />
           Download
@@ -319,7 +319,10 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
           content="Read the latest EnConvo release notes, product updates, improvements, and fixes."
         />
       </Head>
-      <div className="min-h-screen bg-[#061014] text-slate-100">
+      <div
+        className="min-h-screen bg-[#07080a] text-[#f4f4f6]"
+        style={{ fontFeatureSettings: '"calt", "kern", "liga", "ss03"' }}
+      >
         <ReleaseHeader />
 
         <main>
@@ -332,9 +335,17 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
               sizes="100vw"
               className="absolute inset-0 -z-20 scale-105 object-cover opacity-10 blur-sm"
             />
-            <div className="absolute inset-0 -z-10 bg-[linear-gradient(115deg,rgba(3,7,18,0.98)_0%,rgba(6,26,31,0.94)_45%,rgba(39,26,12,0.86)_100%)]" />
-            <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-[#061014] to-transparent" />
+            <div className="absolute inset-0 -z-10 bg-[linear-gradient(115deg,rgba(7,8,10,0.98)_0%,rgba(7,16,20,0.94)_48%,rgba(13,13,13,0.9)_100%)]" />
+            <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-[#07080a] to-transparent" />
             <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-cyan-200/40 to-transparent" />
+            <div
+              className="pointer-events-none absolute left-0 top-0 -z-10 h-24 w-full overflow-hidden"
+              aria-hidden="true"
+            >
+              <div className="from-[#ff6161]/45 absolute left-[7%] top-0 h-20 w-64 -skew-x-12 bg-gradient-to-r to-[#a1131a]/20" />
+              <div className="absolute left-[19%] top-0 h-20 w-40 -skew-x-12 bg-gradient-to-r from-[#ff6161]/30 to-[#a1131a]/10" />
+              <div className="absolute left-[31%] top-0 h-20 w-24 -skew-x-12 bg-gradient-to-r from-[#ff6161]/20 to-transparent" />
+            </div>
             <CrystalShard
               className="pointer-events-none absolute -left-16 top-24 h-72 w-44 border border-cyan-100/20 bg-cyan-100/10 opacity-50 backdrop-blur-md sm:left-[3%]"
               points="50% 0%, 100% 28%, 78% 100%, 10% 86%, 0% 25%"
@@ -344,7 +355,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
               points="24% 0%, 100% 18%, 76% 100%, 0% 82%"
             />
             <CrystalShard
-              className="border-fuchsia-100/15 opacity-55 pointer-events-none absolute bottom-12 right-[26%] hidden h-48 w-72 border bg-fuchsia-100/10 backdrop-blur-md md:block"
+              className="border-[#ff6161]/15 opacity-45 pointer-events-none absolute bottom-12 right-[26%] hidden h-48 w-72 border bg-[#ff6161]/10 backdrop-blur-md md:block"
               points="0% 35%, 64% 0%, 100% 72%, 22% 100%"
             />
 
@@ -378,7 +389,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   <div className="mt-10 flex flex-wrap gap-3">
                     <a
                       href={`#${latest.slug}`}
-                      className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-50"
+                      className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#e8e8e8]"
                     >
                       Read v{latest.version}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -387,7 +398,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                       href="https://docs.enconvo.ai/"
                       target="_blank"
                       rel="noreferrer"
-                      className="border-white/15 hover:bg-white/15 inline-flex items-center gap-2 rounded-md border bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-md transition"
+                      className="inline-flex items-center gap-2 rounded-md border border-[#242728] bg-[#101111] px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20"
                     >
                       Documentation
                       <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -397,8 +408,8 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
               </div>
 
               <div className="relative">
-                <div className="border-white/15 rounded-lg border bg-white/10 p-3 shadow-2xl shadow-cyan-950/40 backdrop-blur-xl">
-                  <div className="mb-3 h-1 rounded-full bg-gradient-to-r from-cyan-200 via-amber-200 to-fuchsia-200" />
+                <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] p-3 backdrop-blur-xl">
+                  <div className="mb-3 h-1 rounded-full bg-gradient-to-r from-[#57c1ff] via-[#ffc533] to-[#ff6161]" />
                   <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-white/10 bg-slate-950">
                     <Image
                       src={appScreenshot}
@@ -424,7 +435,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
 
           <section className="mx-auto grid max-w-7xl gap-8 px-4 py-24 sm:px-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-8">
             <aside className="lg:sticky lg:top-28 lg:self-start">
-              <div className="rounded-lg border border-white/10 bg-white/[0.06] p-4 backdrop-blur-xl">
+              <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] p-4">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
                   Release index
                 </h2>
@@ -451,7 +462,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                 <article
                   key={release.slug}
                   id={release.slug}
-                  className="scroll-mt-28 border-t border-white/10 pt-8 first:border-t-0 first:pt-0"
+                  className="scroll-mt-28 border-t border-[#242728] pt-8 first:border-t-0 first:pt-0"
                 >
                   <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
                     <div>
@@ -478,7 +489,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                       {release.highlights.map((highlight) => (
                         <div
                           key={highlight}
-                          className="border-l border-amber-200/50 bg-white/[0.035] px-4 py-3 text-sm leading-6 text-slate-200"
+                          className="border-l border-[#ffc533]/50 bg-[#0d0d0d] px-4 py-3 text-sm leading-6 text-[#cdcdcd]"
                         >
                           <FormattedText text={highlight} />
                         </div>
@@ -496,7 +507,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                       return (
                         <section
                           key={`${release.slug}-${section.title}`}
-                          className="rounded-lg border border-white/10 bg-white/[0.035] p-4 transition hover:border-white/20 hover:bg-white/[0.055]"
+                          className="rounded-lg border border-[#242728] bg-[#121212] p-4 transition hover:border-white/20 hover:bg-[#101111]"
                         >
                           <div
                             className={`mb-4 h-0.5 w-16 bg-gradient-to-r ${accent.bar}`}
