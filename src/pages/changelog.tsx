@@ -79,7 +79,7 @@ function slugForVersion(version: string) {
 
 function cleanHeading(value: string) {
   return value
-    .replace(/\u{1F680}/gu, '')
+    .replace(/\uD83D\uDE80/g, '')
     .replace(/\s+/g, ' ')
     .trim()
 }

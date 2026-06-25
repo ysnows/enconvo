@@ -158,8 +158,7 @@ export default function Login() {
                     loginState={loginState}
                     setUser={setUser}
                     router={router}
-                >
-                </LoginForm>
+                />
             }
         </div>
     </>
