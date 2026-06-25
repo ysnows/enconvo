@@ -1,6 +1,5 @@
 import { Container } from '@/components/Container'
 
-// FAQ data with questions and answers
 const faqs = [
   [
     {
@@ -19,7 +18,7 @@ const faqs = [
   [
     {
       question: 'What is your refund policy?',
-      answer: 'We offer a 14-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time .',
+      answer: 'We offer a 14-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time.',
     },
     {
       question: 'What platforms does EnConvo support?',
@@ -51,17 +50,17 @@ export function Faqs() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="bg-black py-20 sm:py-32"
+      className="bg-canvas py-20 sm:py-32"
     >
       <Container className="relative">
         <div className="mx-auto max-w-2xl text-center">
           <h2
             id="faq-title"
-            className="font-display text-3xl tracking-tight text-white sm:text-4xl"
+            className="font-display text-3xl tracking-tight text-content sm:text-4xl"
           >
             Frequently asked questions
           </h2>
-          <p className="mt-4 text-lg tracking-tight text-slate-400">
+          <p className="mt-4 text-lg tracking-tight text-content-muted">
             If you can&apos;t find what you&apos;re looking for, email our support team
             and if you&apos;re lucky someone will get back to you.
           </p>
@@ -74,11 +73,11 @@ export function Faqs() {
             <li key={columnIndex}>
               <ul role="list" className="flex flex-col gap-y-8">
                 {column.map((faq, faqIndex) => (
-                  <li key={faqIndex} className="group relative rounded-2xl bg-slate-800/50 p-6 hover:bg-slate-800/75 transition-colors duration-300">
-                    <h3 className="font-display text-lg leading-7 text-white group-hover:text-sky-300 transition-colors duration-300">
+                  <li key={faqIndex} className="group relative rounded-lg bg-surface-card p-6 border border-hairline hover:border-hairline-strong transition-colors">
+                    <h3 className="font-display text-lg leading-7 text-content group-hover:text-signal-blue transition-colors">
                       {faq.question}
                     </h3>
-                    <p className="mt-4 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">{faq.answer}</p>
+                    <p className="mt-4 text-sm text-content-muted group-hover:text-content-body transition-colors">{faq.answer}</p>
                   </li>
                 ))}
               </ul>

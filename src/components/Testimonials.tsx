@@ -8,7 +8,6 @@ import avatarImage4 from '@/images/avatars/avatar-4.png'
 import avatarImage5 from '@/images/avatars/avatar-5.png'
 import avatarImage6 from '@/images/avatars/avatar-6.png'
 
-// Testimonials data showcasing user experiences with EnConvo's various features
 const testimonials = [
   [
     {
@@ -72,7 +71,6 @@ const testimonials = [
   ],
 ]
 
-// Quote icon component for testimonial cards
 function QuoteIcon(props) {
   return (
     <svg aria-hidden="true" width={105} height={78} {...props}>
@@ -86,14 +84,14 @@ export function Testimonials() {
     <section
       id="testimonials"
       aria-label="What our customers are saying"
-      className="bg-black py-20 sm:py-32"
+      className="bg-canvas py-20 sm:py-32"
     >
       <Container>
         <div className="mx-auto max-w-2xl md:text-center">
-          <h2 className="font-display text-3xl tracking-tight text-white sm:text-4xl">
+          <h2 className="font-display text-3xl tracking-tight text-content sm:text-4xl">
             Loved by users worldwide
           </h2>
-          <p className="mt-4 text-lg tracking-tight text-slate-400">
+          <p className="mt-4 text-lg tracking-tight text-content-muted">
             See what our users are saying about their experience with EnConvo&apos;s AI-powered features and workflow integrations.
           </p>
         </div>
@@ -106,23 +104,23 @@ export function Testimonials() {
               <ul role="list" className="flex flex-col gap-y-6 sm:gap-y-8">
                 {column.map((testimonial, testimonialIndex) => (
                   <li key={testimonialIndex}>
-                    <figure className="relative rounded-2xl bg-slate-800/50 p-6 shadow-xl shadow-slate-900/10">
-                      <QuoteIcon className="absolute left-6 top-6 fill-slate-700" />
+                    <figure className="relative rounded-lg bg-surface-card p-6 border border-hairline">
+                      <QuoteIcon className="absolute left-6 top-6 fill-hairline" />
                       <blockquote className="relative">
-                        <p className="text-lg tracking-tight text-slate-200">
+                        <p className="text-lg tracking-tight text-content-body">
                           {testimonial.content}
                         </p>
                       </blockquote>
-                      <figcaption className="relative mt-6 flex items-center justify-between border-t border-slate-700/50 pt-6">
+                      <figcaption className="relative mt-6 flex items-center justify-between border-t border-hairline pt-6">
                         <div>
-                          <div className="font-display text-base text-slate-200">
+                          <div className="font-display text-base text-content">
                             {testimonial.author.name}
                           </div>
-                          <div className="mt-1 text-sm text-slate-400">
+                          <div className="mt-1 text-sm text-content-muted">
                             {testimonial.author.role}
                           </div>
                         </div>
-                        <div className="overflow-hidden rounded-full bg-slate-800">
+                        <div className="overflow-hidden rounded-full bg-surface-elevated">
                           <Image
                             className="h-14 w-14 object-cover"
                             src={testimonial.author.image}

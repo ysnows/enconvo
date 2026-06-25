@@ -17,12 +17,6 @@ module.exports = {
     },
     extend: {
       animation: {
-        'pulse-slow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'pulse-slower': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'float': 'float 3s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite alternate',
-        'shimmer': 'shimmer 2s linear infinite',
-        'bounce-subtle': 'bounce-subtle 2s ease-in-out infinite',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
@@ -60,6 +54,29 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        canvas: '#07080A',
+        'nav-surface': '#071014',
+        surface: {
+          DEFAULT: '#0D0D0D',
+          elevated: '#101111',
+          card: '#121212',
+        },
+        hairline: {
+          DEFAULT: '#242728',
+          strong: 'rgba(255,255,255,0.16)',
+        },
+        content: {
+          DEFAULT: '#F4F4F6',
+          body: '#CDCDCD',
+          muted: '#9C9C9D',
+          ash: '#6A6B6C',
+        },
+        signal: {
+          blue: '#57C1FF',
+          green: '#59D499',
+          yellow: '#FFC533',
+          red: '#FF6161',
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -67,22 +84,6 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
-        },
-        glow: {
-          '0%': { boxShadow: '0 0 5px rgba(59, 130, 246, 0.5)' },
-          '100%': { boxShadow: '0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(59, 130, 246, 0.4)' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-        'bounce-subtle': {
-          '0%, 100%': { transform: 'translateY(-2%)' },
-          '50%': { transform: 'translateY(0)' },
-        },
         "accordion-down": {
           from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },

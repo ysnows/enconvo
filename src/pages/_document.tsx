@@ -5,7 +5,7 @@ export default function Document(props) {
 
   return (
     <Html
-      className="h-full scroll-smooth bg-white antialiased [font-feature-settings:'ss01']"
+      className="h-full scroll-smooth bg-[#07080A] antialiased [font-feature-settings:'calt','kern','liga','ss03']"
       lang="en"
     >
       <Head>
@@ -17,7 +17,7 @@ export default function Document(props) {
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Lexend:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
         />
       </Head>
       <body className="flex h-full flex-col">

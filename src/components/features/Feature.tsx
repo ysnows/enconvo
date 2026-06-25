@@ -1,10 +1,20 @@
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState, useRef, ReactNode } from "react";
 
-export function Feature({ title, description, icon: Icon, gradient, media, mediaType = 'image', index = 0 }) {
+interface FeatureProps {
+    title: string
+    description: string | ReactNode
+    icon: any
+    gradient: string
+    media: string
+    mediaType?: 'video' | 'youtube' | 'image'
+    index?: number
+}
+
+export function Feature({ title, description, icon: Icon, gradient, media, mediaType = 'image', index = 0 }: FeatureProps) {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isYouTubeLoaded, setIsYouTubeLoaded] = useState(false);
-    const videoRef = useRef(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
 
     const handlePlayClick = () => {
         setIsPlaying(true);
@@ -17,52 +27,47 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
         setIsYouTubeLoaded(true);
     };
 
-    // Extract YouTube video ID from URL
-    const getYouTubeVideoId = (url) => {
+    const getYouTubeVideoId = (url: string) => {
         const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&]+)/);
         return match ? match[1] : null;
     };
 
-    const getYouTubeThumbnail = (url) => {
+    const getYouTubeThumbnail = (url: string) => {
         const videoId = getYouTubeVideoId(url);
         if (!videoId) return null;
-        // maxresdefault.jpg is the highest quality, but not always available.
-        // hqdefault.jpg is a reliable fallback.
         return `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
     };
 
-
-    // Alternate layout: even indices = image on left, odd indices = image on right
     const isReversed = index % 2 === 1;
 
     return (
-        <div className={`flex text-white mt-24 sm:mt-32 flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-20`}>
-            {/* Content side */}
+        <div className={`flex text-content mt-24 sm:mt-32 flex-col ${isReversed ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-20`}>
             <div className="flex-1 lg:max-w-xl">
-                {/* Icon and Title on same line */}
                 <div className="flex items-center gap-4">
-                    <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br ${gradient} flex-shrink-0`}>
+                    <div className={`inline-flex items-center justify-center w-14 h-14 rounded-lg bg-gradient-to-br ${gradient} flex-shrink-0`}>
                         <Icon className="w-7 h-7 text-white" />
                     </div>
-                    <h3 className="font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight text-white">
+                    <h3 className="font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight text-content">
                         {title}
                     </h3>
                 </div>
 
-                {/* Description */}
-                <div className="mt-4 text-lg leading-relaxed text-gray-400 [&_a]:text-blue-400 [&_a]:underline [&_a]:underline-offset-2 [&_a]:decoration-blue-400/50 hover:[&_a]:decoration-blue-400"
-                    dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <div className="mt-4 text-lg leading-relaxed text-content-body">
+                    {typeof description === 'string' ? (
+                        <p>{description}</p>
+                    ) : (
+                        description
+                    )}
+                </div>
             </div>
 
-            {/* Media side */}
             <div className="flex-1 w-full max-w-2xl">
                 {mediaType === 'video' ? (
                     <div className="relative group">
-                        <div className="relative rounded-xl overflow-hidden bg-gray-800 shadow-2xl">
+                        <div className="relative rounded-lg overflow-hidden bg-surface-elevated border border-hairline">
                             <video
                                 ref={videoRef}
-                                className="w-full h-auto rounded-xl"
+                                className="w-full h-auto rounded-lg"
                                 controls={isPlaying}
                                 muted
                                 playsInline
@@ -72,12 +77,12 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
 
                             {!isPlaying && (
                                 <div
-                                    className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/20"
+                                    className="absolute inset-0 flex items-center justify-center cursor-pointer bg-canvas/20"
                                     onClick={handlePlayClick}
                                 >
                                     <button className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
                                         <svg
-                                            className="w-6 h-6 text-gray-900 fill-current ml-1"
+                                            className="w-6 h-6 text-canvas fill-current ml-1"
                                             viewBox="0 0 24 24"
                                         >
                                             <path d="M8 5v14l11-7z" />
@@ -91,20 +96,18 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
                     <div className="relative w-full aspect-video">
                         {!isYouTubeLoaded ? (
                             <>
-                                {/* YouTube Thumbnail */}
                                 <img
                                     src={getYouTubeThumbnail(media)}
                                     alt={title}
-                                    className="absolute top-0 left-0 w-full h-full object-cover rounded-xl shadow-2xl"
+                                    className="absolute top-0 left-0 w-full h-full object-cover rounded-lg border border-hairline"
                                 />
-                                {/* Play Button Overlay */}
                                 <div
-                                    className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/20 rounded-xl"
+                                    className="absolute inset-0 flex items-center justify-center cursor-pointer bg-canvas/20 rounded-lg"
                                     onClick={handleYouTubeClick}
                                 >
                                     <button className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors">
                                         <svg
-                                            className="w-6 h-6 text-gray-900 fill-current ml-1"
+                                            className="w-6 h-6 text-canvas fill-current ml-1"
                                             viewBox="0 0 24 24"
                                         >
                                             <path d="M8 5v14l11-7z" />
@@ -114,7 +117,7 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
                             </>
                         ) : (
                             <iframe
-                                className="absolute top-0 left-0 w-full h-full rounded-xl shadow-2xl"
+                                className="absolute top-0 left-0 w-full h-full rounded-lg border border-hairline"
                                 src={`${media.replace('watch?v=', 'embed/')}?autoplay=1&controls=1&showinfo=0&rel=0&modestbranding=1&iv_load_policy=3`}
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
@@ -123,7 +126,7 @@ export function Feature({ title, description, icon: Icon, gradient, media, media
                     </div>
                 ) : (
                     <Image
-                        className="rounded-xl shadow-2xl"
+                        className="rounded-lg border border-hairline"
                         src={media}
                         alt={title}
                         width={800}
