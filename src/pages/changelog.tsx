@@ -3,7 +3,7 @@ import path from 'path'
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { ArrowRight, CalendarDays, ExternalLink } from 'lucide-react'
+import { ArrowRight, CalendarDays } from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
@@ -354,15 +354,6 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                     >
                       Read v{latest.version}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                    </a>
-                    <a
-                      href="https://docs.enconvo.ai/"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-md border border-[#242728] bg-[#101111] px-5 py-3 text-sm font-semibold text-white transition hover:border-white/20"
-                    >
-                      Documentation
-                      <ExternalLink className="h-4 w-4" aria-hidden="true" />
                     </a>
                   </div>
                 )}
