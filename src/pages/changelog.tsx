@@ -3,11 +3,10 @@ import path from 'path'
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
-import { ArrowRight, CalendarDays, Download, ExternalLink } from 'lucide-react'
+import { ArrowRight, CalendarDays, ExternalLink } from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
-import { Logo } from '@/components/Logo'
+import { SiteNav } from '@/components/SiteNav'
 import mainVisual from '@/images/main.jpg'
 import appScreenshot from '@/images/screenshots/app-screenshot.png'
 
@@ -252,44 +251,6 @@ const sectionAccentClasses = [
   },
 ]
 
-function ReleaseHeader() {
-  return (
-    <header className="bg-[#071014]/85 sticky top-0 z-50 border-b border-white/10 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link href="/" aria-label="Home" className="flex items-center gap-3">
-          <Logo className="h-8 w-auto" />
-          <span className="text-sm font-semibold tracking-wide text-white">
-            EnConvo
-          </span>
-        </Link>
-        <nav className="hidden items-center gap-6 text-sm font-medium text-slate-300 md:flex">
-          <Link href="/#features" className="hover:text-white">
-            Features
-          </Link>
-          <Link href="/#pricing" className="hover:text-white">
-            Pricing
-          </Link>
-          <a
-            href="https://docs.enconvo.ai/"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-1 hover:text-white"
-          >
-            Docs
-            <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-          </a>
-        </nav>
-        <a
-          href="https://api.enconvo.com/app/download?arch=arm64&platform=darwin"
-          className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-[#e8e8e8]"
-        >
-          <Download className="h-4 w-4" aria-hidden="true" />
-          Download
-        </a>
-      </div>
-    </header>
-  )
-}
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
@@ -323,7 +284,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
         className="min-h-screen bg-[#07080a] text-[#f4f4f6]"
         style={{ fontFeatureSettings: '"calt", "kern", "liga", "ss03"' }}
       >
-        <ReleaseHeader />
+        <SiteNav />
 
         <main>
           <section className="relative isolate overflow-hidden">
