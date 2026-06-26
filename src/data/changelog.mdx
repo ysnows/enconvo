@@ -9,6 +9,84 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.4 Changelog (2026-06-26)
+
+Hi friends, thanks for testing this round. Enconvo 2.5.4 is mostly about making
+the app feel cleaner and steadier in daily use: Dynamic Island is easier to
+control, Sidebar handoff is quicker, chat rendering is smoother, analytics are
+more privacy-conscious, and the macOS app package is lighter.
+
+## Highlights
+
+- **Dynamic Island is easier to control** with a new menu bar toggle, more
+  reliable hover activation, better keyboard handling, and an optional notch
+  exclusion setting.
+- **Ask Sidebar is now available from selected text or file context**, so you
+  can send content into Enconvo from Finder or other right-click workflows.
+- **Chat answers and long conversations feel cleaner** with better answer
+  formatting and improved message list rendering for longer histories.
+- **Analytics are more privacy-conscious** with consistent signed-in user
+  identity and filtering for sensitive values such as API keys, passwords, and
+  tokens.
+- **The macOS app package is lighter** after removing unused Swift packages and
+  dead UI helper code.
+- **OpenRouter Claude reasoning options are clearer** for newer Opus and Sonnet
+  model families.
+
+## Dynamic Island
+
+- Added an Enable or Disable Dynamic Island item to the menu bar menu.
+- Improved Dynamic Island event handling to match SmartBar behavior more
+  closely, including Escape, Cmd+W, Cmd+N, and Return key flows.
+- Replaced raw event monitors with stack-based hotkey monitors for more reliable
+  open and close cycles.
+- Fixed repeated compact hover entries sometimes failing to open.
+- Hover validation now respects the padded hover target, so activation is less
+  fragile around the visible pill.
+- Added an optional Exclude Notch Area setting. When enabled, hover inside the
+  physical notch area will not trigger Dynamic Island, while hover below or
+  beside the notch still works.
+- Removed streaming text preview from compact and expanded Dynamic Island modes
+  when agent auto-read is active.
+
+## Chat And Sidebar
+
+- Added the Ask Sidebar command for sending selected text or file context into
+  the app sidebar.
+- Registered Ask Sidebar as a Finder service and general right-click action.
+- Chat With AI now avoids fenced code blocks unless you ask for code, commands,
+  structured data, logs, or exact copyable text.
+- Formula-style answers now stay in normal prose or Markdown math instead of
+  code-style boxes.
+- Improved long chat rendering by stabilizing Streamdown props and using
+  content visibility for off-screen cached messages.
+
+## Privacy And App Package
+
+- Signed-in users are identified more consistently across the Mac app, Node.js
+  runtime, and web settings app.
+- Sensitive values such as API keys, passwords, and tokens are filtered before
+  analytics events are sent.
+- Event names are clearer for command runs, panels, providers, settings,
+  login/logout, and feature flags.
+- Removed unused Swift packages including OpenAISwift, ActivityIndicatorView,
+  SwiftUIPager, OpenAI by MacPaw, Blackbird, GoogleSignIn, GoogleSignInSwift,
+  MenuBarExtraAccess, MSDisplayLink, SpringInterpolation, and Splash.
+- Deleted unused WindowAnimation helpers and cleaned dead Swift imports in views
+  and services.
+
+## Models And Providers
+
+- OpenRouter Claude Opus and Sonnet model ids now match reasoning effort
+  profiles by model family and version, even when naming order or separators
+  vary.
+- Opus 4.7 and 4.8 now show adaptive Low, Medium, High, X-High, and Max effort
+  choices instead of legacy token-budget choices.
+- Other Claude fallback models, including Sonnet 4.5 and latest aliases, now use
+  the simpler Low, Medium, High, and Max effort list.
+
+---
+
 # Enconvo 2.5.3 Changelog (2026-06-25)
 
 Friends, thanks for waiting. This release took longer than usual because I spent
