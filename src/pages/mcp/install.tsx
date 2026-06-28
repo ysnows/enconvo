@@ -2,17 +2,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 
-const LOCAL_API = 'http://localhost:54535'
-
-interface DecodedConfig {
-  command?: string
-  args?: string[]
-  env?: Record<string, string>
-  url?: string
-  headers?: Record<string, string>
-}
-
-function decodeConfig(b64: string): DecodedConfig | null {
+function decodeConfig(b64: string): Record<string, unknown> | null {
   try {
     return JSON.parse(atob(b64))
   } catch {
@@ -20,50 +10,40 @@ function decodeConfig(b64: string): DecodedConfig | null {
   }
 }
 
-type InstallState = 'idle' | 'installing' | 'success' | 'error'
-
 export default function MCPInstall() {
   const router = useRouter()
   const { name, config } = router.query as { name?: string; config?: string }
-  const [state, setState] = useState<InstallState>('idle')
-  const [errorMsg, setErrorMsg] = useState('')
+  const [copied, setCopied] = useState(false)
 
   const decoded = useMemo(() => (config ? decodeConfig(config) : null), [config])
-  const transport = decoded?.command ? 'stdio' : 'http'
 
-  const handleInstall = async () => {
+  const fullConfig = useMemo(() => {
+    if (!name || !decoded) return null
+    return { [name]: decoded }
+  }, [name, decoded])
+
+  const configJson = useMemo(
+    () => (fullConfig ? JSON.stringify(fullConfig, null, 2) : ''),
+    [fullConfig]
+  )
+
+  useEffect(() => {
     if (!name || !config) return
+    window.location.href = `enconvo://mcp/install?name=${encodeURIComponent(name)}&config=${encodeURIComponent(config)}`
+  }, [name, config])
 
-    setState('installing')
-
-    window.open(`enconvo://mcp/install?name=${encodeURIComponent(name)}&config=${encodeURIComponent(config)}`, '_self')
-
-    await new Promise(r => setTimeout(r, 500))
-
-    try {
-      const resp = await fetch(`${LOCAL_API}/mcp/install`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, config }),
-      })
-      const data = await resp.json()
-      if (data.success) {
-        setState('success')
-      } else {
-        setState('error')
-        setErrorMsg(data.error || 'Install failed')
-      }
-    } catch {
-      setState('error')
-      setErrorMsg('Could not connect to Enconvo. Make sure the app is running.')
-    }
+  const handleCopy = async () => {
+    if (!configJson) return
+    await navigator.clipboard.writeText(configJson)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   if (!router.isReady) return null
 
   if (!name || !config || !decoded) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+      <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Invalid Install Link</h1>
           <p className="mt-2 text-gray-600">Missing server name or configuration.</p>
@@ -79,97 +59,44 @@ export default function MCPInstall() {
         <meta name="description" content={`Add the ${name} MCP server to Enconvo`} />
       </Head>
 
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-6">
-            <img src="/favicon.ico" alt="Enconvo" className="h-10 w-10 rounded-lg" />
-            <div>
-              <h1 className="text-lg font-semibold text-gray-900">Add MCP Server</h1>
-              <p className="text-sm text-gray-500">to Enconvo</p>
-            </div>
-          </div>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4">
+        <div className="w-full max-w-xl text-center">
+          <h1 className="text-2xl font-bold text-gray-900">Launched Enconvo</h1>
+          <p className="mt-2 text-base text-gray-600">
+            MCP server installation should be starting in Enconvo.
+          </p>
 
-          {/* Server info */}
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 mb-6">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-base font-medium text-gray-900">{name}</span>
-              <span className="rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                {transport}
-              </span>
-            </div>
+          <p className="mt-8 text-sm text-gray-400">
+            If Enconvo didn&apos;t open automatically, you can manually add the MCP server with the configuration below:
+          </p>
 
-            {transport === 'stdio' && decoded.command && (
-              <div className="space-y-1.5 text-sm">
-                <div>
-                  <span className="text-gray-500">Command: </span>
-                  <code className="rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-800">
-                    {decoded.command} {decoded.args?.join(' ')}
-                  </code>
-                </div>
-                {decoded.env && Object.keys(decoded.env).length > 0 && (
-                  <div>
-                    <span className="text-gray-500">Environment: </span>
-                    <span className="text-gray-700">{Object.keys(decoded.env).join(', ')}</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {transport === 'http' && decoded.url && (
-              <div className="text-sm">
-                <span className="text-gray-500">URL: </span>
-                <code className="rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-800 break-all">
-                  {decoded.url}
-                </code>
-              </div>
-            )}
-          </div>
-
-          {/* Action */}
-          {state === 'idle' && (
-            <button
-              onClick={handleInstall}
-              className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
-            >
-              Add to Enconvo
-            </button>
-          )}
-
-          {state === 'installing' && (
-            <button disabled className="w-full rounded-lg bg-gray-400 px-4 py-2.5 text-sm font-medium text-white cursor-not-allowed">
-              Installing...
-            </button>
-          )}
-
-          {state === 'success' && (
-            <div className="rounded-lg bg-green-50 border border-green-200 p-3 text-center">
-              <p className="text-sm font-medium text-green-800">
-                {name} has been added to Enconvo
-              </p>
-              <p className="text-xs text-green-600 mt-1">
-                Check the MCP Servers settings pane in Enconvo.
-              </p>
-            </div>
-          )}
-
-          {state === 'error' && (
-            <div>
-              <div className="rounded-lg bg-red-50 border border-red-200 p-3 text-center mb-3">
-                <p className="text-sm text-red-700">{errorMsg}</p>
-              </div>
+          <div className="mt-4 text-left">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700">MCP Server Configuration:</span>
               <button
-                onClick={handleInstall}
-                className="w-full rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-800 transition-colors"
+                onClick={handleCopy}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+                title="Copy to clipboard"
               >
-                Try Again
+                {copied ? (
+                  <svg className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                )}
               </button>
             </div>
-          )}
+            <pre className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-800 overflow-x-auto">
+              {configJson}
+            </pre>
+          </div>
 
-          <p className="mt-4 text-center text-xs text-gray-400">
+          <p className="mt-8 text-xs text-gray-400">
             Don&apos;t have Enconvo?{' '}
-            <a href="https://enconvo.com" className="text-gray-600 underline">
+            <a href="https://enconvo.com" className="text-gray-600 underline hover:text-gray-800">
               Download
             </a>
           </p>
