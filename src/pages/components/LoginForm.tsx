@@ -56,7 +56,7 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
         })
 
 
-        NativeRouter.login(data.session.access_token, data.session.refresh_token)
+        NativeRouter.login(data.session.access_token, data.session.refresh_token, Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
         setLoginState("success")
 
         setEmailIsLoading(false)
@@ -106,6 +106,15 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             if (router?.query?.returnUrl) {
                 redirectUrl = router.query.returnUrl as string
             }
+            // Preserve from/source across the OAuth round-trip so the app can return
+            // the user to where login started (e.g. the onboarding guide).
+            const from = Array.isArray(router.query.from) ? router.query.from[0] : router.query.from
+            const source = Array.isArray(router.query.source) ? router.query.source[0] : router.query.source
+            const extra = new URLSearchParams()
+            if (from) extra.set('from', from)
+            if (source) extra.set('source', source)
+            const extraQs = extra.toString()
+            if (extraQs) redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + extraQs
 
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',

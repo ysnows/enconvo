@@ -21,7 +21,7 @@ export default function Login() {
 
     const handleOpenApp = () => {
         if (session) {
-            NativeRouter.login(session.access_token, session.refresh_token)
+            NativeRouter.login(session.access_token, session.refresh_token, Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
         }
     }
     const handleLogout = () => {

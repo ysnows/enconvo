@@ -14,7 +14,15 @@ export default function AuthCallback() {
                 await router.push('/login?error=auth')
             }
             if (session) {
-                await router.push('/login')
+                // Carry from/source back to /login so an OAuth login started from the
+                // app (e.g. the onboarding guide) still hands off with its source.
+                const from = Array.isArray(router.query.from) ? router.query.from[0] : router.query.from
+                const source = Array.isArray(router.query.source) ? router.query.source[0] : router.query.source
+                const params = new URLSearchParams()
+                if (from) params.set('from', from)
+                if (source) params.set('source', source)
+                const qs = params.toString()
+                await router.push(qs ? `/login?${qs}` : '/login')
             }
         }
 
