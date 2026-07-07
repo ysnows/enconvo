@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import PaySuccess from './components/PaySucess'
+import { NativeRouter } from "@/utils/app/native_router"
+import type { Session } from '@supabase/supabase-js'
 
 export default function Login() {
     // 获取url参数
@@ -9,7 +11,7 @@ export default function Login() {
     const router = useRouter()
 
     const [loginState, setLoginState] = useState("login")
-    const [session, setSession] = useState({})
+    const [session, setSession] = useState<Session | null>(null)
     const [user, setUser] = useState({})
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -17,9 +19,13 @@ export default function Login() {
     ])
 
     const handleOpenApp = () => {
-        // NativeRouter.login(session.access_token, session.refresh_token)
-        // navigate to login success page
-        router.push("/login")
+        // Jump back into the app like the login flow (deep-link), landing on the Account page,
+        // which re-syncs the user's plan. `source=account` routes the app to Settings → Account.
+        if (session?.access_token) {
+            NativeRouter.login(session.access_token, session.refresh_token, 'account')
+        } else {
+            router.push("/login")
+        }
     }
     const handleLogout = () => {
         supabase.auth.signOut().then(() => {
@@ -31,6 +37,8 @@ export default function Login() {
 
 
     useEffect(() => {
+        supabase.auth.getSession().then(({ data }) => setSession(data.session))
+
         // Check to see if this is a redirect back from Checkout
         const query = new URLSearchParams(window.location.search);
         if (query.get('success')) {
