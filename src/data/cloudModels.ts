@@ -131,6 +131,18 @@ export const cloudModels: CloudModel[] = [
         imageGeneration: true
     },
     {
+        title: "Claude Sonnet 5",
+        value: "anthropic/claude-sonnet-5",
+        context: 1000000,
+        perRequestPrice: 100000,
+        perRequestUnit: "1M input tokens , 500,000 points / 1M output tokens",
+        providerName: "anthropic",
+        toolUse: true,
+        visionEnable: true,
+        searchToolSupported: true,
+        maxTokens: 128000
+    },
+    {
         title: "Claude Sonnet 4.5",
         value: "anthropic/claude-sonnet-4-5-20250929",
         context: 200000,
@@ -259,6 +271,19 @@ export const cloudModels: CloudModel[] = [
         audioEnable: true,
         toolUse: true,
         searchToolSupported: true
+    },
+    {
+        title: "Gemini 3.1 Flash Lite Image",
+        value: "google/gemini-3.1-flash-lite-image",
+        context: 65536,
+        maxTokens: 4096,
+        perRequestPrice: 12500,
+        perRequestUnit: "1M input tokens , 1,500,000 points / 1M image output tokens",
+        providerName: "google",
+        visionEnable: true,
+        imageGeneration: true,
+        audioEnable: false,
+        toolUse: false
     },
     {
         title: "Gemini 3 Pro Image Preview",
