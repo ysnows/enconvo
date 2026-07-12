@@ -459,7 +459,7 @@ function ReleaseBody({ release }: { release: Release }) {
   return (
     <>
       {release.intro && (
-        <p className="max-w-3xl pb-6 text-[15px] leading-7 text-[#9c9c9d]">
+        <p className="max-w-3xl pb-6 text-[15px] leading-7 text-[#9c9c9d] [overflow-wrap:anywhere]">
           <FormattedText text={release.intro} />
         </p>
       )}
@@ -469,7 +469,7 @@ function ReleaseBody({ release }: { release: Release }) {
           {release.highlights.map((highlight) => (
             <div
               key={highlight}
-              className="border-l border-[#ffc533]/50 bg-[#0d0d0d] px-4 py-3 text-sm leading-6 text-[#cdcdcd]"
+              className="min-w-0 border-l border-[#ffc533]/50 bg-[#0d0d0d] px-4 py-3 text-sm leading-6 text-[#cdcdcd] [overflow-wrap:anywhere]"
             >
               <FormattedText text={highlight} />
             </div>
@@ -485,7 +485,7 @@ function ReleaseBody({ release }: { release: Release }) {
           return (
             <section
               key={`${release.slug}-${section.title}`}
-              className="rounded-lg border border-[#242728] bg-[#121212] p-4 transition hover:border-white/20 hover:bg-[#101111]"
+              className="min-w-0 rounded-lg border border-[#242728] bg-[#121212] p-4 transition hover:border-white/20 hover:bg-[#101111]"
             >
               <div
                 className={`mb-4 h-0.5 w-16 bg-gradient-to-r ${accent.bar}`}
@@ -494,7 +494,7 @@ function ReleaseBody({ release }: { release: Release }) {
                 {section.title}
               </h3>
               {section.lede && (
-                <p className="mt-2 text-sm leading-6 text-slate-400">
+                <p className="mt-2 text-sm leading-6 text-slate-400 [overflow-wrap:anywhere]">
                   <FormattedText text={section.lede} />
                 </p>
               )}
@@ -518,7 +518,7 @@ function ReleaseBody({ release }: { release: Release }) {
                           className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-sm ${accent.marker}`}
                         />
                       )}
-                      <span>
+                      <span className="min-w-0 [overflow-wrap:anywhere]">
                         <FormattedText text={verb ? rest : item} />
                       </span>
                     </li>
@@ -1143,7 +1143,7 @@ export default function ChangelogPage({
               </div>
             </aside>
 
-            <div className="space-y-8">
+            <div className="min-w-0 space-y-8">
               {totalMatches === 0 && (
                 <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] px-6 py-16 text-center">
                   <p className="text-lg font-semibold text-white">
@@ -1173,7 +1173,7 @@ export default function ChangelogPage({
                       articleRefs.current.delete(group.slug)
                     }
                   }}
-                  className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-size:auto_900px] first:border-t-0 first:pt-0"
+                  className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-height:auto_900px] first:border-t-0 first:pt-0"
                 >
                   <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
                     <div>
@@ -1237,7 +1237,7 @@ export default function ChangelogPage({
                         articleRefs.current.delete(release.slug)
                       }
                     }}
-                    className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-size:auto_900px] first:border-t-0 first:pt-0"
+                    className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-height:auto_900px] first:border-t-0 first:pt-0"
                   >
                     <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
                       <div>
