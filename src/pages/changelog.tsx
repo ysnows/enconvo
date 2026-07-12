@@ -4,7 +4,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { ArrowRight, CalendarDays, Search, X } from 'lucide-react'
+import {
+  ArrowRight,
+  CalendarDays,
+  ChevronRight,
+  Search,
+  X,
+} from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
@@ -30,8 +36,14 @@ interface Release {
   searchText: string
 }
 
+interface BetaRelease extends Release {
+  targetVersion: string
+  betaNumber: number
+}
+
 interface ChangelogPageProps {
   releases: Release[]
+  betas: BetaRelease[]
 }
 
 function escapeHtml(value: string) {
@@ -283,6 +295,39 @@ function parseChangelog(source: string): Release[] {
   return releases
 }
 
+interface BetaIndexEntry {
+  version: string
+  beta: number
+  file: string
+  date: string
+}
+
+function parseBetaRelease(
+  source: string,
+  entry: BetaIndexEntry
+): BetaRelease | null {
+  const body = source
+    .replace(/^#\s+[^\n]*\r?\n/, '')
+    .split('\n')
+    // Working beta files may carry in-progress percentage prefixes; the
+    // published notes never show them (same rule as the Sparkle pipeline).
+    .map((line) => line.replace(/^(\s*[-*]\s+)\[[0-9]+%\]\s+/, '$1'))
+    .join('\n')
+
+  const synthetic = `# Enconvo ${entry.version}-beta.${entry.beta} Changelog (${entry.date})\n\n${body}`
+  const parsed = parseChangelog(synthetic)[0]
+  if (!parsed) {
+    return null
+  }
+
+  return {
+    ...parsed,
+    searchText: `${parsed.searchText}\nbeta ${entry.beta}\n${entry.version} beta ${entry.beta}`.toLowerCase(),
+    targetVersion: entry.version,
+    betaNumber: entry.beta,
+  }
+}
+
 async function readChangelogSource() {
   const candidates = [
     path.join(process.cwd(), '..', 'mintlify-docs', 'changelog.mdx'),
@@ -298,6 +343,34 @@ async function readChangelogSource() {
   }
 
   return ''
+}
+
+async function readBetaReleases(): Promise<BetaRelease[]> {
+  const betaDir = path.join(process.cwd(), 'src', 'data', 'beta')
+
+  let index: BetaIndexEntry[]
+  try {
+    index = JSON.parse(
+      await fs.readFile(path.join(betaDir, 'index.json'), 'utf8')
+    )
+  } catch {
+    return []
+  }
+
+  const betas: BetaRelease[] = []
+  for (const entry of index) {
+    try {
+      const source = await fs.readFile(path.join(betaDir, entry.file), 'utf8')
+      const parsed = parseBetaRelease(source, entry)
+      if (parsed) {
+        betas.push(parsed)
+      }
+    } catch {
+      continue
+    }
+  }
+
+  return betas
 }
 
 function CrystalShard({
@@ -374,6 +447,154 @@ function Stat({ label, value }: { label: string; value: string | number }) {
   )
 }
 
+function BetaBadge({ label }: { label: string }) {
+  return (
+    <span className="w-fit shrink-0 rounded-md border border-amber-200/25 bg-amber-200/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-amber-100">
+      {label}
+    </span>
+  )
+}
+
+function ReleaseBody({ release }: { release: Release }) {
+  return (
+    <>
+      {release.intro && (
+        <p className="max-w-3xl pb-6 text-[15px] leading-7 text-[#9c9c9d]">
+          <FormattedText text={release.intro} />
+        </p>
+      )}
+
+      {release.highlights.length > 0 && (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {release.highlights.map((highlight) => (
+            <div
+              key={highlight}
+              className="border-l border-[#ffc533]/50 bg-[#0d0d0d] px-4 py-3 text-sm leading-6 text-[#cdcdcd]"
+            >
+              <FormattedText text={highlight} />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-2 first:mt-0">
+        {release.sections.map((section, sectionIndex) => {
+          const accent =
+            sectionAccentClasses[sectionIndex % sectionAccentClasses.length]
+
+          return (
+            <section
+              key={`${release.slug}-${section.title}`}
+              className="rounded-lg border border-[#242728] bg-[#121212] p-4 transition hover:border-white/20 hover:bg-[#101111]"
+            >
+              <div
+                className={`mb-4 h-0.5 w-16 bg-gradient-to-r ${accent.bar}`}
+              />
+              <h3 className={`text-base font-semibold ${accent.title}`}>
+                {section.title}
+              </h3>
+              {section.lede && (
+                <p className="mt-2 text-sm leading-6 text-slate-400">
+                  <FormattedText text={section.lede} />
+                </p>
+              )}
+              <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-300">
+                {section.items.map((item, itemIndex) => {
+                  const { verb, rest } = splitChangeVerb(item)
+
+                  return (
+                    <li
+                      key={`${section.title}-${itemIndex}`}
+                      className="flex gap-3"
+                    >
+                      {verb ? (
+                        <span
+                          className={`mt-0.5 inline-flex h-fit shrink-0 items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${verbBadgeClasses[verb]}`}
+                        >
+                          {verb}
+                        </span>
+                      ) : (
+                        <span
+                          className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-sm ${accent.marker}`}
+                        />
+                      )}
+                      <span>
+                        <FormattedText text={verb ? rest : item} />
+                      </span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </section>
+          )
+        })}
+      </div>
+    </>
+  )
+}
+
+function BetaRow({
+  beta,
+  expanded,
+  onToggle,
+}: {
+  beta: BetaRelease
+  expanded: boolean
+  onToggle: () => void
+}) {
+  return (
+    <div
+      id={beta.slug}
+      className="scroll-mt-28 rounded-lg border border-[#242728] bg-[#0d0d0d] transition hover:border-white/20"
+    >
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={expanded}
+        className="flex w-full items-center gap-3 px-4 py-3 text-left"
+      >
+        <ChevronRight
+          aria-hidden="true"
+          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${
+            expanded ? 'rotate-90' : ''
+          }`}
+        />
+        <span className="shrink-0 font-semibold text-white">
+          Beta {beta.betaNumber}
+        </span>
+        <time
+          dateTime={beta.date}
+          className="shrink-0 text-xs uppercase tracking-[0.14em] text-slate-500"
+        >
+          {beta.shortDateLabel}
+        </time>
+        {!expanded && beta.intro && (
+          <span className="hidden min-w-0 flex-1 truncate text-sm text-slate-500 sm:block">
+            {plainText(beta.intro)}
+          </span>
+        )}
+        <a
+          href={`#${beta.slug}`}
+          onClick={(event) => {
+            event.stopPropagation()
+            event.preventDefault()
+            window.history.replaceState(null, '', `#${beta.slug}`)
+          }}
+          aria-label={`Link to Beta ${beta.betaNumber}`}
+          className="ml-auto shrink-0 text-slate-600 transition hover:text-white"
+        >
+          #
+        </a>
+      </button>
+      {expanded && (
+        <div className="border-t border-[#242728] px-4 pb-6 pt-5 sm:px-5">
+          <ReleaseBody release={beta} />
+        </div>
+      )}
+    </div>
+  )
+}
+
 function scrollToRelease(slug: string) {
   const target = document.getElementById(slug)
   if (!target) {
@@ -384,7 +605,59 @@ function scrollToRelease(slug: string) {
   window.history.replaceState(null, '', `#${slug}`)
 }
 
-export default function ChangelogPage({ releases }: ChangelogPageProps) {
+function narrowToQuery<T extends Release>(release: T, query: string): T | null {
+  if (!release.searchText.includes(query)) {
+    return null
+  }
+
+  const metaMatch =
+    `v${release.version}`.toLowerCase().includes(query) ||
+    release.date.includes(query) ||
+    release.dateLabel.toLowerCase().includes(query)
+
+  if (metaMatch) {
+    return release
+  }
+
+  const highlights = release.highlights.filter((highlight) =>
+    plainText(highlight).toLowerCase().includes(query)
+  )
+  const sections = release.sections
+    .map((section) => {
+      if (
+        plainText(`${section.title} ${section.lede}`)
+          .toLowerCase()
+          .includes(query)
+      ) {
+        return section
+      }
+
+      return {
+        ...section,
+        items: section.items.filter((item) =>
+          plainText(item).toLowerCase().includes(query)
+        ),
+      }
+    })
+    .filter((section) => section.items.length)
+
+  if (!highlights.length && !sections.length) {
+    return release
+  }
+
+  return { ...release, highlights, sections }
+}
+
+interface InBetaGroup {
+  version: string
+  slug: string
+  betas: BetaRelease[]
+}
+
+export default function ChangelogPage({
+  releases,
+  betas,
+}: ChangelogPageProps) {
   const latest = releases[0]
   const firstRelease = releases[releases.length - 1]
   const totalItems = releases.reduce(
@@ -392,67 +665,183 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
     0
   )
 
+  const betasByVersion = useMemo(() => {
+    const map = new Map<string, BetaRelease[]>()
+    for (const beta of betas) {
+      const list = map.get(beta.targetVersion) ?? []
+      list.push(beta)
+      map.set(beta.targetVersion, list)
+    }
+    for (const list of Array.from(map.values())) {
+      list.sort((a, b) => b.betaNumber - a.betaNumber)
+    }
+    return map
+  }, [betas])
+
+  const inBetaGroups = useMemo<InBetaGroup[]>(() => {
+    const releasedVersions = new Set(releases.map((release) => release.version))
+    return Array.from(betasByVersion.entries())
+      .filter(([version]) => !releasedVersions.has(version))
+      .map(([version, list]) => ({
+        version,
+        slug: slugForVersion(version),
+        betas: list,
+      }))
+      .sort((a, b) => b.betas[0].date.localeCompare(a.betas[0].date))
+  }, [betasByVersion, releases])
+
+  const defaultExpandedBetas = useMemo(
+    () =>
+      new Set(
+        inBetaGroups
+          .map((group) => group.betas[0]?.slug)
+          .filter(Boolean) as string[]
+      ),
+    [inBetaGroups]
+  )
+
   const [query, setQuery] = useState('')
-  const [activeSlug, setActiveSlug] = useState(latest?.slug ?? '')
+  const [activeSlug, setActiveSlug] = useState(
+    inBetaGroups[0]?.slug ?? latest?.slug ?? ''
+  )
+  const [expandedBetas, setExpandedBetas] = useState<Set<string> | null>(null)
+  const [openHistories, setOpenHistories] = useState<Set<string>>(
+    () => new Set()
+  )
   const articleRefs = useRef(new Map<string, HTMLElement>())
   const indexListRef = useRef<HTMLDivElement>(null)
 
   const normalizedQuery = query.trim().toLowerCase()
+  const searching = normalizedQuery.length > 0
+  const effectiveExpanded = expandedBetas ?? defaultExpandedBetas
 
-  const displayReleases = useMemo(() => {
-    if (!normalizedQuery) {
-      return releases
+  function toggleBeta(slug: string) {
+    setExpandedBetas((previous) => {
+      const next = new Set(previous ?? defaultExpandedBetas)
+      if (next.has(slug)) {
+        next.delete(slug)
+      } else {
+        next.add(slug)
+      }
+      return next
+    })
+  }
+
+  function toggleHistory(version: string) {
+    setOpenHistories((previous) => {
+      const next = new Set(previous)
+      if (next.has(version)) {
+        next.delete(version)
+      } else {
+        next.add(version)
+      }
+      return next
+    })
+  }
+
+  const display = useMemo(() => {
+    if (!searching) {
+      return {
+        inBeta: inBetaGroups,
+        stable: releases,
+        betaMatches: null as Map<string, BetaRelease[]> | null,
+      }
     }
 
-    const result: Release[] = []
+    const inBeta = inBetaGroups
+      .map((group) => ({
+        ...group,
+        betas: group.betas
+          .map((beta) => narrowToQuery(beta, normalizedQuery))
+          .filter(Boolean) as BetaRelease[],
+      }))
+      .filter((group) => group.betas.length)
+
+    const stable: Release[] = []
+    const betaMatches = new Map<string, BetaRelease[]>()
 
     for (const release of releases) {
-      if (!release.searchText.includes(normalizedQuery)) {
+      const narrowed = narrowToQuery(release, normalizedQuery)
+      const matchedBetas = (betasByVersion.get(release.version) ?? [])
+        .map((beta) => narrowToQuery(beta, normalizedQuery))
+        .filter(Boolean) as BetaRelease[]
+
+      if (!narrowed && !matchedBetas.length) {
         continue
       }
 
-      const metaMatch =
-        `v${release.version}`.toLowerCase().includes(normalizedQuery) ||
-        release.date.includes(normalizedQuery) ||
-        release.dateLabel.toLowerCase().includes(normalizedQuery)
-
-      if (metaMatch) {
-        result.push(release)
-        continue
+      if (matchedBetas.length) {
+        betaMatches.set(release.version, matchedBetas)
       }
 
-      const highlights = release.highlights.filter((highlight) =>
-        plainText(highlight).toLowerCase().includes(normalizedQuery)
+      stable.push(
+        narrowed ?? { ...release, intro: '', highlights: [], sections: [] }
       )
-      const sections = release.sections
-        .map((section) => {
-          if (
-            plainText(`${section.title} ${section.lede}`)
-              .toLowerCase()
-              .includes(normalizedQuery)
-          ) {
-            return section
-          }
-
-          return {
-            ...section,
-            items: section.items.filter((item) =>
-              plainText(item).toLowerCase().includes(normalizedQuery)
-            ),
-          }
-        })
-        .filter((section) => section.items.length)
-
-      if (!highlights.length && !sections.length) {
-        result.push(release)
-        continue
-      }
-
-      result.push({ ...release, highlights, sections })
     }
 
-    return result
-  }, [releases, normalizedQuery])
+    return { inBeta, stable, betaMatches }
+  }, [searching, normalizedQuery, inBetaGroups, releases, betasByVersion])
+
+  function historyBetasFor(version: string): BetaRelease[] {
+    if (display.betaMatches) {
+      return display.betaMatches.get(version) ?? []
+    }
+    return betasByVersion.get(version) ?? []
+  }
+
+  const indexEntries = useMemo(
+    () => [
+      ...display.inBeta.map((group) => ({
+        slug: group.slug,
+        title: `v${group.version}`,
+        subtitle: `In beta · ${group.betas.length} builds`,
+        isBeta: true,
+      })),
+      ...display.stable.map((release) => ({
+        slug: release.slug,
+        title: `v${release.version}`,
+        subtitle: release.shortDateLabel,
+        isBeta: false,
+      })),
+    ],
+    [display]
+  )
+
+  // Deep link: scroll to a version or expand a specific beta build, both on
+  // initial load and on same-page hash navigation.
+  useEffect(() => {
+    function revealFromHash() {
+      const slug = window.location.hash.replace(/^#/, '')
+      if (!slug) {
+        return
+      }
+
+      const beta = betas.find((candidate) => candidate.slug === slug)
+      if (beta) {
+        setOpenHistories((previous) => {
+          const next = new Set(previous)
+          next.add(beta.targetVersion)
+          return next
+        })
+        setExpandedBetas((previous) => {
+          const next = new Set(previous ?? defaultExpandedBetas)
+          next.add(slug)
+          return next
+        })
+        window.setTimeout(() => {
+          document.getElementById(slug)?.scrollIntoView({ block: 'start' })
+        }, 80)
+        return
+      }
+
+      document.getElementById(slug)?.scrollIntoView({ block: 'start' })
+    }
+
+    revealFromHash()
+    window.addEventListener('hashchange', revealFromHash)
+    return () => window.removeEventListener('hashchange', revealFromHash)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Scroll spy: keep the release index in sync with the reading position.
   useEffect(() => {
@@ -460,15 +849,15 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
 
     function update() {
       ticking = false
-      let currentSlug = displayReleases[0]?.slug ?? ''
+      let currentSlug = indexEntries[0]?.slug ?? ''
 
-      for (const release of displayReleases) {
-        const element = articleRefs.current.get(release.slug)
+      for (const entry of indexEntries) {
+        const element = articleRefs.current.get(entry.slug)
         if (!element) {
           continue
         }
         if (element.getBoundingClientRect().top <= 176) {
-          currentSlug = release.slug
+          currentSlug = entry.slug
         } else {
           break
         }
@@ -494,7 +883,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onScroll)
     }
-  }, [displayReleases])
+  }, [indexEntries])
 
   useEffect(() => {
     const list = indexListRef.current
@@ -514,18 +903,20 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
     }
   }, [activeSlug])
 
+  const totalMatches = display.stable.length + display.inBeta.length
+
   return (
     <>
       <Head>
         <title>EnConvo Releases - Changelog</title>
         <meta
           name="description"
-          content="Read the latest EnConvo release notes, product updates, improvements, and fixes."
+          content="Read the latest EnConvo release notes, beta build updates, product improvements, and fixes."
         />
         <meta property="og:title" content="EnConvo Releases - Changelog" />
         <meta
           property="og:description"
-          content="Read the latest EnConvo release notes, product updates, improvements, and fixes."
+          content="Read the latest EnConvo release notes, beta build updates, product improvements, and fixes."
         />
       </Head>
       <div
@@ -582,7 +973,8 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                 <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-200 via-amber-200 to-transparent" />
                 <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
                   Product updates, model providers, workflow improvements, and
-                  fixes from the EnConvo changelog.
+                  fixes from the EnConvo changelog — including every beta
+                  build.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
                   <span className="rounded-md border border-cyan-200/20 bg-cyan-200/10 px-3 py-2 text-cyan-100">
@@ -607,6 +999,19 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                       Read v{latest.version}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </a>
+                    {inBetaGroups[0] && (
+                      <a
+                        href={`#${inBetaGroups[0].slug}`}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          scrollToRelease(inBetaGroups[0].slug)
+                        }}
+                        className="inline-flex items-center gap-2 rounded-md border border-amber-200/25 bg-amber-200/10 px-5 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-200/50"
+                      >
+                        v{inBetaGroups[0].version} beta
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </a>
+                    )}
                   </div>
                 )}
               </div>
@@ -629,17 +1034,8 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                       value={latest ? `v${latest.version}` : '--'}
                     />
                     <Stat label="Releases" value={releases.length} />
+                    <Stat label="Beta builds" value={betas.length} />
                     <Stat label="Updates" value={totalItems} />
-                    <Stat
-                      label="Since"
-                      value={
-                        firstRelease
-                          ? new Date(
-                              `${firstRelease.date}T00:00:00Z`
-                            ).getUTCFullYear()
-                          : '--'
-                      }
-                    />
                   </div>
                 </div>
               </div>
@@ -677,10 +1073,9 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                     </button>
                   )}
                 </div>
-                {normalizedQuery && (
+                {searching && (
                   <p className="mt-2 text-xs text-slate-500">
-                    {displayReleases.length}{' '}
-                    {displayReleases.length === 1 ? 'release' : 'releases'}{' '}
+                    {totalMatches} {totalMatches === 1 ? 'release' : 'releases'}{' '}
                     match
                   </p>
                 )}
@@ -691,9 +1086,10 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   aria-label="Jump to release"
                   className="mt-4 w-full rounded-md border border-[#242728] bg-[#101111] px-3 py-2 text-sm text-white focus:border-cyan-200/40 focus:outline-none lg:hidden"
                 >
-                  {displayReleases.map((release) => (
-                    <option key={release.slug} value={release.slug}>
-                      v{release.version} - {release.shortDateLabel}
+                  {indexEntries.map((entry) => (
+                    <option key={entry.slug} value={entry.slug}>
+                      {entry.title}
+                      {entry.isBeta ? ' (beta)' : ''} - {entry.subtitle}
                     </option>
                   ))}
                 </select>
@@ -702,34 +1098,43 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   ref={indexListRef}
                   className="relative mt-4 hidden max-h-[60vh] space-y-1 overflow-y-auto pr-1 lg:block"
                 >
-                  {displayReleases.map((release) => {
-                    const isActive = release.slug === activeSlug
+                  {indexEntries.map((entry) => {
+                    const isActive = entry.slug === activeSlug
 
                     return (
                       <a
-                        key={release.slug}
-                        data-slug={release.slug}
-                        href={`#${release.slug}`}
+                        key={entry.slug}
+                        data-slug={entry.slug}
+                        href={`#${entry.slug}`}
                         onClick={(event) => {
                           event.preventDefault()
-                          scrollToRelease(release.slug)
+                          scrollToRelease(entry.slug)
                         }}
                         aria-current={isActive ? 'true' : undefined}
                         className={`block rounded-md border-l-2 px-3 py-2 text-sm transition ${
                           isActive
-                            ? 'border-cyan-200 bg-white/10 text-white'
+                            ? `${
+                                entry.isBeta
+                                  ? 'border-amber-200'
+                                  : 'border-cyan-200'
+                              } bg-white/10 text-white`
                             : 'border-transparent text-slate-300 hover:bg-white/10 hover:text-white'
                         }`}
                       >
-                        <span className="font-semibold">
-                          v{release.version}
+                        <span className="flex items-center gap-2 font-semibold">
+                          {entry.title}
+                          {entry.isBeta && (
+                            <span className="rounded border border-amber-200/25 bg-amber-200/10 px-1 py-px text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-100">
+                              Beta
+                            </span>
+                          )}
                         </span>
                         <span
                           className={`mt-1 block text-xs ${
                             isActive ? 'text-slate-400' : 'text-slate-500'
                           }`}
                         >
-                          {release.shortDateLabel}
+                          {entry.subtitle}
                         </span>
                       </a>
                     )
@@ -739,7 +1144,7 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
             </aside>
 
             <div className="space-y-8">
-              {displayReleases.length === 0 && (
+              {totalMatches === 0 && (
                 <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] px-6 py-16 text-center">
                   <p className="text-lg font-semibold text-white">
                     No releases match &ldquo;{query.trim()}&rdquo;
@@ -757,15 +1162,15 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                 </div>
               )}
 
-              {displayReleases.map((release) => (
+              {display.inBeta.map((group) => (
                 <article
-                  key={release.slug}
-                  id={release.slug}
+                  key={group.slug}
+                  id={group.slug}
                   ref={(element) => {
                     if (element) {
-                      articleRefs.current.set(release.slug, element)
+                      articleRefs.current.set(group.slug, element)
                     } else {
-                      articleRefs.current.delete(release.slug)
+                      articleRefs.current.delete(group.slug)
                     }
                   }}
                   className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-size:auto_900px] first:border-t-0 first:pt-0"
@@ -773,21 +1178,21 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <time
-                        dateTime={release.date}
-                        className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200"
+                        dateTime={group.betas[0]?.date}
+                        className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-200"
                       >
-                        {release.dateLabel}
+                        {group.betas[0]?.dateLabel}
                       </time>
                       <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white">
                         <a
-                          href={`#${release.slug}`}
+                          href={`#${group.slug}`}
                           onClick={(event) => {
                             event.preventDefault()
-                            scrollToRelease(release.slug)
+                            scrollToRelease(group.slug)
                           }}
                           className="group inline-flex items-baseline gap-2"
                         >
-                          EnConvo {release.version}
+                          EnConvo {group.version}
                           <span
                             aria-hidden="true"
                             className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"
@@ -796,107 +1201,117 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                           </span>
                         </a>
                       </h2>
-                      <div className="mt-4 h-px w-32 bg-gradient-to-r from-cyan-200/80 to-transparent" />
+                      <div className="mt-4 h-px w-32 bg-gradient-to-r from-amber-200/80 to-transparent" />
                     </div>
-                    {release.slug === latest?.slug && (
-                      <span className="w-fit rounded-md border border-emerald-200/25 bg-emerald-200/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
-                        Latest
-                      </span>
-                    )}
+                    <BetaBadge
+                      label={`In Beta · ${group.betas.length} builds`}
+                    />
                   </div>
 
-                  {release.intro && (
-                    <p className="max-w-3xl pb-6 text-[15px] leading-7 text-[#9c9c9d]">
-                      <FormattedText text={release.intro} />
-                    </p>
-                  )}
-
-                  {release.highlights.length > 0 && (
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      {release.highlights.map((highlight) => (
-                        <div
-                          key={highlight}
-                          className="border-l border-[#ffc533]/50 bg-[#0d0d0d] px-4 py-3 text-sm leading-6 text-[#cdcdcd]"
-                        >
-                          <FormattedText text={highlight} />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="mt-8 grid gap-4 lg:grid-cols-2">
-                    {release.sections.map((section, sectionIndex) => {
-                      const accent =
-                        sectionAccentClasses[
-                          sectionIndex % sectionAccentClasses.length
-                        ]
-
-                      return (
-                        <section
-                          key={`${release.slug}-${section.title}`}
-                          className="rounded-lg border border-[#242728] bg-[#121212] p-4 transition hover:border-white/20 hover:bg-[#101111]"
-                        >
-                          <div
-                            className={`mb-4 h-0.5 w-16 bg-gradient-to-r ${accent.bar}`}
-                          />
-                          <h3
-                            className={`text-base font-semibold ${accent.title}`}
-                          >
-                            {section.title}
-                          </h3>
-                          {section.lede && (
-                            <p className="mt-2 text-sm leading-6 text-slate-400">
-                              <FormattedText text={section.lede} />
-                            </p>
-                          )}
-                          <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-300">
-                            {section.items.map((item, itemIndex) => {
-                              const { verb, rest } = splitChangeVerb(item)
-
-                              return (
-                                <li
-                                  key={`${section.title}-${itemIndex}`}
-                                  className="flex gap-3"
-                                >
-                                  {verb ? (
-                                    <span
-                                      className={`mt-0.5 inline-flex h-fit shrink-0 items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${verbBadgeClasses[verb]}`}
-                                    >
-                                      {verb}
-                                    </span>
-                                  ) : (
-                                    <span
-                                      className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-sm ${accent.marker}`}
-                                    />
-                                  )}
-                                  <span>
-                                    <FormattedText text={verb ? rest : item} />
-                                  </span>
-                                </li>
-                              )
-                            })}
-                          </ul>
-                        </section>
-                      )
-                    })}
+                  <div className="space-y-3">
+                    {group.betas.map((beta) => (
+                      <BetaRow
+                        key={beta.slug}
+                        beta={beta}
+                        expanded={searching || effectiveExpanded.has(beta.slug)}
+                        onToggle={() => toggleBeta(beta.slug)}
+                      />
+                    ))}
                   </div>
                 </article>
               ))}
 
-              {displayReleases.length > 0 && (
-                <p className="border-t border-[#242728] pt-8 text-sm text-slate-500">
-                  Looking for older releases? Visit the{' '}
-                  <a
-                    href="https://github.com/enconvo/releases"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-semibold text-cyan-200 underline decoration-cyan-200/30 underline-offset-4 hover:text-white"
+              {display.stable.map((release) => {
+                const historyBetas = historyBetasFor(release.version)
+                const historyOpen =
+                  searching || openHistories.has(release.version)
+
+                return (
+                  <article
+                    key={release.slug}
+                    id={release.slug}
+                    ref={(element) => {
+                      if (element) {
+                        articleRefs.current.set(release.slug, element)
+                      } else {
+                        articleRefs.current.delete(release.slug)
+                      }
+                    }}
+                    className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-size:auto_900px] first:border-t-0 first:pt-0"
                   >
-                    GitHub releases page
-                  </a>
-                  .
-                </p>
-              )}
+                    <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <time
+                          dateTime={release.date}
+                          className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200"
+                        >
+                          {release.dateLabel}
+                        </time>
+                        <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white">
+                          <a
+                            href={`#${release.slug}`}
+                            onClick={(event) => {
+                              event.preventDefault()
+                              scrollToRelease(release.slug)
+                            }}
+                            className="group inline-flex items-baseline gap-2"
+                          >
+                            EnConvo {release.version}
+                            <span
+                              aria-hidden="true"
+                              className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"
+                            >
+                              #
+                            </span>
+                          </a>
+                        </h2>
+                        <div className="mt-4 h-px w-32 bg-gradient-to-r from-cyan-200/80 to-transparent" />
+                      </div>
+                      {release.slug === latest?.slug && (
+                        <span className="w-fit rounded-md border border-emerald-200/25 bg-emerald-200/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
+                          Latest
+                        </span>
+                      )}
+                    </div>
+
+                    <ReleaseBody release={release} />
+
+                    {historyBetas.length > 0 && (
+                      <div className="mt-8">
+                        <button
+                          type="button"
+                          onClick={() => toggleHistory(release.version)}
+                          aria-expanded={historyOpen}
+                          className="flex items-center gap-2 text-sm font-semibold text-slate-400 transition hover:text-white"
+                        >
+                          <ChevronRight
+                            aria-hidden="true"
+                            className={`h-4 w-4 transition-transform ${
+                              historyOpen ? 'rotate-90' : ''
+                            }`}
+                          />
+                          Beta history · {historyBetas.length}{' '}
+                          {historyBetas.length === 1 ? 'build' : 'builds'}
+                        </button>
+                        {historyOpen && (
+                          <div className="mt-4 space-y-3">
+                            {historyBetas.map((beta) => (
+                              <BetaRow
+                                key={beta.slug}
+                                beta={beta}
+                                expanded={
+                                  searching || effectiveExpanded.has(beta.slug)
+                                }
+                                onToggle={() => toggleBeta(beta.slug)}
+                              />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </article>
+                )
+              })}
             </div>
           </section>
         </main>
@@ -909,10 +1324,12 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
 
 export const getStaticProps: GetStaticProps<ChangelogPageProps> = async () => {
   const changelog = await readChangelogSource()
+  const betas = await readBetaReleases()
 
   return {
     props: {
       releases: parseChangelog(changelog),
+      betas,
     },
   }
 }
