@@ -1,9 +1,10 @@
 import fs from 'fs/promises'
 import path from 'path'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { ArrowRight, CalendarDays } from 'lucide-react'
+import { ArrowRight, CalendarDays, Search, X } from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
@@ -12,6 +13,7 @@ import appScreenshot from '@/images/screenshots/app-screenshot.png'
 
 interface ReleaseSection {
   title: string
+  lede: string
   items: string[]
 }
 
@@ -19,10 +21,13 @@ interface Release {
   version: string
   date: string
   dateLabel: string
+  shortDateLabel: string
   slug: string
+  intro: string
   sections: ReleaseSection[]
   highlights: string[]
   itemCount: number
+  searchText: string
 }
 
 interface ChangelogPageProps {
@@ -60,9 +65,15 @@ function FormattedText({ text }: { text: string }) {
   )
 }
 
-function formatDate(date: string) {
+function plainText(value: string) {
+  return value
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/[*_`]/g, '')
+}
+
+function formatDate(date: string, month: 'long' | 'short' = 'long') {
   return new Intl.DateTimeFormat('en', {
-    month: 'long',
+    month,
     day: 'numeric',
     year: 'numeric',
     timeZone: 'UTC',
@@ -78,9 +89,17 @@ function slugForVersion(version: string) {
 
 function cleanHeading(value: string) {
   return value
-    .replace(/\uD83D\uDE80/g, '')
+    .replace(/🚀/g, '')
     .replace(/\s+/g, ' ')
     .trim()
+}
+
+function isProseLine(trimmed: string) {
+  if (!trimmed) {
+    return false
+  }
+
+  return !/^(#|<|!|\||>|-{3,}|import\s)/.test(trimmed)
 }
 
 function parseChangelog(source: string): Release[] {
@@ -88,10 +107,13 @@ function parseChangelog(source: string): Release[] {
   let current: {
     version: string
     date: string
+    introLines: string[]
     sections: ReleaseSection[]
     highlights: string[]
   } | null = null
   let currentSection: ReleaseSection | null = null
+  let inHighlights = false
+  let lastItems: string[] | null = null
   let inCodeBlock = false
 
   function pushCurrent() {
@@ -100,7 +122,7 @@ function parseChangelog(source: string): Release[] {
     }
 
     const sections = current.sections.filter((section) => section.items.length)
-    if (!sections.length) {
+    if (!sections.length && !current.highlights.length) {
       current = null
       currentSection = null
       return
@@ -111,14 +133,35 @@ function parseChangelog(source: string): Release[] {
       0
     )
 
+    const intro = current.introLines.join(' ').replace(/\s+/g, ' ').trim()
+    const dateLabel = formatDate(current.date)
+    const searchText = plainText(
+      [
+        current.version,
+        `v${current.version}`,
+        current.date,
+        dateLabel,
+        intro,
+        ...current.highlights,
+        ...sections.flatMap((section) => [
+          section.title,
+          section.lede,
+          ...section.items,
+        ]),
+      ].join('\n')
+    ).toLowerCase()
+
     releases.push({
       version: current.version,
       date: current.date,
-      dateLabel: formatDate(current.date),
+      dateLabel,
+      shortDateLabel: formatDate(current.date, 'short'),
       slug: slugForVersion(current.version),
+      intro,
       sections,
       highlights: current.highlights,
       itemCount,
+      searchText,
     })
 
     current = null
@@ -130,17 +173,22 @@ function parseChangelog(source: string): Release[] {
     current = {
       version,
       date,
+      introLines: [],
       sections: [],
       highlights: [],
     }
     currentSection = null
+    inHighlights = false
+    lastItems = null
   }
 
   for (const rawLine of source.split('\n')) {
     const line = rawLine.trimEnd()
+    const trimmed = line.trim()
 
-    if (line.trim().startsWith('```')) {
+    if (trimmed.startsWith('```')) {
       inCodeBlock = !inCodeBlock
+      lastItems = null
       continue
     }
 
@@ -163,29 +211,69 @@ function parseChangelog(source: string): Release[] {
 
     const sectionMatch = line.match(/^#{2,4}\s+(.+)$/)
     if (current && sectionMatch) {
-      currentSection = {
-        title: cleanHeading(sectionMatch[1]),
-        items: [],
+      const title = cleanHeading(sectionMatch[1])
+      lastItems = null
+
+      if (/^highlights$/i.test(title)) {
+        inHighlights = true
+        currentSection = null
+      } else {
+        inHighlights = false
+        currentSection = {
+          title,
+          lede: '',
+          items: [],
+        }
+        current.sections.push(currentSection)
       }
-      current.sections.push(currentSection)
       continue
     }
 
     const itemMatch = line.match(/^\s*-\s+(.+)$/)
     if (current && itemMatch) {
+      const item = cleanHeading(itemMatch[1])
+
+      if (inHighlights) {
+        current.highlights.push(item)
+        lastItems = current.highlights
+        continue
+      }
+
       if (!currentSection) {
         currentSection = {
-          title: 'Highlights',
+          title: 'Updates',
+          lede: '',
           items: [],
         }
         current.sections.push(currentSection)
       }
 
-      const item = cleanHeading(itemMatch[1])
       currentSection.items.push(item)
+      lastItems = currentSection.items
+      continue
+    }
 
-      if (current.highlights.length < 4) {
-        current.highlights.push(item)
+    // Wrapped bullet: an indented plain line continues the previous item.
+    const continuationMatch = rawLine.match(/^\s{2,}(\S.*)$/)
+    if (current && lastItems?.length && continuationMatch) {
+      lastItems[lastItems.length - 1] += ` ${cleanHeading(
+        continuationMatch[1]
+      )}`
+      continue
+    }
+
+    if (!trimmed) {
+      lastItems = null
+      continue
+    }
+
+    if (current && isProseLine(trimmed)) {
+      if (!currentSection && !inHighlights) {
+        current.introLines.push(trimmed)
+      } else if (currentSection && !currentSection.items.length) {
+        currentSection.lede = currentSection.lede
+          ? `${currentSection.lede} ${trimmed}`
+          : trimmed
       }
     }
   }
@@ -251,6 +339,29 @@ const sectionAccentClasses = [
   },
 ]
 
+const verbBadgeClasses: Record<string, string> = {
+  Added: 'border-emerald-200/25 bg-emerald-200/10 text-emerald-100',
+  Fixed: 'border-cyan-200/25 bg-cyan-200/10 text-cyan-100',
+  Resolved: 'border-cyan-200/25 bg-cyan-200/10 text-cyan-100',
+  Changed: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
+  Improved: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
+  Updated: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
+  Enhanced: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
+  Removed: 'border-[#ff6161]/25 bg-[#ff6161]/10 text-rose-100',
+  Deprecated: 'border-[#ff6161]/25 bg-[#ff6161]/10 text-rose-100',
+}
+
+function splitChangeVerb(item: string): { verb: string | null; rest: string } {
+  const match = item.match(
+    /^(Added|Fixed|Resolved|Changed|Improved|Updated|Enhanced|Removed|Deprecated)\b[:,]?\s+(.+)$/
+  )
+
+  if (!match) {
+    return { verb: null, rest: item }
+  }
+
+  return { verb: match[1], rest: match[2] }
+}
 
 function Stat({ label, value }: { label: string; value: string | number }) {
   return (
@@ -263,6 +374,16 @@ function Stat({ label, value }: { label: string; value: string | number }) {
   )
 }
 
+function scrollToRelease(slug: string) {
+  const target = document.getElementById(slug)
+  if (!target) {
+    return
+  }
+
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  window.history.replaceState(null, '', `#${slug}`)
+}
+
 export default function ChangelogPage({ releases }: ChangelogPageProps) {
   const latest = releases[0]
   const firstRelease = releases[releases.length - 1]
@@ -271,12 +392,139 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
     0
   )
 
+  const [query, setQuery] = useState('')
+  const [activeSlug, setActiveSlug] = useState(latest?.slug ?? '')
+  const articleRefs = useRef(new Map<string, HTMLElement>())
+  const indexListRef = useRef<HTMLDivElement>(null)
+
+  const normalizedQuery = query.trim().toLowerCase()
+
+  const displayReleases = useMemo(() => {
+    if (!normalizedQuery) {
+      return releases
+    }
+
+    const result: Release[] = []
+
+    for (const release of releases) {
+      if (!release.searchText.includes(normalizedQuery)) {
+        continue
+      }
+
+      const metaMatch =
+        `v${release.version}`.toLowerCase().includes(normalizedQuery) ||
+        release.date.includes(normalizedQuery) ||
+        release.dateLabel.toLowerCase().includes(normalizedQuery)
+
+      if (metaMatch) {
+        result.push(release)
+        continue
+      }
+
+      const highlights = release.highlights.filter((highlight) =>
+        plainText(highlight).toLowerCase().includes(normalizedQuery)
+      )
+      const sections = release.sections
+        .map((section) => {
+          if (
+            plainText(`${section.title} ${section.lede}`)
+              .toLowerCase()
+              .includes(normalizedQuery)
+          ) {
+            return section
+          }
+
+          return {
+            ...section,
+            items: section.items.filter((item) =>
+              plainText(item).toLowerCase().includes(normalizedQuery)
+            ),
+          }
+        })
+        .filter((section) => section.items.length)
+
+      if (!highlights.length && !sections.length) {
+        result.push(release)
+        continue
+      }
+
+      result.push({ ...release, highlights, sections })
+    }
+
+    return result
+  }, [releases, normalizedQuery])
+
+  // Scroll spy: keep the release index in sync with the reading position.
+  useEffect(() => {
+    let ticking = false
+
+    function update() {
+      ticking = false
+      let currentSlug = displayReleases[0]?.slug ?? ''
+
+      for (const release of displayReleases) {
+        const element = articleRefs.current.get(release.slug)
+        if (!element) {
+          continue
+        }
+        if (element.getBoundingClientRect().top <= 176) {
+          currentSlug = release.slug
+        } else {
+          break
+        }
+      }
+
+      setActiveSlug((previous) =>
+        previous === currentSlug ? previous : currentSlug
+      )
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true
+        window.requestAnimationFrame(update)
+      }
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [displayReleases])
+
+  useEffect(() => {
+    const list = indexListRef.current
+    if (!list || !activeSlug) {
+      return
+    }
+
+    const item = list.querySelector<HTMLElement>(`[data-slug="${activeSlug}"]`)
+    if (!item) {
+      return
+    }
+
+    const top = item.offsetTop
+    const bottom = top + item.offsetHeight
+    if (top < list.scrollTop || bottom > list.scrollTop + list.clientHeight) {
+      list.scrollTop = top - list.clientHeight / 2 + item.offsetHeight / 2
+    }
+  }, [activeSlug])
+
   return (
     <>
       <Head>
         <title>EnConvo Releases - Changelog</title>
         <meta
           name="description"
+          content="Read the latest EnConvo release notes, product updates, improvements, and fixes."
+        />
+        <meta property="og:title" content="EnConvo Releases - Changelog" />
+        <meta
+          property="og:description"
           content="Read the latest EnConvo release notes, product updates, improvements, and fixes."
         />
       </Head>
@@ -350,6 +598,10 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   <div className="mt-10 flex flex-wrap gap-3">
                     <a
                       href={`#${latest.slug}`}
+                      onClick={(event) => {
+                        event.preventDefault()
+                        scrollToRelease(latest.slug)
+                      }}
                       className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#e8e8e8]"
                     >
                       Read v{latest.version}
@@ -378,7 +630,16 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                     />
                     <Stat label="Releases" value={releases.length} />
                     <Stat label="Updates" value={totalItems} />
-                    <Stat label="Source" value="Docs" />
+                    <Stat
+                      label="Since"
+                      value={
+                        firstRelease
+                          ? new Date(
+                              `${firstRelease.date}T00:00:00Z`
+                            ).getUTCFullYear()
+                          : '--'
+                      }
+                    />
                   </div>
                 </div>
               </div>
@@ -392,29 +653,122 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   Release index
                 </h2>
                 <div className="mt-3 h-px bg-gradient-to-r from-cyan-200/70 to-transparent" />
-                <div className="mt-4 max-h-[70vh] space-y-1 overflow-y-auto pr-1">
-                  {releases.map((release) => (
-                    <a
-                      key={release.slug}
-                      href={`#${release.slug}`}
-                      className="block rounded-md px-3 py-2 text-sm text-slate-300 transition hover:bg-white/10 hover:text-white"
+                <div className="relative mt-4">
+                  <Search
+                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+                    aria-hidden="true"
+                  />
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Search updates"
+                    aria-label="Search release notes"
+                    className="w-full rounded-md border border-[#242728] bg-white/5 py-2 pl-9 pr-8 text-sm text-white placeholder:text-slate-500 focus:border-cyan-200/40 focus:outline-none"
+                  />
+                  {query && (
+                    <button
+                      type="button"
+                      onClick={() => setQuery('')}
+                      aria-label="Clear search"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-500 transition hover:text-white"
                     >
-                      <span className="font-semibold">v{release.version}</span>
-                      <span className="mt-1 block text-xs text-slate-500">
-                        {release.date}
-                      </span>
-                    </a>
+                      <X className="h-4 w-4" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+                {normalizedQuery && (
+                  <p className="mt-2 text-xs text-slate-500">
+                    {displayReleases.length}{' '}
+                    {displayReleases.length === 1 ? 'release' : 'releases'}{' '}
+                    match
+                  </p>
+                )}
+
+                <select
+                  value={activeSlug}
+                  onChange={(event) => scrollToRelease(event.target.value)}
+                  aria-label="Jump to release"
+                  className="mt-4 w-full rounded-md border border-[#242728] bg-[#101111] px-3 py-2 text-sm text-white focus:border-cyan-200/40 focus:outline-none lg:hidden"
+                >
+                  {displayReleases.map((release) => (
+                    <option key={release.slug} value={release.slug}>
+                      v{release.version} - {release.shortDateLabel}
+                    </option>
                   ))}
+                </select>
+
+                <div
+                  ref={indexListRef}
+                  className="relative mt-4 hidden max-h-[60vh] space-y-1 overflow-y-auto pr-1 lg:block"
+                >
+                  {displayReleases.map((release) => {
+                    const isActive = release.slug === activeSlug
+
+                    return (
+                      <a
+                        key={release.slug}
+                        data-slug={release.slug}
+                        href={`#${release.slug}`}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          scrollToRelease(release.slug)
+                        }}
+                        aria-current={isActive ? 'true' : undefined}
+                        className={`block rounded-md border-l-2 px-3 py-2 text-sm transition ${
+                          isActive
+                            ? 'border-cyan-200 bg-white/10 text-white'
+                            : 'border-transparent text-slate-300 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        <span className="font-semibold">
+                          v{release.version}
+                        </span>
+                        <span
+                          className={`mt-1 block text-xs ${
+                            isActive ? 'text-slate-400' : 'text-slate-500'
+                          }`}
+                        >
+                          {release.shortDateLabel}
+                        </span>
+                      </a>
+                    )
+                  })}
                 </div>
               </div>
             </aside>
 
             <div className="space-y-8">
-              {releases.map((release, releaseIndex) => (
+              {displayReleases.length === 0 && (
+                <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] px-6 py-16 text-center">
+                  <p className="text-lg font-semibold text-white">
+                    No releases match &ldquo;{query.trim()}&rdquo;
+                  </p>
+                  <p className="mt-2 text-sm text-slate-400">
+                    Try a different keyword, version number, or date.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setQuery('')}
+                    className="mt-6 inline-flex items-center gap-2 rounded-md border border-[#242728] bg-[#101111] px-4 py-2 text-sm font-semibold text-white transition hover:border-white/20"
+                  >
+                    Clear search
+                  </button>
+                </div>
+              )}
+
+              {displayReleases.map((release) => (
                 <article
                   key={release.slug}
                   id={release.slug}
-                  className="scroll-mt-28 border-t border-[#242728] pt-8 first:border-t-0 first:pt-0"
+                  ref={(element) => {
+                    if (element) {
+                      articleRefs.current.set(release.slug, element)
+                    } else {
+                      articleRefs.current.delete(release.slug)
+                    }
+                  }}
+                  className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-size:auto_900px] first:border-t-0 first:pt-0"
                 >
                   <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
                     <div>
@@ -425,16 +779,37 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                         {release.dateLabel}
                       </time>
                       <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white">
-                        EnConvo {release.version}
+                        <a
+                          href={`#${release.slug}`}
+                          onClick={(event) => {
+                            event.preventDefault()
+                            scrollToRelease(release.slug)
+                          }}
+                          className="group inline-flex items-baseline gap-2"
+                        >
+                          EnConvo {release.version}
+                          <span
+                            aria-hidden="true"
+                            className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"
+                          >
+                            #
+                          </span>
+                        </a>
                       </h2>
                       <div className="mt-4 h-px w-32 bg-gradient-to-r from-cyan-200/80 to-transparent" />
                     </div>
-                    {releaseIndex === 0 && (
+                    {release.slug === latest?.slug && (
                       <span className="w-fit rounded-md border border-emerald-200/25 bg-emerald-200/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
                         Latest
                       </span>
                     )}
                   </div>
+
+                  {release.intro && (
+                    <p className="max-w-3xl pb-6 text-[15px] leading-7 text-[#9c9c9d]">
+                      <FormattedText text={release.intro} />
+                    </p>
+                  )}
 
                   {release.highlights.length > 0 && (
                     <div className="grid gap-3 sm:grid-cols-2">
@@ -469,20 +844,37 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                           >
                             {section.title}
                           </h3>
+                          {section.lede && (
+                            <p className="mt-2 text-sm leading-6 text-slate-400">
+                              <FormattedText text={section.lede} />
+                            </p>
+                          )}
                           <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-300">
-                            {section.items.map((item, itemIndex) => (
-                              <li
-                                key={`${section.title}-${itemIndex}`}
-                                className="flex gap-3"
-                              >
-                                <span
-                                  className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-sm ${accent.marker}`}
-                                />
-                                <span>
-                                  <FormattedText text={item} />
-                                </span>
-                              </li>
-                            ))}
+                            {section.items.map((item, itemIndex) => {
+                              const { verb, rest } = splitChangeVerb(item)
+
+                              return (
+                                <li
+                                  key={`${section.title}-${itemIndex}`}
+                                  className="flex gap-3"
+                                >
+                                  {verb ? (
+                                    <span
+                                      className={`mt-0.5 inline-flex h-fit shrink-0 items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${verbBadgeClasses[verb]}`}
+                                    >
+                                      {verb}
+                                    </span>
+                                  ) : (
+                                    <span
+                                      className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-sm ${accent.marker}`}
+                                    />
+                                  )}
+                                  <span>
+                                    <FormattedText text={verb ? rest : item} />
+                                  </span>
+                                </li>
+                              )
+                            })}
                           </ul>
                         </section>
                       )
@@ -490,6 +882,21 @@ export default function ChangelogPage({ releases }: ChangelogPageProps) {
                   </div>
                 </article>
               ))}
+
+              {displayReleases.length > 0 && (
+                <p className="border-t border-[#242728] pt-8 text-sm text-slate-500">
+                  Looking for older releases? Visit the{' '}
+                  <a
+                    href="https://github.com/enconvo/releases"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-semibold text-cyan-200 underline decoration-cyan-200/30 underline-offset-4 hover:text-white"
+                  >
+                    GitHub releases page
+                  </a>
+                  .
+                </p>
+              )}
             </div>
           </section>
         </main>

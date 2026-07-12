@@ -17,6 +17,12 @@ export function Footer() {
                 Features
               </NavLink>
               <NavLink
+                href="/use-cases"
+                className="text-content-muted hover:text-content"
+              >
+                Use Cases
+              </NavLink>
+              <NavLink
                 href="/#pricing"
                 className="text-content-muted hover:text-content"
               >
