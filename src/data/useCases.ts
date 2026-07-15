@@ -35,6 +35,15 @@ export const useCases: UseCase[] = [
     featured: true,
   },
   {
+    slug: 'nvda-trading-strategy-backtest',
+    title: 'Build and Backtest an NVDA Trading Strategy with EnConvo',
+    description:
+      'Ask EnConvo to analyze an NVDA chart, write a Pine Script strategy, and backtest it in TradingView — all from the sidebar.',
+    youtubeId: 'eH7iKo0DqHM',
+    category: 'AI Agent',
+    date: '2026-07-15',
+  },
+  {
     slug: 'resume-to-personal-website',
     title: 'Turn Your Résumé into a Personal Website with EnConvo',
     description:
