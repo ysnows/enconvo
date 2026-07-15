@@ -5,10 +5,8 @@ export interface UseCase {
   description: string
   youtubeId: string
   category: string
-  /** YouTube publish date, YYYY-MM-DD. Non-featured entries sort newest-first. */
+  /** YouTube publish date, YYYY-MM-DD. Entries sort newest-first by default. */
   date: string
-  /** Featured entries are pinned on top in data-file order. */
-  featured?: boolean
   /** Optional "Read the guide" link into docs.enconvo.ai */
   docsUrl?: string
 }
@@ -22,7 +20,6 @@ export const useCases: UseCase[] = [
     youtubeId: 'K_Mmt0eVqRs',
     category: 'Apps & Office',
     date: '2025-08-12',
-    featured: true,
   },
   {
     slug: 'gmail-weather-workflow',
@@ -32,7 +29,6 @@ export const useCases: UseCase[] = [
     youtubeId: '0Hfsxw6LG6Y',
     category: 'Workflows',
     date: '2025-06-07',
-    featured: true,
   },
   {
     slug: 'nvda-trading-strategy-backtest',

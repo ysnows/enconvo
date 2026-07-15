@@ -118,16 +118,12 @@ function CardMeta({
 }
 
 export default function UseCasesPage() {
-  const { featured, rest, all, categories } = useMemo(() => {
-    const featuredCases = useCases.filter((useCase) => useCase.featured)
-    const restCases = useCases
-      .filter((useCase) => !useCase.featured)
-      .sort((a, b) => b.date.localeCompare(a.date))
-    const allCases = [...featuredCases, ...restCases]
+  const { all, categories } = useMemo(() => {
+    const allCases = [...useCases].sort((a, b) =>
+      b.date.localeCompare(a.date)
+    )
 
     return {
-      featured: featuredCases,
-      rest: restCases,
       all: allCases,
       categories: Array.from(
         new Set(allCases.map((useCase) => useCase.category))
@@ -144,9 +140,6 @@ export default function UseCasesPage() {
     }
     return all.filter((useCase) => useCase.category === activeCategory)
   }, [all, activeCategory])
-
-  const showFeaturedRow = activeCategory === ALL_CATEGORY && featured.length > 0
-  const gridCases = showFeaturedRow ? rest : filtered
 
   function openCase(useCase: UseCase) {
     setActiveCase(useCase)
@@ -317,42 +310,8 @@ export default function UseCasesPage() {
               })}
             </div>
 
-            {showFeaturedRow && (
-              <div className="mt-8 grid gap-4 lg:grid-cols-2">
-                {featured.map((useCase) => (
-                  <article
-                    key={useCase.slug}
-                    id={useCase.slug}
-                    onClick={() => openCase(useCase)}
-                    className="group scroll-mt-28 cursor-pointer rounded-lg border border-[#242728] bg-[#0d0d0d] p-3 transition hover:border-white/20"
-                  >
-                    <div className="relative aspect-video overflow-hidden rounded-md border border-white/10 bg-slate-950">
-                      <Thumbnail
-                        youtubeId={useCase.youtubeId}
-                        alt={useCase.title}
-                        className="h-full w-full object-cover"
-                      />
-                      <PlayOverlay title={useCase.title} />
-                    </div>
-                    <div className="px-2 pb-2 pt-4">
-                      <h2 className="text-lg font-semibold text-white">
-                        {useCase.title}
-                      </h2>
-                      <p className="mt-2 text-sm leading-6 text-slate-400">
-                        {useCase.description}
-                      </p>
-                      <CardMeta
-                        useCase={useCase}
-                        onOpenDocs={(event) => event.stopPropagation()}
-                      />
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
-
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {gridCases.map((useCase) => (
+              {filtered.map((useCase) => (
                 <article
                   key={useCase.slug}
                   id={useCase.slug}
