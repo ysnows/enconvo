@@ -35,6 +35,60 @@ export const useCases: UseCase[] = [
     featured: true,
   },
   {
+    slug: 'resume-to-personal-website',
+    title: 'Turn Your Résumé into a Personal Website with EnConvo',
+    description:
+      'Turn a résumé into a polished personal website with Standing. EnConvo reads the CV, builds the page, and helps publish a professional online presence from your Mac.',
+    youtubeId: '9K5ppGhsU6E',
+    category: 'AI Agent',
+    date: '2026-07-15',
+  },
+  {
+    slug: 'dynamic-island-quick-start',
+    title: 'Get Started with EnConvo from the Dynamic Island',
+    description:
+      'Set up EnConvo’s Dynamic Island, choose your AI models, and launch any command with a hover — without breaking your flow.',
+    youtubeId: 'jVSxuPfvNw8',
+    category: 'Everyday Tools',
+    date: '2026-07-15',
+  },
+  {
+    slug: 'browser-use-agent',
+    title: 'Let an EnConvo AI Agent Research and Build in Your Browser',
+    description:
+      'Give EnConvo’s AI agent a goal and watch it research the web, use browser tools, and build a polished result for you.',
+    youtubeId: 'VXMso0CG_RM',
+    category: 'AI Agent',
+    date: '2026-07-15',
+  },
+  {
+    slug: 'dynamic-island-tools',
+    title: 'Run AI Tools from EnConvo’s Dynamic Island',
+    description:
+      'Search the web, analyze images, launch commands, and use your favorite AI tools directly from EnConvo’s Dynamic Island.',
+    youtubeId: 'Dm211JR-6YQ',
+    category: 'Everyday Tools',
+    date: '2026-07-15',
+  },
+  {
+    slug: 'popbar-instant-actions',
+    title: 'Select Text and Act Instantly with EnConvo PopBar',
+    description:
+      'Select any text on your Mac, then translate, rewrite, summarize, or send it to AI instantly with EnConvo PopBar — without switching apps.',
+    youtubeId: 'yvU5Lc62lEE',
+    category: 'Everyday Tools',
+    date: '2026-07-15',
+  },
+  {
+    slug: 'excel-sidebar-ai',
+    title: 'Edit Excel with AI from the EnConvo Sidebar',
+    description:
+      'Open EnConvo beside Microsoft Excel and let AI analyze your workbook, explain the data, and make spreadsheet changes while you stay in context.',
+    youtubeId: '4mJcBRJK-fc',
+    category: 'Apps & Office',
+    date: '2026-07-15',
+  },
+  {
     slug: 'claude-pro-max',
     title: 'Use your Claude Pro or Max subscription in Enconvo',
     description:
