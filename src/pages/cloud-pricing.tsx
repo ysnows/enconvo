@@ -4,12 +4,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { Logo } from '@/components/Logo'
 import {
   fetchPricingCatalog,
-  fetchPricingEstimate,
   type BillingFormula,
   type PricingCatalog,
-  type PricingEstimate,
   type PricingOffering,
-  type TokenFormula,
   type TokenUsageKey,
 } from '@/lib/cloud-pricing'
 
@@ -148,78 +145,7 @@ function FormulaDetails({ formula, usdPerPoint }: { formula: BillingFormula; usd
       </div>
     )
   }
-  return <p className="text-xs text-content-muted">The provider reports the actual cost after the request. A pre-request estimate is not available.</p>
-}
-
-function EstimatePanel({ offering, catalogVersion }: { offering: PricingOffering; catalogVersion: string }) {
-  const [inputTokens, setInputTokens] = useState('10000')
-  const [outputTokens, setOutputTokens] = useState('2000')
-  const [cacheReadTokens, setCacheReadTokens] = useState('0')
-  const [units, setUnits] = useState('1')
-  const [duration, setDuration] = useState('60')
-  const [result, setResult] = useState<PricingEstimate | null>(null)
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-
-  const includesToken = offering.formula.kind === 'token' ||
-    (offering.formula.kind === 'hybrid' && offering.formula.formulas.some((part) => part.kind === 'token'))
-  const includesFlat = offering.formula.kind === 'flat' ||
-    (offering.formula.kind === 'hybrid' && offering.formula.formulas.some((part) => part.kind === 'flat'))
-  const includesDuration = offering.formula.kind === 'duration' ||
-    (offering.formula.kind === 'hybrid' && offering.formula.formulas.some((part) => part.kind === 'duration'))
-
-  async function estimate() {
-    setLoading(true)
-    setError('')
-    try {
-      const numericUnits = Math.max(0, Number(units) || 0)
-      const usage: Record<string, unknown> = {
-        ...(includesToken ? {
-          inputTokens: Math.max(0, Number(inputTokens) || 0),
-          outputTokens: Math.max(0, Number(outputTokens) || 0),
-          cacheReadTokens: Math.max(0, Number(cacheReadTokens) || 0),
-        } : {}),
-        ...(includesFlat ? { units: numericUnits, quantities: { images: numericUnits } } : {}),
-        ...(includesDuration ? { duration: Math.max(0, Number(duration) || 0) } : {}),
-      }
-      setResult(await fetchPricingEstimate(offering.id, usage, catalogVersion))
-    } catch (estimateError) {
-      setResult(null)
-      setError(estimateError instanceof Error ? estimateError.message : 'Unable to calculate this estimate.')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (!offering.estimable) {
-    return <p className="text-xs text-content-muted">This price depends on the provider&apos;s final usage report, so it cannot be estimated before a request.</p>
-  }
-
-  const inputClass = 'h-11 w-full rounded-md border border-hairline bg-canvas px-3 text-sm text-content outline-none transition focus:border-signal-blue/70 focus:ring-1 focus:ring-signal-blue/30'
-
-  return (
-    <div>
-      <div className="grid gap-3 sm:grid-cols-3">
-        {includesToken && (
-          <>
-            <label className="text-[11px] text-content-muted">Input tokens<input className={`${inputClass} mt-1`} inputMode="numeric" value={inputTokens} onChange={(event) => setInputTokens(event.target.value)} /></label>
-            <label className="text-[11px] text-content-muted">Output tokens<input className={`${inputClass} mt-1`} inputMode="numeric" value={outputTokens} onChange={(event) => setOutputTokens(event.target.value)} /></label>
-            <label className="text-[11px] text-content-muted">Cache-read tokens<input className={`${inputClass} mt-1`} inputMode="numeric" value={cacheReadTokens} onChange={(event) => setCacheReadTokens(event.target.value)} /></label>
-          </>
-        )}
-        {includesFlat && <label className="text-[11px] text-content-muted">Units<input className={`${inputClass} mt-1`} inputMode="decimal" value={units} onChange={(event) => setUnits(event.target.value)} /></label>}
-        {includesDuration && <label className="text-[11px] text-content-muted">Duration (seconds)<input className={`${inputClass} mt-1`} inputMode="decimal" value={duration} onChange={(event) => setDuration(event.target.value)} /></label>}
-      </div>
-      <div className="mt-3 flex flex-wrap items-center gap-3">
-        <button type="button" onClick={estimate} disabled={loading} className="h-11 rounded-md bg-content px-4 text-xs font-semibold text-canvas transition hover:bg-white disabled:cursor-wait disabled:opacity-60">
-          {loading ? 'Calculating…' : 'Estimate points'}
-        </button>
-        {result && <p className="text-sm text-content"><span className="font-semibold">{NUMBER.format(result.points)} points</span><span className="ml-2 text-content-ash">{USD.format(result.usd)} usage equivalent</span></p>}
-        {error && <p className="text-xs text-signal-red">{error}</p>}
-      </div>
-      <p className="mt-2 text-[11px] leading-5 text-content-ash">Estimates use the same pricing evaluator as billing. Provider-reported usage and the final one-time rounding can change the settled total.</p>
-    </div>
-  )
+  return <p className="text-xs text-content-muted">The provider reports the actual cost after the request.</p>
 }
 
 function PricingRow({ offering, catalog, expanded, onToggle }: {
@@ -253,20 +179,11 @@ function PricingRow({ offering, catalog, expanded, onToggle }: {
       </button>
       {expanded && (
         <div className="border-t border-hairline bg-white/[0.018] px-4 py-5 sm:px-5">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,.8fr)_minmax(360px,1.2fr)]">
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-content-ash">Billing formula</div>
-              <div className="mt-3"><FormulaDetails formula={offering.formula} usdPerPoint={catalog.pointPolicy.usdPerPoint} /></div>
-              {offering.description && <p className="mt-3 text-xs leading-5 text-content-muted">{offering.description}</p>}
-              {offering.promotion && <p className="mt-3 text-xs text-signal-green">{offering.promotion.label}</p>}
-              <a href={offering.source.url} target="_blank" rel="noreferrer" className="mt-3 inline-flex text-[11px] text-signal-blue hover:underline">
-                {offering.source.label} · checked {offering.source.verifiedAt}
-              </a>
-            </div>
-            <div>
-              <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-content-ash">Usage estimator</div>
-              <div className="mt-3"><EstimatePanel key={offering.id} offering={offering} catalogVersion={catalog.catalogVersion} /></div>
-            </div>
+          <div className="max-w-2xl">
+            <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-content-ash">Billing formula</div>
+            <div className="mt-3"><FormulaDetails formula={offering.formula} usdPerPoint={catalog.pointPolicy.usdPerPoint} /></div>
+            {offering.description && <p className="mt-3 text-xs leading-5 text-content-muted">{offering.description}</p>}
+            {offering.promotion && <p className="mt-3 text-xs text-signal-green">{offering.promotion.label}</p>}
           </div>
         </div>
       )}
@@ -374,7 +291,7 @@ export default function CloudPricingPage() {
 
         <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div><h2 className="text-2xl font-semibold text-content">Cloud pricing catalog</h2><p className="mt-2 text-sm text-content-muted">Active and preview services are shown by default. Expand a row for the full formula and estimator.</p></div>
+            <div><h2 className="text-2xl font-semibold text-content">Cloud pricing catalog</h2><p className="mt-2 text-sm text-content-muted">Active and preview services are shown by default. Expand a row for the full billing formula.</p></div>
             {catalog && <div className="text-[11px] text-content-ash">Updated {new Date(catalog.updatedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>}
           </div>
 
@@ -451,7 +368,7 @@ export default function CloudPricingPage() {
 
         <section className="border-t border-hairline bg-surface/50">
           <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[320px_1fr] lg:px-8 lg:py-20">
-            <div><div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-signal-blue">How billing works</div><h2 className="mt-3 text-2xl font-semibold text-content">Predictable before a request. Exact after it.</h2><p className="mt-4 text-sm leading-6 text-content-muted">The estimator is a planning tool. The ledger stores the exact formula, usage, and catalog version used for settlement.</p></div>
+            <div><div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-signal-blue">How billing works</div><h2 className="mt-3 text-2xl font-semibold text-content">Clear formulas. Exact settlement.</h2><p className="mt-4 text-sm leading-6 text-content-muted">The ledger stores the exact formula, measured usage, and catalog version used for every settled charge.</p></div>
             <div className="divide-y divide-hairline border-y border-hairline">
               {[['01', 'Measure usage', 'The provider reports tokens, generated units, duration, or actual cost.'], ['02', 'Evaluate once', 'Provider quanta are applied first. All formula components are then summed at full precision.'], ['03', 'Settle points', 'The final total is rounded once to the nearest point and written with an immutable billing snapshot.']].map(([number, title, text]) => <div key={number} className="grid grid-cols-[36px_1fr] gap-4 py-5"><span className="text-xs text-content-ash">{number}</span><div><h3 className="text-sm font-medium text-content">{title}</h3><p className="mt-1 text-xs leading-5 text-content-muted">{text}</p></div></div>)}
             </div>
@@ -464,7 +381,7 @@ export default function CloudPricingPage() {
             {[
               ['When are points charged?', 'Successful synchronous requests settle from their measured usage. Asynchronous jobs settle when a billable result is completed. Duplicate delivery is deduplicated before changing the balance.'],
               ['What happens when a request fails?', 'A request that fails before producing a billable provider outcome is not charged. If a provider confirms partial usage from an interrupted stream, that measured partial usage may be charged.'],
-              ['Why can an estimate differ from the final charge?', 'The final response can contain different token counts, duration, generated units, cache usage, or provider-reported costs. The final one-time point rounding is also applied only after every component is known.'],
+              ['Why can the final charge vary between requests?', 'Each response can contain different token counts, duration, generated units, cache usage, or provider-reported costs. The final one-time point rounding is applied only after every component is known.'],
               ['How are refunds or billing corrections handled?', 'Corrections are recorded as linked reversal entries so the original charge and its pricing snapshot remain auditable. Contact support if a settled charge does not match the service result.'],
               ['Do top-up points expire?', catalog ? `Purchased top-up points do not expire until used. The ${NUMBER.format(catalog.cloudPolicy.cloudPlanAllowancePoints)}-point Cloud Plan allowance resets monthly and unused allowance does not roll over.` : 'Point policy is shown only when the live billing catalog is available.'],
             ].map(([question, answer]) => <details key={question} className="group py-4"><summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-medium text-content"><span>{question}</span><span className="text-content-ash transition group-open:rotate-45">+</span></summary><p className="max-w-2xl pt-3 text-xs leading-6 text-content-muted">{answer}</p></details>)}
