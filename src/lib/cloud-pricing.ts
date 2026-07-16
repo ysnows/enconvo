@@ -70,7 +70,7 @@ export interface PricingOffering {
   description?: string
   source: { label: string; url: string; verifiedAt: string }
   promotion?: {
-    type: 'limited-time-free' | 'introductory'
+    type: 'limited-time-free' | 'introductory' | 'new'
     label: string
     startsAt?: string
     endsAt?: string
