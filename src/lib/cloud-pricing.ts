@@ -199,7 +199,7 @@ function validatePricingCatalog(value: unknown): PricingCatalog {
 export async function fetchPricingCatalog(signal?: AbortSignal): Promise<PricingCatalog> {
   const response = await fetch(
     `${CLOUD_PRICING_API_ORIGIN}/api/v1/cloud-pricing/catalog`,
-    { signal, headers: { accept: 'application/json' } }
+    { signal, cache: 'no-store', headers: { accept: 'application/json' } }
   )
   if (!response.ok) throw new Error('The live pricing catalog is temporarily unavailable.')
   return validatePricingCatalog(await response.json())
