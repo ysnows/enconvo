@@ -24,6 +24,15 @@ const nextConfig = {
             },
         ],
     },
+    async redirects() {
+        return [
+            {
+                source: '/cloud-plan',
+                destination: '/cloud-pricing',
+                permanent: true,
+            },
+        ]
+    },
 }
 
 module.exports = nextConfig

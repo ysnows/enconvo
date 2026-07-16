@@ -1,8 +1,9 @@
 import clsx from 'clsx'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { supabase } from '@/lib/supabase'
+import { fetchPricingCatalog } from '@/lib/cloud-pricing'
 
 interface CheckIconProps {
   className: string
@@ -42,6 +43,7 @@ interface PlanProps {
   savePercent?: string
   description: string
   startText?: string
+  detailsHref?: string
   features: string[]
   featured?: boolean
 }
@@ -54,6 +56,7 @@ function Plan({
   savePercent = "50%",
   description,
   startText = "Get started",
+  detailsHref,
   features,
   featured = false
 }: PlanProps) {
@@ -181,12 +184,33 @@ function Plan({
             )}
           </span>
         </Button>
+        {detailsHref && (
+          <a href={detailsHref} className="mt-3 block text-center text-xs text-content-muted transition hover:text-signal-blue">
+            See model &amp; service rates
+          </a>
+        )}
       </div>
     </section>
   );
 }
 
 export function Pricing() {
+  const [cloudAllowance, setCloudAllowance] = useState<number | null>(null)
+
+  useEffect(() => {
+    const controller = new AbortController()
+    fetchPricingCatalog(controller.signal)
+      .then((catalog) => setCloudAllowance(catalog.cloudPolicy.cloudPlanAllowancePoints))
+      .catch((error) => {
+        if (error.name !== 'AbortError') setCloudAllowance(null)
+      })
+    return () => controller.abort()
+  }, [])
+
+  const cloudAllowanceFeature = cloudAllowance === null
+    ? 'Monthly Cloud point allowance'
+    : `${new Intl.NumberFormat('en-US').format(cloudAllowance)} Points/Month`
+
   return (
     <section
       id="pricing"
@@ -295,13 +319,14 @@ export function Pricing() {
 
           <div className="grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-10 mt-20">
             <Plan
-              name="Cloud Premium"
+              name="Cloud Plan"
               price="$10/Monthly"
               lookupKey={'monthly'}
-              description="All Premium features, No need your own apikeys"
+              description="All Premium features with managed Cloud models and services."
+              detailsHref="/cloud-pricing"
               startText={'Get started'}
               features={[
-                '500,000 Points/Month',
+                cloudAllowanceFeature,
                 'Unlimited Knowledge Bases',
                 '5 MacOS Devices',
                 'No Need Your Own ApiKey',
@@ -325,13 +350,14 @@ export function Pricing() {
             />
 
             <Plan
-              name="Cloud Premium"
+              name="Cloud Plan"
               price="$96/Yearly"
               lookupKey={'yearly'}
-              description="All Premium features, No need your own apikeys"
+              description="All Premium features with managed Cloud models and services."
+              detailsHref="/cloud-pricing"
               startText={'Get started'}
               features={[
-                '500,000 Points/Month',
+                cloudAllowanceFeature,
                 'Unlimited Knowledge Bases',
                 '5 MacOS Devices',
                 'No Need Your Own ApiKey',
