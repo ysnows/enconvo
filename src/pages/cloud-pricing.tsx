@@ -269,7 +269,7 @@ export default function CloudPricingPage() {
               <h1 className="max-w-4xl text-4xl font-semibold text-content sm:text-6xl">Every model and service, priced in one place.</h1>
               <p className="mt-6 max-w-2xl text-base leading-7 text-content-muted sm:text-lg">Use hosted AI without managing provider keys. Prices below come directly from the same catalog Enconvo uses to calculate Cloud point charges.</p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/pricing" className="inline-flex h-11 items-center rounded-md bg-content px-4 text-sm font-semibold text-canvas transition hover:bg-white">View Cloud plans</Link>
+                <Link href="https://www.enconvo.com/#pricing" className="inline-flex h-11 items-center rounded-md bg-content px-4 text-sm font-semibold text-canvas transition hover:bg-white">View Cloud plans</Link>
                 <Link href="/cloud-points" className="inline-flex h-11 items-center rounded-md border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition hover:border-hairline-strong">Top up points</Link>
               </div>
             </div>
