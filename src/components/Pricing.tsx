@@ -197,10 +197,10 @@ function Plan({
 }
 
 // Teams lifetime license (ADR 0036): one account, seat-counted devices.
-// Price anchors to the single-user Premium: $129 + (seats − 3) × $20.
-const TEAMS_MIN_SEATS = 10
+// Price anchors to the single-user Premium: $99 + (seats − 3) × $20.
+const TEAMS_MIN_SEATS = 5
 const TEAMS_MAX_SEATS = 500
-const teamsPrice = (seats: number) => 129 + (seats - 3) * 20
+const teamsPrice = (seats: number) => 99 + (seats - 3) * 20
 
 function TeamsPlan() {
   const [seats, setSeats] = useState(TEAMS_MIN_SEATS)
@@ -424,7 +424,7 @@ export function Pricing() {
 
             <Plan
               name="Premium"
-              price="$129"
+              price="$99"
               priceNote="one-time"
               lookupKey={'premium'}
               description="30-day money back guarantee."

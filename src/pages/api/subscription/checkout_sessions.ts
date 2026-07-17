@@ -4,11 +4,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
   'standard': 'price_1QVP9VP5mwiRKlICCifMKEDK',
-  'premium': 'price_1Tu2BwP5mwiRKlICajYU9JJF',
+  'premium': 'price_1QVPBWP5mwiRKlICa2MFNaR7',
 
-  // Teams lifetime license (ADR 0036): base covers 10 seats; extra seats ride the
+  // Teams lifetime license (ADR 0036): base covers 5 seats; extra seats ride the
   // seat add-on price with quantity. `teams_seat` alone grows an existing license.
-  'teams': 'price_1Tu2BRP5mwiRKlICXeSVT8yA',
+  'teams': 'price_1Tu3LuP5mwiRKlICy3h6oU6y',
   'teams_seat': 'price_1Tu2BSP5mwiRKlICmmKspOSI',
 
   'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
@@ -23,7 +23,7 @@ const PRICE_IDS = {
   '3000000_points': 'price_1Qx9QYP5mwiRKlICzdVj9Nx3',
 };
 
-const TEAMS_MIN_SEATS = 10;
+const TEAMS_MIN_SEATS = 5;
 const TEAMS_MAX_SEATS = 500;
 
 async function handler(req, res) {
@@ -58,7 +58,7 @@ async function handler(req, res) {
 
     let line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [{ price: priceId, quantity: 1 }];
     if (lookupKey === 'teams') {
-      // `seats` is the TOTAL seat count; the base price includes the first 10.
+      // `seats` is the TOTAL seat count; the base price includes the first 5.
       const totalSeats = Math.floor(Number(seats) || TEAMS_MIN_SEATS);
       if (totalSeats < TEAMS_MIN_SEATS || totalSeats > TEAMS_MAX_SEATS) {
         res.status(400).json({ statusCode: 400, message: `Teams seats must be between ${TEAMS_MIN_SEATS} and ${TEAMS_MAX_SEATS}` });
