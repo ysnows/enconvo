@@ -257,6 +257,10 @@ const LICENSE_COMPARISON: ComparisonData = {
   ],
 }
 
+// Columns: Free · Plus · Pro · Max. Tier data mirrors the worker's cloudTiers.ts.
+// A Cloud subscription is a paid tier everywhere the app gates on membership, so it
+// unlocks the SAME unlimited features as a lifetime license (KBs, workflows,
+// recording, captions) on top of the monthly points.
 const CLOUD_COMPARISON: ComparisonData = {
   columns: ['Free', 'Plus', 'Pro', 'Max'],
   groups: [
@@ -279,9 +283,46 @@ const CLOUD_COMPARISON: ComparisonData = {
       ],
     },
     {
-      title: 'Account',
+      title: 'AI & Chat',
       rows: [
         { feature: 'Unlimited AI with your own API key', values: [true, true, true, true] },
+        { feature: '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more', values: [true, true, true, true] },
+        { feature: 'Local models — Ollama, LM Studio, MLX', values: [true, true, true, true] },
+        { feature: 'Agent mode with tools, planning & skills', values: [true, true, true, true] },
+      ],
+    },
+    {
+      title: 'Surfaces & Tools',
+      rows: [
+        { feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island', values: [true, true, true, true] },
+        { feature: '100+ built-in tools and plugins', values: [true, true, true, true] },
+        { feature: 'MCP servers & custom skills', values: [true, true, true, true] },
+        { feature: 'Computer use & browser automation', values: [true, true, true, true] },
+        { feature: 'Screenshot, OCR & screen doodle', values: [true, true, true, true] },
+      ],
+    },
+    {
+      title: 'Voice & Meetings',
+      rows: [
+        { feature: 'Dictation & voice commands', values: [true, true, true, true] },
+        { feature: 'Read aloud (text-to-speech)', values: [true, true, true, true] },
+        { feature: 'Meeting recording', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        { feature: 'Live captions', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
+      ],
+    },
+    {
+      title: 'Knowledge & Automation',
+      rows: [
+        { feature: 'Knowledge bases', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        { feature: 'Workflows', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        { feature: 'Memory & context awareness', values: [true, true, true, true] },
+        { feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark', values: [true, true, true, true] },
+        { feature: 'Import & export (Portability)', values: [false, true, true, true] },
+      ],
+    },
+    {
+      title: 'Account',
+      rows: [
         { feature: 'Mac devices', values: ['1', '5', '5', '5'] },
       ],
     },
