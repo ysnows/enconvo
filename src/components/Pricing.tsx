@@ -595,23 +595,7 @@ export function Pricing() {
             </p>
           </div>
 
-          <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
-            <Plan
-              name="Free"
-              price="$0"
-              lookupKey={'free'}
-              description="Everything you need to make Enconvo yours."
-              startText={'Download'}
-              features={[
-                'Unlimited AI with your own API key',
-                'All surfaces — SmartBar, App Sidebar, PopBar & more',
-                '100+ built-in tools and plugins',
-                '5,000 welcome Cloud points',
-                '1 knowledge base · 1 workflow',
-                '1 Mac device',
-              ]}
-            />
-
+          <div className="mt-8 grid max-w-5xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2">
             <Plan
               name="Standard"
               price="$49"
@@ -645,11 +629,11 @@ export function Pricing() {
             />
           </div>
 
-          <div className="mt-8 max-w-7xl mx-auto">
+          <div className="mt-8 max-w-5xl mx-auto">
             <TeamsPlan />
           </div>
 
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <ComparisonTable data={LICENSE_COMPARISON} />
           </div>
         </div>
