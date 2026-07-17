@@ -75,6 +75,8 @@ export interface PricingOffering {
     startsAt?: string
     endsAt?: string
   }
+  /** Boost-model tier discounts (ADR 0034): settlement multiplier per paid Cloud tier. */
+  tierDiscounts?: { pro: number; max: number }
   estimable: boolean
 }
 

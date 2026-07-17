@@ -167,6 +167,7 @@ function PricingRow({ offering, catalog, expanded, onToggle }: {
           <div className="flex min-w-0 items-center gap-2">
             <span className="truncate text-sm font-medium text-content">{offering.title}</span>
             {offering.promotion?.type === 'new' && <span className="rounded border border-signal-green/30 bg-signal-green/10 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-signal-green">New</span>}
+            {offering.tierDiscounts && <span className="rounded border border-signal-blue/30 bg-signal-blue/10 px-1.5 py-0.5 text-[9px] font-medium tracking-wider text-signal-blue">Pro ½ · Max ¼</span>}
             {offering.status === 'preview' && <span className="rounded border border-signal-yellow/30 bg-signal-yellow/10 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-signal-yellow">Preview</span>}
             {offering.status === 'deprecated' && <span className="rounded border border-white/10 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-content-ash">Legacy</span>}
           </div>
