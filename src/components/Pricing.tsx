@@ -160,13 +160,11 @@ function Plan({
       <div className="mt-8">
         <Button
           onClick={() => startCheckout(lookupKey, setIsLoading)}
-          variant="outline"
+          variant={featured ? 'solid' : 'outline'}
           color="white"
           className={clsx(
-            'w-full py-4 text-base font-semibold transition-colors border',
-            featured
-              ? 'bg-white text-canvas border-white hover:bg-content'
-              : 'border-hairline text-content hover:bg-white hover:text-canvas'
+            'w-full py-4 text-base font-semibold transition-colors',
+            featured ? '' : 'border border-hairline text-content hover:bg-white hover:text-canvas'
           )}
           disabled={isLoading}
         >
@@ -408,24 +406,72 @@ function TeamsPlan() {
   const clamp = (n: number) =>
     Math.min(TEAMS_MAX_SEATS, Math.max(TEAMS_MIN_SEATS, Math.floor(n) || TEAMS_MIN_SEATS))
 
+  const stepBtn =
+    'flex h-7 w-7 items-center justify-center rounded-full text-base text-content-body transition-colors hover:bg-surface-elevated disabled:opacity-40'
+
   return (
-    <section className="group relative flex flex-col gap-8 rounded-lg border border-hairline bg-surface-card px-6 py-8 transition-colors hover:border-hairline-strong sm:px-8 lg:flex-row lg:items-center">
-      <div className="lg:max-w-md">
+    <section className="group relative flex flex-col rounded-lg px-6 sm:px-8 py-8 transition-colors bg-surface-card border border-hairline hover:border-hairline-strong">
+      <div className="order-first">
+        <div className="flex items-baseline gap-2">
+          <span className="font-display text-4xl font-bold tracking-tight text-content">
+            ${teamsPrice(seats).toLocaleString()}
+          </span>
+          <span className="text-sm text-content-muted">
+            one-time · ${(teamsPrice(seats) / seats).toFixed(2)}/seat
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-6">
         <h3 className="font-display text-2xl font-bold text-content">Teams</h3>
         <p className="mt-1 text-xs leading-relaxed text-content-muted">
-          One account for your whole team — lifetime license, lifetime updates.
-          30-day money back guarantee.
+          One account for your whole team. 30-day money back guarantee.
         </p>
-        <ul role="list" className="mt-6 space-y-3">
+      </div>
+
+      <div className="mt-6 flex items-center justify-between">
+        <span className="text-sm text-content-muted">Seats</span>
+        <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
+          <button
+            type="button"
+            aria-label="Fewer seats"
+            onClick={() => setSeats((s) => clamp(s - 1))}
+            disabled={seats <= TEAMS_MIN_SEATS}
+            className={stepBtn}
+          >
+            −
+          </button>
+          <input
+            type="number"
+            min={TEAMS_MIN_SEATS}
+            max={TEAMS_MAX_SEATS}
+            value={seats}
+            onChange={(e) => setSeats(clamp(Number(e.target.value)))}
+            className="w-12 border-0 bg-transparent text-center text-sm font-semibold text-content [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+          <button
+            type="button"
+            aria-label="More seats"
+            onClick={() => setSeats((s) => clamp(s + 1))}
+            disabled={seats >= TEAMS_MAX_SEATS}
+            className={stepBtn}
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 flex-1">
+        <ul role="list" className="space-y-4">
           {[
             `${seats} Mac devices on one account`,
             `${(seats * 50000).toLocaleString()} Cloud points bonus — 50,000 per seat`,
             'Add more seats any time at $20 each',
-            'Everything in Premium, lifetime free updates',
+            'Lifetime free updates',
           ].map((feature) => (
             <li key={feature} className="flex items-start">
-              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-surface-elevated">
-                <CheckIcon className="h-3 w-3 text-signal-blue" />
+              <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 bg-surface-elevated">
+                <CheckIcon className="w-3 h-3 text-signal-blue" />
               </div>
               <span className="ml-4 text-sm leading-relaxed text-content-body">
                 {feature}
@@ -435,53 +481,12 @@ function TeamsPlan() {
         </ul>
       </div>
 
-      <div className="flex flex-1 flex-col items-center gap-5 lg:items-end">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-content-muted">Seats</span>
-          <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
-            <button
-              type="button"
-              aria-label="Fewer seats"
-              onClick={() => setSeats((s) => clamp(s - 1))}
-              disabled={seats <= TEAMS_MIN_SEATS}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-lg text-content-body transition-colors hover:bg-surface-elevated disabled:opacity-40"
-            >
-              −
-            </button>
-            <input
-              type="number"
-              min={TEAMS_MIN_SEATS}
-              max={TEAMS_MAX_SEATS}
-              value={seats}
-              onChange={(e) => setSeats(clamp(Number(e.target.value)))}
-              className="w-14 border-0 bg-transparent text-center text-base font-semibold text-content [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-            />
-            <button
-              type="button"
-              aria-label="More seats"
-              onClick={() => setSeats((s) => clamp(s + 1))}
-              disabled={seats >= TEAMS_MAX_SEATS}
-              className="flex h-8 w-8 items-center justify-center rounded-full text-lg text-content-body transition-colors hover:bg-surface-elevated disabled:opacity-40"
-            >
-              +
-            </button>
-          </div>
-        </div>
-
-        <div className="flex items-baseline gap-2">
-          <span className="font-display text-4xl font-bold tracking-tight text-content">
-            ${teamsPrice(seats).toLocaleString()}
-          </span>
-          <span className="text-sm text-content-muted">
-            one-time · ${(teamsPrice(seats) / seats).toFixed(2)}/seat
-          </span>
-        </div>
-
+      <div className="mt-8">
         <Button
           onClick={() => startCheckout('teams', setIsLoading, { seats })}
           variant="outline"
           color="white"
-          className="w-full border border-hairline py-4 text-base font-semibold text-content transition-colors hover:bg-white hover:text-canvas lg:w-64"
+          className="w-full py-4 text-base font-semibold transition-colors border border-hairline text-content hover:bg-white hover:text-canvas"
           disabled={isLoading}
         >
           <span className="flex items-center justify-center gap-2">
@@ -595,7 +600,7 @@ export function Pricing() {
             </p>
           </div>
 
-          <div className="mt-8 grid max-w-5xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2">
+          <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
             <Plan
               name="Standard"
               price="$49"
@@ -627,13 +632,11 @@ export function Pricing() {
                 '3 Mac devices',
               ]}
             />
-          </div>
 
-          <div className="mt-8 max-w-5xl mx-auto">
             <TeamsPlan />
           </div>
 
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             <ComparisonTable data={LICENSE_COMPARISON} />
           </div>
         </div>
@@ -648,7 +651,17 @@ export function Pricing() {
               service.
             </p>
 
-            <div className="mt-6 inline-flex items-center rounded-full border border-hairline bg-surface p-1">
+            <div className="relative mt-6 flex items-center justify-center">
+              <a
+                href="/cloud-pricing"
+                className="absolute right-0 hidden items-center gap-1 text-xs text-content-muted transition hover:text-signal-blue lg:inline-flex"
+              >
+                See model &amp; service rates
+                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </a>
+            <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
               <button
                 onClick={() => setBilling('monthly')}
                 className={clsx(
@@ -673,6 +686,7 @@ export function Pricing() {
                 <span className="ml-1.5 text-xs text-signal-green">-20%</span>
               </button>
             </div>
+            </div>
           </div>
 
           <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
@@ -692,7 +706,6 @@ export function Pricing() {
                   badge={tier.badge}
                   featured={tier.featured}
                   description={tier.description}
-                  detailsHref="/cloud-pricing"
                   features={tier.features}
                 />
               )
