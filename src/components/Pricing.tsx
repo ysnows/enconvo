@@ -483,9 +483,9 @@ const CLOUD_TIERS: CloudTier[] = [
     annual: { price: '$96', perMonth: '$8', lookupKey: 'yearly' },
     features: [
       '500,000 points / month',
-      'No API key needed',
-      'Unlimited knowledge bases & workflows',
-      'Import & export (Portability)',
+      'Every Cloud model & service — chat, image, TTS, transcription',
+      'Latest frontier models — GPT, Claude, Gemini & more',
+      'No API keys needed',
       '5 Mac devices',
       'Priority support',
     ],
@@ -500,7 +500,11 @@ const CLOUD_TIERS: CloudTier[] = [
     features: [
       '2,500,000 points / month',
       '⚡ DeepSeek & MiniMax M3 at 1/2 price — up to 5M points of usage',
-      'Everything in Plus',
+      'Every Cloud model & service — chat, image, TTS, transcription',
+      'Latest frontier models — GPT, Claude, Gemini & more',
+      'No API keys needed',
+      '5 Mac devices',
+      'Priority support',
     ],
   },
   {
@@ -511,7 +515,11 @@ const CLOUD_TIERS: CloudTier[] = [
     features: [
       '5,000,000 points / month',
       '⚡ DeepSeek & MiniMax M3 at 1/4 price — up to 20M points of usage',
-      'Everything in Pro',
+      'Every Cloud model & service — chat, image, TTS, transcription',
+      'Latest frontier models — GPT, Claude, Gemini & more',
+      'No API keys needed',
+      '5 Mac devices',
+      'Priority support',
     ],
   },
 ]
