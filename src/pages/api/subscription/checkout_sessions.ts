@@ -8,6 +8,11 @@ const PRICE_IDS = {
 
   'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
   'yearly': 'price_1PUnbcP5mwiRKlICBAdbINOS',
+  // Cloud tiers Pro/Max (ADR 0034)
+  'pro_monthly': 'price_1TtzpnP5mwiRKlICF1zwDrRO',
+  'pro_yearly': 'price_1TtzpxP5mwiRKlIC2O3cX0rd',
+  'max_monthly': 'price_1TtzqDP5mwiRKlICEj5Nkmun',
+  'max_yearly': 'price_1TtzqPP5mwiRKlIC3lNm6g81',
   '250000_points': 'price_1Qx9GDP5mwiRKlICDn53Og5c',
   '1500000_points': 'price_1Qx9NTP5mwiRKlIC8vIK1Ym1',
   '3000000_points': 'price_1Qx9QYP5mwiRKlICzdVj9Nx3',
@@ -28,7 +33,7 @@ async function handler(req, res) {
   let mode: 'payment' | 'subscription' = 'payment';
   if (lookupKey === 'standard' || lookupKey === 'premium') {
     mode = 'payment';
-  } else if (lookupKey === 'monthly' || lookupKey === 'yearly') {
+  } else if (['monthly', 'yearly', 'pro_monthly', 'pro_yearly', 'max_monthly', 'max_yearly'].includes(lookupKey)) {
     mode = 'subscription';
   }
 

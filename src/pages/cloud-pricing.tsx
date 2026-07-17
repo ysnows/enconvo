@@ -327,8 +327,8 @@ const TIERS: Array<{
   highlight?: boolean
 }> = [
   { id: 'plus', name: 'Plus', monthly: '$10', annual: '$96/yr', points: '500K points / month', boost: null },
-  { id: 'pro', name: 'Pro', monthly: '$50', annual: '$480/yr', points: '2.5M points / month', boost: { multiplier: 0.5, cap: 'up to 5M points' }, soon: true, highlight: true },
-  { id: 'max', name: 'Max', monthly: '$100', annual: '$960/yr', points: '5M points / month', boost: { multiplier: 0.25, cap: 'up to 20M points' }, soon: true },
+  { id: 'pro', name: 'Pro', monthly: '$50', annual: '$480/yr', points: '2.5M points / month', boost: { multiplier: 0.5, cap: 'up to 5M points' }, highlight: true },
+  { id: 'max', name: 'Max', monthly: '$100', annual: '$960/yr', points: '5M points / month', boost: { multiplier: 0.25, cap: 'up to 20M points' } },
 ]
 
 export default function CloudPricingPage() {
