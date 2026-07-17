@@ -290,6 +290,42 @@ export default function CloudPricingPage() {
           </div>
         </section>
 
+        {/* Cloud tiers (ADR 0034): Plus / Pro / Max. Pro & Max launch once their Stripe prices go live. */}
+        <section className="mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-20 lg:px-8">
+          <h2 className="text-2xl font-semibold text-content">Cloud plans</h2>
+          <p className="mt-2 text-sm text-content-muted">Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4 and MiniMax M3.</p>
+          <div className="mt-8 grid gap-5 sm:grid-cols-3">
+            {[
+              {
+                name: 'Plus', monthly: '$10', annual: '$96/yr', points: '500,000 points / month',
+                boost: null, soon: false, highlight: false,
+              },
+              {
+                name: 'Pro', monthly: '$50', annual: '$480/yr', points: '2,500,000 points / month',
+                boost: 'DeepSeek & MiniMax M3 at 1/2 price — up to 5M points of usage', soon: true, highlight: true,
+              },
+              {
+                name: 'Max', monthly: '$100', annual: '$960/yr', points: '5,000,000 points / month',
+                boost: 'DeepSeek & MiniMax M3 at 1/4 price — up to 20M points of usage', soon: true, highlight: false,
+              },
+            ].map((tier) => (
+              <div key={tier.name} className={`relative rounded-lg border p-6 ${tier.highlight ? 'border-signal-blue/40 bg-signal-blue/[0.04]' : 'border-hairline bg-surface-elevated'}`}>
+                <div className="flex items-center gap-2">
+                  <div className="text-sm font-semibold text-content">{tier.name}</div>
+                  {tier.soon && <span className="rounded border border-hairline px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-wider text-content-ash">Coming soon</span>}
+                </div>
+                <div className="mt-3 flex items-baseline gap-2">
+                  <span className="text-3xl font-semibold text-content">{tier.monthly}</span>
+                  <span className="text-xs text-content-ash">/month · {tier.annual} billed annually</span>
+                </div>
+                <div className="mt-4 text-sm text-content">{tier.points}</div>
+                {tier.boost && <div className="mt-2 text-sm text-signal-green">⚡ {tier.boost}</div>}
+                <div className="mt-2 text-xs text-content-muted">5 Mac devices · all catalog models at the prices below</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div><h2 className="text-2xl font-semibold text-content">Cloud pricing catalog</h2><p className="mt-2 text-sm text-content-muted">Active and preview services are shown by default. Expand a row for the full billing formula.</p></div>
