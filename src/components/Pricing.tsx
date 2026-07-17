@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import { Button } from '@/components/Button'
 import { supabase } from '@/lib/supabase'
 
@@ -193,6 +193,164 @@ function Plan({
         )}
       </div>
     </section>
+  )
+}
+
+// ---- Full benefits comparison (shown under each plan group) ----
+// `true` renders a check, `false` a muted dash, a string renders as text.
+// Mirrors the in-app plan picker (PlansDialog).
+type ComparisonCell = boolean | string
+type ComparisonRow = { feature: string; values: ComparisonCell[] }
+type ComparisonGroup = { title?: string; rows: ComparisonRow[] }
+type ComparisonData = { columns: string[]; groups: ComparisonGroup[] }
+
+const LICENSE_COMPARISON: ComparisonData = {
+  columns: ['Free', 'Standard', 'Premium', 'Teams'],
+  groups: [
+    {
+      title: 'AI & Chat',
+      rows: [
+        { feature: 'Unlimited AI with your own API key', values: [true, true, true, true] },
+        { feature: '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more', values: [true, true, true, true] },
+        { feature: 'Local models — Ollama, LM Studio, MLX', values: [true, true, true, true] },
+        { feature: 'Agent mode with tools, planning & skills', values: [true, true, true, true] },
+        { feature: 'Cloud points bonus', values: ['5,000 welcome', '50,000', '150,000', '50,000 / seat'] },
+      ],
+    },
+    {
+      title: 'Surfaces & Tools',
+      rows: [
+        { feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island', values: [true, true, true, true] },
+        { feature: '100+ built-in tools and plugins', values: [true, true, true, true] },
+        { feature: 'MCP servers & custom skills', values: [true, true, true, true] },
+        { feature: 'Computer use & browser automation', values: [true, true, true, true] },
+        { feature: 'Screenshot, OCR & screen doodle', values: [true, true, true, true] },
+      ],
+    },
+    {
+      title: 'Voice & Meetings',
+      rows: [
+        { feature: 'Dictation & voice commands', values: [true, true, true, true] },
+        { feature: 'Read aloud (text-to-speech)', values: [true, true, true, true] },
+        { feature: 'Meeting recording', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        { feature: 'Live captions', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
+      ],
+    },
+    {
+      title: 'Knowledge & Automation',
+      rows: [
+        { feature: 'Knowledge bases', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        { feature: 'Workflows', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        { feature: 'Memory & context awareness', values: [true, true, true, true] },
+        { feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark', values: [true, true, true, true] },
+        { feature: 'Import & export (Portability)', values: [false, true, true, true] },
+      ],
+    },
+    {
+      title: 'License',
+      rows: [
+        { feature: 'Free updates', values: [false, '1 year', 'Lifetime', 'Lifetime'] },
+        { feature: 'Mac devices', values: ['1', '1', '3', '5 – 500'] },
+        { feature: '30-day money-back guarantee', values: [false, true, true, true] },
+      ],
+    },
+  ],
+}
+
+const CLOUD_COMPARISON: ComparisonData = {
+  columns: ['Free', 'Plus', 'Pro', 'Max'],
+  groups: [
+    {
+      title: 'Points',
+      rows: [
+        { feature: 'Included points', values: ['5,000 welcome', '500K / month', '2.5M / month', '5M / month'] },
+        { feature: 'DeepSeek & MiniMax M3 rates', values: ['Standard', 'Standard', '1/2 price', '1/4 price'] },
+        { feature: 'Points top-up packs', values: [true, true, true, true] },
+        { feature: 'Annual billing — save 20%', values: [false, '$96 / year', '$480 / year', '$960 / year'] },
+      ],
+    },
+    {
+      title: 'Cloud Services',
+      rows: [
+        { feature: 'Works without API keys', values: [false, true, true, true] },
+        { feature: 'Every Cloud model & service — chat, image, TTS, transcription', values: [false, true, true, true] },
+        { feature: 'Latest frontier models — GPT, Claude, Gemini & more', values: [false, true, true, true] },
+        { feature: 'Priority support', values: [false, true, true, true] },
+      ],
+    },
+    {
+      title: 'Account',
+      rows: [
+        { feature: 'Unlimited AI with your own API key', values: [true, true, true, true] },
+        { feature: 'Mac devices', values: ['1', '5', '5', '5'] },
+      ],
+    },
+  ],
+}
+
+function ComparisonTable({ data }: { data: ComparisonData }) {
+  return (
+    <div className="mt-8 overflow-hidden rounded-lg border border-hairline bg-surface-card">
+      <div className="overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-hairline">
+              <th className="w-[36%] py-3.5 pl-6 pr-3 text-xs font-medium text-content-muted">
+                Everything you get
+              </th>
+              {data.columns.map((c) => (
+                <th key={c} className="px-3 py-3.5 text-center text-sm font-semibold text-content">
+                  {c}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {data.groups.map((group, gi) => (
+              <Fragment key={group.title ?? gi}>
+                {group.title && (
+                  <tr>
+                    <td
+                      colSpan={data.columns.length + 1}
+                      className="pb-1.5 pl-6 pt-5 text-[11px] font-semibold uppercase tracking-[0.08em] text-content-ash"
+                    >
+                      {group.title}
+                    </td>
+                  </tr>
+                )}
+                {group.rows.map((row, ri) => (
+                  <tr
+                    key={row.feature}
+                    className={clsx(
+                      'border-b transition-colors hover:bg-surface-elevated/40',
+                      ri === group.rows.length - 1 && gi !== data.groups.length - 1
+                        ? 'border-hairline'
+                        : 'border-hairline/50',
+                      gi === data.groups.length - 1 && ri === group.rows.length - 1 && 'border-0',
+                    )}
+                  >
+                    <td className="py-3 pl-6 pr-3 leading-snug text-content-body">{row.feature}</td>
+                    {row.values.map((v, i) => (
+                      <td key={i} className="px-3 py-3 text-center">
+                        {v === true ? (
+                          <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
+                            <CheckIcon className="h-3 w-3 text-signal-blue" />
+                          </span>
+                        ) : v === false ? (
+                          <span className="text-xs text-content-ash">—</span>
+                        ) : (
+                          <span className="text-xs font-medium tabular-nums text-content-body">{v}</span>
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </Fragment>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
 
@@ -441,6 +599,10 @@ export function Pricing() {
           <div className="mt-8 max-w-7xl mx-auto">
             <TeamsPlan />
           </div>
+
+          <div className="max-w-7xl mx-auto">
+            <ComparisonTable data={LICENSE_COMPARISON} />
+          </div>
         </div>
 
         <div className="mt-20">
@@ -502,6 +664,10 @@ export function Pricing() {
                 />
               )
             })}
+          </div>
+
+          <div className="max-w-7xl mx-auto">
+            <ComparisonTable data={CLOUD_COMPARISON} />
           </div>
         </div>
 
