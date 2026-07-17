@@ -4,7 +4,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
   'standard': 'price_1QVP9VP5mwiRKlICCifMKEDK',
-  'premium': 'price_1QVPBWP5mwiRKlICa2MFNaR7',
+  'premium': 'price_1Tu2BwP5mwiRKlICajYU9JJF',
+
+  // Teams lifetime license (ADR 0036): base covers 10 seats; extra seats ride the
+  // seat add-on price with quantity. `teams_seat` alone grows an existing license.
+  'teams': 'price_1Tu2BRP5mwiRKlICXeSVT8yA',
+  'teams_seat': 'price_1Tu2BSP5mwiRKlICmmKspOSI',
 
   'monthly': 'price_1PUnZ5P5mwiRKlICwO3oKaJZ',
   'yearly': 'price_1PUnbcP5mwiRKlICBAdbINOS',
@@ -18,6 +23,9 @@ const PRICE_IDS = {
   '3000000_points': 'price_1Qx9QYP5mwiRKlICzdVj9Nx3',
 };
 
+const TEAMS_MIN_SEATS = 10;
+const TEAMS_MAX_SEATS = 500;
+
 async function handler(req, res) {
 
   if (req.method !== 'POST') {
@@ -26,14 +34,12 @@ async function handler(req, res) {
     return;
   }
 
-  const { lookupKey, endorsely_referral } = req.body;
+  const { lookupKey, endorsely_referral, seats, quantity } = req.body;
   console.log("endorsely_referral", endorsely_referral, lookupKey)
   const email = req.user.email
 
   let mode: 'payment' | 'subscription' = 'payment';
-  if (lookupKey === 'standard' || lookupKey === 'premium') {
-    mode = 'payment';
-  } else if (['monthly', 'yearly', 'pro_monthly', 'pro_yearly', 'max_monthly', 'max_yearly'].includes(lookupKey)) {
+  if (['monthly', 'yearly', 'pro_monthly', 'pro_yearly', 'max_monthly', 'max_yearly'].includes(lookupKey)) {
     mode = 'subscription';
   }
 
@@ -45,15 +51,37 @@ async function handler(req, res) {
   try {
     // Create Checkout Sessions from body params.
     const priceId = PRICE_IDS[lookupKey];
+    if (!priceId) {
+      res.status(400).json({ statusCode: 400, message: `Unknown plan: ${lookupKey}` });
+      return;
+    }
+
+    let line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [{ price: priceId, quantity: 1 }];
+    if (lookupKey === 'teams') {
+      // `seats` is the TOTAL seat count; the base price includes the first 10.
+      const totalSeats = Math.floor(Number(seats) || TEAMS_MIN_SEATS);
+      if (totalSeats < TEAMS_MIN_SEATS || totalSeats > TEAMS_MAX_SEATS) {
+        res.status(400).json({ statusCode: 400, message: `Teams seats must be between ${TEAMS_MIN_SEATS} and ${TEAMS_MAX_SEATS}` });
+        return;
+      }
+      const extraSeats = totalSeats - TEAMS_MIN_SEATS;
+      if (extraSeats > 0) {
+        line_items.push({ price: PRICE_IDS['teams_seat'], quantity: extraSeats });
+      }
+    } else if (lookupKey === 'teams_seat') {
+      // Add-on-only purchase: `quantity` extra seats for an existing Teams license.
+      const qty = Math.floor(Number(quantity) || 0);
+      if (qty < 1 || qty > TEAMS_MAX_SEATS) {
+        res.status(400).json({ statusCode: 400, message: 'quantity must be at least 1' });
+        return;
+      }
+      line_items = [{ price: priceId, quantity: qty }];
+    }
+
     // Create a checkout session with Stripe
     // For one-time payments, we enable invoice creation to ensure customers receive an invoice
     const session_data: Stripe.Checkout.SessionCreateParams = {
-      line_items: [
-        {
-          price: priceId,
-          quantity: 1,
-        },
-      ],
+      line_items,
       mode: mode,
       success_url: `${req.headers.origin}/pay_success?success=true&session_id={CHECKOUT_SESSION_ID}&from=${from}`,
       cancel_url: `${req.headers.origin}/pay_success?canceled=true&from=${from}`,
@@ -66,21 +94,6 @@ async function handler(req, res) {
         endorsely_referral: endorsely_referral
       }
     }
-    // if (lookupKey === 'standard' || lookupKey === 'premium') {
-    //   session_data.discounts = [{
-    //     coupon: 'Tk3jnTqN',
-    //   }];
-    // } else if (lookupKey === 'monthly') {
-    //   session_data.discounts = [{
-    //     coupon: 'qUM6wdRb',
-    //   }];
-    // } else if (lookupKey === 'yearly') {
-    //   session_data.discounts = [{
-    //     coupon: 'NdNP006S',
-    //   }];
-    // } else {
-    //   session_data.allow_promotion_codes = true;
-    // }
 
     session_data.allow_promotion_codes = true;
 

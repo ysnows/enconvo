@@ -1,9 +1,7 @@
 import clsx from 'clsx'
-import { useEffect, useState } from 'react';
+import { useState } from 'react'
 import { Button } from '@/components/Button'
-import { Container } from '@/components/Container'
 import { supabase } from '@/lib/supabase'
-import { fetchPricingCatalog } from '@/lib/cloud-pricing'
 
 interface CheckIconProps {
   className: string
@@ -35,12 +33,61 @@ function CheckIcon({ className }: CheckIconProps) {
   )
 }
 
+async function startCheckout(
+  lookupKey: string,
+  setIsLoading: (loading: boolean) => void,
+  extra?: Record<string, unknown>
+) {
+  try {
+    setIsLoading(true)
+    if (lookupKey === 'free') {
+      window.location.href = 'https://api.enconvo.com/app/download'
+      return
+    }
+
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
+      const returnUrl = `/pricing?plan=${lookupKey}`
+      window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`
+      return
+    }
+
+    const response = await fetch('/api/subscription/checkout_sessions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        lookupKey,
+        email: session.user.email,
+        endorsely_referral: window.endorsely_referral,
+        ...extra,
+      }),
+    })
+
+    if (response.status === 200) {
+      const data = await response.json()
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } else {
+      const error = await response.json()
+      console.error('Payment error:', error)
+    }
+  } catch (error) {
+    console.error('Error initiating checkout:', error)
+  } finally {
+    setIsLoading(false)
+  }
+}
+
 interface PlanProps {
   name: string
   price: string
+  priceNote?: string
   lookupKey: string
-  originPrice?: string
-  savePercent?: string
+  badge?: string
   description: string
   startText?: string
   detailsHref?: string
@@ -51,90 +98,40 @@ interface PlanProps {
 function Plan({
   name,
   price,
+  priceNote,
   lookupKey,
-  originPrice,
-  savePercent = "50%",
+  badge,
   description,
-  startText = "Get started",
+  startText = 'Get started',
   detailsHref,
   features,
-  featured = false
+  featured = false,
 }: PlanProps) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleClick = async () => {
-    try {
-      setIsLoading(true);
-      if (lookupKey === "free") {
-        window.location.href = "https://api.enconvo.com/app/download";
-        return;
-      }
-      if (lookupKey === "teams") {
-        window.location.href = "mailto:support@enconvo.com";
-        return;
-      }
-
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session) {
-        const returnUrl = `/pricing?plan=${lookupKey}`;
-        window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`;
-        return;
-      }
-
-      const response = await fetch('/api/subscription/checkout_sessions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          lookupKey,
-          email: session.user.email,
-          endorsely_referral: window.endorsely_referral
-        }),
-      });
-
-      if (response.status === 200) {
-        const data = await response.json()
-        if (data.url) {
-          window.location.href = data.url;
-        }
-      } else {
-        const error = await response.json();
-        console.error('Payment error:', error);
-      }
-    } catch (error) {
-      console.error('Error initiating checkout:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <section
-      className="group relative flex flex-col rounded-lg px-6 sm:px-8 py-8 transition-colors bg-surface-card border border-hairline hover:border-hairline-strong"
+      className={clsx(
+        'group relative flex flex-col rounded-lg px-6 sm:px-8 py-8 transition-colors bg-surface-card border',
+        featured
+          ? 'border-hairline-strong'
+          : 'border-hairline hover:border-hairline-strong'
+      )}
     >
-      {originPrice && (
-        <div className="absolute right-0 top-0 overflow-hidden w-28 h-28 pointer-events-none rounded-tr-lg z-10">
-          <div className="absolute rotate-45 bg-signal-red text-white text-sm font-bold py-2 w-40 text-center shadow-lg -right-10 top-6">
-            SAVE {savePercent}
-          </div>
-        </div>
+      {badge && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-canvas">
+          {badge}
+        </span>
       )}
 
-      <div className="order-first relative">
-        <div className="flex flex-col gap-2">
-          {originPrice && (
-            <span className="font-display text-xl font-bold line-through text-content-ash">
-              {originPrice}
-            </span>
-          )}
-          <span className={clsx(
-            "font-display text-4xl font-bold tracking-tight",
-            originPrice ? "text-signal-red" : "text-content"
-          )}>
+      <div className="order-first">
+        <div className="flex items-baseline gap-2">
+          <span className="font-display text-4xl font-bold tracking-tight text-content">
             {price}
           </span>
+          {priceNote && (
+            <span className="text-sm text-content-muted">{priceNote}</span>
+          )}
         </div>
       </div>
 
@@ -148,7 +145,7 @@ function Plan({
       <div className="mt-8 flex-1">
         <ul role="list" className="space-y-4">
           {features.map((feature) => (
-            <li key={feature} className="flex items-start group/item">
+            <li key={feature} className="flex items-start">
               <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 bg-surface-elevated">
                 <CheckIcon className="w-3 h-3 text-signal-blue" />
               </div>
@@ -162,10 +159,15 @@ function Plan({
 
       <div className="mt-8">
         <Button
-          onClick={handleClick}
+          onClick={() => startCheckout(lookupKey, setIsLoading)}
           variant="outline"
           color="white"
-          className="w-full py-4 text-base font-semibold transition-colors border border-hairline text-content hover:bg-white hover:text-canvas"
+          className={clsx(
+            'w-full py-4 text-base font-semibold transition-colors border',
+            featured
+              ? 'bg-white text-canvas border-white hover:bg-content'
+              : 'border-hairline text-content hover:bg-white hover:text-canvas'
+          )}
           disabled={isLoading}
         >
           <span className="flex items-center justify-center gap-2">
@@ -191,25 +193,173 @@ function Plan({
         )}
       </div>
     </section>
-  );
+  )
 }
 
+// Teams lifetime license (ADR 0036): one account, seat-counted devices.
+// Price anchors to the single-user Premium: $129 + (seats − 3) × $20.
+const TEAMS_MIN_SEATS = 10
+const TEAMS_MAX_SEATS = 500
+const teamsPrice = (seats: number) => 129 + (seats - 3) * 20
+
+function TeamsPlan() {
+  const [seats, setSeats] = useState(TEAMS_MIN_SEATS)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const clamp = (n: number) =>
+    Math.min(TEAMS_MAX_SEATS, Math.max(TEAMS_MIN_SEATS, Math.floor(n) || TEAMS_MIN_SEATS))
+
+  return (
+    <section className="group relative flex flex-col gap-8 rounded-lg border border-hairline bg-surface-card px-6 py-8 transition-colors hover:border-hairline-strong sm:px-8 lg:flex-row lg:items-center">
+      <div className="lg:max-w-md">
+        <h3 className="font-display text-2xl font-bold text-content">Teams</h3>
+        <p className="mt-1 text-xs leading-relaxed text-content-muted">
+          One account for your whole team — lifetime license, lifetime updates.
+          30-day money back guarantee.
+        </p>
+        <ul role="list" className="mt-6 space-y-3">
+          {[
+            `${seats} Mac devices on one account`,
+            `${(seats * 50000).toLocaleString()} Cloud points bonus — 50,000 per seat`,
+            'Add more seats any time at $20 each',
+            'Everything in Premium, lifetime free updates',
+          ].map((feature) => (
+            <li key={feature} className="flex items-start">
+              <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-surface-elevated">
+                <CheckIcon className="h-3 w-3 text-signal-blue" />
+              </div>
+              <span className="ml-4 text-sm leading-relaxed text-content-body">
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="flex flex-1 flex-col items-center gap-5 lg:items-end">
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-content-muted">Seats</span>
+          <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
+            <button
+              type="button"
+              aria-label="Fewer seats"
+              onClick={() => setSeats((s) => clamp(s - 1))}
+              disabled={seats <= TEAMS_MIN_SEATS}
+              className="flex h-8 w-8 items-center justify-center rounded-full text-lg text-content-body transition-colors hover:bg-surface-elevated disabled:opacity-40"
+            >
+              −
+            </button>
+            <input
+              type="number"
+              min={TEAMS_MIN_SEATS}
+              max={TEAMS_MAX_SEATS}
+              value={seats}
+              onChange={(e) => setSeats(clamp(Number(e.target.value)))}
+              className="w-14 border-0 bg-transparent text-center text-base font-semibold text-content [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            />
+            <button
+              type="button"
+              aria-label="More seats"
+              onClick={() => setSeats((s) => clamp(s + 1))}
+              disabled={seats >= TEAMS_MAX_SEATS}
+              className="flex h-8 w-8 items-center justify-center rounded-full text-lg text-content-body transition-colors hover:bg-surface-elevated disabled:opacity-40"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-baseline gap-2">
+          <span className="font-display text-4xl font-bold tracking-tight text-content">
+            ${teamsPrice(seats).toLocaleString()}
+          </span>
+          <span className="text-sm text-content-muted">
+            one-time · ${(teamsPrice(seats) / seats).toFixed(2)}/seat
+          </span>
+        </div>
+
+        <Button
+          onClick={() => startCheckout('teams', setIsLoading, { seats })}
+          variant="outline"
+          color="white"
+          className="w-full border border-hairline py-4 text-base font-semibold text-content transition-colors hover:bg-white hover:text-canvas lg:w-64"
+          disabled={isLoading}
+        >
+          <span className="flex items-center justify-center gap-2">
+            {isLoading ? (
+              <>
+                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+                Going to checkout...
+              </>
+            ) : (
+              <>
+                Buy Teams License
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </>
+            )}
+          </span>
+        </Button>
+      </div>
+    </section>
+  )
+}
+
+interface CloudTier {
+  name: string
+  description: string
+  badge?: string
+  featured?: boolean
+  monthly: { price: string; lookupKey: string }
+  annual: { price: string; perMonth: string; lookupKey: string }
+  features: string[]
+}
+
+// Tier data mirrors the in-app plan picker (PlansDialog / worker cloudTiers).
+const CLOUD_TIERS: CloudTier[] = [
+  {
+    name: 'Plus',
+    description: 'No API keys — points included.',
+    monthly: { price: '$10', lookupKey: 'monthly' },
+    annual: { price: '$96', perMonth: '$8', lookupKey: 'yearly' },
+    features: [
+      '500,000 points / month',
+      'No API key needed',
+      'Unlimited knowledge bases & workflows',
+      'Import & export (Portability)',
+      '5 Mac devices',
+      'Priority support',
+    ],
+  },
+  {
+    name: 'Pro',
+    description: 'DeepSeek & MiniMax M3 at half price.',
+    badge: 'Most popular',
+    featured: true,
+    monthly: { price: '$50', lookupKey: 'pro_monthly' },
+    annual: { price: '$480', perMonth: '$40', lookupKey: 'pro_yearly' },
+    features: [
+      '2,500,000 points / month',
+      '⚡ DeepSeek & MiniMax M3 at 1/2 price — up to 5M points of usage',
+      'Everything in Plus',
+    ],
+  },
+  {
+    name: 'Max',
+    description: 'DeepSeek & MiniMax M3 at quarter price.',
+    monthly: { price: '$100', lookupKey: 'max_monthly' },
+    annual: { price: '$960', perMonth: '$80', lookupKey: 'max_yearly' },
+    features: [
+      '5,000,000 points / month',
+      '⚡ DeepSeek & MiniMax M3 at 1/4 price — up to 20M points of usage',
+      'Everything in Pro',
+    ],
+  },
+]
+
 export function Pricing() {
-  const [cloudAllowance, setCloudAllowance] = useState<number | null>(null)
-
-  useEffect(() => {
-    const controller = new AbortController()
-    fetchPricingCatalog(controller.signal)
-      .then((catalog) => setCloudAllowance(catalog.cloudPolicy.cloudPlanAllowancePoints))
-      .catch((error) => {
-        if (error.name !== 'AbortError') setCloudAllowance(null)
-      })
-    return () => controller.abort()
-  }, [])
-
-  const cloudAllowanceFeature = cloudAllowance === null
-    ? 'Monthly Cloud point allowance'
-    : `${new Intl.NumberFormat('en-US').format(cloudAllowance)} Points/Month`
+  const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly')
 
   return (
     <section
@@ -217,188 +367,162 @@ export function Pricing() {
       aria-label="Pricing"
       className="bg-canvas py-20 sm:py-32"
     >
-      <Container>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="md:text-center">
           <h2 className="font-display text-3xl tracking-tight text-content sm:text-4xl">
             Simple pricing, for everyone.
           </h2>
           <p className="mt-4 text-lg text-content-muted">
-            No matter who you are, our software is designed to meet your requirements.
+            Two ways to pay for AI — and they stack.
           </p>
         </div>
 
         <div className="mt-16">
-          <div className="grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-10">
+          <div className="md:text-center">
+            <h3 className="font-display text-xl font-semibold text-content">
+              You bring the AI
+            </h3>
+            <p className="mt-2 text-sm text-content-muted">
+              Use your own API keys or local models — AI usage is free and
+              unlimited on every tier.
+            </p>
+          </div>
+
+          <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
             <Plan
               name="Free"
-              price="FREE"
+              price="$0"
               lookupKey={'free'}
-              description="Lifetime access to all basic features."
+              description="Everything you need to make Enconvo yours."
               startText={'Download'}
               features={[
-                '10 uses/day',
-                'Knowledge Base',
-                'Workflow',
-                'Voice Input Method',
-                'Context Awareness',
-                'Live closed captions',
-                'Seamless access AI via SmartBar',
-                'PopBar',
-                'AI Web Search',
-                'Image Generation',
-                'Text-to-Speech (TTS)',
-                'Chat With Documents',
-                'Chat With Webpage',
-                'Use Local LLM (Ollama,LMStudio) For Privacy',
-                'Ultimate Use of OCR',
-                'Extension system',
-                'More Than 100+ Features',
+                'Unlimited AI with your own API key',
+                'All surfaces — SmartBar, App Sidebar, PopBar & more',
+                '100+ built-in tools and plugins',
+                '5,000 welcome Cloud points',
+                '1 knowledge base · 1 workflow',
+                '1 Mac device',
               ]}
             />
 
             <Plan
               name="Standard"
               price="$49"
+              priceNote="one-time"
               lookupKey={'standard'}
-              description="30-day Money Back Guarantee"
+              description="30-day money back guarantee."
               startText="Buy License"
               features={[
-                '50,000 Points one-time bonus',
-                'Unlimited AI use with your API key',
-                '1 years free updates',
-                '1 MacOS Devices',
-                'Knowledge Base',
-                'Workflow',
-                'Voice Input Method',
-                'Context Awareness',
-                'Live closed captions',
-                'Seamless access AI via SmartBar',
-                'PopBar',
-                'AI Web Search',
-                'Image Generation',
-                'Text-to-Speech (TTS)',
-                'Chat With Documents',
-                'Chat With Webpage',
-                'Use Local LLM (Ollama,LMStudio) For Privacy',
-                'Ultimate Use of OCR',
-                'Extension system',
-                'More Than 100+ Features',
+                'Unlimited AI with your own API key',
+                'Unlimited knowledge bases & workflows',
+                'Import & export (Portability)',
+                '50,000 Cloud points bonus',
+                '1 year of free updates',
+                '1 Mac device',
               ]}
             />
 
             <Plan
               name="Premium"
-              price="$99"
+              price="$129"
+              priceNote="one-time"
               lookupKey={'premium'}
-              description="30-day Money Back Guarantee"
+              description="30-day money back guarantee."
               startText="Buy License"
               features={[
-                '150,000 Points one-time bonus',
-                'Unlimited AI use with your API key',
-                '3 MacOS Devices',
+                'Everything in Standard',
+                '150,000 Cloud points bonus',
                 'Lifetime free updates',
-                'Knowledge Base',
-                'Workflow',
-                'Voice Input Method',
-                'Context Awareness',
-                'Live closed captions',
-                'Seamless access AI via SmartBar',
-                'PopBar',
-                'AI Web Search',
-                'Image Generation',
-                'Text-to-Speech (TTS)',
-                'Chat With Documents',
-                'Chat With Webpage',
-                'Use Local LLM (Ollama,LMStudio) For Privacy',
-                'Ultimate Use of OCR',
-                'Extension system',
-                'More Than 100+ Features',
+                '3 Mac devices',
               ]}
             />
           </div>
 
-          <div className="grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 2xl:gap-10 mt-20">
-            <Plan
-              name="Cloud Plan"
-              price="$10/Monthly"
-              lookupKey={'monthly'}
-              description="All Premium features with managed Cloud models and services."
-              detailsHref="/cloud-pricing"
-              startText={'Get started'}
-              features={[
-                cloudAllowanceFeature,
-                'Unlimited Knowledge Bases',
-                '5 MacOS Devices',
-                'No Need Your Own ApiKey',
-                'Knowledge Base',
-                'Workflow',
-                'Voice Input Method',
-                'Context Awareness',
-                'Live closed captions',
-                'Seamless access AI via SmartBar',
-                'PopBar',
-                'AI Web Search',
-                'Image Generation',
-                'Text-to-Speech (TTS)',
-                'Chat With Documents',
-                'Chat With Webpage',
-                'Use Local LLM (Ollama,LMStudio) For Privacy',
-                'Ultimate Use of OCR',
-                'Extension system',
-                'More Than 100+ Features',
-              ]}
-            />
-
-            <Plan
-              name="Cloud Plan"
-              price="$96/Yearly"
-              lookupKey={'yearly'}
-              description="All Premium features with managed Cloud models and services."
-              detailsHref="/cloud-pricing"
-              startText={'Get started'}
-              features={[
-                cloudAllowanceFeature,
-                'Unlimited Knowledge Bases',
-                '5 MacOS Devices',
-                'No Need Your Own ApiKey',
-                'Knowledge Base',
-                'Workflow',
-                'Voice Input Method',
-                'Context Awareness',
-                'Live closed captions',
-                'Seamless access AI via SmartBar',
-                'PopBar',
-                'AI Web Search',
-                'Image Generation',
-                'Text-to-Speech (TTS)',
-                'Chat With Documents',
-                'Chat With Webpage',
-                'Use Local LLM (Ollama,LMStudio) For Privacy',
-                'Ultimate Use of OCR',
-                'Extension system',
-                'More Than 100+ Features',
-              ]}
-            />
-
-            <Plan
-              name="Teams"
-              price="Teams"
-              description="Custom solutions for organizations with advanced needs"
-              lookupKey={'teams'}
-              startText={'Contact Sales'}
-              features={[
-                'All Premium Features',
-                'Private Deployment Options',
-                'Custom Tool & Agent Deployment',
-                'Custom Workflow Development',
-                'Priority Support',
-                'Advanced Security Controls',
-                'Team Management Features'
-              ]}
-            />
+          <div className="mt-8 max-w-7xl mx-auto">
+            <TeamsPlan />
           </div>
         </div>
-      </Container>
+
+        <div className="mt-20">
+          <div className="md:text-center">
+            <h3 className="font-display text-xl font-semibold text-content">
+              We bring the AI
+            </h3>
+            <p className="mt-2 text-sm text-content-muted">
+              No API keys. A monthly point allowance powers every model and
+              service.
+            </p>
+
+            <div className="mt-6 inline-flex items-center rounded-full border border-hairline bg-surface p-1">
+              <button
+                onClick={() => setBilling('monthly')}
+                className={clsx(
+                  'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
+                  billing === 'monthly'
+                    ? 'bg-surface-elevated text-content ring-1 ring-hairline-strong'
+                    : 'text-content-muted hover:text-content-body'
+                )}
+              >
+                Monthly
+              </button>
+              <button
+                onClick={() => setBilling('annual')}
+                className={clsx(
+                  'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
+                  billing === 'annual'
+                    ? 'bg-surface-elevated text-content ring-1 ring-hairline-strong'
+                    : 'text-content-muted hover:text-content-body'
+                )}
+              >
+                Annual
+                <span className="ml-1.5 text-xs text-signal-green">-20%</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
+            {CLOUD_TIERS.map((tier) => {
+              const isAnnual = billing === 'annual'
+              return (
+                <Plan
+                  key={tier.name}
+                  name={tier.name}
+                  price={isAnnual ? tier.annual.perMonth : tier.monthly.price}
+                  priceNote={
+                    isAnnual
+                      ? `/mo · billed ${tier.annual.price}/year`
+                      : '/month'
+                  }
+                  lookupKey={isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey}
+                  badge={tier.badge}
+                  featured={tier.featured}
+                  description={tier.description}
+                  detailsHref="/cloud-pricing"
+                  features={tier.features}
+                />
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="mx-auto mt-12 max-w-3xl text-center">
+          <p className="text-sm text-content-muted">
+            Licenses and Cloud plans stack — a Lifetime owner can add any Cloud
+            plan for included points, and every plan keeps own-key usage
+            unlimited.
+          </p>
+          <p className="mt-2 text-sm text-content-ash">
+            Need more than 500 seats or private deployment?{' '}
+            <a
+              href="mailto:support@enconvo.com"
+              className="text-content-muted underline underline-offset-2 transition hover:text-content"
+            >
+              Contact us
+            </a>
+            .
+          </p>
+        </div>
+      </div>
     </section>
   )
 }
