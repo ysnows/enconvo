@@ -12,8 +12,8 @@ export interface Feature {
 
 export const features: Feature[] = [
     {
-        title: 'App Side Bar',
-        description: 'Transform all your installed apps into AI Agents. Always within reach, they empower your workflow instantly, right at your fingertips.',
+        title: 'App Sidebar',
+        description: 'Dock an AI agent next to any app. It sees the app, understands its state, and works inside it — turning every installed app into an AI-powered one.',
         icon: () => (
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                 {/* Mac app windows */}
@@ -28,7 +28,7 @@ export const features: Feature[] = [
     },
     {
         title: 'Context Awareness',
-        description: 'Enconvo intelligently perceives and utilizes your current context, including active applications, selected text, Finder files, and open web pages. This enables a smarter, more intuitive AI experience tailored to your workflow.',
+        description: 'Enconvo sees what you are working on — the active app, selected text, files, and open web pages — and brings that context into the conversation automatically, so you never paste context by hand.',
         icon: () => (
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
                 {/* Eye for perception */}
@@ -63,8 +63,8 @@ export const features: Feature[] = [
         mediaType: 'youtube'
     },
     {
-        title: 'Companion Orb',
-        description: 'Your always-on companion, providing instant access to essential features and real-time updates on your active tasks.',
+        title: 'Pet',
+        description: 'A pixel-art companion that lives on your desktop and mirrors what your agents are doing. Tap it to jump to the session that needs attention. Compatible with the open Codex pet-pack format.',
         icon: () => (
             // Mini SmartBar icon - a smaller, simplified version of the SmartBar icon
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">

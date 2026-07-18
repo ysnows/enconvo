@@ -3,16 +3,30 @@ import { Container } from '@/components/Container'
 const faqs = [
   [
     {
-      question: 'Is EnConvo an Electron app?',
-      answer: 'No, EnConvo is a native macOS application built for optimal performance and system integration.',
+      question: 'Is Enconvo free to use?',
+      answer: 'Yes. The free tier includes every core feature, with unlimited AI when you bring your own API key or run local models. Paid tiers remove creation caps (knowledge bases, workflows) and add Cloud points.',
     },
     {
-      question: 'Is EnConvo free to use?',
-      answer: 'EnConvo offers a free trial with 10 uses per day. We also provide lifetime licenses and subscription plans for full access.',
+      question: 'Do I need my own API key?',
+      answer: 'No. Cloud plans include a monthly point allowance with zero key setup. If you prefer your own keys or local models, that usage is free and unlimited on every tier — including the free one.',
     },
     {
-      question: 'Does EnConvo use my data for training?',
+      question: 'Can I use my existing ChatGPT, Claude, or Grok subscription?',
+      answer: 'Yes. Sign in with those accounts and Enconvo can use the subscriptions you already pay for, right inside the app.',
+    },
+  ],
+  [
+    {
+      question: 'Does Enconvo use my data for training?',
       answer: 'No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.',
+    },
+    {
+      question: 'Is Enconvo an Electron app?',
+      answer: 'No, Enconvo is a native macOS application built for optimal performance and system integration.',
+    },
+    {
+      question: 'Can Enconvo work fully offline?',
+      answer: 'Yes. Run local models through MLX, Ollama, or LM Studio — including on-device speech recognition — and your data never leaves your Mac.',
     },
   ],
   [
@@ -21,22 +35,8 @@ const faqs = [
       answer: 'We offer a 14-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time.',
     },
     {
-      question: 'What platforms does EnConvo support?',
-      answer: 'EnConvo currently only supports macOS, and has been optimized for native macOS performance and system integration.',
-    },
-    {
       question: 'Is Enconvo open source?',
       answer: 'While Enconvo itself is not open source, all Enconvo extensions are open source and can be found on https://github.com/enconvo',
-    },
-  ],
-  [
-    {
-      question: 'Do you offer technical support?',
-      answer: 'Yes, you can join our Discord community for technical support. Our team and community members are there to help you get the most out of EnConvo.',
-    },
-    {
-      question: 'How often do you release updates?',
-      answer: 'We regularly release updates with new features, improvements, and bug fixes. All updates are free for existing users within their license period.',
     },
     {
       question: 'Student Discount?',

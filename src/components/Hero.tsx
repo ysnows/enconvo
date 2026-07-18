@@ -1,9 +1,7 @@
-import { useState } from 'react'
 import { Menu } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
-import Image from 'next/image'
-import allInOne from '@/images/main.jpg'
 import { SiteNav } from '@/components/SiteNav'
+import { HeroShowcase } from '@/components/HeroShowcase'
 
 declare global {
   interface Window {
@@ -11,26 +9,41 @@ declare global {
   }
 }
 
-export function Hero() {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+function AppleLogoIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+    </svg>
+  )
+}
 
+function DownloadRowArrow() {
+  return (
+    <svg className="w-4 h-4 text-content-ash group-hover:text-content-muted transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3" />
+    </svg>
+  )
+}
+
+export function Hero() {
   return (
     <div className="bg-canvas relative overflow-hidden">
       <SiteNav />
 
       <div className="relative isolate pt-20 z-10">
-        <div className="py-20 sm:py-32 lg:py-40">
+        <div className="py-16 sm:py-20 lg:py-24">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-5xl text-center">
+            <div className="mx-auto max-w-4xl text-center">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-content leading-tight">
-                The Always-Online AI Companion That Knows You Best
+                The assistant your Mac was promised.
               </h1>
 
-              <p className="mt-6 text-xl sm:text-2xl leading-relaxed text-content-body max-w-3xl mx-auto">
-                Contextually aware of your screen and apps, delivering the perfect response to automate your complex tasks.
+              <p className="mt-6 text-lg sm:text-xl leading-relaxed text-content-body max-w-3xl mx-auto">
+                Enconvo is an AI agent that lives across your Mac — it sees your
+                screen, works inside your apps, and actually gets things done.
               </p>
 
-              <div className="mt-10 flex flex-col items-center space-y-6">
+              <div className="mt-8 flex flex-col items-center space-y-4">
                 <Menu as="div" className="relative">
                   <Menu.Button className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-canvas bg-white hover:bg-content rounded-lg transition-colors">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,17 +66,13 @@ export function Hero() {
                             >
                               <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center">
-                                  <svg className="w-5 h-5 mr-3 text-content-muted" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
-                                  </svg>
+                                  <AppleLogoIcon className="w-5 h-5 mr-3 text-content-muted" />
                                   <div>
-                                    <div className="text-content font-medium">macOS (Apple Silicon)</div>
+                                    <div className="text-content font-medium text-start">macOS (Apple Silicon)</div>
                                     <div className="text-content-ash text-xs">For M1, M2, M3, M4 Macs</div>
                                   </div>
                                 </div>
-                                <svg className="w-4 h-4 text-content-ash group-hover:text-content-muted transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3" />
-                                </svg>
+                                <DownloadRowArrow />
                               </div>
                             </a>
                           )}
@@ -79,17 +88,13 @@ export function Hero() {
                             >
                               <div className="flex items-center justify-between w-full">
                                 <div className="flex items-center">
-                                  <svg className="w-5 h-5 mr-3 text-content-muted" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
-                                  </svg>
+                                  <AppleLogoIcon className="w-5 h-5 mr-3 text-content-muted" />
                                   <div>
                                     <div className="text-content font-medium text-start">macOS (Intel)</div>
                                     <div className="text-content-ash text-xs">For Intel-based Macs</div>
                                   </div>
                                 </div>
-                                <svg className="w-4 h-4 text-content-ash group-hover:text-content-muted transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3" />
-                                </svg>
+                                <DownloadRowArrow />
                               </div>
                             </a>
                           )}
@@ -100,48 +105,12 @@ export function Hero() {
                 </Menu>
 
                 <div className="flex items-center space-x-6 text-sm text-content-muted">
-                  <span>macOS 14+ (Intel & Apple Silicon)</span>
+                  <span>macOS 14+ (Intel &amp; Apple Silicon)</span>
                 </div>
               </div>
             </div>
 
-            <div className="relative mt-16 sm:mt-24">
-              {!isVideoLoaded ? (
-                <>
-                  <Image
-                    src={allInOne}
-                    alt="EnConvo Preview"
-                    className="rounded-lg bg-surface-elevated w-full shadow-2xl ring-1 ring-hairline-strong"
-                    width={1200}
-                    height={800}
-                    priority
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <button
-                      onClick={() => setIsVideoLoaded(true)}
-                      className="relative w-16 h-16 bg-white/90 rounded-full flex items-center justify-center group hover:bg-white transition-colors"
-                    >
-                      <svg
-                        className="w-6 h-6 text-canvas fill-current ml-0.5"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                  <iframe
-                    className="absolute top-0 left-0 w-full h-full rounded-lg shadow-2xl ring-1 ring-hairline-strong"
-                    src="https://www.youtube.com/embed/QucptiybwVk?autoplay=1&mute=1"
-                    title="EnConvo Demo"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              )}
-            </div>
+            <HeroShowcase />
           </div>
         </div>
       </div>
