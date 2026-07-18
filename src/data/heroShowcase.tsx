@@ -37,21 +37,6 @@ export const heroTabs: HeroTab[] = [
                 caption: 'Finder, Calendar, Notes, and Excel — one sidebar does the work in every app.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch.mp4' },
             },
-            {
-                id: 'excel',
-                label: 'Excel live edit',
-                caption: 'Ask for changes in plain language and watch them land in the open spreadsheet.',
-            },
-            {
-                id: 'affinity',
-                label: 'Affinity',
-                caption: 'Drive professional apps without hunting through menus.',
-            },
-            {
-                id: 'app-skills',
-                label: 'Per-app skills & MCPs',
-                caption: 'Pin specialized skills and MCP servers to each app — the agent comes prepared.',
-            },
         ],
     },
     {

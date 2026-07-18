@@ -47,6 +47,7 @@ export function HeroShowcase() {
     const [tabIndex, setTabIndex] = useState(0)
     const [sceneIndex, setSceneIndex] = useState(0)
     const [autoPlay, setAutoPlay] = useState(true)
+    const [soundOn, setSoundOn] = useState(false)
     const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const activeTab = heroTabs[tabIndex]
@@ -56,10 +57,22 @@ export function HeroShowcase() {
     const select = useCallback((nextTab: number, nextScene: number) => {
         setTabIndex(nextTab)
         setSceneIndex(nextScene)
+        setSoundOn(false)
         setAutoPlay(false)
         if (resumeTimer.current) clearTimeout(resumeTimer.current)
         resumeTimer.current = setTimeout(() => setAutoPlay(true), INTERACTION_PAUSE_MS)
     }, [])
+
+    const advance = useCallback(() => {
+        const tab = heroTabs[tabIndex]
+        setSoundOn(false)
+        if (sceneIndex + 1 < tab.subScenes.length) {
+            setSceneIndex(sceneIndex + 1)
+        } else {
+            setTabIndex((tabIndex + 1) % heroTabs.length)
+            setSceneIndex(0)
+        }
+    }, [tabIndex, sceneIndex])
 
     useEffect(() => {
         if (typeof window !== 'undefined' &&
@@ -69,19 +82,14 @@ export function HeroShowcase() {
         }
     }, [])
 
+    // Timer drives placeholder/image scenes only — videos advance when they
+    // finish playing (onEnded), so a film is always watched to the end.
     useEffect(() => {
         if (!autoPlay) return
-        const timer = setTimeout(() => {
-            const tab = heroTabs[tabIndex]
-            if (sceneIndex + 1 < tab.subScenes.length) {
-                setSceneIndex(sceneIndex + 1)
-            } else {
-                setTabIndex((tabIndex + 1) % heroTabs.length)
-                setSceneIndex(0)
-            }
-        }, SUB_SCENE_MS)
+        if (activeScene.media?.type === 'video') return
+        const timer = setTimeout(advance, SUB_SCENE_MS)
         return () => clearTimeout(timer)
-    }, [autoPlay, tabIndex, sceneIndex])
+    }, [autoPlay, tabIndex, sceneIndex, activeScene, advance])
 
     useEffect(() => () => {
         if (resumeTimer.current) clearTimeout(resumeTimer.current)
@@ -112,7 +120,8 @@ export function HeroShowcase() {
                 ))}
             </div>
 
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
+            {/* invisible (not hidden) when single-scene so the layout height stays stable across tabs */}
+            <div className={clsx('mt-4 flex flex-wrap justify-center gap-2', activeTab.subScenes.length <= 1 && 'invisible')}>
                 {activeTab.subScenes.map((scene, i) => (
                     <button
                         key={scene.id}
@@ -135,8 +144,8 @@ export function HeroShowcase() {
                         key={activeScene.media.src}
                         src={activeScene.media.src}
                         autoPlay
-                        muted
-                        loop
+                        muted={!soundOn}
+                        onEnded={() => { if (autoPlay) advance() }}
                         playsInline
                         preload="metadata"
                         className="absolute inset-0 h-full w-full object-cover"
@@ -156,6 +165,20 @@ export function HeroShowcase() {
                     />
                 )}
 
+                {activeScene.media?.type === 'video' && (
+                    <button
+                        onClick={() => setSoundOn(!soundOn)}
+                        aria-label={soundOn ? 'Mute' : 'Play with sound'}
+                        className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-xs font-medium text-content backdrop-blur transition-colors hover:bg-black/75"
+                    >
+                        {soundOn ? (
+                            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.4 5.6a9 9 0 0 1 0 12.8" /></svg>
+                        ) : (
+                            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z" /><line x1="22" y1="9" x2="16" y2="15" /><line x1="16" y1="9" x2="22" y2="15" /></svg>
+                        )}
+                        {soundOn ? 'Sound on' : 'Play with sound'}
+                    </button>
+                )}
                 {activeScene.media && (
                     <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/70 to-transparent px-4 pb-3 pt-8">
                         <span className="rounded bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-content backdrop-blur">
