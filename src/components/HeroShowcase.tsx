@@ -175,7 +175,7 @@ export function HeroShowcase() {
                 ))}
             </div>
 
-            <div ref={playerRef} className="relative mt-4 aspect-video overflow-hidden rounded-lg border border-hairline-strong bg-surface-elevated shadow-2xl">
+            <div ref={playerRef} className="group relative mt-4 aspect-video overflow-hidden rounded-lg border border-hairline-strong bg-surface-elevated shadow-2xl">
                 {activeScene.media?.type === 'video' ? (
                     <video
                         key={activeScene.media.src}
@@ -216,10 +216,18 @@ export function HeroShowcase() {
                 )}
 
                 {activeScene.media?.type === 'video' && (
+                    <span className="absolute left-4 top-4 z-10 rounded bg-black/45 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-content backdrop-blur">
+                        {activeTab.productName}
+                    </span>
+                )}
+                {activeScene.media?.type === 'video' && (
                     <button
                         onClick={() => setSoundOn(!soundOn)}
                         aria-label={soundOn ? 'Mute' : 'Play with sound'}
-                        className="absolute right-4 top-4 z-10 flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-xs font-medium text-content backdrop-blur transition-colors hover:bg-black/75"
+                        className={clsx(
+                            'absolute right-4 top-4 z-10 flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-xs font-medium text-content backdrop-blur transition-opacity hover:bg-black/75',
+                            playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+                        )}
                     >
                         {soundOn ? (
                             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /><path d="M18.4 5.6a9 9 0 0 1 0 12.8" /></svg>
@@ -230,7 +238,23 @@ export function HeroShowcase() {
                     </button>
                 )}
                 {activeScene.media?.type === 'video' ? (
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/75 to-transparent px-4 pb-2.5 pt-10">
+                    <div
+                        className={clsx(
+                            'absolute inset-x-0 bottom-0 z-10 flex items-center gap-3 bg-gradient-to-t from-black/75 to-transparent px-4 pb-3 pt-10 transition-opacity',
+                            playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+                        )}
+                    >
+                        <button
+                            onClick={togglePlay}
+                            aria-label={playing ? 'Pause' : 'Play'}
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
+                        >
+                            {playing ? (
+                                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
+                            ) : (
+                                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                            )}
+                        </button>
                         <input
                             type="range"
                             aria-label="Seek"
@@ -244,41 +268,25 @@ export function HeroShowcase() {
                                 setCurrentTime(t)
                                 noteInteraction()
                             }}
-                            className="mb-2 block h-1.5 w-full cursor-pointer accent-white"
+                            style={{
+                                background: `linear-gradient(to right, rgba(255,255,255,0.95) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%, rgba(255,255,255,0.22) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%)`,
+                            }}
+                            className="h-1 min-w-0 flex-1 cursor-pointer appearance-none rounded-full outline-none transition-[height] hover:h-1.5 [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-[0_1px_4px_rgba(0,0,0,0.5)] [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
                         />
-                        <div className="flex items-center gap-2.5">
-                            <button
-                                onClick={togglePlay}
-                                aria-label={playing ? 'Pause' : 'Play'}
-                                className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
-                            >
-                                {playing ? (
-                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
-                                ) : (
-                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
-                                )}
-                            </button>
-                            <span className="rounded bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-content backdrop-blur">
-                                {activeTab.productName}
-                            </span>
-                            <span className="truncate text-xs text-content-body">
-                                {activeScene.caption}
-                            </span>
-                            <span className="ml-auto shrink-0 text-[11px] tabular-nums text-content-body">
-                                {formatTime(currentTime)} / {formatTime(duration)}
-                            </span>
-                            <button
-                                onClick={toggleFullscreen}
-                                aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-                                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
-                            >
-                                {isFullscreen ? (
-                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3" /><path d="M21 8h-3a2 2 0 0 1-2-2V3" /><path d="M3 16h3a2 2 0 0 1 2 2v3" /><path d="M16 21v-3a2 2 0 0 1 2-2h3" /></svg>
-                                ) : (
-                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3" /><path d="M21 8V5a2 2 0 0 0-2-2h-3" /><path d="M3 16v3a2 2 0 0 0 2 2h3" /><path d="M16 21h3a2 2 0 0 0 2-2v-3" /></svg>
-                                )}
-                            </button>
-                        </div>
+                        <span className="shrink-0 text-[11px] tabular-nums text-content-body">
+                            {formatTime(currentTime)} / {formatTime(duration)}
+                        </span>
+                        <button
+                            onClick={toggleFullscreen}
+                            aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
+                        >
+                            {isFullscreen ? (
+                                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3" /><path d="M21 8h-3a2 2 0 0 1-2-2V3" /><path d="M3 16h3a2 2 0 0 1 2 2v3" /><path d="M16 21v-3a2 2 0 0 1 2-2h3" /></svg>
+                            ) : (
+                                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3" /><path d="M21 8V5a2 2 0 0 0-2-2h-3" /><path d="M3 16v3a2 2 0 0 0 2 2h3" /><path d="M16 21h3a2 2 0 0 0 2-2v-3" /></svg>
+                            )}
+                        </button>
                     </div>
                 ) : activeScene.media ? (
                     <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/70 to-transparent px-4 pb-3 pt-8">
