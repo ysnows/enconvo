@@ -46,6 +46,12 @@ export const heroTabs: HeroTab[] = [
         tagline: 'A tiny always-on surface at the top of your screen. Hover, ask, done.',
         subScenes: [
             {
+                id: 'launch-film',
+                label: 'Launch film',
+                caption: 'Voice, Live Screen, Doodle, and instant translation — one island does it all.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/dynamic-island-launch.mp4' },
+            },
+            {
                 id: 'voice-command',
                 label: 'Voice Command',
                 caption: 'Speak a command and it gets done — no window switching.',
