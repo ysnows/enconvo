@@ -51,32 +51,6 @@ export const heroTabs: HeroTab[] = [
                 caption: 'Voice, Live Screen, Doodle, and instant translation — one island does it all.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/dynamic-island-launch.mp4' },
             },
-            {
-                id: 'voice-command',
-                label: 'Voice Command',
-                caption: 'Speak a command and it gets done — no window switching.',
-            },
-            {
-                id: 'live-screen',
-                label: 'Live Screen',
-                caption: 'Share what is on your screen and ask about it in real time.',
-                media: { type: 'video', src: 'https://file.enconvo.com/usecases/live_screen_camera.mp4' },
-            },
-            {
-                id: 'doodle',
-                label: 'Doodle',
-                caption: 'Sketch over your screen to show the AI exactly what you mean.',
-            },
-            {
-                id: 'screenshot-explain',
-                label: 'Screenshot explain',
-                caption: 'Snap any region and get an instant explanation.',
-            },
-            {
-                id: 'app-shots',
-                label: 'App Shots',
-                caption: 'Capture app windows straight into the conversation.',
-            },
         ],
     },
     {

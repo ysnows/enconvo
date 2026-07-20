@@ -43,24 +43,61 @@ function ScenePlaceholder({
     )
 }
 
+function formatTime(s: number) {
+    if (!Number.isFinite(s) || s < 0) return '0:00'
+    const m = Math.floor(s / 60)
+    const sec = Math.floor(s % 60)
+    return `${m}:${sec.toString().padStart(2, '0')}`
+}
+
 export function HeroShowcase() {
     const [tabIndex, setTabIndex] = useState(0)
     const [sceneIndex, setSceneIndex] = useState(0)
     const [autoPlay, setAutoPlay] = useState(true)
     const [soundOn, setSoundOn] = useState(false)
+    const [playing, setPlaying] = useState(true)
+    const [currentTime, setCurrentTime] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const [isFullscreen, setIsFullscreen] = useState(false)
     const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const videoRef = useRef<HTMLVideoElement | null>(null)
+    const playerRef = useRef<HTMLDivElement | null>(null)
 
     const activeTab = heroTabs[tabIndex]
     const activeScene = activeTab.subScenes[sceneIndex]
 
-    // Any manual pick pauses the rotation briefly, then it resumes.
+    // Any manual interaction pauses the rotation briefly, then it resumes.
+    const noteInteraction = useCallback(() => {
+        setAutoPlay(false)
+        if (resumeTimer.current) clearTimeout(resumeTimer.current)
+        resumeTimer.current = setTimeout(() => setAutoPlay(true), INTERACTION_PAUSE_MS)
+    }, [])
+
     const select = useCallback((nextTab: number, nextScene: number) => {
         setTabIndex(nextTab)
         setSceneIndex(nextScene)
         setSoundOn(false)
-        setAutoPlay(false)
-        if (resumeTimer.current) clearTimeout(resumeTimer.current)
-        resumeTimer.current = setTimeout(() => setAutoPlay(true), INTERACTION_PAUSE_MS)
+        noteInteraction()
+    }, [noteInteraction])
+
+    const togglePlay = useCallback(() => {
+        const v = videoRef.current
+        if (!v) return
+        if (v.paused) void v.play()
+        else v.pause()
+        noteInteraction()
+    }, [noteInteraction])
+
+    const toggleFullscreen = useCallback(() => {
+        if (document.fullscreenElement) void document.exitFullscreen()
+        else void playerRef.current?.requestFullscreen?.()
+        noteInteraction()
+    }, [noteInteraction])
+
+    useEffect(() => {
+        const onFsChange = () => setIsFullscreen(Boolean(document.fullscreenElement))
+        document.addEventListener('fullscreenchange', onFsChange)
+        return () => document.removeEventListener('fullscreenchange', onFsChange)
     }, [])
 
     const advance = useCallback(() => {
@@ -138,17 +175,30 @@ export function HeroShowcase() {
                 ))}
             </div>
 
-            <div className="relative mt-4 aspect-video overflow-hidden rounded-lg border border-hairline-strong bg-surface-elevated shadow-2xl">
+            <div ref={playerRef} className="relative mt-4 aspect-video overflow-hidden rounded-lg border border-hairline-strong bg-surface-elevated shadow-2xl">
                 {activeScene.media?.type === 'video' ? (
                     <video
                         key={activeScene.media.src}
+                        ref={videoRef}
                         src={activeScene.media.src}
                         autoPlay
                         muted={!soundOn}
                         onEnded={() => { if (autoPlay) advance() }}
+                        onPlay={() => setPlaying(true)}
+                        onPause={() => setPlaying(false)}
+                        onTimeUpdate={e => setCurrentTime(e.currentTarget.currentTime)}
+                        onLoadedMetadata={e => {
+                            setDuration(e.currentTarget.duration)
+                            setCurrentTime(e.currentTarget.currentTime)
+                            setPlaying(!e.currentTarget.paused)
+                        }}
+                        onClick={togglePlay}
                         playsInline
                         preload="metadata"
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className={clsx(
+                            'absolute inset-0 h-full w-full cursor-pointer',
+                            isFullscreen ? 'bg-black object-contain' : 'object-cover'
+                        )}
                     />
                 ) : activeScene.media?.type === 'image' ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -179,7 +229,58 @@ export function HeroShowcase() {
                         {soundOn ? 'Sound on' : 'Play with sound'}
                     </button>
                 )}
-                {activeScene.media && (
+                {activeScene.media?.type === 'video' ? (
+                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/75 to-transparent px-4 pb-2.5 pt-10">
+                        <input
+                            type="range"
+                            aria-label="Seek"
+                            min={0}
+                            max={duration || 0}
+                            step={0.1}
+                            value={Math.min(currentTime, duration || 0)}
+                            onChange={e => {
+                                const t = Number(e.currentTarget.value)
+                                if (videoRef.current) videoRef.current.currentTime = t
+                                setCurrentTime(t)
+                                noteInteraction()
+                            }}
+                            className="mb-2 block h-1.5 w-full cursor-pointer accent-white"
+                        />
+                        <div className="flex items-center gap-2.5">
+                            <button
+                                onClick={togglePlay}
+                                aria-label={playing ? 'Pause' : 'Play'}
+                                className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
+                            >
+                                {playing ? (
+                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
+                                ) : (
+                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                                )}
+                            </button>
+                            <span className="rounded bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-content backdrop-blur">
+                                {activeTab.productName}
+                            </span>
+                            <span className="truncate text-xs text-content-body">
+                                {activeScene.caption}
+                            </span>
+                            <span className="ml-auto shrink-0 text-[11px] tabular-nums text-content-body">
+                                {formatTime(currentTime)} / {formatTime(duration)}
+                            </span>
+                            <button
+                                onClick={toggleFullscreen}
+                                aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+                                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
+                            >
+                                {isFullscreen ? (
+                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3" /><path d="M21 8h-3a2 2 0 0 1-2-2V3" /><path d="M3 16h3a2 2 0 0 1 2 2v3" /><path d="M16 21v-3a2 2 0 0 1 2-2h3" /></svg>
+                                ) : (
+                                    <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3" /><path d="M21 8V5a2 2 0 0 0-2-2h-3" /><path d="M3 16v3a2 2 0 0 0 2 2h3" /><path d="M16 21h3a2 2 0 0 0 2-2v-3" /></svg>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                ) : activeScene.media ? (
                     <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/70 to-transparent px-4 pb-3 pt-8">
                         <span className="rounded bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-content backdrop-blur">
                             {activeTab.productName}
@@ -188,7 +289,7 @@ export function HeroShowcase() {
                             {activeScene.caption}
                         </span>
                     </div>
-                )}
+                ) : null}
             </div>
 
             <p className="mt-3 text-center text-sm text-content-muted">
