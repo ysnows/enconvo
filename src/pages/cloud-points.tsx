@@ -4,27 +4,28 @@ import { supabase } from '@/lib/supabase'
 import Image from 'next/image'
 import Head from 'next/head'
 
-// Array of available cloud points packages
+// Array of available cloud points packages.
+// lookupKey is the legacy Stripe key; the displayed point amount is the current grant.
 const pointsPackages = [
   {
     id: '250000_points',
-    title: 'Enconvo Cloud Points 250,000',
+    title: 'Enconvo Cloud Points 450,000',
     price: '$10.00 USD',
-    points: '250,000',
+    points: '450,000',
     lookupKey: '250000_points'
   },
   {
     id: '1500000_points',
-    title: 'Enconvo Cloud Points 1,500,000',
+    title: 'Enconvo Cloud Points 2,250,000',
     price: '$50.00 USD',
-    points: '1,500,000',
+    points: '2,250,000',
     lookupKey: '1500000_points'
   },
   {
     id: '3000000_points',
-    title: 'Enconvo Cloud Points 3,000,000',
+    title: 'Enconvo Cloud Points 4,500,000',
     price: '$100.00 USD',
-    points: '3,000,000',
+    points: '4,500,000',
     lookupKey: '3000000_points'
   }
 ]
