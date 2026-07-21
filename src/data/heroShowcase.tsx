@@ -60,6 +60,12 @@ export const heroTabs: HeroTab[] = [
         tagline: 'Select text in any app and a toolbar appears with one-click actions.',
         subScenes: [
             {
+                id: 'launch-film',
+                label: 'Launch film',
+                caption: 'Translate, fix spelling, read aloud, and inline edits — one selection, every action.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/popbar-launch.mp4' },
+            },
+            {
                 id: 'fix-spelling',
                 label: 'Fix Spelling',
                 caption: 'Correct grammar and spelling in place, in any app.',
