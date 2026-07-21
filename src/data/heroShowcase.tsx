@@ -65,21 +65,6 @@ export const heroTabs: HeroTab[] = [
                 caption: 'Translate, fix spelling, read aloud, and inline edits — one selection, every action.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/popbar-launch.mp4' },
             },
-            {
-                id: 'fix-spelling',
-                label: 'Fix Spelling',
-                caption: 'Correct grammar and spelling in place, in any app.',
-            },
-            {
-                id: 'read-aloud',
-                label: 'Read Aloud',
-                caption: 'Have any selection read to you in a natural voice.',
-            },
-            {
-                id: 'translate',
-                label: 'Translate',
-                caption: 'Translate the selection without leaving the app.',
-            },
         ],
     },
     {
