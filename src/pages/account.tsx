@@ -4,6 +4,15 @@ import { supabase } from '@/lib/supabase'
 import Image from 'next/image'
 import { NativeRouter } from "@/utils/app/native_router"
 import type { Session } from '@supabase/supabase-js'
+import {
+    getCurrentEmailPreference,
+    updateCurrentEmailPreference,
+} from '@/lib/email-preferences-client'
+
+type EmailPreference = {
+    product_updates_subscribed: boolean
+    resend_sync_status: 'pending' | 'synced' | 'failed' | 'skipped'
+}
 
 export default function Account() {
     const router = useRouter()
@@ -13,6 +22,10 @@ export default function Account() {
     const [userInfo, setUserInfo] = useState(null)
     const [managingSubscription, setManagingSubscription] = useState(false)
     const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+    const [emailPreference, setEmailPreference] = useState<EmailPreference | null>(null)
+    const [emailPreferenceLoading, setEmailPreferenceLoading] = useState(true)
+    const [emailPreferenceSaving, setEmailPreferenceSaving] = useState(false)
+    const [emailPreferenceMessage, setEmailPreferenceMessage] = useState('')
 
     // Check for success query parameter from Stripe redirect
     useEffect(() => {
@@ -43,6 +56,47 @@ export default function Account() {
             }
         } catch (error) {
             console.error('Error fetching user info:', error)
+        }
+    }
+
+    const fetchEmailPreference = async (token: string) => {
+        setEmailPreferenceLoading(true)
+        try {
+            const data = await getCurrentEmailPreference(token)
+            setEmailPreference(data.preference)
+        } catch (error) {
+            console.error('Error fetching email preference:', error)
+            setEmailPreferenceMessage('Email preference is temporarily unavailable.')
+        } finally {
+            setEmailPreferenceLoading(false)
+        }
+    }
+
+    const handleEmailPreferenceChange = async (subscribed: boolean) => {
+        if (!session) return
+
+        const previousPreference = emailPreference
+        setEmailPreferenceSaving(true)
+        setEmailPreferenceMessage('')
+        setEmailPreference((current) => ({
+            product_updates_subscribed: subscribed,
+            resend_sync_status: current?.resend_sync_status ?? 'pending',
+        }))
+
+        try {
+            const data = await updateCurrentEmailPreference(session.access_token, subscribed)
+            setEmailPreference(data.preference)
+            setEmailPreferenceMessage(
+                data.syncResult?.status === 'failed' || data.syncResult?.status === 'skipped'
+                    ? 'Saved. Delivery service sync will be retried.'
+                    : 'Preference saved.',
+            )
+        } catch (error) {
+            console.error('Error updating email preference:', error)
+            setEmailPreference(previousPreference)
+            setEmailPreferenceMessage('Could not save this preference. Please try again.')
+        } finally {
+            setEmailPreferenceSaving(false)
         }
     }
 
@@ -97,7 +151,10 @@ export default function Account() {
             }
             console.log(session.user)
             setUser(session.user)
-            fetchUserInfo(session.access_token)
+            void Promise.all([
+                fetchUserInfo(session.access_token),
+                fetchEmailPreference(session.access_token),
+            ])
             setLoading(false)
         })
     }, [router])
@@ -195,6 +252,34 @@ export default function Account() {
                                         <div className="mt-1 p-3 bg-gray-800 rounded-md">
                                             {user?.email}
                                         </div>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm text-gray-400">Email updates</label>
+                                        <label className="mt-1 flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.025] p-3">
+                                            <input
+                                                type="checkbox"
+                                                checked={emailPreference?.product_updates_subscribed ?? true}
+                                                disabled={emailPreferenceLoading || emailPreferenceSaving}
+                                                onChange={(event) => void handleEmailPreferenceChange(event.target.checked)}
+                                                className="mt-0.5 h-4 w-4 rounded border-white/20 bg-gray-900 text-blue-500 focus:ring-1 focus:ring-blue-500/60 focus:ring-offset-0 disabled:opacity-50"
+                                            />
+                                            <span>
+                                                <span className="block text-sm text-gray-200">
+                                                    Product updates and release notes
+                                                </span>
+                                                <span className="mt-0.5 block text-xs leading-5 text-gray-500">
+                                                    Occasional Enconvo news. You can unsubscribe at any time.
+                                                </span>
+                                            </span>
+                                        </label>
+                                        {emailPreferenceMessage && (
+                                            <p
+                                                className={`mt-2 text-xs ${emailPreferenceMessage.includes('Could not') || emailPreferenceMessage.includes('unavailable') ? 'text-red-400' : 'text-gray-500'}`}
+                                                role="status"
+                                            >
+                                                {emailPreferenceMessage}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </div>

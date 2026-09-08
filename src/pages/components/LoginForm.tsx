@@ -13,6 +13,7 @@ import * as React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { NativeRouter } from "@/utils/app/native_router";
+import { syncCurrentEmailPreference } from '@/lib/email-preferences-client';
 
 export default function LoginForm({ loginState, setLoginState, setUser, router }) {
 
@@ -54,6 +55,12 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             access_token: data.session.access_token,
             refresh_token: data.session.refresh_token
         })
+
+        try {
+            await syncCurrentEmailPreference(data.session.access_token)
+        } catch (syncError) {
+            console.error('Unable to sync email preferences:', syncError)
+        }
 
 
         NativeRouter.login(data.session.access_token, data.session.refresh_token, Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)

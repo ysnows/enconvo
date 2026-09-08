@@ -12,6 +12,10 @@ import { Input } from "@/components/ui/input";
 import * as React from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+    saveRegistrationEmailPreference,
+    syncCurrentEmailPreference,
+} from "@/lib/email-preferences-client";
 
 export default function RegisterForm({ loginState, setLoginState, email, setEmail }) {
 
@@ -24,6 +28,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
     const [error, setError] = useState('')
     const [emailIsLoading, setEmailIsLoading] = React.useState(false)
     const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
+    const [productUpdatesSubscribed, setProductUpdatesSubscribed] = React.useState(true)
 
 
 
@@ -45,6 +50,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                 emailRedirectTo: `${window.location.origin}/login?from=app${returnUrlParams}`,
                 data: {
                     name: name,
+                    product_updates_subscribed: productUpdatesSubscribed,
                 }
             }
         })
@@ -55,7 +61,13 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
             return
         }
 
-        console.log("kk--", data)
+        if (data.session) {
+            try {
+                await syncCurrentEmailPreference(data.session.access_token)
+            } catch (syncError) {
+                console.error('Unable to sync registration email preference:', syncError)
+            }
+        }
 
         setLoginState("success")
 
@@ -66,14 +78,18 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
     async function signInWithGoogle() {
         try {
             setGoogleIsLoading(true)
-            let redirectUrl = `${window.location.origin}/auth/callback`
+            saveRegistrationEmailPreference(productUpdatesSubscribed)
+            const callbackUrl = new URL('/auth/callback', window.location.origin)
             if (router.query.returnUrl) {
-                redirectUrl = router.query.returnUrl as string
+                const returnUrl = Array.isArray(router.query.returnUrl)
+                    ? router.query.returnUrl[0]
+                    : router.query.returnUrl
+                callbackUrl.searchParams.set('returnUrl', returnUrl)
             }
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: redirectUrl,
+                    redirectTo: callbackUrl.toString(),
                     queryParams: {
                         access_type: 'offline',
                         prompt: 'consent',
@@ -174,6 +190,18 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
                                     className="h-10 bg-[#1C1C1C] border-[#333333] text-white placeholder:text-[#666666]"
                                 />
                             </div>
+
+                            <label className="flex cursor-pointer items-start gap-2 rounded-[10px] border border-white/10 bg-white/[0.025] px-3 py-2 text-left">
+                                <input
+                                    type="checkbox"
+                                    checked={productUpdatesSubscribed}
+                                    onChange={(event) => setProductUpdatesSubscribed(event.target.checked)}
+                                    className="mt-0.5 h-3.5 w-3.5 rounded border-white/20 bg-[#141A22] text-blue-600 focus:ring-1 focus:ring-blue-500/60 focus:ring-offset-0"
+                                />
+                                <span className="text-[12px] leading-4 text-[#777F8A]">
+                                    Send me occasional product updates and release notes. You can unsubscribe anytime.
+                                </span>
+                            </label>
 
                             {error &&
                                 <Alert variant="destructive" className="bg-red-900/20 text-red-400 border-red-900/30">

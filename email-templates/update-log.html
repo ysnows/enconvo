@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>{{email_title}}</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f4f4f5;color:#18181b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+      {{preheader}}
+    </div>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;border-collapse:collapse;">
+      <tr>
+        <td align="center" style="padding:40px 18px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:680px;border-collapse:collapse;">
+            <tr>
+              <td style="padding:0 0 14px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                  <tr>
+                    <td style="font-size:20px;font-weight:700;line-height:28px;color:#18181b;">Enconvo</td>
+                    <td align="right" style="font-size:13px;line-height:18px;color:#71717a;">{{issue_label}}</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="background:#ffffff;border:1px solid #e4e4e7;border-radius:16px;padding:34px 36px;">
+                <p style="margin:0 0 14px;font-size:12px;line-height:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#71717a;">
+                  Product update
+                </p>
+
+                <h1 style="margin:0 0 16px;font-size:32px;line-height:38px;font-weight:750;color:#18181b;">
+                  {{headline}}
+                </h1>
+
+                <p style="margin:0 0 28px;font-size:16px;line-height:26px;color:#52525b;">
+                  {{intro}}
+                </p>
+
+                <a href="{{youtube_url}}" style="display:block;text-decoration:none;color:#18181b;">
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:0;border:1px solid #e4e4e7;border-radius:12px;overflow:hidden;background:#0b0f14;">
+                    <tr>
+                      <td background="{{youtube_thumbnail_url}}" style="background-image:url('{{youtube_thumbnail_url}}');background-size:cover;background-position:center;padding:0;">
+                        <div style="min-height:260px;background:rgba(11,15,20,.16);">
+                          <table role="presentation" width="100%" height="260" cellpadding="0" cellspacing="0" style="height:260px;border-collapse:collapse;">
+                            <tr>
+                              <td align="center" valign="middle">
+                                <span style="display:inline-block;width:66px;height:66px;border-radius:999px;background:#ffffff;color:#18181b;font-size:28px;line-height:66px;text-align:center;font-weight:700;">&#9658;</span>
+                              </td>
+                            </tr>
+                          </table>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="background:#ffffff;padding:18px 20px;">
+                        <p style="margin:0 0 4px;font-size:15px;line-height:22px;font-weight:700;color:#18181b;">{{video_title}}</p>
+                        <p style="margin:0;font-size:14px;line-height:22px;color:#71717a;">Watch the quick walkthrough on YouTube.</p>
+                      </td>
+                    </tr>
+                  </table>
+                </a>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0 0;border-collapse:collapse;">
+                  <tr>
+                    <td style="padding:0 0 12px;font-size:18px;line-height:26px;font-weight:700;color:#18181b;">
+                      What changed
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0;">
+                      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                        <tr>
+                          <td width="24" valign="top" style="padding:8px 0 0;color:#2563eb;font-size:16px;line-height:22px;">&bull;</td>
+                          <td style="padding:8px 0;font-size:15px;line-height:24px;color:#3f3f46;">{{update_1}}</td>
+                        </tr>
+                        <tr>
+                          <td width="24" valign="top" style="padding:8px 0 0;color:#2563eb;font-size:16px;line-height:22px;">&bull;</td>
+                          <td style="padding:8px 0;font-size:15px;line-height:24px;color:#3f3f46;">{{update_2}}</td>
+                        </tr>
+                        <tr>
+                          <td width="24" valign="top" style="padding:8px 0 0;color:#2563eb;font-size:16px;line-height:22px;">&bull;</td>
+                          <td style="padding:8px 0;font-size:15px;line-height:24px;color:#3f3f46;">{{update_3}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:30px 0 0;border-collapse:collapse;">
+                  <tr>
+                    <td style="border-radius:10px;background:#18181b;">
+                      <a href="{{primary_cta_url}}" style="display:inline-block;padding:14px 18px;font-size:15px;line-height:18px;font-weight:700;color:#ffffff;text-decoration:none;border-radius:10px;">
+                        {{primary_cta_label}}
+                      </a>
+                    </td>
+                    <td width="12"></td>
+                    <td style="border-radius:10px;border:1px solid #d4d4d8;background:#ffffff;">
+                      <a href="{{subscribe_url}}" style="display:inline-block;padding:13px 18px;font-size:15px;line-height:18px;font-weight:700;color:#18181b;text-decoration:none;border-radius:10px;">
+                        Subscribe
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:30px 0 0;font-size:15px;line-height:24px;color:#52525b;">
+                  {{closing_note}}
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:22px 8px 0;font-size:12px;line-height:19px;color:#71717a;">
+                <p style="margin:0 0 8px;">You are receiving this because product updates are enabled for your Enconvo account.</p>
+                <p style="margin:0;">
+                  <a href="{{manage_preferences_url}}" style="color:#52525b;text-decoration:underline;">Manage preferences</a>
+                  <span style="color:#a1a1aa;"> · </span>
+                  <a href="{{unsubscribe_url}}" style="color:#52525b;text-decoration:underline;">Unsubscribe</a>
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
