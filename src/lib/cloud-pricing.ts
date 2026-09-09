@@ -12,6 +12,11 @@ export type PricingCategoryId =
 export type PricingStatus = 'active' | 'preview' | 'deprecated'
 
 export type TokenUsageKey =
+  | 'textInputTokens'
+  | 'cachedTextInputTokens'
+  | 'imageInputTokens'
+  | 'cachedImageInputTokens'
+  | 'imageOutputTokens'
   | 'inputTokens'
   | 'outputTokens'
   | 'cacheWriteTokens'

@@ -11,6 +11,11 @@ import {
 } from '@/lib/cloud-pricing'
 
 const TOKEN_LABELS: Record<TokenUsageKey, string> = {
+  textInputTokens: 'Text input',
+  cachedTextInputTokens: 'Cached text input',
+  imageInputTokens: 'Image input',
+  cachedImageInputTokens: 'Cached image input',
+  imageOutputTokens: 'Image output',
   inputTokens: 'Input',
   outputTokens: 'Output',
   cacheWriteTokens: '5m cache write',
@@ -132,7 +137,7 @@ function FormulaSummary({
       <div className="space-y-0.5">
         <div className="flex flex-wrap items-baseline gap-x-1.5">
           <span className="text-[13px] font-medium text-content">{POINTS.format(discounted)} pts</span>
-          <span className="text-[11px] text-content-ash">/ 1M {TOKEN_LABELS[key as TokenUsageKey].toLowerCase()}</span>
+          <span className="text-[11px] text-content-ash">/ 1M {(TOKEN_LABELS[key as TokenUsageKey] || key).toLowerCase()}</span>
           {discount != null && discount < 1 && (
             <span className="rounded bg-signal-blue/12 px-1.5 py-px text-[10px] font-medium text-signal-blue">×{discount}</span>
           )}
@@ -180,7 +185,7 @@ function FormulaDetails({ formula, usdPerPoint, activeTier }: { formula: Billing
       <div className="overflow-hidden rounded-md border border-hairline">
         {Object.entries(formula.components).map(([key, rate]) => rate && (
           <div key={key} className="grid grid-cols-[1fr_auto] gap-4 border-b border-hairline px-3 py-2 text-xs last:border-b-0">
-            <span className="text-content-muted">{TOKEN_LABELS[key as TokenUsageKey]}</span>
+            <span className="text-content-muted">{TOKEN_LABELS[key as TokenUsageKey] || key}</span>
             <span className="text-right text-content">
               {POINTS.format(effectivePoints(rate.usdPerMillion, usdPerPoint, discount))} pts / 1M
               <span className="ml-2 text-content-ash">{USD.format(rate.usdPerMillion)}</span>
@@ -192,7 +197,7 @@ function FormulaDetails({ formula, usdPerPoint, activeTier }: { formula: Billing
             <div className="mb-2">Rates above {NUMBER.format(tier.aboveTokens)} input tokens{tier.inputIncludesCacheRead ? ' (including cache reads)' : ''}</div>
             {Object.entries(tier.components).map(([key, rate]) => rate && (
               <div key={key} className="flex justify-between gap-4 py-1">
-                <span>{TOKEN_LABELS[key as TokenUsageKey]}</span>
+                <span>{TOKEN_LABELS[key as TokenUsageKey] || key}</span>
                 <span className="text-content">{POINTS.format(effectivePoints(rate.usdPerMillion, usdPerPoint, discount))} pts / 1M <span className="ml-2 text-content-ash">{USD.format(rate.usdPerMillion)}</span></span>
               </div>
             ))}
