@@ -1,4 +1,5 @@
 import clsx from 'clsx'
+import Link from 'next/link'
 import { Fragment, useState } from 'react'
 import { Button } from '@/components/Button'
 import { supabase } from '@/lib/supabase'
@@ -652,7 +653,7 @@ export function Pricing() {
             </p>
 
             <div className="relative mt-6 flex items-center justify-center">
-              <a
+              <Link
                 href="/cloud-pricing"
                 className="absolute right-0 hidden items-center gap-1 text-xs text-content-muted transition hover:text-signal-blue lg:inline-flex"
               >
@@ -660,7 +661,7 @@ export function Pricing() {
                 <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
-              </a>
+              </Link>
             <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
               <button
                 onClick={() => setBilling('monthly')}
