@@ -102,26 +102,10 @@ export const heroTabs: HeroTab[] = [
         tagline: 'Everything you capture becomes searchable, chattable knowledge.',
         subScenes: [
             {
-                id: 'folder-sync',
-                label: 'Drop in a folder',
-                caption: 'Point it at a folder — it indexes and stays in sync automatically.',
-                media: { type: 'video', src: 'https://file.enconvo.com/usecases/knowledge_base.mp4' },
-            },
-            {
-                id: 'chat-docs',
-                label: 'Chat with your documents',
-                caption: 'Ask questions across PDFs, docs, sheets, and notes.',
-                media: { type: 'video', src: 'https://file.enconvo.com/usecases/chat_with_documents.mp4' },
-            },
-            {
-                id: 'quick-capture',
-                label: 'Quick Capture',
-                caption: 'Save anything you see with one hotkey.',
-            },
-            {
-                id: 'voice-notes',
-                label: 'Voice Notes',
-                caption: 'Spoken thoughts, transcribed and filed automatically.',
+                id: 'launch-film',
+                label: 'Launch film',
+                caption: 'Search and chat with your documents, notes, and captured ideas.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/knowledgebase-launch-v3.mp4?v=3' },
             },
         ],
     },
