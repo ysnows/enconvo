@@ -1,3 +1,5 @@
+import styles from '@/styles/Home.module.css'
+import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { Container } from '@/components/Container'
 import { features } from '@/data/features'
@@ -25,10 +27,10 @@ export function FeatureGrid() {
         <section
             id="features"
             aria-label="More features"
-            className="bg-canvas py-20 sm:py-28"
+            className={styles.section}
         >
-            <Container>
-                <div className="mx-auto max-w-3xl text-center">
+            <Container className={styles.sectionContainer}>
+                <div className={`${styles.sectionHeading} ${styles.sectionHeadingSplit}`} data-reveal>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-ash">
                         And more
                     </p>
@@ -47,7 +49,9 @@ export function FeatureGrid() {
                             <Link
                                 key={feature.title}
                                 href="/use-cases"
-                                className="group flex items-start gap-4 rounded-lg border border-hairline bg-surface-card p-5 transition-colors hover:border-hairline-strong"
+                                className={`${styles.featureCard} group flex items-start gap-4 transition-colors`}
+                                data-spotlight
+                                data-reveal
                             >
                                 <span className="mt-0.5 flex h-9 w-9 flex-none items-center justify-center rounded-md border border-hairline bg-surface-elevated text-content-muted group-hover:text-content">
                                     <Icon />
@@ -60,6 +64,7 @@ export function FeatureGrid() {
                                         {feature.description}
                                     </span>
                                 </span>
+                                <ArrowUpRight className={styles.featureArrow} aria-hidden="true" />
                             </Link>
                         )
                     })}

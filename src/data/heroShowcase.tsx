@@ -1,4 +1,4 @@
-// Hero showcase data — 7 Hero tabs × sub-scenes.
+// Hero showcase data — Hero tabs and their sub-scenes.
 // Structure and vocabulary: docs/homepage-redesign-2026-07.md + root CONTEXT.md
 // ("Hero showcase", "Hero tab", "Sub-scene", "Benefit label").
 // Sub-scenes without `media` render as styled placeholders until their demo
@@ -74,25 +74,24 @@ export const heroTabs: HeroTab[] = [
         tagline: 'System-wide dictation and live captions — online or fully offline.',
         subScenes: [
             {
-                id: 'dictation',
-                label: 'Global dictation',
+                id: 'launch-film',
+                label: 'Launch film',
                 caption: 'Hold a key, talk, and the text lands wherever your cursor is.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/dictation-launch-v32.mp4' },
             },
+        ],
+    },
+    {
+        id: 'meeting-caption',
+        benefitLabel: 'Catch every word',
+        productName: 'Meetings & Live Captions',
+        tagline: 'Live captions, instant translation, and meeting notes — stay in the conversation.',
+        subScenes: [
             {
-                id: 'live-captions',
-                label: 'Live captions & meetings',
-                caption: 'Real-time captions with speaker labels and meeting notes.',
-                media: { type: 'video', src: 'https://file.enconvo.com/usecases/live_captions.mp4' },
-            },
-            {
-                id: 'live-translation',
-                label: 'Live translation',
-                caption: 'Captions translated on the fly, for any audio on your Mac.',
-            },
-            {
-                id: 'offline-models',
-                label: 'Offline models',
-                caption: 'MLX and CoreML speech models run entirely on your Mac.',
+                id: 'launch-film',
+                label: 'Launch film',
+                caption: 'Caption any app, translate as people speak, and turn meetings into clear notes.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/meeting-caption-launch-v21.mp4' },
             },
         ],
     },
@@ -123,47 +122,6 @@ export const heroTabs: HeroTab[] = [
                 id: 'voice-notes',
                 label: 'Voice Notes',
                 caption: 'Spoken thoughts, transcribed and filed automatically.',
-            },
-        ],
-    },
-    {
-        id: 'smartbar',
-        benefitLabel: 'Ask AI anywhere',
-        productName: 'SmartBar',
-        tagline: "One hotkey opens a command bar over whatever you're doing.",
-        subScenes: [
-            {
-                id: 'ask',
-                label: 'Ask AI',
-                caption: 'Instant answers without switching apps.',
-            },
-            {
-                id: 'mentions',
-                label: '@ files & plugins',
-                caption: 'Pull files, plugins, and tools into the conversation with @.',
-            },
-            {
-                id: 'references',
-                label: '# references',
-                caption: 'Attach context and recent items with #.',
-            },
-        ],
-    },
-    {
-        id: 'autopilot',
-        benefitLabel: 'Runs your Mac for you',
-        productName: 'Computer & Browser Use',
-        tagline: 'An agent that clicks, types, and browses to finish the whole task.',
-        subScenes: [
-            {
-                id: 'computer-use',
-                label: 'Operate any app',
-                caption: 'Watch it drive real apps end to end — clicks, keys, and all.',
-            },
-            {
-                id: 'browser-use',
-                label: 'Complete web tasks',
-                caption: 'It browses, fills forms, and comes back with the result.',
             },
         ],
     },

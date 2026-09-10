@@ -468,7 +468,7 @@ export default function CloudPricingPage() {
             <div>
               <h2 className="text-2xl font-semibold text-content sm:text-3xl">Cloud plans</h2>
               <p className="mt-2 max-w-2xl text-sm text-content-muted">
-                Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4 and MiniMax M3.
+                Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4, MiniMax M3, and GLM-5.3-Flash.
               </p>
             </div>
             <Link href="/pricing" className="hidden text-sm text-content-muted underline-offset-4 hover:text-content hover:underline sm:inline">Compare full plan details →</Link>

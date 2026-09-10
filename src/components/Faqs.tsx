@@ -1,3 +1,4 @@
+import styles from '@/styles/Home.module.css'
 import { Container } from '@/components/Container'
 
 const faqs = [
@@ -50,10 +51,10 @@ export function Faqs() {
     <section
       id="faq"
       aria-labelledby="faq-title"
-      className="bg-canvas py-20 sm:py-32"
+      className={styles.section}
     >
-      <Container className="relative">
-        <div className="mx-auto max-w-2xl text-center">
+      <Container className={`${styles.sectionContainer} ${styles.faqLayout} relative`}>
+        <div className={`${styles.sectionHeading} ${styles.faqHeading}`} data-reveal>
           <h2
             id="faq-title"
             className="font-display text-3xl tracking-tight text-content sm:text-4xl"
@@ -67,13 +68,13 @@ export function Faqs() {
         </div>
         <ul
           role="list"
-          className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 lg:max-w-none lg:grid-cols-3"
+          className={styles.faqList}
         >
           {faqs.map((column, columnIndex) => (
-            <li key={columnIndex}>
-              <ul role="list" className="flex flex-col gap-y-8">
+            <li key={columnIndex} data-reveal>
+              <ul role="list" className="flex flex-col">
                 {column.map((faq, faqIndex) => (
-                  <li key={faqIndex} className="group relative rounded-lg bg-surface-card p-6 border border-hairline hover:border-hairline-strong transition-colors">
+                  <li key={faqIndex} className={`${styles.faqItem} group relative`}>
                     <h3 className="font-display text-lg leading-7 text-content group-hover:text-signal-blue transition-colors">
                       {faq.question}
                     </h3>

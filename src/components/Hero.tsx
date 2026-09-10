@@ -1,7 +1,11 @@
+import styles from '@/styles/Home.module.css'
+import { useEffect, useState } from 'react'
 import { Menu } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline'
 import { SiteNav } from '@/components/SiteNav'
 import { HeroShowcase } from '@/components/HeroShowcase'
+import { HeroBackdrop } from '@/components/HeroBackdrop'
+import { HeroLayout } from '@/components/home/HeroLayout'
 
 declare global {
   interface Window {
@@ -26,26 +30,43 @@ function DownloadRowArrow() {
 }
 
 export function Hero() {
+  const [navElevated, setNavElevated] = useState(false)
+  const [backgroundPaused, setBackgroundPaused] = useState(false)
+
+  useEffect(() => {
+    const updateNav = () => setNavElevated(window.scrollY > 24)
+    updateNav()
+    window.addEventListener('scroll', updateNav, { passive: true })
+    window.addEventListener('pageshow', updateNav)
+    return () => {
+      window.removeEventListener('scroll', updateNav)
+      window.removeEventListener('pageshow', updateNav)
+    }
+  }, [])
+
   return (
-    <div className="bg-canvas relative overflow-hidden">
+    <div className={`${styles.hero} bg-canvas relative overflow-hidden`} data-nav-elevated={navElevated}>
+      <HeroLayout />
+      <HeroBackdrop paused={backgroundPaused} />
       <SiteNav />
 
-      <div className="relative isolate pt-20 z-10">
-        <div className="py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-4xl text-center">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-content leading-tight">
-                The assistant your Mac was promised.
+      <div className={styles.heroContent}>
+        <div className={styles.heroInner}>
+          <div className="w-full">
+            <div className={styles.heroCopy}>
+              <h1 className={styles.heroTitle}>
+                The assistant your{' '}
+                <span className={styles.heroTitleAccent}>Mac was promised.</span>
               </h1>
 
-              <p className="mt-6 text-lg sm:text-xl leading-relaxed text-content-body max-w-3xl mx-auto">
+              <p className={styles.heroDescription}>
                 Enconvo is an AI agent that lives across your Mac — it sees your
                 screen, works inside your apps, and actually gets things done.
               </p>
 
-              <div className="mt-8 flex flex-col items-center space-y-4">
+              <div className={styles.heroActions}>
                 <Menu as="div" className="relative">
-                  <Menu.Button className="group inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-canvas bg-white hover:bg-content rounded-lg transition-colors">
+                  <Menu.Button className={`${styles.downloadButton} group inline-flex items-center justify-center font-semibold text-canvas bg-white hover:bg-content`}>
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
                     </svg>
@@ -53,7 +74,7 @@ export function Hero() {
                     <ChevronDownIcon className="w-4 h-4 ml-2" />
                   </Menu.Button>
 
-                  <Menu.Items className="absolute top-full mt-2 w-80 bg-surface-elevated backdrop-blur-md rounded-lg shadow-2xl ring-1 ring-hairline focus:outline-none z-50">
+                  <Menu.Items className={`${styles.downloadMenu} absolute top-full mt-2 bg-surface-elevated backdrop-blur-md shadow-2xl ring-1 ring-hairline focus:outline-none z-50`}>
                     <div className="p-3">
                       <div className="space-y-1">
                         <Menu.Item>
@@ -104,8 +125,17 @@ export function Hero() {
                   </Menu.Items>
                 </Menu>
 
-                <div className="flex items-center space-x-6 text-sm text-content-muted">
+                <div className={styles.requirements}>
                   <span>macOS 14+ (Intel &amp; Apple Silicon)</span>
+                  <button
+                    type="button"
+                    className={styles.backgroundToggle}
+                    aria-label={backgroundPaused ? 'Resume background animation' : 'Pause background animation'}
+                    title={backgroundPaused ? 'Resume background animation' : 'Pause background animation'}
+                    onClick={() => setBackgroundPaused(value => !value)}
+                  >
+                    {backgroundPaused ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
+                  </button>
                 </div>
               </div>
             </div>

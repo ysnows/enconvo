@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
 import { heroTabs } from '@/data/heroShowcase'
+import styles from '@/styles/Home.module.css'
 
 const SUB_SCENE_MS = 7000
 const INTERACTION_PAUSE_MS = 20000
@@ -16,7 +17,7 @@ function ScenePlaceholder({
     caption: string
 }) {
     return (
-        <div className="absolute inset-0 flex flex-col">
+        <div className={`${styles.playerMedia} flex flex-col`}>
             <div className="flex items-center gap-2 border-b border-hairline bg-surface px-4 py-2.5">
                 <span className="h-2.5 w-2.5 rounded-full bg-signal-red/70" />
                 <span className="h-2.5 w-2.5 rounded-full bg-signal-yellow/70" />
@@ -54,6 +55,7 @@ export function HeroShowcase() {
     const [tabIndex, setTabIndex] = useState(0)
     const [sceneIndex, setSceneIndex] = useState(0)
     const [autoPlay, setAutoPlay] = useState(true)
+    // The user's sound choice belongs to the whole showcase, not one clip.
     const [soundOn, setSoundOn] = useState(false)
     const [playing, setPlaying] = useState(true)
     const [currentTime, setCurrentTime] = useState(0)
@@ -62,28 +64,43 @@ export function HeroShowcase() {
     const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const videoRef = useRef<HTMLVideoElement | null>(null)
     const playerRef = useRef<HTMLDivElement | null>(null)
+    const tabScrollerRef = useRef<HTMLDivElement | null>(null)
+    const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
+    const reducedMotion = useRef(false)
 
     const activeTab = heroTabs[tabIndex]
     const activeScene = activeTab.subScenes[sceneIndex]
+
+    const syncVideoMetadata = useCallback(() => {
+        const video = videoRef.current
+        if (!video) return
+        setDuration(Number.isFinite(video.duration) ? video.duration : 0)
+        setCurrentTime(video.currentTime)
+        setPlaying(!video.paused)
+    }, [])
+
+    // Cached media can load before hydration attaches the metadata listener.
+    useEffect(syncVideoMetadata, [activeScene, syncVideoMetadata])
 
     // Any manual interaction pauses the rotation briefly, then it resumes.
     const noteInteraction = useCallback(() => {
         setAutoPlay(false)
         if (resumeTimer.current) clearTimeout(resumeTimer.current)
-        resumeTimer.current = setTimeout(() => setAutoPlay(true), INTERACTION_PAUSE_MS)
+        if (!reducedMotion.current) {
+            resumeTimer.current = setTimeout(() => setAutoPlay(true), INTERACTION_PAUSE_MS)
+        }
     }, [])
 
     const select = useCallback((nextTab: number, nextScene: number) => {
         setTabIndex(nextTab)
         setSceneIndex(nextScene)
-        setSoundOn(false)
         noteInteraction()
     }, [noteInteraction])
 
     const togglePlay = useCallback(() => {
         const v = videoRef.current
         if (!v) return
-        if (v.paused) void v.play()
+        if (v.paused) void v.play().catch(() => setPlaying(false))
         else v.pause()
         noteInteraction()
     }, [noteInteraction])
@@ -102,7 +119,6 @@ export function HeroShowcase() {
 
     const advance = useCallback(() => {
         const tab = heroTabs[tabIndex]
-        setSoundOn(false)
         if (sceneIndex + 1 < tab.subScenes.length) {
             setSceneIndex(sceneIndex + 1)
         } else {
@@ -112,12 +128,29 @@ export function HeroShowcase() {
     }, [tabIndex, sceneIndex])
 
     useEffect(() => {
-        if (typeof window !== 'undefined' &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            setAutoPlay(false)
-            return
+        const preference = window.matchMedia('(prefers-reduced-motion: reduce)')
+        const syncPreference = () => {
+            reducedMotion.current = preference.matches
+            if (preference.matches) {
+                if (resumeTimer.current) clearTimeout(resumeTimer.current)
+                setAutoPlay(false)
+            }
         }
+        syncPreference()
+        preference.addEventListener('change', syncPreference)
+        return () => preference.removeEventListener('change', syncPreference)
     }, [])
+
+    useEffect(() => {
+        const scroller = tabScrollerRef.current
+        const selected = tabRefs.current[tabIndex]
+        if (!scroller || !selected) return
+        const viewport = scroller.getBoundingClientRect()
+        const tab = selected.getBoundingClientRect()
+        // Only scroll the selector horizontally; auto-rotation must never move the page.
+        if (tab.left < viewport.left + 8) scroller.scrollLeft += tab.left - viewport.left - 8
+        else if (tab.right > viewport.right - 8) scroller.scrollLeft += tab.right - viewport.right + 8
+    }, [tabIndex])
 
     // Timer drives placeholder/image scenes only — videos advance when they
     // finish playing (onEnded), so a film is always watched to the end.
@@ -133,35 +166,48 @@ export function HeroShowcase() {
     }, [])
 
     return (
-        <div className="mx-auto mt-14 w-full max-w-5xl">
-            <div
-                className="flex flex-wrap justify-center gap-2"
-                role="tablist"
-                aria-label="Enconvo capabilities"
-            >
-                {heroTabs.map((tab, i) => (
-                    <button
-                        key={tab.id}
-                        role="tab"
-                        aria-selected={i === tabIndex}
-                        onClick={() => select(i, 0)}
-                        className={clsx(
-                            'whitespace-nowrap rounded-full border px-4 py-2 text-sm font-medium transition-colors',
-                            i === tabIndex
-                                ? 'border-hairline-strong bg-surface-elevated text-content'
-                                : 'border-hairline bg-surface text-content-muted hover:text-content-body'
-                        )}
-                    >
-                        {tab.benefitLabel}
-                    </button>
-                ))}
+        <div className={styles.showcase}>
+            <div className={styles.tabScroller} ref={tabScrollerRef}>
+                <div
+                    className={styles.tabs}
+                    role="tablist"
+                    aria-label="Enconvo capabilities"
+                >
+                    {heroTabs.map((tab, i) => (
+                        <button
+                            key={tab.id}
+                            ref={element => { tabRefs.current[i] = element }}
+                            id={`hero-tab-${tab.id}`}
+                            role="tab"
+                            aria-selected={i === tabIndex}
+                            aria-controls="hero-demo-panel"
+                            tabIndex={i === tabIndex ? 0 : -1}
+                            onClick={() => select(i, 0)}
+                            onKeyDown={event => {
+                                let next: number
+                                if (event.key === 'ArrowRight') next = (i + 1) % heroTabs.length
+                                else if (event.key === 'ArrowLeft') next = (i - 1 + heroTabs.length) % heroTabs.length
+                                else if (event.key === 'Home') next = 0
+                                else if (event.key === 'End') next = heroTabs.length - 1
+                                else return
+                                event.preventDefault()
+                                select(next, 0)
+                                tabRefs.current[next]?.focus({ preventScroll: true })
+                            }}
+                            className={styles.tab}
+                        >
+                            {tab.benefitLabel}
+                        </button>
+                    ))}
+                </div>
             </div>
 
             {/* invisible (not hidden) when single-scene so the layout height stays stable across tabs */}
-            <div className={clsx('mt-4 flex flex-wrap justify-center gap-2', activeTab.subScenes.length <= 1 && 'invisible')}>
+            <div className={clsx(styles.scenes, activeTab.subScenes.length <= 1 && styles.scenesHidden)} aria-hidden={activeTab.subScenes.length <= 1}>
                 {activeTab.subScenes.map((scene, i) => (
                     <button
                         key={scene.id}
+                        aria-pressed={i === sceneIndex}
                         onClick={() => select(tabIndex, i)}
                         className={clsx(
                             'whitespace-nowrap rounded-md border px-3 py-1.5 text-xs font-medium transition-colors',
@@ -175,10 +221,10 @@ export function HeroShowcase() {
                 ))}
             </div>
 
-            <div ref={playerRef} className="group relative mt-4 aspect-video overflow-hidden rounded-lg border border-hairline-strong bg-surface-elevated shadow-2xl">
+            <div ref={playerRef} id="hero-demo-panel" role="tabpanel" aria-labelledby={`hero-tab-${activeTab.id}`} className={clsx(styles.player, playing && styles.playing)}>
                 {activeScene.media?.type === 'video' ? (
+                    // Reuse this element across clips to preserve media playback permission.
                     <video
-                        key={activeScene.media.src}
                         ref={videoRef}
                         src={activeScene.media.src}
                         autoPlay
@@ -186,17 +232,16 @@ export function HeroShowcase() {
                         onEnded={() => { if (autoPlay) advance() }}
                         onPlay={() => setPlaying(true)}
                         onPause={() => setPlaying(false)}
+                        onLoadStart={() => { setCurrentTime(0); setDuration(0) }}
                         onTimeUpdate={e => setCurrentTime(e.currentTarget.currentTime)}
-                        onLoadedMetadata={e => {
-                            setDuration(e.currentTarget.duration)
-                            setCurrentTime(e.currentTarget.currentTime)
-                            setPlaying(!e.currentTarget.paused)
-                        }}
+                        onLoadedMetadata={syncVideoMetadata}
+                        onDurationChange={syncVideoMetadata}
                         onClick={togglePlay}
                         playsInline
                         preload="metadata"
                         className={clsx(
-                            'absolute inset-0 h-full w-full cursor-pointer',
+                            styles.playerMedia,
+                            'cursor-pointer',
                             isFullscreen ? 'bg-black object-contain' : 'object-cover'
                         )}
                     />
@@ -206,7 +251,7 @@ export function HeroShowcase() {
                         key={activeScene.media.src}
                         src={activeScene.media.src}
                         alt={activeScene.caption}
-                        className="absolute inset-0 h-full w-full object-cover"
+                        className={`${styles.playerMedia} object-cover`}
                     />
                 ) : (
                     <ScenePlaceholder
@@ -222,11 +267,11 @@ export function HeroShowcase() {
                 )}
                 {activeScene.media?.type === 'video' && (
                     <button
-                        onClick={() => setSoundOn(!soundOn)}
+                        onClick={() => setSoundOn(value => !value)}
                         aria-label={soundOn ? 'Mute' : 'Play with sound'}
                         className={clsx(
-                            'absolute right-4 top-4 z-10 flex items-center gap-2 rounded-full border border-white/20 bg-black/55 px-3.5 py-2 text-xs font-medium text-content backdrop-blur transition-opacity hover:bg-black/75',
-                            playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
+                            styles.soundButton,
+                            'absolute right-4 top-4 z-10 flex items-center gap-2 border border-white/20 bg-black/55 px-3.5 py-2 text-xs font-medium text-content backdrop-blur hover:bg-black/75'
                         )}
                     >
                         {soundOn ? (
@@ -239,15 +284,12 @@ export function HeroShowcase() {
                 )}
                 {activeScene.media?.type === 'video' ? (
                     <div
-                        className={clsx(
-                            'absolute inset-x-0 bottom-0 z-10 flex items-center gap-3 bg-gradient-to-t from-black/75 to-transparent px-4 pb-3 pt-10 transition-opacity',
-                            playing ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'
-                        )}
+                        className={styles.playerControls}
                     >
                         <button
                             onClick={togglePlay}
                             aria-label={playing ? 'Pause' : 'Play'}
-                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
+                            className={styles.playerButton}
                         >
                             {playing ? (
                                 <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1" /><rect x="14" y="4" width="4" height="16" rx="1" /></svg>
@@ -269,9 +311,9 @@ export function HeroShowcase() {
                                 noteInteraction()
                             }}
                             style={{
-                                background: `linear-gradient(to right, rgba(255,255,255,0.95) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%, rgba(255,255,255,0.22) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%)`,
+                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.95) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%, rgba(255,255,255,0.22) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%)`,
                             }}
-                            className="h-1 min-w-0 flex-1 cursor-pointer appearance-none rounded-full outline-none transition-[height] hover:h-1.5 [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:shadow-[0_1px_4px_rgba(0,0,0,0.5)] [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:shadow-[0_1px_4px_rgba(0,0,0,0.5)]"
+                            className={`${styles.seek} min-w-0 flex-1 cursor-pointer appearance-none rounded-full [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white`}
                         />
                         <span className="shrink-0 text-[11px] tabular-nums text-content-body">
                             {formatTime(currentTime)} / {formatTime(duration)}
@@ -279,7 +321,7 @@ export function HeroShowcase() {
                         <button
                             onClick={toggleFullscreen}
                             aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
-                            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/20 bg-black/40 text-content transition-colors hover:bg-black/70"
+                            className={styles.playerButton}
                         >
                             {isFullscreen ? (
                                 <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3" /><path d="M21 8h-3a2 2 0 0 1-2-2V3" /><path d="M3 16h3a2 2 0 0 1 2 2v3" /><path d="M16 21v-3a2 2 0 0 1 2-2h3" /></svg>
@@ -300,7 +342,7 @@ export function HeroShowcase() {
                 ) : null}
             </div>
 
-            <p className="mt-3 text-center text-sm text-content-muted">
+            <p className={styles.showcaseCaption}>
                 <span className="font-medium text-content-body">{activeTab.productName}</span>
                 {' — '}
                 {activeTab.tagline}

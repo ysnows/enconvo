@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import styles from '@/styles/Home.module.css'
 
 import { Faqs } from '@/components/Faqs'
 import { Footer } from '@/components/Footer'
@@ -9,14 +10,16 @@ import { AlwaysWithYou } from '@/components/home/AlwaysWithYou'
 import { FeatureGrid } from '@/components/home/FeatureGrid'
 import { ModelFreedom } from '@/components/home/ModelFreedom'
 import { OpenPlatform } from '@/components/home/OpenPlatform'
+import { useSectionEffects } from '@/components/home/useSectionEffects'
 
 const TITLE = 'Enconvo — The Assistant Your Mac Was Promised | AI Agent for macOS'
 const DESCRIPTION =
   'Enconvo is an AI agent that lives across your Mac — it sees your screen, works inside your apps, and actually gets things done. 100+ tools, MCP support, local models, and your own API keys.'
 
 export default function Home() {
+  const sectionEffectsRef = useSectionEffects()
   return (
-    <>
+    <div className={styles.page} ref={sectionEffectsRef}>
       <Head>
         <title>{TITLE}</title>
         <meta name="description" content={DESCRIPTION} />
@@ -41,6 +44,6 @@ export default function Home() {
         <Faqs />
       </main>
       <Footer />
-    </>
+    </div>
   )
 }

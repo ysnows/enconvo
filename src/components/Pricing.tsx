@@ -1,3 +1,4 @@
+import styles from '@/styles/Home.module.css'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
@@ -12,6 +13,7 @@ function CheckIcon({ className }: CheckIconProps) {
   return (
     <svg
       aria-hidden="true"
+      viewBox="0 0 24 24"
       className={clsx(
         'h-6 w-6 flex-none fill-current stroke-current',
         className
@@ -87,6 +89,8 @@ interface PlanProps {
   name: string
   price: string
   priceNote?: string
+  billingNote?: string
+  allowance?: string
   lookupKey: string
   badge?: string
   description: string
@@ -96,101 +100,58 @@ interface PlanProps {
   featured?: boolean
 }
 
+function PlanFeatures({ features }: { features: string[] }) {
+  return (
+    <ul className={styles.planFeatures}>
+      {features.map(feature => (
+        <li key={feature}>
+          <CheckIcon className={styles.planCheck} />
+          <span>{feature}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
 function Plan({
-  name,
-  price,
-  priceNote,
-  lookupKey,
-  badge,
-  description,
-  startText = 'Get started',
-  detailsHref,
-  features,
-  featured = false,
+  name, price, priceNote, billingNote, allowance, lookupKey, badge, description,
+  startText = 'Get started', detailsHref, features, featured = false,
 }: PlanProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <section
-      className={clsx(
-        'group relative flex flex-col rounded-lg px-6 sm:px-8 py-8 transition-colors bg-surface-card border',
-        featured
-          ? 'border-hairline-strong'
-          : 'border-hairline hover:border-hairline-strong'
-      )}
-    >
-      {badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-canvas">
-          {badge}
-        </span>
-      )}
-
-      <div className="order-first">
-        <div className="flex items-baseline gap-2">
-          <span className="font-display text-4xl font-bold tracking-tight text-content">
-            {price}
-          </span>
-          {priceNote && (
-            <span className="text-sm text-content-muted">{priceNote}</span>
-          )}
+    <section aria-label={`${name} plan`} data-spotlight className={clsx(styles.planCard, featured && styles.planFeatured)}>
+      <div className={styles.planIdentity}>
+        <div className={styles.planTitleRow}>
+          <h4>{name}</h4>
+          {badge && <span className={styles.planBadge}>{badge}</span>}
         </div>
+        <p>{description}</p>
       </div>
-
-      <div className="mt-6">
-        <h3 className="font-display text-2xl font-bold text-content">{name}</h3>
-        <p className="mt-1 text-xs leading-relaxed text-content-muted">
-          {description}
-        </p>
+      <div className={styles.planPriceBlock}>
+        <div className={styles.planPriceRow}>
+          <span className={styles.planAmount}>{price}</span>
+          {priceNote && <span className={styles.planUnit}>{priceNote}</span>}
+        </div>
+        <p className={styles.planBillingNote}>{billingNote || '\u00a0'}</p>
       </div>
-
-      <div className="mt-8 flex-1">
-        <ul role="list" className="space-y-4">
-          {features.map((feature) => (
-            <li key={feature} className="flex items-start">
-              <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 bg-surface-elevated">
-                <CheckIcon className="w-3 h-3 text-signal-blue" />
-              </div>
-              <span className="ml-4 text-sm leading-relaxed text-content-body">
-                {feature}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-8">
+      <div className={styles.planAction}>
         <Button
           onClick={() => startCheckout(lookupKey, setIsLoading)}
-          variant={featured ? 'solid' : 'outline'}
-          color="white"
-          className={clsx(
-            'w-full py-4 text-base font-semibold transition-colors',
-            featured ? '' : 'border border-hairline text-content hover:bg-white hover:text-canvas'
-          )}
-          disabled={isLoading}
+          variant={featured ? 'solid' : 'outline'} color="white"
+          className={styles.planPurchase} disabled={isLoading}
+          aria-label={isLoading ? 'Going to checkout...' : `${startText} — ${name}`}
         >
-          <span className="flex items-center justify-center gap-2">
-            {isLoading ? (
-              <>
-                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
-                Going to checkout...
-              </>
-            ) : (
-              <>
-                {startText}
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </>
-            )}
-          </span>
+          {isLoading ? (
+            <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />Going to checkout...</>
+          ) : (
+            <>{startText}<svg className="ml-2 h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg></>
+          )}
         </Button>
-        {detailsHref && (
-          <a href={detailsHref} className="mt-3 block text-center text-xs text-content-muted transition hover:text-signal-blue">
-            See model &amp; service rates
-          </a>
-        )}
+        {detailsHref && <a href={detailsHref} className={styles.planDetailsLink}>See model &amp; service rates</a>}
       </div>
+      {allowance && <p className={styles.planAllowance}><strong>{allowance.split(' points')[0]}</strong><span>points / month</span></p>}
+      <PlanFeatures features={features} />
     </section>
   )
 }
@@ -267,7 +228,7 @@ const CLOUD_COMPARISON: ComparisonData = {
       title: 'Points',
       rows: [
         { feature: 'Included points', values: ['5,000 welcome', '500K / month', '2.5M / month', '5M / month'] },
-        { feature: 'DeepSeek & MiniMax M3 rates', values: ['Standard', 'Standard', '1/2 price', '1/4 price'] },
+        { feature: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash rates', values: ['Standard', 'Standard', '1/2 price', '1/4 price'] },
         { feature: 'Points top-up packs', values: [true, true, true, true] },
         { feature: 'Annual billing — save 20%', values: [false, '$96 / year', '$480 / year', '$960 / year'] },
       ],
@@ -328,18 +289,24 @@ const CLOUD_COMPARISON: ComparisonData = {
   ],
 }
 
-function ComparisonTable({ data }: { data: ComparisonData }) {
+function ComparisonTable({ data, label }: { data: ComparisonData; label: string }) {
   return (
-    <div className="mt-8 overflow-hidden rounded-lg border border-hairline bg-surface-card">
-      <div className="overflow-x-auto">
+    <details className={styles.comparisonDisclosure}>
+      <summary>
+        <span>{label}</span>
+        <span className={styles.comparisonSummaryNote}>{data.columns.join(' · ')}</span>
+        <svg className={styles.comparisonChevron} aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="m5 7.5 5 5 5-5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+      </summary>
+      <div className={styles.comparison}>
+      <div className={styles.comparisonScroll} tabIndex={0} role="region" aria-label={`Compare ${data.columns.join(", ")} plans`}>
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-hairline">
-              <th className="w-[36%] py-3.5 pl-6 pr-3 text-xs font-medium text-content-muted">
+              <th scope="col" className="w-[36%] py-3.5 pl-6 pr-3 text-xs font-medium text-content-muted">
                 Everything you get
               </th>
               {data.columns.map((c) => (
-                <th key={c} className="px-3 py-3.5 text-center text-sm font-semibold text-content">
+                <th key={c} scope="col" data-recommended={c === 'Pro'} className="px-3 py-3.5 text-center text-sm font-semibold text-content">
                   {c}
                 </th>
               ))}
@@ -369,15 +336,15 @@ function ComparisonTable({ data }: { data: ComparisonData }) {
                       gi === data.groups.length - 1 && ri === group.rows.length - 1 && 'border-0',
                     )}
                   >
-                    <td className="py-3 pl-6 pr-3 leading-snug text-content-body">{row.feature}</td>
+                    <th scope="row" className="py-3 pl-6 pr-3 font-normal leading-snug text-content-body">{row.feature}</th>
                     {row.values.map((v, i) => (
-                      <td key={i} className="px-3 py-3 text-center">
+                      <td key={i} data-recommended={data.columns[i] === 'Pro'} className="px-3 py-3 text-center">
                         {v === true ? (
                           <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
-                            <CheckIcon className="h-3 w-3 text-signal-blue" />
+                            <CheckIcon className="h-3 w-3 text-signal-blue" /><span className="sr-only">Included</span>
                           </span>
                         ) : v === false ? (
-                          <span className="text-xs text-content-ash">—</span>
+                          <span className="text-xs text-content-ash"><span aria-hidden="true">—</span><span className="sr-only">Not included</span></span>
                         ) : (
                           <span className="text-xs font-medium tabular-nums text-content-body">{v}</span>
                         )}
@@ -390,7 +357,8 @@ function ComparisonTable({ data }: { data: ComparisonData }) {
           </tbody>
         </table>
       </div>
-    </div>
+      </div>
+    </details>
   )
 }
 
@@ -407,106 +375,39 @@ function TeamsPlan() {
   const clamp = (n: number) =>
     Math.min(TEAMS_MAX_SEATS, Math.max(TEAMS_MIN_SEATS, Math.floor(n) || TEAMS_MIN_SEATS))
 
-  const stepBtn =
-    'flex h-7 w-7 items-center justify-center rounded-full text-base text-content-body transition-colors hover:bg-surface-elevated disabled:opacity-40'
-
   return (
-    <section className="group relative flex flex-col rounded-lg px-6 sm:px-8 py-8 transition-colors bg-surface-card border border-hairline hover:border-hairline-strong">
-      <div className="order-first">
-        <div className="flex items-baseline gap-2">
-          <span className="font-display text-4xl font-bold tracking-tight text-content">
-            ${teamsPrice(seats).toLocaleString()}
-          </span>
-          <span className="text-sm text-content-muted">
-            one-time · ${(teamsPrice(seats) / seats).toFixed(2)}/seat
-          </span>
+    <section aria-label="Teams plan" data-spotlight className={`${styles.planCard} ${styles.teamsPlan}`}>
+      <div className={styles.teamsTop}>
+        <div className={styles.planIdentity}>
+          <h4>Teams</h4>
+          <p>One account for your whole team. 30-day money back guarantee.</p>
+        </div>
+        <div className={styles.teamsControls}>
+          <div className={styles.teamsSeats}>
+            <label htmlFor="pricing-team-seats">Seats</label>
+            <div className={styles.seatStepper}>
+              <button type="button" aria-label="Fewer seats" onClick={() => setSeats(s => clamp(s - 1))} disabled={seats <= TEAMS_MIN_SEATS}>−</button>
+              <input id="pricing-team-seats" type="number" min={TEAMS_MIN_SEATS} max={TEAMS_MAX_SEATS}
+                value={seats} onChange={e => setSeats(clamp(Number(e.target.value)))} />
+              <button type="button" aria-label="More seats" onClick={() => setSeats(s => clamp(s + 1))} disabled={seats >= TEAMS_MAX_SEATS}>+</button>
+            </div>
+          </div>
+          <div className={styles.teamsQuote} aria-live="polite" aria-atomic="true">
+            <span className={styles.planAmount}>${teamsPrice(seats).toLocaleString()}</span>
+            <p className={styles.planBillingNote}>one-time · ${(teamsPrice(seats) / seats).toFixed(2)}/seat</p>
+          </div>
+          <Button onClick={() => startCheckout('teams', setIsLoading, { seats })}
+            variant="outline" color="white" className={styles.planPurchase} disabled={isLoading}>
+            {isLoading ? <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />Going to checkout...</> : 'Buy Teams License'}
+          </Button>
         </div>
       </div>
-
-      <div className="mt-6">
-        <h3 className="font-display text-2xl font-bold text-content">Teams</h3>
-        <p className="mt-1 text-xs leading-relaxed text-content-muted">
-          One account for your whole team. 30-day money back guarantee.
-        </p>
-      </div>
-
-      <div className="mt-6 flex items-center justify-between">
-        <span className="text-sm text-content-muted">Seats</span>
-        <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
-          <button
-            type="button"
-            aria-label="Fewer seats"
-            onClick={() => setSeats((s) => clamp(s - 1))}
-            disabled={seats <= TEAMS_MIN_SEATS}
-            className={stepBtn}
-          >
-            −
-          </button>
-          <input
-            type="number"
-            min={TEAMS_MIN_SEATS}
-            max={TEAMS_MAX_SEATS}
-            value={seats}
-            onChange={(e) => setSeats(clamp(Number(e.target.value)))}
-            className="w-12 border-0 bg-transparent text-center text-sm font-semibold text-content [appearance:textfield] focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-          />
-          <button
-            type="button"
-            aria-label="More seats"
-            onClick={() => setSeats((s) => clamp(s + 1))}
-            disabled={seats >= TEAMS_MAX_SEATS}
-            className={stepBtn}
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-6 flex-1">
-        <ul role="list" className="space-y-4">
-          {[
-            `${seats} Mac devices on one account`,
-            `${(seats * 50000).toLocaleString()} Cloud points bonus — 50,000 per seat`,
-            'Add more seats any time at $20 each',
-            'Lifetime free updates',
-          ].map((feature) => (
-            <li key={feature} className="flex items-start">
-              <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 bg-surface-elevated">
-                <CheckIcon className="w-3 h-3 text-signal-blue" />
-              </div>
-              <span className="ml-4 text-sm leading-relaxed text-content-body">
-                {feature}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-8">
-        <Button
-          onClick={() => startCheckout('teams', setIsLoading, { seats })}
-          variant="outline"
-          color="white"
-          className="w-full py-4 text-base font-semibold transition-colors border border-hairline text-content hover:bg-white hover:text-canvas"
-          disabled={isLoading}
-        >
-          <span className="flex items-center justify-center gap-2">
-            {isLoading ? (
-              <>
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
-                Going to checkout...
-              </>
-            ) : (
-              <>
-                Buy Teams License
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </>
-            )}
-          </span>
-        </Button>
-      </div>
+      <PlanFeatures features={[
+        `${seats} Mac devices on one account`,
+        `${(seats * 50000).toLocaleString()} Cloud points bonus — 50,000 per seat`,
+        'Add more seats any time at $20 each',
+        'Lifetime free updates',
+      ]} />
     </section>
   )
 }
@@ -539,14 +440,14 @@ const CLOUD_TIERS: CloudTier[] = [
   },
   {
     name: 'Pro',
-    description: 'DeepSeek & MiniMax M3 at half price.',
+    description: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash at half price.',
     badge: 'Most popular',
     featured: true,
     monthly: { price: '$50', lookupKey: 'pro_monthly' },
     annual: { price: '$480', perMonth: '$40', lookupKey: 'pro_yearly' },
     features: [
       '2,500,000 points / month',
-      '⚡ DeepSeek & MiniMax M3 at 1/2 price — up to 5M points of usage',
+      '⚡ DeepSeek, MiniMax M3 & GLM-5.3-Flash at 1/2 price — up to 5M points of usage',
       'Every Cloud model & service — chat, image, TTS, transcription',
       'Latest frontier models — GPT, Claude, Gemini & more',
       'No API keys needed',
@@ -556,12 +457,12 @@ const CLOUD_TIERS: CloudTier[] = [
   },
   {
     name: 'Max',
-    description: 'DeepSeek & MiniMax M3 at quarter price.',
+    description: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash at quarter price.',
     monthly: { price: '$100', lookupKey: 'max_monthly' },
     annual: { price: '$960', perMonth: '$80', lookupKey: 'max_yearly' },
     features: [
       '5,000,000 points / month',
-      '⚡ DeepSeek & MiniMax M3 at 1/4 price — up to 20M points of usage',
+      '⚡ DeepSeek, MiniMax M3 & GLM-5.3-Flash at 1/4 price — up to 20M points of usage',
       'Every Cloud model & service — chat, image, TTS, transcription',
       'Latest frontier models — GPT, Claude, Gemini & more',
       'No API keys needed',
@@ -578,10 +479,11 @@ export function Pricing() {
     <section
       id="pricing"
       aria-label="Pricing"
-      className="bg-canvas py-20 sm:py-32"
+      className={`${styles.section} ${styles.pricingSection}`}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="md:text-center">
+      <div className={`${styles.sectionContainer} mx-auto`}>
+        <div className={styles.pricingHeading} data-reveal>
+          <p className={styles.pricingEyebrow}>Pricing</p>
           <h2 className="font-display text-3xl tracking-tight text-content sm:text-4xl">
             Simple pricing, for everyone.
           </h2>
@@ -590,8 +492,9 @@ export function Pricing() {
           </p>
         </div>
 
-        <div className="mt-16">
-          <div className="md:text-center">
+        <div className={styles.pricingGroup}>
+          <div className={styles.pricingGroupHeading} data-reveal>
+            <span className={styles.pricingKind}>One-time purchase</span>
             <h3 className="font-display text-xl font-semibold text-content">
               You bring the AI
             </h3>
@@ -601,7 +504,7 @@ export function Pricing() {
             </p>
           </div>
 
-          <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className={styles.licenseGrid} data-reveal>
             <Plan
               name="Standard"
               price="$49"
@@ -634,63 +537,32 @@ export function Pricing() {
               ]}
             />
 
-            <TeamsPlan />
           </div>
-
-          <div className="max-w-7xl mx-auto">
-            <ComparisonTable data={LICENSE_COMPARISON} />
-          </div>
+          <TeamsPlan />
+          <ComparisonTable data={LICENSE_COMPARISON} label="Compare all license features" />
         </div>
 
-        <div className="mt-20">
-          <div className="md:text-center">
+        <div className={`${styles.pricingGroup} ${styles.cloudGroup}`}>
+          <div className={styles.pricingGroupHeading} data-reveal>
+            <span className={styles.pricingKind}>Monthly or annual</span>
             <h3 className="font-display text-xl font-semibold text-content">
-              We bring the AI
+              Enconvo Cloud Plan
             </h3>
             <p className="mt-2 text-sm text-content-muted">
               No API keys. A monthly point allowance powers every model and
               service.
             </p>
 
-            <div className="relative mt-6 flex items-center justify-center">
-              <Link
-                href="/cloud-pricing"
-                className="absolute right-0 hidden items-center gap-1 text-xs text-content-muted transition hover:text-signal-blue lg:inline-flex"
-              >
-                See model &amp; service rates
-                <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </Link>
-            <div className="inline-flex items-center rounded-full border border-hairline bg-surface p-1">
-              <button
-                onClick={() => setBilling('monthly')}
-                className={clsx(
-                  'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                  billing === 'monthly'
-                    ? 'bg-surface-elevated text-content ring-1 ring-hairline-strong'
-                    : 'text-content-muted hover:text-content-body'
-                )}
-              >
-                Monthly
-              </button>
-              <button
-                onClick={() => setBilling('annual')}
-                className={clsx(
-                  'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
-                  billing === 'annual'
-                    ? 'bg-surface-elevated text-content ring-1 ring-hairline-strong'
-                    : 'text-content-muted hover:text-content-body'
-                )}
-              >
-                Annual
-                <span className="ml-1.5 text-xs text-signal-green">-20%</span>
-              </button>
+          </div>
+          <div className={styles.cloudToolbar}>
+            <div className={styles.billingToggle} role="group" aria-label="Cloud billing period">
+              <button type="button" onClick={() => setBilling('monthly')} aria-pressed={billing === 'monthly'}>Monthly</button>
+              <button type="button" onClick={() => setBilling('annual')} aria-pressed={billing === 'annual'}>Annual<span className={styles.billingSaving}>−20%</span></button>
             </div>
-            </div>
+            <Link href="/cloud-pricing" className={styles.pricingRates}>See model &amp; service rates <span aria-hidden="true">↗</span></Link>
           </div>
 
-          <div className="mt-8 grid max-w-7xl mx-auto grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className={styles.cloudGrid} data-reveal>
             {CLOUD_TIERS.map((tier) => {
               const isAnnual = billing === 'annual'
               return (
@@ -698,27 +570,23 @@ export function Pricing() {
                   key={tier.name}
                   name={tier.name}
                   price={isAnnual ? tier.annual.perMonth : tier.monthly.price}
-                  priceNote={
-                    isAnnual
-                      ? `/mo · billed ${tier.annual.price}/year`
-                      : '/month'
-                  }
+                  priceNote={isAnnual ? '/mo' : '/month'}
+                  billingNote={isAnnual ? `billed ${tier.annual.price}/year` : undefined}
+                  allowance={tier.features[0]}
                   lookupKey={isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey}
                   badge={tier.badge}
                   featured={tier.featured}
                   description={tier.description}
-                  features={tier.features}
+                  features={tier.features.slice(1)}
                 />
               )
             })}
           </div>
 
-          <div className="max-w-7xl mx-auto">
-            <ComparisonTable data={CLOUD_COMPARISON} />
-          </div>
+          <ComparisonTable data={CLOUD_COMPARISON} label="Compare all Cloud features" />
         </div>
 
-        <div className="mx-auto mt-12 max-w-3xl text-center">
+        <div className={styles.pricingFooter}>
           <p className="text-sm text-content-muted">
             Licenses and Cloud plans stack — a Lifetime owner can add any Cloud
             plan for included points, and every plan keeps own-key usage
