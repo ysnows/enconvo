@@ -9,6 +9,127 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.5 Changelog (2026-09-10)
+
+Friends, thanks for waiting and for all your feedback along the way. I've spent
+this release making Enconvo easier to reach, more useful in your daily work,
+and smoother from the first voice command to the finished result.
+
+## Highlights
+
+- **Dynamic Island feels faster and more capable**, with a live voice HUD,
+  immediate recording, richer attachments, and easier Default Agent switching.
+- **Meetings and live captions are easier to follow**, with speaker recognition,
+  word-by-word playback, live translation, and local transcription models.
+- **CoreML dictation runs on your Mac's Neural Engine**, with smaller downloads,
+  lower memory use, and fast on-device speech recognition.
+- **Build workflows with your AI Agent**, combining Enconvo features and MCP
+  tools in a visual editor with live progress and step-by-step results.
+- **Projects keep related work together**, bringing chats, files, and shared
+  instructions into a single workspace.
+- **Knowledge Base has a new asset browser**, while Quick Memory lets you save
+  app content or voice notes with the right Shift key.
+- **DeepSeek V4.1 Flash is now supported** through your own DeepSeek API key or
+  Enconvo Cloud, with image understanding, a 1M-token context window, and tool use.
+- **Enconvo Cloud gives you more DeepSeek usage**: Pro uses half the standard
+  points and Max uses one quarter for all DeepSeek models.
+
+## Dynamic Island And Everyday Interaction
+
+- Added a live Voice Command HUD with a waveform, transcript, and clear
+  recording and processing states.
+- Improved hotkey response so recording starts immediately and captures your
+  first words while the panel opens.
+- Added screenshots, file attachments, Screen Doodle, and automatic read-aloud
+  controls to Dynamic Island.
+- Added Default Agent switching from the agent icon in SmartBar, Chat Window,
+  and the Dynamic Island panel.
+- Fixed commands returning their results to the wrong window.
+- Improved App Sidebar opening, window following, closing, and remembered width
+  for each app.
+- Added Inline Mode for applying commands directly to selected text, with a
+  compact progress indicator and the result pasted back in place.
+- Improved SmartBar input, Chinese text composition, command ordering, and
+  PopBar behavior around window dragging and design apps.
+
+## Voice, Recording, And Live Captioning
+
+- Added CoreML Parakeet, SenseVoice, and Paraformer dictation models with
+  download, load, unload, and delete controls.
+- Added speaker diarization and recognition to meeting recording, with
+  word-level transcript alignment during playback.
+- Added Live Captioning with realtime transcripts, speaker labels, translation,
+  local model support, and saved history.
+- Fixed Voice Command on macOS 27, Dictation post-actions, and local speech
+  model loading.
+- Improved recording sounds, volume restoration, dictation translation, and
+  the way spoken input merges with your typed edits.
+- Improved Read Aloud reliability and refreshed xAI voice selection.
+
+## Workflows, Agents, And Visual Results
+
+- Added a visual workflow builder with step configuration, live execution
+  status, individual step runs, and YAML editing.
+- Added AI-assisted workflow creation and editing using Enconvo capabilities,
+  MCP tools, and supported VS Code tools.
+- Added the Visualize plugin for SVG, HTML previews, and interactive widgets
+  inside chat, alongside native tables, charts, weather cards, and other
+  generated results.
+- Improved workflow cancellation and output so runs are easier to follow and
+  stop.
+- Added immediate Steer messages so you can correct an active Agent task while
+  its tools continue running, including messages from Telegram and Discord.
+- Improved long-conversation memory, model switching, prompt caching, and
+  cancellation of stopped requests.
+- Added settings to open Dynamic Island or send a system notification when a
+  task finishes, with fewer duplicate prompts for conversations already visible.
+
+## Projects, Knowledge, And App Context
+
+- Added Projects with shared instructions, folder-backed chats, a file browser,
+  and Git branch controls.
+- Added file and folder mentions from your current project, alongside workflow,
+  MCP server, Finder file, Notes, and Mail context.
+- Redesigned Knowledge Base with a folder tree, previews, tags, an inspector,
+  drag-and-drop imports, and a standalone window.
+- Added Quick Memory: double-tap right Shift to save the current app context,
+  or hold right Shift to record a voice note for your knowledge base.
+- Improved imports and retrieval for PDFs, images, and larger knowledge bases.
+- Added app presets and site Command Packs for more direct automation, plus
+  improved Office, Finder, Browser Use, and Computer Use support.
+- Added inline attachment previews and live progress for video and audio
+  downloads.
+
+## Models And Cloud Plans
+
+- Expanded model choice with GPT-6 Astra, the GPT-5.6 family, Grok 4.6,
+  Gemini 3.8 Flash, GLM-5.3-Flash, Kimi K3, MiniMax M3, and DeepSeek V4.1 Flash
+  through their supported providers.
+- Added GPT Image 2.5 Flare and Sunburst for image creation and editing, with
+  support for API keys, Enconvo Cloud, and supported ChatGPT sign-in workflows.
+- Added Google Gemini and Kie.ai video-generation options and expanded xAI
+  voice, image, video, and search support.
+- Improved custom provider model lists, fuzzy model search, and saved choices.
+- Added clearer Cloud plan comparisons and upgrades, with DeepSeek usage at
+  half the standard point rate on Pro and one quarter on Max.
+- Redesigned Points Usage with clearer balances, usage breakdowns, and monthly
+  allowance reset history.
+
+## Settings And Reliability
+
+- Added new Skills, Plugins, MCP Servers, and Permissions management pages.
+- Improved MCP setup, OAuth sign-in, credential refresh, and reconnection.
+- Added account device management and clearer recovery when you reach your
+  device limit or move to a new Mac.
+- Added the Pet desktop companion with live task cards and community packs.
+- Added a help menu for companion setup, release notes, and keyboard shortcuts.
+- Fixed high background CPU usage, slow app switching, Dock icon hiding, and
+  workspace preview close controls.
+- Improved chat syntax highlighting, scrolling, panel transitions, and startup
+  performance throughout the app.
+
+---
+
 # Enconvo 2.5.4 Changelog (2026-06-26)
 
 Hi friends, thanks for testing this round. Enconvo 2.5.4 is mostly about making
