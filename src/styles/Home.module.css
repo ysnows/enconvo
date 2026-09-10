@@ -158,24 +158,7 @@
   border-radius: 12px;
 }
 
-.requirements { position: relative; padding-right: 36px; font-size: 12px; line-height: 18px; color: #9c9c9d; }
-.backgroundToggle {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 28px;
-  height: 28px;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: #9c9c9d;
-  transition: background-color 160ms ease, color 160ms ease;
-}
-.backgroundToggle:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--home-stroke); color: #f4f4f6; }
+.requirements { font-size: 12px; line-height: 18px; color: #9c9c9d; }
 
 .showcase { width: 100%; max-width: 1120px; margin: 28px auto 0; }
 
@@ -682,8 +665,6 @@
 }
 
 @media (max-width: 639px) {
-  .requirements { padding-right: 52px; }
-  .backgroundToggle { top: calc(50% + 2px); width: 44px; height: 44px; }
   .heroContent { padding: 100px 20px 48px; }
   .heroTitle { font-size: 34px; line-height: 1.15; }
   .heroDescription { font-size: 16px; line-height: 1.65; margin-top: 16px; }
@@ -720,12 +701,10 @@
 @media (prefers-reduced-motion: reduce) {
   .page *, .page *::before, .page *::after { transition-duration: 0ms; scroll-behavior: auto; }
   .heroTitleAccent { animation: none; }
-  .backgroundToggle { display: none; }
 }
 
 @media (prefers-reduced-transparency: reduce) {
   .hero header::before { background: #071014; backdrop-filter: none; }
-  .backgroundToggle { display: none; }
   .tabs { background: #101111; }
 }
 
@@ -733,20 +712,14 @@
   .page { --home-stroke: rgba(255, 255, 255, 0.35); --home-stroke-strong: rgba(255, 255, 255, 0.6); }
   .hero header::before { background: #071014; }
   .tab { color: #cdcdcd; }
-  .backgroundToggle { display: none; }
   .heroTitleAccent { background: none; color: #f4f4f6; -webkit-text-fill-color: currentColor; animation: none; }
 }
 
 @media (forced-colors: active) {
   .hero header::before { background: Canvas; border-color: CanvasText; backdrop-filter: none; }
   .player::after { display: none; }
-  .backgroundToggle { display: none; }
   .heroTitleAccent { background: none; color: CanvasText; -webkit-text-fill-color: currentColor; animation: none; }
   .downloadButton { background-image: none; box-shadow: none; border: 1px solid ButtonText; }
-}
-
-@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-  .requirements { padding-right: 0; }
 }
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {

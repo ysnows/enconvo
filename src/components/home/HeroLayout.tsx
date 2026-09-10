@@ -26,8 +26,7 @@ const layout = `
 .${styles.heroDescription} { max-width: 680px; margin: 20px auto 0; color: #cdcdcd; font-size: 18px; line-height: 1.6; text-wrap: pretty; }
 .${styles.heroActions} { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 24px; }
 .${styles.downloadButton} { min-height: 48px; padding: 12px 22px; border-radius: 10px; font-size: 14px; }
-.${styles.requirements} { position: relative; padding-right: 36px; font-size: 12px; line-height: 18px; color: #9c9c9d; }
-.${styles.backgroundToggle} { position: absolute; top: 50%; right: 0; transform: translateY(-50%); display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; }
+.${styles.requirements} { font-size: 12px; line-height: 18px; color: #9c9c9d; }
 .${styles.showcase} { width: 100%; max-width: 1120px; margin: 28px auto 0; }
 .${styles.tabScroller} { overflow-x: auto; padding: 5px; scrollbar-width: thin; }
 .${styles.tabs} { display: flex; width: max-content; gap: 4px; margin: 0 auto; padding: 4px; border: 1px solid var(--home-stroke, rgba(255,255,255,.1)); border-radius: 12px; background: rgba(13,16,19,.88); }
@@ -56,8 +55,6 @@ const layout = `
   .${styles.heroTitle} { font-size: 34px; line-height: 1.15; }
   .${styles.heroDescription} { font-size: 16px; line-height: 1.65; margin-top: 16px; }
   .${styles.heroActions} { margin-top: 20px; }
-  .${styles.requirements} { padding-right: 52px; }
-  .${styles.backgroundToggle} { top: calc(50% + 2px); width: 44px; height: 44px; }
   .${styles.showcase} { margin-top: 24px; }
   .${styles.tabScroller} { margin-inline: -4px; }
   .${styles.tab} { padding-inline: 12px; }
@@ -70,10 +67,6 @@ const layout = `
   .${styles.playerButton} { width: 44px; }
   .${styles.player} .${styles.soundButton} { top: 8px; right: 8px; min-height: 44px; padding-inline: 10px; }
   .${styles.showcaseCaption} { min-height: 62px; margin-top: 12px; font-size: 12px; }
-}
-@media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
-  .${styles.backgroundToggle} { display: none; }
-  .${styles.requirements} { padding-right: 0; }
 }
 `
 

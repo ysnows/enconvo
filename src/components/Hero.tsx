@@ -1,7 +1,7 @@
 import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
 import { Menu } from '@headlessui/react'
-import { ChevronDownIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline'
+import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import { SiteNav } from '@/components/SiteNav'
 import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroBackdrop } from '@/components/HeroBackdrop'
@@ -31,7 +31,6 @@ function DownloadRowArrow() {
 
 export function Hero() {
   const [navElevated, setNavElevated] = useState(false)
-  const [backgroundPaused, setBackgroundPaused] = useState(false)
 
   useEffect(() => {
     const updateNav = () => setNavElevated(window.scrollY > 24)
@@ -47,7 +46,7 @@ export function Hero() {
   return (
     <div className={`${styles.hero} bg-canvas relative overflow-hidden`} data-nav-elevated={navElevated}>
       <HeroLayout />
-      <HeroBackdrop paused={backgroundPaused} />
+      <HeroBackdrop />
       <SiteNav />
 
       <div className={styles.heroContent}>
@@ -127,15 +126,6 @@ export function Hero() {
 
                 <div className={styles.requirements}>
                   <span>macOS 14+ (Intel &amp; Apple Silicon)</span>
-                  <button
-                    type="button"
-                    className={styles.backgroundToggle}
-                    aria-label={backgroundPaused ? 'Resume background animation' : 'Pause background animation'}
-                    title={backgroundPaused ? 'Resume background animation' : 'Pause background animation'}
-                    onClick={() => setBackgroundPaused(value => !value)}
-                  >
-                    {backgroundPaused ? <PlayIcon className="h-4 w-4" /> : <PauseIcon className="h-4 w-4" />}
-                  </button>
                 </div>
               </div>
             </div>

@@ -439,3 +439,22 @@ Fresh release validation:
 No real checkout was initiated. Physical Safari/iPhone and assistive technology
 remain untested. The Git deployment result and live acceptance evidence will
 be recorded in the active root Beta 32 tracking entry after publication.
+
+## Remove the background animation control — 2026-09-10
+
+At the user's request, removed the pause/resume button beside the macOS
+requirements. Removed its state, icon imports, unused control styles and
+reserved spacing from both the critical first-paint CSS and the full stylesheet.
+The requirements text is centered beneath Download on desktop and mobile.
+The existing backdrop still runs automatically and retains reduced-motion and
+off-screen behavior. Video pause, sound and fullscreen controls are unchanged.
+
+Fresh verification: standard `npm run build` passed with lint/types and all 28
+static pages. Log: `/tmp/enconvo-remove-motion-control-build.log`. The existing
+first-paint comparison passed at 1280px and 390px with zero geometry differences
+between critical and complete CSS. Browser checks found no requirements-row
+button or reserved padding, centered text, advancing ribbon/trace motion and
+both expected download menu links. Production mobile rendering was visually
+checked. No module code changed; no new issue found in the checked homepage
+flows. Existing nonfatal build warnings remain. Deployment evidence is tracked
+in root Beta 32.
