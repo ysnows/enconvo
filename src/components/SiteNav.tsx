@@ -38,9 +38,9 @@ const socialLinks: SocialLink[] = [
 ]
 
 const defaultNav: NavigationItem[] = [
-  { name: 'Features', href: '#features' },
+  { name: 'Features', href: '/#features' },
   { name: 'Use Cases', href: '/use-cases' },
-  { name: 'Pricing', href: '#pricing' },
+  { name: 'Pricing', href: '/#pricing' },
   { name: 'Docs', href: 'https://docs.enconvo.ai/' },
   { name: 'Releases', href: '/changelog' },
   { name: 'Affiliate', href: 'https://affiliate.enconvo.com/' },
@@ -56,9 +56,9 @@ export function SiteNav() {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) {
         setNavigation([
-          { name: 'Features', href: '#features' },
+          { name: 'Features', href: '/#features' },
           { name: 'Use Cases', href: '/use-cases' },
-          { name: 'Pricing', href: '#pricing' },
+          { name: 'Pricing', href: '/#pricing' },
           { name: 'Docs', href: 'https://docs.enconvo.ai/' },
           { name: 'Releases', href: '/changelog' },
           { name: 'Affiliate', href: 'https://affiliate.enconvo.com/' },
