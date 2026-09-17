@@ -274,7 +274,7 @@ export function HeroShowcase() {
                             }
                             setSoundOn(value => !value)
                         }}
-                        aria-label={soundOn ? 'Sound on — mute video' : 'Play with sound'}
+                        aria-label={soundOn ? 'Sound on — mute video' : 'Sound off — turn sound on'}
                         aria-pressed={soundOn}
                         className={clsx(
                             styles.soundButton,
@@ -286,7 +286,7 @@ export function HeroShowcase() {
                         ) : (
                             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z" /><line x1="22" y1="9" x2="16" y2="15" /><line x1="16" y1="9" x2="22" y2="15" /></svg>
                         )}
-                        {soundOn ? 'Sound on' : 'Play with sound'}
+                        {soundOn ? 'Sound on' : 'Sound off'}
                     </button>
                 )}
                 {activeScene.media?.type === 'video' ? (
