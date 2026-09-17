@@ -210,7 +210,7 @@ export default function UseCasesPage() {
             uploadDate: useCase.date,
             embedUrl: `https://www.youtube-nocookie.com/embed/${useCase.youtubeId}`,
             contentUrl: watchUrl(useCase.youtubeId),
-            url: `https://enconvo.com/use-cases#${useCase.slug}`,
+            url: `https://www.enconvo.com/use-cases#${useCase.slug}`,
           },
         })),
       }),
@@ -221,6 +221,8 @@ export default function UseCasesPage() {
     <>
       <Head>
         <title>EnConvo Use Cases - Video Walkthroughs</title>
+        <link rel="canonical" href="https://www.enconvo.com/use-cases" />
+        <meta property="og:url" content="https://www.enconvo.com/use-cases" />
         <meta
           name="description"
           content="Watch how people get real work done with EnConvo: provider setup, office automation, workflows, OCR, and agent-built apps — one video per use case."

@@ -78,7 +78,7 @@ export function FeatureGrid() {
                         Explore all use cases &rarr;
                     </Link>
                 </p>
-                <p className="mt-3 text-center text-sm text-content-ash">
+                <p className="mt-3 text-center text-sm text-content-muted">
                     All Enconvo extensions are open source on{' '}
                     <a
                         href="https://github.com/enconvo"

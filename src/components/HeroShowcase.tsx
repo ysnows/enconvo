@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import clsx from 'clsx'
+import { VideoTimeline } from '@/components/home/VideoTimeline'
+import { observeVideoPlayback } from '@/lib/visibleVideo'
 import { heroTabs } from '@/data/heroShowcase'
 import styles from '@/styles/Home.module.css'
 
@@ -44,22 +46,14 @@ function ScenePlaceholder({
     )
 }
 
-function formatTime(s: number) {
-    if (!Number.isFinite(s) || s < 0) return '0:00'
-    const m = Math.floor(s / 60)
-    const sec = Math.floor(s % 60)
-    return `${m}:${sec.toString().padStart(2, '0')}`
-}
-
 export function HeroShowcase() {
     const [tabIndex, setTabIndex] = useState(0)
     const [sceneIndex, setSceneIndex] = useState(0)
     const [autoPlay, setAutoPlay] = useState(true)
     // The user's sound choice belongs to the whole showcase, not one clip.
     const [soundOn, setSoundOn] = useState(false)
-    const [playing, setPlaying] = useState(true)
-    const [currentTime, setCurrentTime] = useState(0)
-    const [duration, setDuration] = useState(0)
+    const [playing, setPlaying] = useState(false)
+    const [isActive, setIsActive] = useState(false)
     const [isFullscreen, setIsFullscreen] = useState(false)
     const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -74,13 +68,18 @@ export function HeroShowcase() {
     const syncVideoMetadata = useCallback(() => {
         const video = videoRef.current
         if (!video) return
-        setDuration(Number.isFinite(video.duration) ? video.duration : 0)
-        setCurrentTime(video.currentTime)
         setPlaying(!video.paused)
     }, [])
 
     // Cached media can load before hydration attaches the metadata listener.
     useEffect(syncVideoMetadata, [activeScene, syncVideoMetadata])
+
+    useEffect(() => {
+        const container = playerRef.current
+        if (!container) return
+        setIsActive(false)
+        return observeVideoPlayback(container, videoRef.current, setIsActive)
+    }, [activeScene])
 
     // Any manual interaction pauses the rotation briefly, then it resumes.
     const noteInteraction = useCallback(() => {
@@ -155,11 +154,11 @@ export function HeroShowcase() {
     // Timer drives placeholder/image scenes only — videos advance when they
     // finish playing (onEnded), so a film is always watched to the end.
     useEffect(() => {
-        if (!autoPlay) return
+        if (!autoPlay || !isActive) return
         if (activeScene.media?.type === 'video') return
         const timer = setTimeout(advance, SUB_SCENE_MS)
         return () => clearTimeout(timer)
-    }, [autoPlay, tabIndex, sceneIndex, activeScene, advance])
+    }, [autoPlay, isActive, tabIndex, sceneIndex, activeScene, advance])
 
     useEffect(() => () => {
         if (resumeTimer.current) clearTimeout(resumeTimer.current)
@@ -227,18 +226,18 @@ export function HeroShowcase() {
                     <video
                         ref={videoRef}
                         src={activeScene.media.src}
-                        autoPlay
+                        poster={activeScene.media.poster}
+                        width={1920}
+                        height={1080}
                         muted={!soundOn}
                         onEnded={() => { if (autoPlay) advance() }}
                         onPlay={() => setPlaying(true)}
                         onPause={() => setPlaying(false)}
-                        onLoadStart={() => { setCurrentTime(0); setDuration(0) }}
-                        onTimeUpdate={e => setCurrentTime(e.currentTarget.currentTime)}
                         onLoadedMetadata={syncVideoMetadata}
                         onDurationChange={syncVideoMetadata}
                         onClick={togglePlay}
                         playsInline
-                        preload="metadata"
+                        preload="none"
                         className={clsx(
                             styles.playerMedia,
                             'cursor-pointer',
@@ -267,8 +266,16 @@ export function HeroShowcase() {
                 )}
                 {activeScene.media?.type === 'video' && (
                     <button
-                        onClick={() => setSoundOn(value => !value)}
-                        aria-label={soundOn ? 'Mute' : 'Play with sound'}
+                        onClick={() => {
+                            const video = videoRef.current
+                            if (video) {
+                                video.muted = soundOn
+                                if (!soundOn && video.paused) void video.play().catch(() => setPlaying(false))
+                            }
+                            setSoundOn(value => !value)
+                        }}
+                        aria-label={soundOn ? 'Sound on — mute video' : 'Play with sound'}
+                        aria-pressed={soundOn}
                         className={clsx(
                             styles.soundButton,
                             'absolute right-4 top-4 z-10 flex items-center gap-2 border border-white/20 bg-black/55 px-3.5 py-2 text-xs font-medium text-content backdrop-blur hover:bg-black/75'
@@ -297,27 +304,7 @@ export function HeroShowcase() {
                                 <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                             )}
                         </button>
-                        <input
-                            type="range"
-                            aria-label="Seek"
-                            min={0}
-                            max={duration || 0}
-                            step={0.1}
-                            value={Math.min(currentTime, duration || 0)}
-                            onChange={e => {
-                                const t = Number(e.currentTarget.value)
-                                if (videoRef.current) videoRef.current.currentTime = t
-                                setCurrentTime(t)
-                                noteInteraction()
-                            }}
-                            style={{
-                                backgroundImage: `linear-gradient(to right, rgba(255,255,255,0.95) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%, rgba(255,255,255,0.22) ${duration ? Math.min(currentTime / duration, 1) * 100 : 0}%)`,
-                            }}
-                            className={`${styles.seek} min-w-0 flex-1 cursor-pointer appearance-none rounded-full [&::-moz-range-thumb]:h-2.5 [&::-moz-range-thumb]:w-2.5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-white [&::-webkit-slider-thumb]:h-2.5 [&::-webkit-slider-thumb]:w-2.5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white`}
-                        />
-                        <span className="shrink-0 text-[11px] tabular-nums text-content-body">
-                            {formatTime(currentTime)} / {formatTime(duration)}
-                        </span>
+                        <VideoTimeline key={activeScene.media.src} videoRef={videoRef} onSeek={noteInteraction} />
                         <button
                             onClick={toggleFullscreen}
                             aria-label={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}

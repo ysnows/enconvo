@@ -8,7 +8,7 @@ import styles from '@/styles/Home.module.css'
 const layout = `
 .${styles.page} {
   background: #07080a; color: #f4f4f6;
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-feature-settings: 'calt', 'kern', 'liga', 'ss03';
   -webkit-font-smoothing: antialiased;
 }

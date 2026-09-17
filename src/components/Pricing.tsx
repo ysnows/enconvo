@@ -592,7 +592,7 @@ export function Pricing() {
             plan for included points, and every plan keeps own-key usage
             unlimited.
           </p>
-          <p className="mt-2 text-sm text-content-ash">
+          <p className="mt-2 text-sm text-content-muted">
             Need more than 500 seats or private deployment?{' '}
             <a
               href="mailto:support@enconvo.com"

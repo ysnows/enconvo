@@ -2,16 +2,17 @@ import 'focus-visible'
 import '@/styles/tailwind.css'
 import React from 'react'
 import Script from 'next/script'
+import Head from 'next/head'
 import { AppProps } from 'next/app'
 
-const App = ({ Component, pageProps }: AppProps) => {
+const privateRoutes = new Set(['/account', '/login', '/register', '/auth', '/auth/callback', '/payment', '/pay_success', '/cloud-points', '/reset_password', '/reset_password_send'])
+
+const App = ({ Component, pageProps, router }: AppProps) => {
     return (
         <>
-            <Script
-                src="https://js.stripe.com/v3/"
-                strategy="afterInteractive"
-            />
-
+            {(privateRoutes.has(router.pathname) || router.pathname.startsWith('/components/')) && (
+                <Head><meta name="robots" content="noindex, follow" /></Head>
+            )}
             <Script
                 src="https://assets.endorsely.com/endorsely.js"
                 data-endorsely="2006ac68-b1bd-4140-ab76-aa957e3c2016"
@@ -38,4 +39,3 @@ const App = ({ Component, pageProps }: AppProps) => {
 };
 
 export default App;
-

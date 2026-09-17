@@ -1,0 +1,24 @@
+# Enconvo
+
+> Enconvo is a native AI assistant and agent for macOS 14 or later, on Intel and Apple Silicon Macs. It works alongside Mac apps, using screen and selection context to help people complete tasks.
+
+## Product
+
+- [Overview](https://www.enconvo.com/): Product capabilities and live demonstrations.
+- [Use cases](https://www.enconvo.com/use-cases): Video walkthroughs for app automation, writing, research, providers, and workflows.
+- [Download](https://www.enconvo.com/): Choose Apple Silicon or Intel from the homepage download menu.
+
+App Sidebar works beside Mac apps. Dynamic Island provides quick access to AI. PopBar acts on selected text. Voice & Dictation provides system-wide speech input. Meetings & Live Captions supports captions, translation, and meeting notes. Knowledge Base makes documents and captured ideas searchable and available in chat.
+
+Enconvo supports cloud providers, users' own API keys, and local models through MLX, Ollama, or LM Studio. Local operation depends on selecting local models and tools; cloud providers and online tools require network access.
+
+## Pricing and documentation
+
+- [Plans and FAQ](https://www.enconvo.com/#pricing): Free and paid licenses, optional Cloud subscriptions, and current plan terms. Own-key and local-model usage is not metered by Enconvo; external API providers may charge separately.
+- [Cloud model and service rates](https://www.enconvo.com/cloud-pricing): Current Cloud point costs. Refer to this page for changing model availability and rates.
+- [Documentation](https://docs.enconvo.com/): Setup and product documentation.
+- [Releases](https://www.enconvo.com/changelog): Release notes and beta updates.
+- [Privacy](https://www.enconvo.com/privacy): Published privacy policy.
+- [Terms](https://www.enconvo.com/terms): Published terms of service.
+
+This file is a navigation aid. The linked product, pricing, and policy pages are the authoritative sources.

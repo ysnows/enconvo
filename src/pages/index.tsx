@@ -11,10 +11,10 @@ import { FeatureGrid } from '@/components/home/FeatureGrid'
 import { ModelFreedom } from '@/components/home/ModelFreedom'
 import { OpenPlatform } from '@/components/home/OpenPlatform'
 import { useSectionEffects } from '@/components/home/useSectionEffects'
+import { homepageStructuredData, SITE_DESCRIPTION } from '@/data/siteMetadata'
 
-const TITLE = 'Enconvo — The Assistant Your Mac Was Promised | AI Agent for macOS'
-const DESCRIPTION =
-  'Enconvo is an AI agent that lives across your Mac — it sees your screen, works inside your apps, and actually gets things done. 100+ tools, MCP support, local models, and your own API keys.'
+const TITLE = 'Enconvo — AI Assistant & Agent for Mac'
+const DESCRIPTION = SITE_DESCRIPTION
 const SHARE_TITLE = 'Enconvo — The assistant your Mac was promised.'
 const SHARE_DESCRIPTION =
   'An AI agent that understands your screen and works in your Mac apps. Organize files, write, research, and get things done with Enconvo.'
@@ -30,6 +30,10 @@ export default function Home() {
         <title>{TITLE}</title>
         <meta name="description" content={DESCRIPTION} />
         <link rel="canonical" href="https://www.enconvo.com/" />
+        <link rel="preload" as="image" href="/posters/app-sidebar.jpg" />
+        <link rel="preconnect" href="https://file.enconvo.com" />
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageStructuredData).replace(/</g, '\\u003c') }} />
         <meta property="og:title" content={SHARE_TITLE} />
         <meta property="og:description" content={SHARE_DESCRIPTION} />
         <meta property="og:type" content="website" />

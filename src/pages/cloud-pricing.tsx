@@ -393,7 +393,7 @@ export default function CloudPricingPage() {
       <Head>
         <title>Enconvo Cloud Pricing — Models & Services</title>
         <meta name="description" content="Current Enconvo Cloud point prices for language models, image and video generation, speech, search, and document services." />
-        <link rel="canonical" href="https://enconvo.com/cloud-pricing" />
+        <link rel="canonical" href="https://www.enconvo.com/cloud-pricing" />
       </Head>
 
       <header className="sticky top-0 z-40 border-b border-hairline bg-canvas/85 backdrop-blur-xl">

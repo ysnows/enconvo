@@ -909,6 +909,8 @@ export default function ChangelogPage({
     <>
       <Head>
         <title>EnConvo Releases - Changelog</title>
+        <link rel="canonical" href="https://www.enconvo.com/changelog" />
+        <meta property="og:url" content="https://www.enconvo.com/changelog" />
         <meta
           name="description"
           content="Read the latest EnConvo release notes, beta build updates, product improvements, and fixes."

@@ -4,7 +4,7 @@
   --home-glass: rgba(255, 255, 255, 0.035);
   background: #07080a;
   color: #f4f4f6;
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-feature-settings: 'calt', 'kern', 'liga', 'ss03';
   -webkit-font-smoothing: antialiased;
 }
@@ -247,6 +247,7 @@
 .player:fullscreen::after { display: none; }
 
 .soundButton {
+  opacity: 1;
   min-height: 40px;
   border-radius: 8px;
   transition: opacity 160ms ease, background-color 160ms ease;
@@ -651,9 +652,9 @@
 .page > footer > div > div:last-child { gap: 20px; padding-block: 24px; }
 
 @media (hover: hover) and (pointer: fine) {
-  .playing .playerControls, .playing .soundButton { opacity: 0; }
-  .player:hover .playerControls, .player:hover .soundButton,
-  .player:focus-within .playerControls, .player:focus-within .soundButton { opacity: 1; }
+  .playing .playerControls { opacity: 0; }
+  .player:hover .playerControls,
+  .player:focus-within .playerControls { opacity: 1; }
 }
 
 @media (max-width: 1023px) {

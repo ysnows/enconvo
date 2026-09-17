@@ -1,9 +1,15 @@
+import Head from 'next/head'
 import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
 import Link from "next/link";
 
 export default function Downloads() {
     return (
         <div className="bg-white px-6 py-32 lg:px-8">
+            <Head>
+                <title>Enconvo Privacy Policy</title>
+                <meta name="description" content="How Enconvo handles app permissions, data, and privacy." />
+                <link rel="canonical" href="https://www.enconvo.com/privacy" />
+            </Head>
             <div className="mx-auto max-w-3xl text-base leading-7 text-gray-700">
                 <p className="mb-8 text-base font-semibold leading-7 text-indigo-600">_______________________</p>
 

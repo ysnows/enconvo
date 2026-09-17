@@ -4,6 +4,10 @@ import { Container } from '@/components/Container'
 const faqs = [
   [
     {
+      question: 'What is Enconvo?',
+      answer: 'Enconvo is a native AI assistant and agent for Mac. It works beside your apps, understands screen and selected-text context, and helps with writing, research, app automation, dictation, and document search.',
+    },
+    {
       question: 'Is Enconvo free to use?',
       answer: 'Yes. The free tier includes every core feature, with unlimited AI when you bring your own API key or run local models. Paid tiers remove creation caps (knowledge bases, workflows) and add Cloud points.',
     },
@@ -18,6 +22,10 @@ const faqs = [
   ],
   [
     {
+      question: 'Which Macs does Enconvo support?',
+      answer: 'Enconvo requires macOS 14 or later and supports both Intel and Apple Silicon Macs. Choose the matching installer from the Download for macOS menu.',
+    },
+    {
       question: 'Does Enconvo use my data for training?',
       answer: 'No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.',
     },
@@ -31,6 +39,10 @@ const faqs = [
     },
   ],
   [
+    {
+      question: 'How do local models and Cloud differ?',
+      answer: 'Local models run on your Mac through MLX, Ollama, or LM Studio. Cloud models use online providers. Enconvo Cloud includes points for supported services; you can also bring your own API keys, with any provider charges billed separately.',
+    },
     {
       question: 'What is your refund policy?',
       answer: 'We offer a 14-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time.',
@@ -62,8 +74,8 @@ export function Faqs() {
             Frequently asked questions
           </h2>
           <p className="mt-4 text-lg tracking-tight text-content-muted">
-            If you can&apos;t find what you&apos;re looking for, email our support team
-            and if you&apos;re lucky someone will get back to you.
+            Learn how Enconvo works, which Macs it supports, and how to choose
+            between local models, your own API keys, and Cloud.
           </p>
         </div>
         <ul

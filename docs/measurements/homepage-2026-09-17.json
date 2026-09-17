@@ -1,0 +1,125 @@
+{
+  "date": "2026-09-17",
+  "environment": "Local Next.js production build, Lighthouse 13.4.1, mobile simulated throttling, Edge headless",
+  "baselineCommit": "54fda51",
+  "note": "Lab samples, not field Core Web Vitals or ranking guarantees; network, CPU and video transfer vary between runs.",
+  "runs": {
+    "before": {
+      "scores": {
+        "performance": 61,
+        "accessibility": 97,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 5462.07635,
+          "unit": "millisecond",
+          "display": "5.5\u00a0s"
+        },
+        "largest-contentful-paint": {
+          "value": 7965.275449999999,
+          "unit": "millisecond",
+          "display": "8.0\u00a0s"
+        },
+        "total-blocking-time": {
+          "value": 96.44702499999903,
+          "unit": "millisecond",
+          "display": "100\u00a0ms"
+        },
+        "cumulative-layout-shift": {
+          "value": 0,
+          "unit": "unitless",
+          "display": "0"
+        },
+        "speed-index": {
+          "value": 5684.326427282838,
+          "unit": "millisecond",
+          "display": "5.7\u00a0s"
+        },
+        "total-byte-weight": {
+          "value": 4601013,
+          "unit": "byte",
+          "display": "Total size was 4,493\u00a0KiB"
+        }
+      }
+    },
+    "optimizedFirst": {
+      "scores": {
+        "performance": 87,
+        "accessibility": 97,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 1059.8563,
+          "unit": "millisecond",
+          "display": "1.1\u00a0s"
+        },
+        "largest-contentful-paint": {
+          "value": 2905.6048250000003,
+          "unit": "millisecond",
+          "display": "2.9\u00a0s"
+        },
+        "total-blocking-time": {
+          "value": 361.5,
+          "unit": "millisecond",
+          "display": "360\u00a0ms"
+        },
+        "cumulative-layout-shift": {
+          "value": 0,
+          "unit": "unitless",
+          "display": "0"
+        },
+        "speed-index": {
+          "value": 2283.4613442312125,
+          "unit": "millisecond",
+          "display": "2.3\u00a0s"
+        },
+        "total-byte-weight": {
+          "value": 4268867,
+          "unit": "byte",
+          "display": "Total size was 4,169\u00a0KiB"
+        }
+      }
+    },
+    "optimizedFinal": {
+      "scores": {
+        "performance": 87,
+        "accessibility": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 1056.1687,
+          "unit": "millisecond",
+          "display": "1.1\u00a0s"
+        },
+        "largest-contentful-paint": {
+          "value": 3812.7987999999996,
+          "unit": "millisecond",
+          "display": "3.8\u00a0s"
+        },
+        "total-blocking-time": {
+          "value": 135.99999999999955,
+          "unit": "millisecond",
+          "display": "140\u00a0ms"
+        },
+        "cumulative-layout-shift": {
+          "value": 0,
+          "unit": "unitless",
+          "display": "0"
+        },
+        "speed-index": {
+          "value": 2957.356174848666,
+          "unit": "millisecond",
+          "display": "3.0\u00a0s"
+        },
+        "total-byte-weight": {
+          "value": 4218108,
+          "unit": "byte",
+          "display": "Total size was 4,119\u00a0KiB"
+        }
+      }
+    }
+  }
+}

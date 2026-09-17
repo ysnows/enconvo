@@ -39,7 +39,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col items-center border-t border-hairline py-10 sm:flex-row sm:justify-between">
           <div className="mt-6 sm:mt-0">
-            <p className="text-sm text-content-ash">
+            <p className="text-sm text-content-muted">
               Copyright &copy; {new Date().getFullYear()} EnConvo. All rights
               reserved.
             </p>
@@ -48,7 +48,7 @@ export function Footer() {
           <div className="flex gap-x-6">
           </div>
 
-          <div className="flex space-x-6 text-sm text-content-ash">
+          <div className="flex space-x-6 text-sm text-content-muted">
             <Link href="/privacy" className="hover:text-content-muted">
               Privacy Policy
             </Link>
