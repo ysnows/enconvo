@@ -8,7 +8,7 @@ date; the history lives in `LOG.md`.
 | Source | Status (2026-09-24) |
 | --- | --- |
 | Google Search Console | **Readable** (domain property `sc-domain:enconvo.com`, via the owner's signed-in browser). Performance read; Page indexing report not read (the page did not load). |
-| GA4 | Live site still sends to `G-X7999CT0H3`, a property in an account nobody can reach. Working tree now sends to the owner's property "enconvo.com" (477108245, `G-JBLMBKBEN2`), which has no data yet. **Not deployed.** `download_click` / `begin_checkout` are not key events yet; the GA4 events hub can only star an event after it has been received. There is no GA4 baseline; it starts on deploy day. |
+| GA4 | **Live on the owner's property** "enconvo.com" (477108245, `G-JBLMBKBEN2`) since the 2026-09-24 deploy (commit 7c6fd8d). The old `G-X7999CT0H3` property, in an account nobody can reach, gets no more data. `download_click` / `begin_checkout` are not key events yet: the GA4 events hub can only star an event after it has been received. The GA4 baseline starts on 2026-09-24. |
 | PostHog | Website is not instrumented (project data is app and webapp only). |
 | Bing Webmaster Tools | Not connected. |
 | PageSpeed Insights API | Daily quota exceeded on 2026-09-24; local Lighthouse used instead. No field (CrUX) data seen. |
@@ -111,11 +111,11 @@ sources in `reports/2026-09-24-homepage-checkup.md`).
 
 ## Page inventory
 
-State of the local working tree, 2026-09-24. Not deployed yet.
+Live site, deployed 2026-09-24 (enconvo.com 7c6fd8d, enconvo_docs dff52c6).
 
 | Path | Indexable | In sitemap | Notes |
 | --- | --- | --- | --- |
-| `/` | yes | yes | Money page. Section headings rewritten (pending deploy). |
+| `/` | yes | yes | Money page. Section headings rewritten (live 2026-09-24). Recrawl requested in Search Console on 2026-09-24. |
 | `/use-cases` | yes | yes | |
 | `/cloud-pricing` | yes | yes | Plan links now point to `/#pricing` (were a 404). |
 | `/changelog` | yes | yes | 374 kB page data. 709 impressions, 0 clicks. |
@@ -127,4 +127,4 @@ State of the local working tree, 2026-09-24. Not deployed yet.
 | `/mcp/install` | noindex | no | `enconvo://` deep-link handler. |
 | `/okara` | — | no | Deleted; returns 404. |
 | Account/auth/payment pages | noindex | no | Unchanged. |
-| `docs.enconvo.com/*` | yes (live) | — | Old Docusaurus site. Redirect map to `docs.enconvo.ai` ready in `enconvo_docs/vercel.json`, not deployed. |
+| `docs.enconvo.com/*` | — (308) | — | Old Docusaurus site. Every path now 308-redirects to `docs.enconvo.ai` (page-by-page map in `enconvo_docs/vercel.json`; query strings kept). |

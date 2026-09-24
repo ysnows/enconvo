@@ -88,3 +88,27 @@ deployed yet.
   Recent events.
 - Verified: isolated production build passed. `G-JBLMBKBEN2` is in the
   built `_app` chunk, and `G-X7999CT0H3` appears 0 times in `.next`.
+
+## 2026-09-24 — Deployed
+
+- Pushed enconvo.com `7c6fd8d` (Vercel production) and enconvo_docs
+  `dff52c6` (the docs Vercel project is git-linked, so the redirects shipped
+  on push).
+- Checked on production `https://www.enconvo.com/`:
+  - The discovery, navigation and social-preview checks passed.
+  - The four new H2s are in the SSR HTML. "14-day" appears 0 times.
+    "EnConvo" appears 2 times, both in customer quotes (intended).
+  - The live `_app` chunk has `G-JBLMBKBEN2` twice and `G-X7999CT0H3` 0 times.
+  - `/okara` returns 404, `/pricing` returns 307 → `/#pricing`, and
+    `/developer` is noindex.
+  - Terms: "30-day money-back" appears once, "Apple support" 0 times.
+- `docs.enconvo.com`: page paths return 308 to their `docs.enconvo.ai`
+  equivalents, and unmapped paths go to the docs home. Query strings are
+  kept (`/docs/start?v=7` → `/quickstart?v=7`).
+- Search Console URL inspection for `/`: "URL is on Google, page is
+  indexed". Requested indexing, and Google replied "Indexing requested, URL
+  was added to a priority crawl queue".
+- **The measurement window starts 2026-09-24.** Leave the homepage headings
+  alone until at least 2026-10-22, then compare against `STATE.md`.
+- Owner to do: star `download_click` and `begin_checkout` as key events in
+  GA4 477108245 once they show under Recent events (usually within 24 hours).

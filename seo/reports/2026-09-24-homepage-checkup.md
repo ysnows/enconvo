@@ -188,14 +188,14 @@ written; the current state is:
 
 | Item | Status |
 | --- | --- |
-| ONE change: descriptive H2s | Implemented as proposed in the table above. Verified on a local production build. **Not deployed.** |
+| ONE change: descriptive H2s | Implemented as proposed in the table above. **Live since 2026-09-24** (commit 7c6fd8d), verified on production. |
 | Refund policy | FAQ and Terms now state the 30-day license guarantee that the backend enforces. The Terms "Pricing strategy" section is still outdated. |
 | Name spelling | "Enconvo" in all site text except customer quotes and historical release notes. |
 | `/okara` | Deleted (404). |
-| `docs.enconvo.com` | Redirect map ready in `enconvo_docs/vercel.json`. Not deployed. |
+| `docs.enconvo.com` | 308 redirects to `docs.enconvo.ai` live since 2026-09-24 (enconvo_docs dff52c6). |
 | Search Console | Connected (read). Baseline in `STATE.md`. It confirms the data-limits note above: non-branded visibility is near zero. |
-| Recrawl request | Waiting on deploy. |
-| GA4 | Site tag switched to the owner's property 477108245 (`G-JBLMBKBEN2`); the old `G-X7999CT0H3` property is in an account nobody can reach. Star both events as key events once they arrive after deploy. |
+| Recrawl request | Sent for `/` on 2026-09-24; Google added it to the priority crawl queue. |
+| GA4 | Site tag switched to the owner's property 477108245 (`G-JBLMBKBEN2`); the old `G-X7999CT0H3` property is in an account nobody can reach. Live since 2026-09-24. Star both events as key events once they arrive. |
 | Off-site | Drafts in `../outreach.md`. Not sent. |
 
 How to judge the change is unchanged. Starting four weeks after deploy,
