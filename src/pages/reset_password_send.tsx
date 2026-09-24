@@ -67,7 +67,7 @@ export default function ResetPasswordStepOne() {
     return (
         <>
             <Head>
-                <title>Reset Password - EnConvo</title>
+                <title>Reset Password - Enconvo</title>
                 <meta
                     name="description"
                     content="you can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."

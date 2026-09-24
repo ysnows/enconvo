@@ -400,7 +400,7 @@ export default function CloudPricingPage() {
         <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" aria-label="Enconvo home" className="flex items-center gap-2.5 transition-opacity hover:opacity-80"><Logo className="h-7 w-auto" /><span className="text-sm font-semibold text-content">Enconvo</span></Link>
           <nav className="flex items-center gap-1 text-xs">
-            <Link href="/pricing" className="inline-flex h-11 items-center rounded-md px-3 text-content-muted transition hover:bg-white/[0.04] hover:text-content">Plans</Link>
+            <Link href="/#pricing" className="inline-flex h-11 items-center rounded-md px-3 text-content-muted transition hover:bg-white/[0.04] hover:text-content">Plans</Link>
             <Link href="/cloud-points" className="inline-flex h-11 items-center rounded-md border border-hairline bg-surface-elevated px-3 text-content transition hover:border-hairline-strong">Top up points</Link>
           </nav>
         </div>
@@ -422,7 +422,7 @@ export default function CloudPricingPage() {
                 Use hosted AI without managing provider keys. Prices below come directly from the same catalog Enconvo uses to calculate Cloud point charges — including boost-model discounts for Pro and Max tiers.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/pricing" className="inline-flex h-11 items-center rounded-md bg-content px-4 text-sm font-semibold text-canvas transition hover:bg-white">View Cloud plans</Link>
+                <Link href="/#pricing" className="inline-flex h-11 items-center rounded-md bg-content px-4 text-sm font-semibold text-canvas transition hover:bg-white">View Cloud plans</Link>
                 <Link href="/cloud-points" className="inline-flex h-11 items-center rounded-md border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition hover:border-hairline-strong">Top up points</Link>
               </div>
             </div>
@@ -471,7 +471,7 @@ export default function CloudPricingPage() {
                 Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4, MiniMax M3, and GLM-5.3-Flash.
               </p>
             </div>
-            <Link href="/pricing" className="hidden text-sm text-content-muted underline-offset-4 hover:text-content hover:underline sm:inline">Compare full plan details →</Link>
+            <Link href="/#pricing" className="hidden text-sm text-content-muted underline-offset-4 hover:text-content hover:underline sm:inline">Compare full plan details →</Link>
           </div>
           <div className="mt-8 grid gap-4 lg:grid-cols-3">
             {TIERS.map((tier) => {
@@ -794,7 +794,7 @@ export default function CloudPricingPage() {
               </p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Link href="/pricing" className="inline-flex h-11 items-center rounded-md bg-content px-5 text-sm font-semibold text-canvas transition hover:bg-white">Compare plans</Link>
+              <Link href="/#pricing" className="inline-flex h-11 items-center rounded-md bg-content px-5 text-sm font-semibold text-canvas transition hover:bg-white">Compare plans</Link>
               <Link href="/cloud-points" className="inline-flex h-11 items-center rounded-md border border-hairline-strong bg-canvas px-5 text-sm font-medium text-content transition hover:border-signal-blue/40 hover:text-signal-blue">Top up points</Link>
             </div>
           </div>

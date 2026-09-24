@@ -12,7 +12,7 @@ export default function RegisterSuccess({ email }) {
     return (
         <>
             <Head>
-                <title>Sign Up Success - EnConvo</title>
+                <title>Sign Up Success - Enconvo</title>
                 <meta
                     name="description"
                     content="you can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the plugin system, giving your workflow an AI brain."

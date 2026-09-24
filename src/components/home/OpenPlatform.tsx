@@ -39,10 +39,10 @@ export function OpenPlatform() {
                     data-reveal
                 >
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-ash">
-                        Open &amp; extensible
+                        A platform, not a chatbox.
                     </p>
                     <h2 className="font-display mt-3 text-3xl tracking-tight text-content sm:text-4xl">
-                        A platform, not a chatbox.
+                        Extend your Mac AI agent with MCP servers, plugins, skills and workflows
                     </h2>
                     <p className="mt-4 text-lg text-content-muted">
                         Everything the agent can do is a building block you can

@@ -39,7 +39,7 @@ export default function Privacy() {
                 <div className="mt-16 max-w-2xl">
                     <h2 className="text-2xl font-bold tracking-tight text-gray-900">Refund</h2>
                     <p className="mt-6">If you have such thoughts, we are sorry, so please prioritize contacting us to resolve your dissatisfaction, but we always respect your choice. </p>
-                    <p className="mt-8">However, the refund process of the application is not controlled by the developer, so we suggest that you contact Apple support team to handle the refund. You can find <a className={"text-indigo-600"} href="https://support.apple.com/zh-cn/HT204084">relevant information here</a> in a new window.</p>
+                    <p className="mt-8">Standard, Premium and Teams licenses come with a <span className="font-bold">30-day money-back guarantee</span> from the date of purchase. You can request a refund in Enconvo under Settings → Account, or by emailing <a className={"text-indigo-600"} href="mailto:support@enconvo.com">support@enconvo.com</a>. Enconvo Cloud subscriptions can be canceled at any time.</p>
 
 
                 </div>

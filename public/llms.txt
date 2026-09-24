@@ -16,7 +16,7 @@ Enconvo supports cloud providers, users' own API keys, and local models through 
 
 - [Plans and FAQ](https://www.enconvo.com/#pricing): Free and paid licenses, optional Cloud subscriptions, and current plan terms. Own-key and local-model usage is not metered by Enconvo; external API providers may charge separately.
 - [Cloud model and service rates](https://www.enconvo.com/cloud-pricing): Current Cloud point costs. Refer to this page for changing model availability and rates.
-- [Documentation](https://docs.enconvo.com/): Setup and product documentation.
+- [Documentation](https://docs.enconvo.ai/): Setup and product documentation.
 - [Releases](https://www.enconvo.com/changelog): Release notes and beta updates.
 - [Privacy](https://www.enconvo.com/privacy): Published privacy policy.
 - [Terms](https://www.enconvo.com/terms): Published terms of service.

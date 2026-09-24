@@ -908,17 +908,17 @@ export default function ChangelogPage({
   return (
     <>
       <Head>
-        <title>EnConvo Releases - Changelog</title>
+        <title>Enconvo Releases - Changelog</title>
         <link rel="canonical" href="https://www.enconvo.com/changelog" />
         <meta property="og:url" content="https://www.enconvo.com/changelog" />
         <meta
           name="description"
-          content="Read the latest EnConvo release notes, beta build updates, product improvements, and fixes."
+          content="Read the latest Enconvo release notes, beta build updates, product improvements, and fixes."
         />
-        <meta property="og:title" content="EnConvo Releases - Changelog" />
+        <meta property="og:title" content="Enconvo Releases - Changelog" />
         <meta
           property="og:description"
-          content="Read the latest EnConvo release notes, beta build updates, product improvements, and fixes."
+          content="Read the latest Enconvo release notes, beta build updates, product improvements, and fixes."
         />
       </Head>
       <div
@@ -970,12 +970,12 @@ export default function ChangelogPage({
                     : 'Release notes'}
                 </div>
                 <h1 className="mt-8 text-5xl font-semibold tracking-normal text-white sm:text-6xl lg:text-7xl">
-                  EnConvo releases
+                  Enconvo releases
                 </h1>
                 <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-200 via-amber-200 to-transparent" />
                 <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
                   Product updates, model providers, workflow improvements, and
-                  fixes from the EnConvo changelog — including every beta
+                  fixes from the Enconvo changelog — including every beta
                   build.
                 </p>
                 <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
@@ -1024,7 +1024,7 @@ export default function ChangelogPage({
                   <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-white/10 bg-slate-950">
                     <Image
                       src={appScreenshot}
-                      alt="EnConvo app interface"
+                      alt="Enconvo app interface"
                       fill
                       sizes="(min-width: 1024px) 480px, 100vw"
                       className="object-cover"
@@ -1194,7 +1194,7 @@ export default function ChangelogPage({
                           }}
                           className="group inline-flex items-baseline gap-2"
                         >
-                          EnConvo {group.version}
+                          Enconvo {group.version}
                           <span
                             aria-hidden="true"
                             className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"
@@ -1258,7 +1258,7 @@ export default function ChangelogPage({
                             }}
                             className="group inline-flex items-baseline gap-2"
                           >
-                            EnConvo {release.version}
+                            Enconvo {release.version}
                             <span
                               aria-hidden="true"
                               className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"

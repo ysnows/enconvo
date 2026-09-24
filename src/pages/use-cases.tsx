@@ -220,17 +220,17 @@ export default function UseCasesPage() {
   return (
     <>
       <Head>
-        <title>EnConvo Use Cases - Video Walkthroughs</title>
+        <title>Enconvo Use Cases - Video Walkthroughs</title>
         <link rel="canonical" href="https://www.enconvo.com/use-cases" />
         <meta property="og:url" content="https://www.enconvo.com/use-cases" />
         <meta
           name="description"
-          content="Watch how people get real work done with EnConvo: provider setup, office automation, workflows, OCR, and agent-built apps — one video per use case."
+          content="Watch how people get real work done with Enconvo: provider setup, office automation, workflows, OCR, and agent-built apps — one video per use case."
         />
-        <meta property="og:title" content="EnConvo Use Cases" />
+        <meta property="og:title" content="Enconvo Use Cases" />
         <meta
           property="og:description"
-          content="Watch how people get real work done with EnConvo — one video per use case."
+          content="Watch how people get real work done with Enconvo — one video per use case."
         />
         <script
           type="application/ld+json"
@@ -275,7 +275,7 @@ export default function UseCasesPage() {
                 </h1>
                 <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-200 via-amber-200 to-transparent" />
                 <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                  See how to get real work done with EnConvo — connecting your
+                  See how to get real work done with Enconvo — connecting your
                   model subscriptions, automating office files and email, and
                   letting agents build things for you. One short video per use
                   case.
@@ -352,7 +352,7 @@ export default function UseCasesPage() {
                 rel="noreferrer"
                 className="font-semibold text-cyan-200 underline decoration-cyan-200/30 underline-offset-4 hover:text-white"
               >
-                EnConvo YouTube channel
+                Enconvo YouTube channel
               </a>{' '}
               — new walkthroughs land there first.
             </p>

@@ -45,7 +45,7 @@ const faqs = [
     },
     {
       question: 'What is your refund policy?',
-      answer: 'We offer a 14-day no-questions-asked refund policy for Lifetime Licenses. For Subscription plans, you can cancel your subscription at any time.',
+      answer: 'Standard, Premium and Teams licenses come with a 30-day money-back guarantee. Request a refund in Enconvo under Settings → Account, or email support@enconvo.com. Enconvo Cloud subscriptions can be canceled at any time.',
     },
     {
       question: 'Is Enconvo open source?',

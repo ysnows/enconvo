@@ -12,10 +12,10 @@ export function AlwaysWithYou() {
             <Container className={styles.sectionContainer}>
                 <div className={styles.sectionHeading} data-reveal>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-ash">
-                        Always with you
+                        On your desktop. In your pocket.
                     </p>
                     <h2 className="font-display mt-3 text-3xl tracking-tight text-content sm:text-4xl">
-                        On your desktop. In your pocket.
+                        Track your agents on the desktop and command your Mac from Telegram, Discord or Slack
                     </h2>
                 </div>
 

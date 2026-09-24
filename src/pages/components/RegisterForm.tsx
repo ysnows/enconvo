@@ -107,7 +107,7 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
     return (
         <>
             <Head>
-                <title>Sign Up - EnConvo</title>
+                <title>Sign Up - Enconvo</title>
                 <meta
                     name="description"
                     content="you can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."

@@ -73,9 +73,9 @@ export function SiteNav() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-nav-surface/90 backdrop-blur-md border-b border-hairline">
       <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1 items-center">
-          <Link href="/" aria-label="EnConvo home" className="flex items-center gap-3">
+          <Link href="/" aria-label="Enconvo home" className="flex items-center gap-3">
             <Logo className="h-8 w-auto" />
-            <span className="text-content font-bold text-lg">EnConvo</span>
+            <span className="text-content font-bold text-lg">Enconvo</span>
           </Link>
         </div>
         <div className="flex lg:hidden">
@@ -122,7 +122,7 @@ export function SiteNav() {
         <div className="fixed inset-0 z-50" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-surface px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-hairline">
           <div className="flex items-center justify-between">
-            <Link href="/" className="-m-1.5 p-1.5" aria-label="EnConvo home">
+            <Link href="/" className="-m-1.5 p-1.5" aria-label="Enconvo home">
               <Logo className="h-8 w-auto" />
             </Link>
             <button

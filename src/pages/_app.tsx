@@ -6,11 +6,13 @@ import Head from 'next/head'
 import { AppProps } from 'next/app'
 
 const privateRoutes = new Set(['/account', '/login', '/register', '/auth', '/auth/callback', '/payment', '/pay_success', '/cloud-points', '/reset_password', '/reset_password_send'])
+// Placeholder and deep-link pages that should not compete in search.
+const noindexRoutes = new Set(['/developer', '/mcp/install'])
 
 const App = ({ Component, pageProps, router }: AppProps) => {
     return (
         <>
-            {(privateRoutes.has(router.pathname) || router.pathname.startsWith('/components/')) && (
+            {(privateRoutes.has(router.pathname) || noindexRoutes.has(router.pathname) || router.pathname.startsWith('/components/')) && (
                 <Head><meta name="robots" content="noindex, follow" /></Head>
             )}
             <Script
@@ -20,7 +22,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
             />
 
             <Script
-                src="https://www.googletagmanager.com/gtag/js?id=G-X7999CT0H3"
+                src="https://www.googletagmanager.com/gtag/js?id=G-JBLMBKBEN2"
                 strategy="afterInteractive"
             />
             <Script id="google-analytics" strategy="afterInteractive">
@@ -29,7 +31,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
 
-          gtag('config', 'G-X7999CT0H3');
+          gtag('config', 'G-JBLMBKBEN2');
         `}
             </Script>
 

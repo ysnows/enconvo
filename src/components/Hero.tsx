@@ -6,6 +6,7 @@ import { SiteNav } from '@/components/SiteNav'
 import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroBackdrop } from '@/components/HeroBackdrop'
 import { HeroLayout } from '@/components/home/HeroLayout'
+import { trackEvent } from '@/lib/analytics'
 
 declare global {
   interface Window {
@@ -80,6 +81,7 @@ export function Hero() {
                           {({ active }) => (
                             <a
                               href="https://api.enconvo.com/app/download?arch=arm64&platform=darwin"
+                              onClick={() => trackEvent('download_click', { arch: 'arm64', placement: 'hero' })}
                               target="_blank"
                               rel="noreferrer"
                               className={`${active ? 'bg-surface-card' : ''} group flex items-center w-full px-4 py-3 text-sm font-medium text-content rounded-lg transition-colors`}
@@ -102,6 +104,7 @@ export function Hero() {
                           {({ active }) => (
                             <a
                               href="https://api.enconvo.com/app/download?arch=x64&platform=darwin"
+                              onClick={() => trackEvent('download_click', { arch: 'x64', placement: 'hero' })}
                               target="_blank"
                               rel="noreferrer"
                               className={`${active ? 'bg-surface-card' : ''} group flex items-center w-full px-4 py-3 text-sm font-medium text-content rounded-lg transition-colors`}

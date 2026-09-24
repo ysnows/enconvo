@@ -40,7 +40,7 @@ export function Footer() {
         <div className="flex flex-col items-center border-t border-hairline py-10 sm:flex-row sm:justify-between">
           <div className="mt-6 sm:mt-0">
             <p className="text-sm text-content-muted">
-              Copyright &copy; {new Date().getFullYear()} EnConvo. All rights
+              Copyright &copy; {new Date().getFullYear()} Enconvo. All rights
               reserved.
             </p>
           </div>

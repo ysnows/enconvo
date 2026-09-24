@@ -96,10 +96,10 @@ export function ModelFreedom() {
                         data-reveal
                     >
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-ash">
-                            Model freedom
+                            Any AI. Your terms.
                         </p>
                         <h2 className="font-display mt-3 text-3xl tracking-tight text-content sm:text-4xl">
-                            Any AI. Your terms.
+                            Use OpenAI, Anthropic, Gemini or local models in one Mac app
                         </h2>
                         <p className="mt-4 text-lg text-content-muted">
                             One app for every provider — language, image, video,

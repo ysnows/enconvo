@@ -93,7 +93,7 @@ export function Testimonials() {
             Loved by users worldwide
           </h2>
           <p className="mt-4 text-lg tracking-tight text-content-muted">
-            See what our users are saying about their experience with EnConvo&apos;s AI-powered features and workflow integrations.
+            See what our users are saying about their experience with Enconvo&apos;s AI-powered features and workflow integrations.
           </p>
         </div>
         <ul

@@ -32,63 +32,63 @@ export const useCases: UseCase[] = [
   },
   {
     slug: 'nvda-trading-strategy-backtest',
-    title: 'Build and Backtest an NVDA Trading Strategy with EnConvo',
+    title: 'Build and Backtest an NVDA Trading Strategy with Enconvo',
     description:
-      'Ask EnConvo to analyze an NVDA chart, write a Pine Script strategy, and backtest it in TradingView — all from the sidebar.',
+      'Ask Enconvo to analyze an NVDA chart, write a Pine Script strategy, and backtest it in TradingView — all from the sidebar.',
     youtubeId: 'eH7iKo0DqHM',
     category: 'AI Agent',
     date: '2026-07-15',
   },
   {
     slug: 'resume-to-personal-website',
-    title: 'Turn Your Résumé into a Personal Website with EnConvo',
+    title: 'Turn Your Résumé into a Personal Website with Enconvo',
     description:
-      'Turn a résumé into a polished personal website with Standing. EnConvo reads the CV, builds the page, and helps publish a professional online presence from your Mac.',
+      'Turn a résumé into a polished personal website with Standing. Enconvo reads the CV, builds the page, and helps publish a professional online presence from your Mac.',
     youtubeId: '9K5ppGhsU6E',
     category: 'AI Agent',
     date: '2026-07-15',
   },
   {
     slug: 'dynamic-island-quick-start',
-    title: 'Get Started with EnConvo from the Dynamic Island',
+    title: 'Get Started with Enconvo from the Dynamic Island',
     description:
-      'Set up EnConvo’s Dynamic Island, choose your AI models, and launch any command with a hover — without breaking your flow.',
+      'Set up Enconvo’s Dynamic Island, choose your AI models, and launch any command with a hover — without breaking your flow.',
     youtubeId: 'jVSxuPfvNw8',
     category: 'Everyday Tools',
     date: '2026-07-15',
   },
   {
     slug: 'browser-use-agent',
-    title: 'Let an EnConvo AI Agent Research and Build in Your Browser',
+    title: 'Let an Enconvo AI Agent Research and Build in Your Browser',
     description:
-      'Give EnConvo’s AI agent a goal and watch it research the web, use browser tools, and build a polished result for you.',
+      'Give Enconvo’s AI agent a goal and watch it research the web, use browser tools, and build a polished result for you.',
     youtubeId: 'VXMso0CG_RM',
     category: 'AI Agent',
     date: '2026-07-15',
   },
   {
     slug: 'dynamic-island-tools',
-    title: 'Run AI Tools from EnConvo’s Dynamic Island',
+    title: 'Run AI Tools from Enconvo’s Dynamic Island',
     description:
-      'Search the web, analyze images, launch commands, and use your favorite AI tools directly from EnConvo’s Dynamic Island.',
+      'Search the web, analyze images, launch commands, and use your favorite AI tools directly from Enconvo’s Dynamic Island.',
     youtubeId: 'Dm211JR-6YQ',
     category: 'Everyday Tools',
     date: '2026-07-15',
   },
   {
     slug: 'popbar-instant-actions',
-    title: 'Select Text and Act Instantly with EnConvo PopBar',
+    title: 'Select Text and Act Instantly with Enconvo PopBar',
     description:
-      'Select any text on your Mac, then translate, rewrite, summarize, or send it to AI instantly with EnConvo PopBar — without switching apps.',
+      'Select any text on your Mac, then translate, rewrite, summarize, or send it to AI instantly with Enconvo PopBar — without switching apps.',
     youtubeId: 'yvU5Lc62lEE',
     category: 'Everyday Tools',
     date: '2026-07-15',
   },
   {
     slug: 'excel-sidebar-ai',
-    title: 'Edit Excel with AI from the EnConvo Sidebar',
+    title: 'Edit Excel with AI from the Enconvo Sidebar',
     description:
-      'Open EnConvo beside Microsoft Excel and let AI analyze your workbook, explain the data, and make spreadsheet changes while you stay in context.',
+      'Open Enconvo beside Microsoft Excel and let AI analyze your workbook, explain the data, and make spreadsheet changes while you stay in context.',
     youtubeId: '4mJcBRJK-fc',
     category: 'Apps & Office',
     date: '2026-07-15',

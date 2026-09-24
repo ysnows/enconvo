@@ -23,7 +23,7 @@ export default function LoginSuccess({ handleOpenApp, user }) {
     return (
         <>
             <Head>
-                <title>Sign In Success - EnConvo</title>
+                <title>Sign In Success - Enconvo</title>
                 <meta
                     name="description"
                     content="you can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."

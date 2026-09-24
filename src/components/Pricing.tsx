@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Fragment, useState } from 'react'
 import { Button } from '@/components/Button'
 import { supabase } from '@/lib/supabase'
+import { trackEvent } from '@/lib/analytics'
 
 interface CheckIconProps {
   className: string
@@ -44,11 +45,13 @@ async function startCheckout(
   try {
     setIsLoading(true)
     if (lookupKey === 'free') {
+      trackEvent('download_click', { arch: 'auto', placement: 'pricing_free' })
       window.location.href = 'https://api.enconvo.com/app/download'
       return
     }
 
     const { data: { session } } = await supabase.auth.getSession()
+    trackEvent('begin_checkout', { plan: lookupKey, signed_in: Boolean(session) })
 
     if (!session) {
       const returnUrl = `/pricing?plan=${lookupKey}`

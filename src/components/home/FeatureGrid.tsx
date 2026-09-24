@@ -32,13 +32,13 @@ export function FeatureGrid() {
             <Container className={styles.sectionContainer}>
                 <div className={`${styles.sectionHeading} ${styles.sectionHeadingSplit}`} data-reveal>
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-ash">
-                        And more
+                        The rest of the toolbox.
                     </p>
                     <h2 className="mt-3 font-display text-3xl tracking-tight text-content sm:text-4xl">
-                        The rest of the toolbox.
+                        100+ built-in AI tools for writing, web search, translation and screen context
                     </h2>
                     <p className="mt-4 text-lg text-content-muted">
-                        100+ capabilities ship built in. A few highlights:
+                        A few highlights from what ships built in:
                     </p>
                 </div>
 

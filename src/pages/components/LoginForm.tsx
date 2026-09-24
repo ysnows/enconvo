@@ -140,7 +140,7 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
     return (
         <>
             <Head>
-                <title>Log In - EnConvo</title>
+                <title>Log In - Enconvo</title>
                 <meta
                     name="description"
                     content="you can use it to call AI anytime, anywhere in the MacOS system. You can also integrate AI into your existing workflow through the  plugin system, giving your workflow an AI brain."

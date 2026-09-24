@@ -31,6 +31,13 @@ const nextConfig = {
                 destination: '/cloud-pricing',
                 permanent: true,
             },
+            {
+                // Plans live in the homepage pricing section; older links and
+                // the login returnUrl still use /pricing.
+                source: '/pricing',
+                destination: '/#pricing',
+                permanent: false,
+            },
         ]
     },
 }
