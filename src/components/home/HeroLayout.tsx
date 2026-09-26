@@ -24,9 +24,12 @@ const layout = `
 .${styles.heroTitle} { font-size: 56px; font-weight: 600; line-height: 1.1; text-wrap: balance; }
 :where(.${styles.heroTitleAccent}) { color: #d1e4ee; }
 .${styles.heroDescription} { max-width: 680px; margin: 20px auto 0; color: #cdcdcd; font-size: 18px; line-height: 1.6; text-wrap: pretty; }
-.${styles.heroActions} { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 24px; }
+.${styles.heroActions} { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; margin-top: 24px; }
 .${styles.downloadButton} { min-height: 48px; padding: 12px 22px; border-radius: 10px; font-size: 14px; }
-.${styles.requirements} { font-size: 12px; line-height: 18px; color: #9c9c9d; }
+.${styles.requirements} { margin-top: 12px; font-size: 12px; line-height: 18px; color: #9c9c9d; }
+.${styles.browseButton} { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 18px; border: 1px solid var(--home-stroke-strong, rgba(255,255,255,.2)); border-radius: 10px; color: #f4f4f6; font-size: 14px; font-weight: 500; }
+.${styles.skipLink} { position: fixed; top: 12px; left: 12px; z-index: 60; padding: 12px 16px; border-radius: 10px; transform: translateY(-160%); }
+.${styles.skipLink}:focus { transform: translateY(0); }
 .${styles.showcase} { width: 100%; max-width: 1120px; margin: 28px auto 0; }
 .${styles.tabScroller} { overflow-x: auto; padding: 5px; scrollbar-width: thin; }
 .${styles.tabs} { display: flex; width: max-content; gap: 4px; margin: 0 auto; padding: 4px; border: 1px solid var(--home-stroke, rgba(255,255,255,.1)); border-radius: 12px; background: rgba(13,16,19,.88); }

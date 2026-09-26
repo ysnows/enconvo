@@ -91,7 +91,7 @@ export function Hero() {
                                   <AppleLogoIcon className="w-5 h-5 mr-3 text-content-muted" />
                                   <div>
                                     <div className="text-content font-medium text-start">macOS (Apple Silicon)</div>
-                                    <div className="text-content-ash text-xs">For M1, M2, M3, M4 Macs</div>
+                                    <div className="text-content-ash text-xs">For Macs with an Apple chip</div>
                                   </div>
                                 </div>
                                 <DownloadRowArrow />
@@ -127,10 +127,9 @@ export function Hero() {
                   </Menu.Items>
                 </Menu>
 
-                <div className={styles.requirements}>
-                  <span>macOS 14+ (Intel &amp; Apple Silicon)</span>
-                </div>
+                <a href="#features" className={styles.browseButton}>Explore what you can do <span aria-hidden="true">↓</span></a>
               </div>
+              <p className={styles.requirements}>Free to start · macOS 14+ · Intel &amp; Apple Silicon</p>
             </div>
 
             <HeroShowcase />

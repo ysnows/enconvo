@@ -92,8 +92,8 @@ const server = createServer(async (request, response) => {
     )
     // Keep the real Hero and its ancestors. No lower sections or app scripts
     // are needed to reproduce the escaping video.
-    const heroEnd = html.indexOf('<section id="models"')
-    if (heroEnd < 0) throw new Error('Expected the homepage Hero followed by #models')
+    const heroEnd = html.indexOf('<section id="features"')
+    if (heroEnd < 0) throw new Error('Expected the homepage Hero followed by #features')
     html = html.slice(0, heroEnd) + '</main></div></div></body></html>'
     html = html
       .replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '')

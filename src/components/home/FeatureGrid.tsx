@@ -1,96 +1,54 @@
-import styles from '@/styles/Home.module.css'
-import { ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
-import { Container } from '@/components/Container'
-import { features } from '@/data/features'
+import { ArrowRight } from 'lucide-react'
+import { UseCaseGallery } from '@/components/UseCaseGallery'
+import { useCases } from '@/data/useCases'
+import styles from '@/styles/Discovery.module.css'
 
-// Long-tail capabilities not already shown in the Hero showcase or the
-// mid-page sections. Titles must match src/data/features.tsx.
-const GRID_TITLES = [
-    'Agent Mode',
-    'Writing Tools',
-    'AI Web Search',
-    'Image Generation',
-    'Advanced Translation',
-    'Live Screen & Camera',
-    'Context Awareness',
-    'Offline & Privacy Mode',
-    'Online Video Downloader',
+// Curated real walkthroughs, reusing the catalogue's stable deep links.
+const FEATURED_SLUGS = [
+  'excel-sidebar-ai',
+  'resume-to-personal-website',
+  'popbar-instant-actions',
+  'browser-use-agent',
+  'gmail-weather-workflow',
+  'seamless-ocr',
 ]
+const featured = FEATURED_SLUGS.map((slug) =>
+  useCases.find((item) => item.slug === slug)
+).filter((item): item is NonNullable<typeof item> => Boolean(item))
 
 export function FeatureGrid() {
-    const items = GRID_TITLES
-        .map((title) => features.find((feature) => feature.title === title))
-        .filter((feature): feature is NonNullable<typeof feature> => Boolean(feature))
-
-    return (
-        <section
-            id="features"
-            aria-label="More features"
-            className={styles.section}
-        >
-            <Container className={styles.sectionContainer}>
-                <div className={`${styles.sectionHeading} ${styles.sectionHeadingSplit}`} data-reveal>
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-content-ash">
-                        The rest of the toolbox.
-                    </p>
-                    <h2 className="mt-3 font-display text-3xl tracking-tight text-content sm:text-4xl">
-                        100+ built-in AI tools for writing, web search, translation and screen context
-                    </h2>
-                    <p className="mt-4 text-lg text-content-muted">
-                        A few highlights from what ships built in:
-                    </p>
-                </div>
-
-                <div className="mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {items.map((feature) => {
-                        const Icon = feature.icon
-                        return (
-                            <Link
-                                key={feature.title}
-                                href="/use-cases"
-                                className={`${styles.featureCard} group flex items-start gap-4 transition-colors`}
-                                data-spotlight
-                                data-reveal
-                            >
-                                <span className="mt-0.5 flex h-9 w-9 flex-none items-center justify-center rounded-md border border-hairline bg-surface-elevated text-content-muted group-hover:text-content">
-                                    <Icon />
-                                </span>
-                                <span>
-                                    <span className="block font-display text-base font-semibold text-content">
-                                        {feature.title}
-                                    </span>
-                                    <span className="mt-1 line-clamp-2 text-sm leading-relaxed text-content-muted">
-                                        {feature.description}
-                                    </span>
-                                </span>
-                                <ArrowUpRight className={styles.featureArrow} aria-hidden="true" />
-                            </Link>
-                        )
-                    })}
-                </div>
-
-                <p className="mt-10 text-center">
-                    <Link
-                        href="/use-cases"
-                        className="text-sm font-medium text-signal-blue transition hover:text-content"
-                    >
-                        Explore all use cases &rarr;
-                    </Link>
-                </p>
-                <p className="mt-3 text-center text-sm text-content-muted">
-                    All Enconvo extensions are open source on{' '}
-                    <a
-                        href="https://github.com/enconvo"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-content-muted underline underline-offset-2 transition hover:text-content"
-                    >
-                        GitHub
-                    </a>
-                    .
-                </p>
-            </Container>
-        </section>
-    )
+  return (
+    <section
+      id="features"
+      aria-labelledby="discovery-title"
+      className={styles.section}
+    >
+      <div className={styles.container}>
+        <div className={styles.heading}>
+          <div>
+            <p className={styles.eyebrow}>Made for the work you do.</p>
+            <h2 id="discovery-title">What will you do with Enconvo?</h2>
+            <p className={styles.intro}>
+              Write, research, build, and take care of the everyday. See real
+              tasks come together on a Mac, one walkthrough at a time.
+            </p>
+          </div>
+          <Link href="/use-cases" className={styles.allLink}>
+            All walkthroughs <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+        <UseCaseGallery items={featured} />
+        <div className={styles.footnote}>
+          <p>
+            100+ built-in AI tools for writing, search, translation, and more.
+          </p>
+          <p>
+            Make them your own with{' '}
+            <a href="#platform">plugins, skills &amp; workflows</a>.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
 }

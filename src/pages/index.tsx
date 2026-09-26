@@ -15,12 +15,6 @@ import { homepageStructuredData, SITE_DESCRIPTION } from '@/data/siteMetadata'
 
 const TITLE = 'Enconvo — AI Assistant & Agent for Mac'
 const DESCRIPTION = SITE_DESCRIPTION
-const SHARE_TITLE = 'Enconvo — The assistant your Mac was promised.'
-const SHARE_DESCRIPTION =
-  'An AI agent that understands your screen and works in your Mac apps. Organize files, write, research, and get things done with Enconvo.'
-const SHARE_IMAGE = 'https://www.enconvo.com/og/enconvo-mac-agent-v1.jpg'
-const SHARE_IMAGE_ALT =
-  'Enconvo — The assistant your Mac was promised. A native AI sidebar organizes files alongside Finder, framed by blue light ribbons.'
 
 export default function Home() {
   const sectionEffectsRef = useSectionEffects()
@@ -34,32 +28,15 @@ export default function Home() {
         <link rel="preconnect" href="https://file.enconvo.com" />
         <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(homepageStructuredData).replace(/</g, '\\u003c') }} />
-        <meta property="og:title" content={SHARE_TITLE} />
-        <meta property="og:description" content={SHARE_DESCRIPTION} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.enconvo.com/" />
-        <meta property="og:site_name" content="Enconvo" />
-        <meta property="og:locale" content="en_US" />
-        <meta property="og:image" content={SHARE_IMAGE} />
-        <meta property="og:image:secure_url" content={SHARE_IMAGE} />
-        <meta property="og:image:type" content="image/jpeg" />
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content={SHARE_IMAGE_ALT} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@enconvo_ai" />
-        <meta name="twitter:title" content={SHARE_TITLE} />
-        <meta name="twitter:description" content={SHARE_DESCRIPTION} />
-        <meta name="twitter:image" content={SHARE_IMAGE} />
-        <meta name="twitter:image:alt" content={SHARE_IMAGE_ALT} />
       </Head>
 
-      <main>
+      <a href="#main-content" className={styles.skipLink}>Skip to content</a>
+      <main id="main-content" tabIndex={-1}>
         <Hero />
+        <FeatureGrid />
         <ModelFreedom />
         <OpenPlatform />
         <AlwaysWithYou />
-        <FeatureGrid />
         <Testimonials />
         <Pricing />
         <Faqs />
