@@ -1,113 +1,301 @@
 import Head from 'next/head'
-import {CheckCircleIcon, InformationCircleIcon} from '@heroicons/react/20/solid'
 import Link from "next/link";
+import {ReactNode} from "react";
+
+const LAST_UPDATED = 'September 27, 2026'
+const SUPPORT_EMAIL = 'support@enconvo.com'
+
+function Section({id, title, children}: { id?: string, title: string, children: ReactNode }) {
+    return (
+        <section id={id} className="mt-16 max-w-2xl">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900">{title}</h2>
+            <div className="mt-6 space-y-6">{children}</div>
+        </section>
+    )
+}
+
+function Items({children}: { children: ReactNode }) {
+    return <ul role="list" className="list-disc space-y-3 pl-6 text-gray-600">{children}</ul>
+}
+
+function Item({title, children}: { title?: string, children: ReactNode }) {
+    return (
+        <li>
+            {title && <strong className="font-semibold text-gray-900">{title}. </strong>}
+            {children}
+        </li>
+    )
+}
+
+function ExternalLink({href, children}: { href: string, children: ReactNode }) {
+    return <a className="text-indigo-600" href={href} target="_blank" rel="noopener noreferrer">{children}</a>
+}
 
 export default function Privacy() {
     return (
         <div className="bg-white px-6 py-32 lg:px-8">
             <Head>
                 <title>Enconvo Privacy Policy</title>
-                <meta name="description" content="How Enconvo handles app permissions, data, and privacy." />
-                <link rel="canonical" href="https://www.enconvo.com/privacy" />
+                <meta name="description"
+                      content="How Enconvo collects, uses, stores, and shares data, including Google user data."/>
+                <link rel="canonical" href="https://www.enconvo.com/privacy"/>
             </Head>
             <div className="mx-auto max-w-3xl text-base leading-7 text-gray-700">
-                <p className="mb-8 text-base font-semibold leading-7 text-indigo-600">_______________________</p>
-
-
                 <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Privacy
                     Policy</h1>
+                <p className="mt-4 text-sm text-gray-500">Last updated: {LAST_UPDATED}</p>
                 <p className="mt-6 text-xl leading-8">
-                    Enconvo is an intelligent conversation tool software for macOS platform, mainly
-                    completing quick conversation needs through integrating third-party artificial
-                    intelligence services.
-
-                    This privacy policy mainly applies to the Enconvo main program and the
-                    integrated frameworks and services, and does not apply to Enconvo plugins
-                    installed by yourself.
+                    Enconvo is an AI assistant for your computer and iPhone. Enconvo is developed by
+                    THE GREAT LIONHEART PTE. LTD. (&quot;Enconvo&quot;, &quot;we&quot;, &quot;us&quot;). This
+                    policy explains what data the Enconvo desktop app, the Enconvo iPhone app, the
+                    website enconvo.com, and the Enconvo cloud services collect, how we use it, where it
+                    is stored, who we share it with, and how you can delete it.
                 </p>
-                <div className="mt-10 max-w-2xl">
-                    <h2 className="mt-16 text-2xl font-bold tracking-tight text-gray-900">Privacy
-                        permissions</h2>
-                    <p className="mt-6">
-                        To ensure the normal operation of the program, the following privacy
-                        permissions need to be enabled for Enconvo:
+                <p className="mt-6">
+                    It does not cover third-party plugins, MCP servers, or AI providers you add
+                    yourself. Those are governed by their own privacy policies.
+                </p>
+
+                <Section title="Summary">
+                    <Items>
+                        <Item>Your chats, files, settings, and your own API keys stay on your device unless you
+                            use a feature that needs a network service.</Item>
+                        <Item>We do not sell your data, show ads, or use your content to train AI models.</Item>
+                        <Item>Google user data is used only to provide the features you ask for in Enconvo, and
+                            is handled according to Google&apos;s Limited Use requirements (see <Link
+                                className="text-indigo-600" href="#google-user-data">Google user data</Link>).</Item>
+                        <Item>You can turn off product analytics at any time in Enconvo Settings.</Item>
+                    </Items>
+                </Section>
+
+                <Section title="Data that stays on your device">
+                    <p>
+                        Your conversation history, chat sessions, plugin settings, knowledge base, and the
+                        API keys you enter for AI providers are stored locally on your device. We do not
+                        upload them to our servers. When you use your own API key, Enconvo sends your
+                        request directly from your device to that provider.
                     </p>
-
-                    <ul role="list" className="mt-8 max-w-xl space-y-8 text-gray-600">
-                        <li className="flex gap-x-3">
-                            <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
-                                             aria-hidden="true"/>
-                            <span>
-                <strong className="font-semibold text-gray-900">Accessibility permission. </strong> Obtain the currently selected text through accessibility permission, which is used to implement functions related to word translation. Enconvo will only request this permission when you use the relevant functions.
-              </span>
-                        </li>
-                        <li className="flex gap-x-3">
-                            <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
-                                             aria-hidden="true"/>
-                            <span>
-                <strong className="font-semibold text-gray-900">Clipboard read and write. </strong> Obtain the currently selected text through the clipboard, or write specified text to the clipboard.
-              </span>
-                        </li>
-                    </ul>
-
-                    <p className="mt-10">
-                        We will not save or share any data obtained through the above permissions.
+                    <p>
+                        Enconvo asks for system permissions only for the features that need them, and only
+                        when you use those features:
                     </p>
-                </div>
-                <div className="mt-16 max-w-2xl">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Collected
-                        data.</h2>
-                    <p className="mt-6">
-                        Enconvo does not collect core data generated during your usage, such as
-                        translated text and recognized images. If you enable services that require
-                        network requests, Enconvo may send data over the network to the service
-                        provider server for data processing to obtain the required results.
+                    <Items>
+                        <Item title="Accessibility">Reads the text you have selected and lets agents operate
+                            apps when you ask them to.</Item>
+                        <Item title="Clipboard">Reads or writes text when you run a command that uses the
+                            clipboard.</Item>
+                        <Item title="Microphone">Records audio for dictation, transcription, and voice
+                            conversations.</Item>
+                        <Item title="Screen recording and camera">Captures the screen or camera when you
+                            share it with an agent.</Item>
+                        <Item title="Calendars, reminders, contacts, and automation">Lets agents read and
+                            update your Apple apps when you ask them to.</Item>
+                        <Item title="Location">Shows local weather. Your location is not stored on our
+                            servers.</Item>
+                    </Items>
+                </Section>
+
+                <Section title="Your Enconvo account">
+                    <p>
+                        You need an Enconvo account for Enconvo&apos;s cloud features, subscriptions, and
+                        the iPhone app. When you sign up with an email and password, or with Google Sign-In,
+                        we store:
                     </p>
-                    <p className="mt-8">
-                        In addition, when you use certain service provider services, you may need
-                        to enter your own key into the Enconvo main program to use them normally.
-                        Enconvo only saves your key locally and does not upload it to the server.
-                        <br/> If you explicitly enable anonymous product analytics, Enconvo may
-                        collect the following product event data:
+                    <Items>
+                        <Item title="Profile">Your email address, your name, and your profile picture if you
+                            sign in with Google.</Item>
+                        <Item title="Devices">An identifier derived from your computer&apos;s hardware (we
+                            store a one-way hash, not the serial number itself), the device model and
+                            system version, and the IP address and approximate city of the device when it
+                            signs in. We use this to apply your plan to your devices and to prevent
+                            abuse.</Item>
+                        <Item title="Plan and usage">Your plan, your points balance, and a usage record for
+                            each cloud request: the model or feature used, the command, token counts, and
+                            the points charged. Usage records do not contain your prompts or the
+                            responses.</Item>
+                        <Item title="Email preferences">Whether you want product update emails.</Item>
+                    </Items>
+                </Section>
+
+                <Section title="Payments">
+                    <p>
+                        Payments are processed by Stripe. We receive and store the plan you bought, the
+                        amount, the currency, the purchase and refund dates, and Stripe&apos;s reference
+                        identifiers. We never receive or store your full card number.
                     </p>
+                </Section>
 
-                    <ul role="list" className="mt-8 max-w-xl space-y-8 text-gray-600">
-
-                        <li className="flex gap-x-3">
-                            <CheckCircleIcon className="mt-1 h-5 w-5 flex-none text-indigo-600"
-                                             aria-hidden="true"/>
-                            <span>
-                <strong className="font-semibold text-gray-900">Product analytics. </strong> We collect anonymous metadata such as app version, macOS version, extension identifiers, command identifiers, command status, and duration. We do not collect prompts, selected text, clipboard contents, file contents, API keys, recognized images, model responses, or credentials.
-              </span>
-                        </li>
-                    </ul>
-
-                </div>
-                <div className="mt-16 max-w-2xl">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Changes to this
-                        Privacy Policy</h2>
-                    <p className="mt-6">
-                        We may update our privacy policy from time to time to adapt to the latest
-                        situation of Enconvo. Therefore, we recommend that you regularly check this
-                        page for the latest content.
-
-                        <br/>
-                        We will notify you of any changes by posting a new privacy policy on this
-                        page. All changes take effect immediately after being posted on this page.
+                <Section title="Enconvo cloud models and services">
+                    <p>
+                        When you choose one of Enconvo&apos;s built-in cloud models, or a cloud feature such
+                        as web search, image or video generation, speech recognition, or text-to-speech,
+                        your request passes through our servers to the provider that performs it (for
+                        example OpenAI, Anthropic, Google, or the other providers listed in the model
+                        picker). The request can include your prompt, the files or context you attach, and
+                        any data an agent has gathered for the task.
                     </p>
-
-
-                </div>
-                <div className="mt-16 max-w-2xl">
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">Contact Us</h2>
-                    <p className="mt-6">
-                        If you have any questions or suggestions about our privacy policy, please
-                        contact us at: &nbsp; <Link className="text-indigo-600"
-                                                    href={'mailto:support@enconvo.com.com'}>support@enconvo.com.com</Link>
+                    <p>
+                        We use this content only to return the result you asked for. We do not store
+                        prompts or responses in our databases. Our servers keep short-lived operational
+                        logs, which can include parts of a request, to diagnose failures and prevent
+                        abuse. These logs are deleted automatically after at most 7 days. Providers
+                        process your request under their own terms for API customers.
                     </p>
+                </Section>
 
+                <Section title="The iPhone app">
+                    <Items>
+                        <Item title="Connection to your computer">When the iPhone app controls Enconvo on
+                            your computer, the connection passes through our relay server end-to-end
+                            encrypted. The relay can see only routing information, not the content.</Item>
+                        <Item title="Phone chats">Chats you have in the iPhone app itself, their
+                            attachments, and your personal instructions are synced through Enconvo&apos;s
+                            servers so they are available on your devices. They are encrypted at rest but
+                            not end-to-end encrypted. You can delete them in the app, or by deleting your
+                            account.</Item>
+                        <Item title="Notifications">We store your iPhone&apos;s push notification token to
+                            deliver notifications from your computer.</Item>
+                        <Item title="API keys">Any provider API keys you enter in the iPhone app are kept
+                            in the iOS Keychain on your phone.</Item>
+                    </Items>
+                </Section>
 
-                </div>
+                <Section id="google-user-data" title="Google user data">
+                    <p>
+                        Enconvo accesses Google user data only when you choose to connect a Google
+                        account.
+                    </p>
+                    <Items>
+                        <Item title="Google Sign-In">We receive your name, email address, and profile
+                            picture to create and identify your Enconvo account.</Item>
+                        <Item title="Gmail">If you connect Gmail, Enconvo can read, search, and organize
+                            your messages and labels, create drafts, and send email on your behalf, but only
+                            when you or an agent you are using asks it to.</Item>
+                    </Items>
+                    <p>
+                        <strong className="font-semibold text-gray-900">How we use it.</strong> We use Google
+                        user data only to provide the features you use in Enconvo. For example, we show your
+                        emails to you, summarize them, draft replies, or send a message you asked an agent to
+                        send. We do not use it for advertising, and we do not use it to create, train, or
+                        improve any AI or machine learning model.
+                    </p>
+                    <p>
+                        <strong className="font-semibold text-gray-900">Where it is stored.</strong> Gmail
+                        requests go directly from your device to Google. The authorization token is kept
+                        encrypted on your device. We do not copy your email to our servers. Messages an
+                        agent reads may be saved in your local chat history on your device, and you can
+                        delete that history at any time.
+                    </p>
+                    <p>
+                        <strong className="font-semibold text-gray-900">Who we share it with.</strong> When
+                        a task needs email content, Enconvo includes only the content that task needs in
+                        the request to the AI model you selected. If you use one of Enconvo&apos;s built-in
+                        cloud models, that request passes through our servers as described above. We do not
+                        sell Google user data or share it with advertising platforms, data brokers, or
+                        information resellers. We share it with others only when you ask us to, when it is
+                        needed for security, or when the law requires it.
+                    </p>
+                    <p>
+                        <strong className="font-semibold text-gray-900">Human access.</strong> No person at
+                        Enconvo reads your Google user data unless you give us explicit permission for a
+                        specific message (for example, in a support request), it is needed to investigate
+                        abuse or a security incident, or the law requires it.
+                    </p>
+                    <p>
+                        <strong className="font-semibold text-gray-900">Removing access.</strong> You can
+                        disconnect a Google account in Enconvo at any time, which deletes the token from
+                        your device. You can also revoke Enconvo&apos;s access at <ExternalLink
+                            href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</ExternalLink>.
+                    </p>
+                    <p className="rounded-md bg-gray-50 p-4 text-gray-900">
+                        Enconvo&apos;s use and transfer to any other app of information received from
+                        Google APIs will adhere to the <ExternalLink
+                            href="https://developers.google.com/terms/api-services-user-data-policy">Google
+                        API Services User Data Policy</ExternalLink>, including the Limited Use
+                        requirements.
+                    </p>
+                </Section>
+
+                <Section title="Product analytics">
+                    <p>
+                        The desktop app sends product analytics to PostHog to help us understand which
+                        features work and where they fail. This is on by default, and you can turn it off
+                        in Settings &gt; General. Events include the app version, system version, device
+                        identifier, plugin and command identifiers, status, and duration. If you are signed
+                        in, we link these events to your Enconvo account. Analytics never include your
+                        prompts, selected text, clipboard contents, files, emails, API keys, or model
+                        responses.
+                    </p>
+                    <p>
+                        The website enconvo.com uses Google Analytics to measure visits. The iPhone app
+                        does not include an analytics SDK.
+                    </p>
+                </Section>
+
+                <Section title="Service providers">
+                    <p>We rely on these providers to operate Enconvo. Each processes data only on our
+                        behalf:</p>
+                    <Items>
+                        <Item title="Supabase">Account sign-in and account records.</Item>
+                        <Item title="Cloudflare">Our API servers, the iPhone relay, Phone chat sync
+                            storage, and operational logs.</Item>
+                        <Item title="Stripe">Payments.</Item>
+                        <Item title="PostHog">Product analytics.</Item>
+                        <Item title="Google Analytics">Website analytics.</Item>
+                        <Item title="Resend">Account and product update emails.</Item>
+                        <Item title="AI, speech, and search providers">Processing the cloud requests you
+                            make, as described above.</Item>
+                        <Item title="Apple">Push notifications to the iPhone app.</Item>
+                    </Items>
+                </Section>
+
+                <Section title="Retention and deletion">
+                    <p>
+                        We keep account, plan, and usage records while your account is active. Operational
+                        logs are deleted after at most 7 days. To delete your account and the data tied to
+                        it, including synced Phone chats, email us at <Link className="text-indigo-600"
+                                                                            href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</Link> from
+                        the address on your account. We complete deletion within 30 days, except for
+                        payment records that we must keep by law.
+                    </p>
+                    <p>
+                        Data stored only on your device, such as local chat history, is removed when you
+                        delete it in Enconvo or uninstall the app and remove its data folder.
+                    </p>
+                </Section>
+
+                <Section title="Security">
+                    <p>
+                        Connections to our servers use TLS. Stored data is encrypted at rest by our
+                        infrastructure providers. Tokens for connected accounts are encrypted on your
+                        device, and access to production systems is limited to the people who operate
+                        Enconvo.
+                    </p>
+                </Section>
+
+                <Section title="Children">
+                    <p>
+                        Enconvo is not directed to children under 13, and we do not knowingly collect
+                        personal data from them.
+                    </p>
+                </Section>
+
+                <Section title="Changes to this Privacy Policy">
+                    <p>
+                        We may update this policy as Enconvo changes. We will post the new version on this
+                        page and update the date at the top. If a change materially affects how we handle
+                        Google user data or other personal data, we will also notify you in the app or by
+                        email before it takes effect.
+                    </p>
+                </Section>
+
+                <Section title="Contact Us">
+                    <p>
+                        If you have questions about this policy or want to exercise your privacy rights,
+                        contact us at <Link className="text-indigo-600"
+                                            href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</Link>.
+                    </p>
+                </Section>
             </div>
         </div>
     )
