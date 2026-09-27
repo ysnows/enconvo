@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'build-your-first-workflow',
+    title: 'Build your first workflow, step by step',
+    description:
+      'Create a workflow from the starter template, add a step by hand, let the workflow assistant add another, then run it and check what every step produced — a narrated walkthrough in eight steps.',
+    youtubeId: 'g02LJwso1yk',
+    category: 'Workflows',
+    date: '2026-09-27',
+    docsUrl: 'https://docs.enconvo.ai/workflows/build-your-first-workflow',
+  },
+  {
     slug: 'excel-mcp-agent',
     title: 'Create and edit Excel workbooks with your AI agent',
     description:

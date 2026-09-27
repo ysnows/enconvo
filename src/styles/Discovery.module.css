@@ -147,6 +147,7 @@
   gap: 32px 24px;
 }
 .card {
+  position: relative;
   min-width: 0;
   scroll-margin-top: 100px;
 }
@@ -264,13 +265,20 @@
 .cardLink:hover .cardMeta {
   @apply text-content;
 }
+/* Shares the "Watch walkthrough" line so a guide link never grows the card. */
 .guide {
   @apply text-content-body;
+  position: absolute;
+  right: 0;
+  bottom: 0;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-end;
   gap: 4px;
   min-height: 44px;
   font-size: 12px;
+}
+.guide:hover {
+  @apply text-content;
 }
 .empty {
   @apply text-content-muted;
