@@ -6,6 +6,7 @@ import {
     syncCurrentEmailPreference,
     updateCurrentEmailPreference,
 } from '@/lib/email-preferences-client'
+import { redeemPendingInvite } from '@/lib/invite'
 
 export default function AuthCallback() {
     const router = useRouter()
@@ -21,6 +22,7 @@ export default function AuthCallback() {
                 await router.push('/login?error=auth')
             }
             if (session) {
+                void redeemPendingInvite(session.access_token)
                 const registrationPreference = consumeRegistrationEmailPreference()
 
                 try {

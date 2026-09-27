@@ -8,6 +8,7 @@ import {
     getCurrentEmailPreference,
     updateCurrentEmailPreference,
 } from '@/lib/email-preferences-client'
+import InviteFriends from '@/components/InviteFriends'
 
 type EmailPreference = {
     product_updates_subscribed: boolean
@@ -410,6 +411,8 @@ export default function Account() {
                                     </div>
                                 </div>
                             )}
+
+                            {session && <InviteFriends accessToken={session.access_token} />}
                         </div>
                     </div>
                 </div>

@@ -5,10 +5,11 @@ import Script from 'next/script'
 import Head from 'next/head'
 import { AppProps } from 'next/app'
 import { SocialMetadata } from '@/components/SocialMetadata'
+import { InviteToast } from '@/components/InviteToast'
 
 const privateRoutes = new Set(['/account', '/login', '/register', '/auth', '/auth/callback', '/payment', '/pay_success', '/cloud-points', '/reset_password', '/reset_password_send'])
 // Placeholder and deep-link pages that should not compete in search.
-const noindexRoutes = new Set(['/developer', '/mcp/install'])
+const noindexRoutes = new Set(['/developer', '/mcp/install', '/i/[code]'])
 
 const App = ({ Component, pageProps, router }: AppProps) => {
     return (
@@ -38,6 +39,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
             </Script>
 
             <Component {...pageProps} />
+            <InviteToast />
         </>
     );
 };
