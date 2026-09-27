@@ -14,7 +14,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { NativeRouter } from "@/utils/app/native_router";
 import { syncCurrentEmailPreference } from '@/lib/email-preferences-client';
-import { redeemPendingInvite } from '@/lib/invite';
 
 export default function LoginForm({ loginState, setLoginState, setUser, router }) {
 
@@ -56,8 +55,6 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             access_token: data.session.access_token,
             refresh_token: data.session.refresh_token
         })
-
-        void redeemPendingInvite(data.session.access_token)
 
         try {
             await syncCurrentEmailPreference(data.session.access_token)
@@ -113,8 +110,10 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
         try {
             setGoogleIsLoading(true)
             let redirectUrl = `${window.location.origin}/auth/callback`
-            if (router?.query?.returnUrl) {
-                redirectUrl = router.query.returnUrl as string
+            // The callback carries a local returnUrl on (a bare path isn't a valid OAuth redirect).
+            const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : router.query.returnUrl
+            if (returnUrl?.startsWith('/')) {
+                redirectUrl += `?returnUrl=${encodeURIComponent(returnUrl)}`
             }
             // Preserve from/source across the OAuth round-trip so the app can return
             // the user to where login started (e.g. the onboarding guide).

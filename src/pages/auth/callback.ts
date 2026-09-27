@@ -6,7 +6,6 @@ import {
     syncCurrentEmailPreference,
     updateCurrentEmailPreference,
 } from '@/lib/email-preferences-client'
-import { redeemPendingInvite } from '@/lib/invite'
 
 export default function AuthCallback() {
     const router = useRouter()
@@ -22,7 +21,6 @@ export default function AuthCallback() {
                 await router.push('/login?error=auth')
             }
             if (session) {
-                void redeemPendingInvite(session.access_token)
                 const registrationPreference = consumeRegistrationEmailPreference()
 
                 try {
@@ -48,6 +46,12 @@ export default function AuthCallback() {
                 const returnUrl = Array.isArray(router.query.returnUrl)
                     ? router.query.returnUrl[0]
                     : router.query.returnUrl
+                // A page that sent the user to sign in (e.g. /redeem/<code>) gets them back
+                // directly; /login only fires SIGNED_IN for a sign-in made on that page.
+                if (!from && returnUrl?.startsWith('/') && returnUrl !== '/' && !returnUrl.startsWith('//') && !returnUrl.startsWith('/pricing?plan=')) {
+                    await router.push(returnUrl)
+                    return
+                }
                 const params = new URLSearchParams()
                 if (from) params.set('from', from)
                 if (source) params.set('source', source)

@@ -5,7 +5,6 @@ import LoginForm from './components/LoginForm'
 import LoginSuccess from "@/pages/components/LoginSuccess"
 import { NativeRouter } from "@/utils/app/native_router"
 import type { Session } from '@supabase/supabase-js'
-import { redeemPendingInvite } from '@/lib/invite'
 
 export default function Login() {
     // 获取url参数
@@ -39,7 +38,6 @@ export default function Login() {
             console.log("data--", data)
             if (data.session) {
                 setSession(data.session)
-                void redeemPendingInvite(data.session.access_token)
                 const expires_at = data.session.expires_at
                 console.log("session--", expires_at, new Date().getTime())
                 const { data: { user }, error } = await supabase.auth.getUser()
@@ -69,7 +67,6 @@ export default function Login() {
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
             console.log("event--", event, session)
             if (event === 'SIGNED_IN') {
-                void redeemPendingInvite(session?.access_token)
                 const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : (router.query.returnUrl || '/');
                 if (typeof returnUrl === 'string' && returnUrl.startsWith('/pricing?plan=')) {
                     // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付

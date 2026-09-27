@@ -3,19 +3,23 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import type { GetServerSideProps } from 'next'
-import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { Footer } from '@/components/Footer'
+import { InviteRedeemMessage } from '@/components/InviteRedeemMessage'
+import { metaLabel, primaryButton, secondaryButton } from '@/components/landing-styles'
 import { SiteNav } from '@/components/SiteNav'
 import { SITE_URL } from '@/data/siteMetadata'
 import { trackEvent } from '@/lib/analytics'
 import { supabase } from '@/lib/supabase'
+import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
 import {
     clearInviteCookie,
     fetchInviteCode,
     formatRewardUsd,
+    getLastRedeemOutcome,
+    INVITE_DEVICE_COPY,
     inviteCookieHeader,
     normalizeInviteCode,
-    redeemPendingInvite,
     type RedeemResult,
 } from '@/lib/invite'
 
@@ -32,12 +36,6 @@ const LOOKUP_TIMEOUT_MS = 3500
 const DOWNLOAD_ARM64 = 'https://api.enconvo.com/app/download?arch=arm64&platform=darwin'
 const DOWNLOAD_X64 = 'https://api.enconvo.com/app/download?arch=x64&platform=darwin'
 const OG_IMAGE = `${SITE_URL}/og/enconvo-mac-agent-v1.jpg`
-
-const primaryButton =
-    'inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg bg-white px-5 text-sm font-semibold text-black transition-colors hover:bg-content'
-const secondaryButton =
-    'inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-5 text-sm font-medium text-content transition-colors hover:border-hairline-strong hover:bg-white/[0.06]'
-const metaLabel = 'text-[11px] font-medium uppercase tracking-[0.16em] text-content-muted'
 
 export const getServerSideProps: GetServerSideProps<InvitePageProps> = async ({ params, res }) => {
     const code = normalizeInviteCode(typeof params?.code === 'string' ? params.code : '')
@@ -99,29 +97,9 @@ function IntelNote() {
 }
 
 function RedeemNotice({ result }: { result: RedeemResult }) {
-    let title = "We couldn't add this invite"
-    let body = result.ok ? '' : result.message
-    if (result.ok) {
-        const reward = formatRewardUsd(result.data.reward_usd)
-        title = 'Invite code redeemed'
-        body = result.data.qualified
-            ? `You and your friend each got ${reward} in Cloud points.`
-            : `Sign in to the Enconvo app on a device that's new to Enconvo, and you both get ${reward} in Cloud points.`
-    } else if (!result.terminal) {
-        body = `${result.message} We'll try again the next time you sign in.`
-    }
-
     return (
         <div role="status" className="mt-8 flex max-w-xl items-start gap-3 rounded-lg border border-hairline bg-surface-card p-4">
-            {result.ok ? (
-                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-signal-green" aria-hidden="true" />
-            ) : (
-                <AlertCircle className="mt-0.5 h-5 w-5 flex-none text-content-muted" aria-hidden="true" />
-            )}
-            <div>
-                <p className="text-sm font-medium text-content">{title}</p>
-                <p className="mt-1 text-sm leading-6 text-content-muted">{body}</p>
-            </div>
+            <InviteRedeemMessage result={result} />
         </div>
     )
 }
@@ -130,7 +108,10 @@ export default function InvitePage({ code, status: initialStatus, rewardUsd: ini
     const [status, setStatus] = useState(initialStatus)
     const [rewardUsd, setRewardUsd] = useState(initialRewardUsd)
     const [signedIn, setSignedIn] = useState(false)
-    const [redeemResult, setRedeemResult] = useState<RedeemResult | null>(null)
+    const [redeemResult, setRedeemResult] = useState<RedeemResult | null>(() => {
+        const outcome = getLastRedeemOutcome()
+        return outcome?.code === code ? outcome : null
+    })
 
     useEffect(() => {
         if (initialStatus !== 'unknown') return
@@ -146,20 +127,24 @@ export default function InvitePage({ code, status: initialStatus, rewardUsd: ini
         }
     }, [code, initialStatus])
 
-    // Already signed in: redeem right here and show the outcome in the page.
+    // Already signed in: `useInviteAutoRedeem` in `_app` redeems the cookie this
+    // page set, and the page shows that outcome here instead of in the site toast.
     useEffect(() => {
         if (initialStatus === 'invalid') return
         let cancelled = false
-        void supabase.auth.getSession().then(async ({ data }) => {
-            if (cancelled || !data.session) return
-            setSignedIn(true)
-            const result = await redeemPendingInvite(data.session.access_token, { notify: false })
-            if (!cancelled && result) setRedeemResult(result)
+        void supabase.auth.getSession().then(({ data }) => {
+            if (!cancelled && data.session) setSignedIn(true)
         })
         return () => {
             cancelled = true
         }
     }, [initialStatus])
+
+    useInviteRedeemed((outcome) => {
+        if (outcome.code !== code) return
+        setRedeemResult(outcome)
+        if (outcome.ok) setSignedIn(true)
+    })
 
     const reward = rewardUsd === null ? null : formatRewardUsd(rewardUsd)
     const shareTitle = 'A friend invited you to Enconvo'
@@ -212,7 +197,7 @@ export default function InvitePage({ code, status: initialStatus, rewardUsd: ini
         },
         {
             title: 'Sign in to the app',
-            body: "Download Enconvo and sign in on a Mac, Windows PC or iPhone that's new to Enconvo.",
+            body: `Download Enconvo and sign in on ${INVITE_DEVICE_COPY}.`,
         },
         {
             title: reward ? `You both get ${reward}` : 'You both get Cloud points',

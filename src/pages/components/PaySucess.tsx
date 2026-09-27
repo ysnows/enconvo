@@ -20,7 +20,11 @@ export default function PaySuccess({ handleOpenApp }) {
     const isCanceled = router.query.canceled === 'true';
     const from = router.query.from;
     const isTopUpPoints = from === 'points_top_up';
-    const successTipText = isTopUpPoints ? 'Thank you for your purchase! You will receive your points in your account shortly.' : 'Thank you for your purchase! You can now start using Enconvo premium features.';
+    const isTrialCode = from === 'trial_code';
+    const successTitle = isTrialCode ? 'Your free month has started!' : 'Thank you for your purchase!';
+    const successTipText = isTrialCode
+        ? "Your Plus Cloud plan is active and costs nothing for the first 30 days. It renews at $10/month after that unless you cancel before the trial ends from your account."
+        : isTopUpPoints ? 'Thank you for your purchase! You will receive your points in your account shortly.' : 'Thank you for your purchase! You can now start using Enconvo premium features.';
 
     useEffect(() => {
         if (isSuccess) {
@@ -56,7 +60,7 @@ export default function PaySuccess({ handleOpenApp }) {
     return (
         <>
             <Head>
-                <title>Payment {isSuccess ? 'Successful' : 'Cancelled'} - Enconvo</title>
+                <title>{isTrialCode && isSuccess ? 'Free Month Started' : `Payment ${isSuccess ? 'Successful' : 'Cancelled'}`} - Enconvo</title>
                 <meta
                     name="description"
                     content={isSuccess ? "Payment successful for Enconvo" : "Payment cancelled for Enconvo"}
@@ -74,13 +78,13 @@ export default function PaySuccess({ handleOpenApp }) {
                                             ? 'bg-indigo-500/10 text-indigo-400 ring-indigo-500/20' 
                                             : 'bg-yellow-500/10 text-yellow-400 ring-yellow-500/20'
                                     }`}>
-                                        {isSuccess ? 'Payment Success' : 'Payment Cancelled'}
+                                        {isSuccess ? (isTrialCode ? 'Free Month Started' : 'Payment Success') : 'Payment Cancelled'}
                                     </span>
                                 </a>
                             </div>
                             <h1 className="mt-10 text-4xl font-bold tracking-tight text-white sm:text-6xl">
                                 {isSuccess 
-                                    ? 'Thank you for your purchase!' 
+                                    ? successTitle 
                                     : 'Payment Cancelled'}
                             </h1>
                             <p className="mt-6 text-lg leading-8 text-gray-300">

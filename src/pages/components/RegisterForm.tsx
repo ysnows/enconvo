@@ -16,7 +16,6 @@ import {
     saveRegistrationEmailPreference,
     syncCurrentEmailPreference,
 } from "@/lib/email-preferences-client";
-import { redeemPendingInvite } from "@/lib/invite";
 
 export default function RegisterForm({ loginState, setLoginState, email, setEmail }) {
 
@@ -63,7 +62,6 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
         }
 
         if (data.session) {
-            void redeemPendingInvite(data.session.access_token)
             try {
                 await syncCurrentEmailPreference(data.session.access_token)
             } catch (syncError) {

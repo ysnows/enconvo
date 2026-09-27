@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
+import { CheckCircle2, X } from 'lucide-react'
+import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
 import {
+    claimInviteRewards,
     clearInviteCookie,
     formatRewardUsd,
     getInviteSummary,
+    INVITE_DEVICE_COPY,
+    inviteArrivalMessage,
     normalizeInviteCode,
-    pointsToUsd,
     redeemInvite,
-    redeemPendingInvite,
+    sumRewardsUsd,
+    type InviteReward,
     type InviteSummary,
 } from '@/lib/invite'
 
@@ -45,6 +50,15 @@ async function copyText(text: string) {
     }
 }
 
+/** The summary without rewards this page has just marked seen. */
+function withoutUnseen(summary: InviteSummary, ids: string[]): InviteSummary {
+    const unseen = summary.unseen
+    if (!unseen) return summary
+    const rewards = unseen.rewards.filter((reward) => !ids.includes(reward.id))
+    const removed = unseen.rewards.length - rewards.length
+    return { ...summary, unseen: { ...unseen, rewards, count: Math.max(0, unseen.count - removed) } }
+}
+
 /** Account page "Invite friends": the user's code and link, results, and code entry. */
 export default function InviteFriends({ accessToken }: { accessToken: string }) {
     const [summary, setSummary] = useState<InviteSummary | null>(null)
@@ -53,24 +67,56 @@ export default function InviteFriends({ accessToken }: { accessToken: string }) 
     const [codeInput, setCodeInput] = useState('')
     const [redeeming, setRedeeming] = useState(false)
     const [redeemError, setRedeemError] = useState('')
+    const [arrival, setArrival] = useState<InviteReward[]>([])
     const loadId = useRef(0)
+    const summaryToken = useRef('')
+    const claiming = useRef(new Set<string>())
 
     const load = useCallback(async () => {
         const id = ++loadId.current
         setLoadError('')
         const result = await getInviteSummary(accessToken)
         if (id !== loadId.current) return
-        if (result.ok) setSummary(result.data)
-        else setLoadError(result.message)
+        if (result.ok) {
+            summaryToken.current = accessToken
+            setSummary(result.data)
+        } else {
+            setLoadError(result.message)
+        }
     }, [accessToken])
 
     useEffect(() => {
+        claiming.current = new Set()
+        setArrival([])
         void load()
-        // An Invite link opened before signing in is redeemed here if no sign-in page did it.
-        void redeemPendingInvite(accessToken).then((result) => {
-            if (result?.ok) void load()
-        })
     }, [accessToken, load])
+
+    // `useInviteAutoRedeem` in `_app` redeems an Invite link's code; show its result here.
+    useInviteRedeemed((outcome) => {
+        if (outcome.ok) void load()
+    })
+
+    // Claim first, then announce: only rewards this call newly marked seen are shown,
+    // so a reward already announced in the app or another tab is not announced again.
+    useEffect(() => {
+        if (!summary || summaryToken.current !== accessToken) return
+        const ids = (summary.unseen?.rewards ?? []).map((reward) => reward.id).filter((id) => !claiming.current.has(id))
+        if (ids.length === 0) return
+        const rewards = summary.unseen.rewards
+        ids.forEach((id) => claiming.current.add(id))
+        void claimInviteRewards(accessToken, ids).then((claimed) => {
+            if (summaryToken.current !== accessToken) return
+            if (claimed === null) {
+                ids.forEach((id) => claiming.current.delete(id))
+                return
+            }
+            setSummary((current) => (current ? withoutUnseen(current, ids) : current))
+            const announced = rewards.filter((reward) => claimed.includes(reward.id))
+            if (announced.length > 0) {
+                setArrival((current) => [...current, ...announced.filter((reward) => !current.some((shown) => shown.id === reward.id))])
+            }
+        })
+    }, [summary, accessToken])
 
     useEffect(() => {
         if (!copied) return
@@ -102,9 +148,14 @@ export default function InviteFriends({ accessToken }: { accessToken: string }) 
         await load()
     }
 
+    const hasNewReward = arrival.length > 0 || (summary?.unseen?.count ?? 0) > 0
+
     return (
         <div>
-            <h3 className="text-xl font-semibold mb-4">Invite friends</h3>
+            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                Invite friends
+                {hasNewReward && <span className="h-2 w-2 flex-none rounded-full bg-signal-red" aria-label="New invite reward" />}
+            </h3>
 
             {!summary && !loadError && (
                 <div className="animate-pulse space-y-4">
@@ -131,9 +182,26 @@ export default function InviteFriends({ accessToken }: { accessToken: string }) 
                 const { redemption } = summary
                 return (
                     <div className="space-y-4">
+                        {arrival.length > 0 && (
+                            <div className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.025] p-3" role="status">
+                                <CheckCircle2 className="mt-0.5 h-5 w-5 flex-none text-green-400" aria-hidden="true" />
+                                <div className="min-w-0 flex-1 text-sm">
+                                    <p className="font-medium">+{formatRewardUsd(sumRewardsUsd(arrival))} in Cloud points</p>
+                                    <p className="mt-0.5 text-gray-400">{inviteArrivalMessage(arrival)}</p>
+                                </div>
+                                <button
+                                    onClick={() => setArrival([])}
+                                    className="flex-none rounded-md p-1 text-gray-500 hover:text-gray-300 transition-colors"
+                                    aria-label="Dismiss"
+                                >
+                                    <X className="h-4 w-4" aria-hidden="true" />
+                                </button>
+                            </div>
+                        )}
+
                         <p className="text-sm leading-6 text-gray-400">
                             Give {reward}, get {reward}. When a friend signs up with your link or code and signs in to
-                            the Enconvo app on a device that&apos;s new to Enconvo, you both get {reward} in Cloud points.
+                            the Enconvo app on {INVITE_DEVICE_COPY}, you both get {reward} in Cloud points.
                         </p>
 
                         {summary.code_disabled && (
@@ -179,7 +247,7 @@ export default function InviteFriends({ accessToken }: { accessToken: string }) 
                             {[
                                 { label: 'Invited', value: String(summary.stats.invited) },
                                 { label: 'Joined', value: String(summary.stats.qualified) },
-                                { label: 'Earned', value: formatRewardUsd(pointsToUsd(summary.stats.points_earned)) },
+                                { label: 'Earned', value: formatRewardUsd(summary.stats.usd_earned) },
                             ].map((stat) => (
                                 <div key={stat.label} className="rounded-xl border border-white/10 bg-white/[0.025] p-3">
                                     <div className="text-xs text-gray-500">{stat.label}</div>
@@ -190,7 +258,7 @@ export default function InviteFriends({ accessToken }: { accessToken: string }) 
 
                         {summary.invitees.length > 0 && (
                             <ul className="divide-y divide-white/10 rounded-xl border border-white/10 bg-white/[0.025]">
-                                {summary.invitees.slice(0, 20).map((invitee) => (
+                                {summary.invitees.map((invitee) => (
                                     <li key={invitee.id} className="flex items-center justify-between gap-3 px-3 py-2 text-sm">
                                         <span className="min-w-0 truncate text-gray-200">{invitee.email}</span>
                                         <span className="flex-none text-xs">
@@ -201,12 +269,17 @@ export default function InviteFriends({ accessToken }: { accessToken: string }) 
                                 ))}
                             </ul>
                         )}
+                        {summary.stats.invited > summary.invitees.length && summary.invitees.length > 0 && (
+                            <p className="-mt-2 text-xs text-gray-500">
+                                Showing the latest {summary.invitees.length} of {summary.stats.invited} invites.
+                            </p>
+                        )}
 
                         {redemption.redeemed && (
                             <p className="text-sm text-gray-400" role="status">
                                 You joined with an invite from {redemption.inviter}.{' '}
-                                {redemption.status === 'qualified' && `You both got ${formatRewardUsd(pointsToUsd(redemption.reward_points))} in Cloud points.`}
-                                {redemption.status === 'pending' && `Sign in to the Enconvo app on a device that's new to Enconvo to get your ${formatRewardUsd(pointsToUsd(redemption.reward_points))}.`}
+                                {redemption.status === 'qualified' && `You both got ${formatRewardUsd(redemption.reward_usd)} in Cloud points.`}
+                                {redemption.status === 'pending' && `Sign in to the Enconvo app on ${INVITE_DEVICE_COPY} to get your ${formatRewardUsd(redemption.reward_usd)}.`}
                                 {redemption.status === 'revoked' && 'This invite was revoked.'}
                             </p>
                         )}

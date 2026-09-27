@@ -7,7 +7,6 @@ import { NativeRouter } from "@/utils/app/native_router"
 import RegisterForm from "@/pages/components/RegisterForm"
 import RegisterSuccess from "@/pages/components/RegisterSuccess"
 import type { Session, AuthChangeEvent } from '@supabase/supabase-js'
-import { redeemPendingInvite } from '@/lib/invite'
 
 
 export default function Register() {
@@ -30,7 +29,6 @@ export default function Register() {
     useEffect(() => {
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
             if (event === 'SIGNED_UP' as AuthChangeEvent || event === 'SIGNED_IN' as AuthChangeEvent) {
-                void redeemPendingInvite(session?.access_token)
                 const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : (router.query.returnUrl || '/');
                 if (typeof returnUrl === 'string' && returnUrl.startsWith('/pricing?plan=')) {
                     // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
@@ -67,7 +65,6 @@ export default function Register() {
             if (data.session) {
                 console.log("session", data)
                 setSession(data.session)
-                void redeemPendingInvite(data.session.access_token)
                 setRegisterState("success")
                 if (router.query['from'] === "app") {
                     handleOpenApp()
