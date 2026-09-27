@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'pair-your-iphone',
+    title: 'Pair your iPhone and reach your Mac from anywhere',
+    description:
+      'Sign in on the Enconvo iPhone app, show the pairing code on your Mac, and scan it. Your Mac’s projects and chats are then on your phone, and every chat keeps running on your Mac — a narrated walkthrough in seven steps.',
+    youtubeId: 'rYhgz_SjnNs',
+    category: 'Everyday Tools',
+    date: '2026-09-27',
+    docsUrl: 'https://docs.enconvo.ai/integrations/iphone-app',
+  },
+  {
     slug: 'build-your-first-workflow',
     title: 'Build your first workflow, step by step',
     description:
