@@ -171,29 +171,41 @@ export default function Privacy() {
                         <Item title="Gmail">If you connect Gmail, Enconvo can read, search, and organize
                             your messages and labels, create drafts, and send email on your behalf, but only
                             when you or an agent you are using asks it to.</Item>
+                        <Item title="Google Calendar">If you connect Google Calendar, Enconvo can read your
+                            calendars and events, find free time, and create, change, or delete events on your
+                            behalf, but only when you or an agent you are using asks it to.</Item>
                     </Items>
                     <p>
                         <strong className="font-semibold text-gray-900">How we use it.</strong> We use Google
                         user data only to provide the features you use in Enconvo. For example, we show your
                         emails to you, summarize them, draft replies, or send a message you asked an agent to
-                        send. We do not use it for advertising, and we do not use it to create, train, or
-                        improve any AI or machine learning model.
+                        send, or add an event you asked for. We do not use it for advertising, and we do not
+                        use it to create, train, or improve any AI or machine learning model.
                     </p>
                     <p>
-                        <strong className="font-semibold text-gray-900">Where it is stored.</strong> Gmail
-                        requests go directly from your device to Google. The authorization token is kept
-                        encrypted on your device. We do not copy your email to our servers. Messages an
-                        agent reads may be saved in your local chat history on your device, and you can
-                        delete that history at any time.
+                        <strong className="font-semibold text-gray-900">Where it goes and where it is
+                        stored.</strong> Gmail and Google Calendar connections currently run through
+                        Composio, a service provider that holds the Google authorization for your Enconvo
+                        account. Composio knows your account only by an anonymous account id, not by your
+                        email address. Each request goes from your device through our servers to Composio
+                        and on to Google, and the result comes back the same way. Our servers pass it
+                        through without storing its content. Composio does not store the content either;
+                        it keeps a record of which action ran, when, and whether it worked. We do not copy
+                        your email or events to our servers. If you set up the older Gmail plugin in an
+                        earlier version of Enconvo, its requests go directly from your device to Google, and
+                        its authorization token is kept encrypted on your device. Messages and events an agent
+                        reads may be saved in your local chat history on your device, and you can delete that
+                        history at any time.
                     </p>
                     <p>
                         <strong className="font-semibold text-gray-900">Who we share it with.</strong> When
-                        a task needs email content, Enconvo includes only the content that task needs in
+                        a task needs email or calendar content, Enconvo includes only the content that task needs in
                         the request to the AI model you selected. If you use one of Enconvo&apos;s built-in
                         cloud models, that request passes through our servers as described above. We do not
                         sell Google user data or share it with advertising platforms, data brokers, or
-                        information resellers. We share it with others only when you ask us to, when it is
-                        needed for security, or when the law requires it.
+                        information resellers. Apart from Composio, which runs your Gmail and Google Calendar
+                        requests as described above, we share it with others only when you ask us to, when
+                        it is needed for security, or when the law requires it.
                     </p>
                     <p>
                         <strong className="font-semibold text-gray-900">Human access.</strong> No person at
@@ -203,9 +215,12 @@ export default function Privacy() {
                     </p>
                     <p>
                         <strong className="font-semibold text-gray-900">Removing access.</strong> You can
-                        disconnect a Google account in Enconvo at any time, which deletes the token from
-                        your device. You can also revoke Enconvo&apos;s access at <ExternalLink
-                            href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</ExternalLink>.
+                        disconnect Gmail or Google Calendar in Enconvo at any time, which revokes the
+                        authorization and deletes it from Composio; for the older Gmail plugin, it deletes the
+                        token from your device. You can also revoke access at <ExternalLink
+                            href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</ExternalLink>,
+                        where a Gmail or Google Calendar connection is listed under Composio and the older
+                        Gmail plugin under Enconvo.
                     </p>
                     <p className="rounded-md bg-gray-50 p-4 text-gray-900">
                         Enconvo&apos;s use and transfer to any other app of information received from
@@ -243,6 +258,8 @@ export default function Privacy() {
                         <Item title="PostHog">Product analytics.</Item>
                         <Item title="Google Analytics">Website analytics.</Item>
                         <Item title="Resend">Account and product update emails.</Item>
+                        <Item title="Composio">Holding the authorization for your Gmail and Google Calendar
+                            connections and running those requests with Google.</Item>
                         <Item title="AI, speech, and search providers">Processing the cloud requests you
                             make, as described above.</Item>
                         <Item title="Apple">Push notifications to the iPhone app.</Item>
