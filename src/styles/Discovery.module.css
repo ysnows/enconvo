@@ -280,6 +280,12 @@
 .guide:hover {
   @apply text-content;
 }
+/* Closes a truncated homepage preview; the full list lives on /use-cases. */
+.more {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
 .empty {
   @apply text-content-muted;
   display: flex;

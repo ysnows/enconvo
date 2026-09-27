@@ -1,5 +1,6 @@
 import { useId, useRef, useState } from 'react'
-import { ArrowUpRight, Play, Search, X } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowRight, ArrowUpRight, Play, Search, X } from 'lucide-react'
 import type { UseCase } from '@/data/useCases'
 import {
   ALL_USE_CASES,
@@ -43,9 +44,12 @@ function Preview({ item }: { item: UseCase }) {
 export function UseCaseGallery({
   items,
   onOpen,
+  limit,
 }: {
   items: UseCase[]
   onOpen?: (item: UseCase) => void
+  /** Show at most this many matches, then link to the full catalogue. */
+  limit?: number
 }) {
   const id = useId()
   const searchRef = useRef<HTMLInputElement>(null)
@@ -53,6 +57,7 @@ export function UseCaseGallery({
   const [query, setQuery] = useState('')
   const categories = useCaseCategories(items)
   const filtered = filterUseCases(items, category, query)
+  const shown = limit ? filtered.slice(0, limit) : filtered
 
   function reset() {
     setCategory(ALL_USE_CASES)
@@ -119,6 +124,7 @@ export function UseCaseGallery({
         aria-live="polite"
         aria-atomic="true"
       >
+        {shown.length < filtered.length ? `${shown.length} of ` : ''}
         {filtered.length}{' '}
         {filtered.length === 1 ? 'walkthrough' : 'walkthroughs'}
         {category !== ALL_USE_CASES ? ` in ${category}` : ''}
@@ -126,7 +132,7 @@ export function UseCaseGallery({
       </p>
 
       <div id={`${id}-results`} className={styles.gallery}>
-        {filtered.map((item) => (
+        {shown.map((item) => (
           <article
             key={item.slug}
             id={onOpen ? item.slug : undefined}
@@ -173,6 +179,14 @@ export function UseCaseGallery({
           </article>
         ))}
       </div>
+      {shown.length < filtered.length && (
+        <div className={styles.more}>
+          <Link href="/use-cases" className={styles.allLink}>
+            See all {filtered.length} walkthroughs{' '}
+            <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+      )}
       {filtered.length === 0 && (
         <div className={styles.empty}>
           <Search size={24} aria-hidden="true" />

@@ -22,6 +22,11 @@ export function filterUseCases(
   })
 }
 
+/** Newest first: the one order the homepage preview and /use-cases share. */
+export function newestFirst(items: UseCase[]) {
+  return [...items].sort((a, b) => b.date.localeCompare(a.date))
+}
+
 export function useCaseCategories(items: UseCase[]) {
   return [
     ALL_USE_CASES,

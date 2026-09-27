@@ -2,20 +2,13 @@ import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { UseCaseGallery } from '@/components/UseCaseGallery'
 import { useCases } from '@/data/useCases'
+import { newestFirst } from '@/lib/useCaseDiscovery'
 import styles from '@/styles/Discovery.module.css'
 
-// Curated real walkthroughs, reusing the catalogue's stable deep links.
-const FEATURED_SLUGS = [
-  'excel-sidebar-ai',
-  'resume-to-personal-website',
-  'popbar-instant-actions',
-  'browser-use-agent',
-  'gmail-weather-workflow',
-  'seamless-ocr',
-]
-const featured = FEATURED_SLUGS.map((slug) =>
-  useCases.find((item) => item.slug === slug)
-).filter((item): item is NonNullable<typeof item> => Boolean(item))
+// The same catalogue as /use-cases, previewed six cards at a time, so a new
+// walkthrough shows up here as soon as it's added.
+const catalogue = newestFirst(useCases)
+const PREVIEW_COUNT = 6
 
 export function FeatureGrid() {
   return (
@@ -38,7 +31,7 @@ export function FeatureGrid() {
             All walkthroughs <ArrowRight size={16} aria-hidden="true" />
           </Link>
         </div>
-        <UseCaseGallery items={featured} />
+        <UseCaseGallery items={catalogue} limit={PREVIEW_COUNT} />
         <div className={styles.footnote}>
           <p>
             100+ built-in AI tools for writing, search, translation, and more.

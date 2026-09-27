@@ -17,7 +17,7 @@ async function loadTS(path) {
 }
 
 const { useCases } = await loadTS('../src/data/useCases.ts')
-const { filterUseCases, useCaseCategories } = await loadTS(
+const { filterUseCases, newestFirst, useCaseCategories } = await loadTS(
   '../src/lib/useCaseDiscovery.ts'
 )
 const slugs = (items) => Array.from(items, (item) => item.slug)
@@ -74,6 +74,11 @@ const homeCases = [...home.matchAll(/href="\/use-cases#([^"]+)"/g)].map(
   (match) => match[1]
 )
 assert.equal(homeCases.length, 6)
+assert.deepEqual(
+  homeCases,
+  slugs(newestFirst(useCases)).slice(0, 6),
+  'homepage previews the newest walkthroughs from /use-cases'
+)
 for (const slug of homeCases) {
   assert.ok(initialOrder.includes(slug), `featured demo exists: ${slug}`)
   assert.ok(catalogue.includes(`id="${slug}"`), `deep link resolves: ${slug}`)

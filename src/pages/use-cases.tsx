@@ -6,9 +6,10 @@ import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
 import { UseCaseGallery } from '@/components/UseCaseGallery'
 import { useCases, type UseCase } from '@/data/useCases'
+import { newestFirst } from '@/lib/useCaseDiscovery'
 import styles from '@/styles/Discovery.module.css'
 
-const all = [...useCases].sort((a, b) => b.date.localeCompare(a.date))
+const all = newestFirst(useCases)
 const watchUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
