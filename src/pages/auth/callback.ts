@@ -39,10 +39,11 @@ export default function AuthCallback() {
                     console.error('Unable to sync email preferences:', preferenceError)
                 }
 
-                // Carry from/source back to /login so an OAuth login started from the
-                // app (e.g. the onboarding guide) still hands off with its source.
+                // Carry from/source/handoff back to /login so an OAuth login started from
+                // the app (e.g. the onboarding guide) still hands off with its source.
                 const from = Array.isArray(router.query.from) ? router.query.from[0] : router.query.from
                 const source = Array.isArray(router.query.source) ? router.query.source[0] : router.query.source
+                const handoff = Array.isArray(router.query.handoff) ? router.query.handoff[0] : router.query.handoff
                 const returnUrl = Array.isArray(router.query.returnUrl)
                     ? router.query.returnUrl[0]
                     : router.query.returnUrl
@@ -55,6 +56,7 @@ export default function AuthCallback() {
                 const params = new URLSearchParams()
                 if (from) params.set('from', from)
                 if (source) params.set('source', source)
+                if (handoff) params.set('handoff', handoff)
                 if (returnUrl?.startsWith('/')) params.set('returnUrl', returnUrl)
                 const qs = params.toString()
                 await router.push(qs ? `/login?${qs}` : '/login')

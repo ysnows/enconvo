@@ -56,16 +56,18 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             refresh_token: data.session.refresh_token
         })
 
+        // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
+        const opened = await NativeRouter.openApp(
+            Array.isArray(router.query.source) ? router.query.source[0] : router.query.source,
+            Array.isArray(router.query.handoff) ? router.query.handoff[0] : router.query.handoff)
+        if (typeof opened === 'object') alert(opened.error)
+
         try {
             await syncCurrentEmailPreference(data.session.access_token)
         } catch (syncError) {
             console.error('Unable to sync email preferences:', syncError)
         }
 
-
-        // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
-        const opened = await NativeRouter.openApp(Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
-        if (typeof opened === 'object') alert(opened.error)
         setLoginState("success")
 
         setEmailIsLoading(false)
@@ -117,13 +119,15 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
             if (returnUrl?.startsWith('/')) {
                 redirectUrl += `?returnUrl=${encodeURIComponent(returnUrl)}`
             }
-            // Preserve from/source across the OAuth round-trip so the app can return
-            // the user to where login started (e.g. the onboarding guide).
+            // Preserve from/source/handoff across the OAuth round-trip so the app can
+            // return the user to where login started (e.g. the onboarding guide).
             const from = Array.isArray(router.query.from) ? router.query.from[0] : router.query.from
             const source = Array.isArray(router.query.source) ? router.query.source[0] : router.query.source
+            const handoff = Array.isArray(router.query.handoff) ? router.query.handoff[0] : router.query.handoff
             const extra = new URLSearchParams()
             if (from) extra.set('from', from)
             if (source) extra.set('source', source)
+            if (handoff) extra.set('handoff', handoff)
             const extraQs = extra.toString()
             if (extraQs) redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + extraQs
 

@@ -23,12 +23,30 @@ export const NativeRouter = {
      * so signing out of one leaves the other signed in and the two never spend the
      * same refresh token. The browser's session is checked with the auth service
      * first: one that was signed out is never handed over.
+     *
+     * `handoff: 'exchange'` (sent by apps that make that session themselves)
+     * opens Enconvo at once with the browser's access token; the app asks the
+     * Worker for its session while it shows "Signing in…". Pages that open the
+     * app on load must confirm the session with `getUser()` first.
      */
-    openApp: async (source?: string): Promise<OpenAppResult> => {
+    openApp: async (source?: string, handoff?: string): Promise<OpenAppResult> => {
         // The session now, not the one the page loaded with: it may have been
         // refreshed or signed out since.
-        const { data: { session } } = await supabase.auth.getSession()
+        let { data: { session } } = await supabase.auth.getSession()
         if (!session) return 'signed_out'
+
+        if (handoff === 'exchange') {
+            // The app exchanges the token a few seconds from now.
+            if ((session.expires_at ?? 0) * 1000 - Date.now() < 60_000) {
+                const refreshed = await supabase.auth.refreshSession()
+                if (refreshed.data.session) session = refreshed.data.session
+                else if (refreshed.error?.status && refreshed.error.status < 500) return 'signed_out'
+            }
+            let url = `enconvo://login?exchange_token=${encodeURIComponent(session.access_token)}`
+            if (source) url += `&source=${encodeURIComponent(source)}`
+            window.location.href = url
+            return 'opened'
+        }
 
         const result = await workerRequest<AppSession>('/api/app_session', {
             method: 'POST',

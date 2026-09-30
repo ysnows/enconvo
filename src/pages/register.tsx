@@ -20,7 +20,8 @@ export default function Register() {
     const supabase = createClientComponentClient()
 
     const handleOpenApp = async () => {
-        const result = await NativeRouter.openApp()
+        const handoff = Array.isArray(router.query.handoff) ? router.query.handoff[0] : router.query.handoff
+        const result = await NativeRouter.openApp(undefined, handoff)
         // The browser's session ended elsewhere: show the form again.
         if (result === 'signed_out') setRegisterState("register")
         else if (result !== 'opened') alert(result.error)
@@ -61,12 +62,15 @@ export default function Register() {
     }, [router]);
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data, error }) => {
+        supabase.auth.getSession().then(async ({ data, error }) => {
             if (data.session) {
                 console.log("session", data)
                 setRegisterState("success")
                 if (router.query['from'] === "app") {
-                    handleOpenApp()
+                    // Only a session the auth service still has goes to the app.
+                    const { data: { user } } = await supabase.auth.getUser()
+                    if (user) handleOpenApp()
+                    else setRegisterState("register")
                 }
             }
         })

@@ -23,7 +23,9 @@ export default function Login() {
         setNavigation([])
     }
     const handleOpenApp = async () => {
-        const result = await NativeRouter.openApp(Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
+        const result = await NativeRouter.openApp(
+            Array.isArray(router.query.source) ? router.query.source[0] : router.query.source,
+            Array.isArray(router.query.handoff) ? router.query.handoff[0] : router.query.handoff)
         if (result === 'signed_out') {
             // The browser's session ended elsewhere: sign in again on this page,
             // which keeps from/source for the hand-off.
