@@ -241,7 +241,7 @@ export default function RedeemTrialCodePage({ code, status: initialStatus, trial
                                                 Redeeming as <span className="text-content">{email}</span>.{' '}
                                                 <button
                                                     type="button"
-                                                    onClick={() => void supabase.auth.signOut()}
+                                                    onClick={() => void supabase.auth.signOut({ scope: 'local' })}
                                                     className="text-content underline decoration-hairline-strong underline-offset-4"
                                                 >
                                                     Use another account

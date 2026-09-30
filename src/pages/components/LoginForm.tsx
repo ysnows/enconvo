@@ -63,7 +63,9 @@ export default function LoginForm({ loginState, setLoginState, setUser, router }
         }
 
 
-        NativeRouter.login(data.session.access_token, data.session.refresh_token, Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
+        // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
+        const opened = await NativeRouter.openApp(Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
+        if (typeof opened === 'object') alert(opened.error)
         setLoginState("success")
 
         setEmailIsLoading(false)

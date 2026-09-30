@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import PaySuccess from './components/PaySucess'
 import { NativeRouter } from "@/utils/app/native_router"
-import type { Session } from '@supabase/supabase-js'
 
 export default function Login() {
     // 获取url参数
@@ -11,7 +10,6 @@ export default function Login() {
     const router = useRouter()
 
     const [loginState, setLoginState] = useState("login")
-    const [session, setSession] = useState<Session | null>(null)
     const [user, setUser] = useState({})
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -21,14 +19,14 @@ export default function Login() {
     const handleOpenApp = () => {
         // Jump back into the app like the login flow (deep-link), landing on the Account page,
         // which re-syncs the user's plan. `source=account` routes the app to Settings → Account.
-        if (session?.access_token) {
-            NativeRouter.login(session.access_token, session.refresh_token, 'account')
-        } else {
-            router.push("/login")
-        }
+        void NativeRouter.openApp('account').then((result) => {
+            if (result === 'signed_out') router.push("/login?from=app&source=account")
+            else if (result !== 'opened') alert(result.error)
+        })
     }
     const handleLogout = () => {
-        supabase.auth.signOut().then(() => {
+        // Only this browser: Enconvo and other devices stay signed in.
+        supabase.auth.signOut({ scope: 'local' }).then(() => {
             setLoginState("login")
             setUser(null)
             setNavigation([])
@@ -37,8 +35,6 @@ export default function Login() {
 
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data }) => setSession(data.session))
-
         // Check to see if this is a redirect back from Checkout
         const query = new URLSearchParams(window.location.search);
         if (query.get('success')) {

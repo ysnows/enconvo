@@ -161,14 +161,15 @@ export default function Account() {
     }, [router])
 
     const handleSignOut = async () => {
-        await supabase.auth.signOut()
+        // Only this browser: Enconvo and other devices stay signed in.
+        await supabase.auth.signOut({ scope: 'local' })
         router.push('/')
     }
 
-    const handleOpenApp = () => {
-        if (session) {
-            NativeRouter.login(session.access_token, session.refresh_token)
-        }
+    const handleOpenApp = async () => {
+        const result = await NativeRouter.openApp()
+        if (result === 'signed_out') router.push('/login?from=app')
+        else if (result !== 'opened') alert(result.error)
     }
 
     if (loading) {

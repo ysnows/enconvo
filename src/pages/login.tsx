@@ -4,7 +4,6 @@ import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 import LoginSuccess from "@/pages/components/LoginSuccess"
 import { NativeRouter } from "@/utils/app/native_router"
-import type { Session } from '@supabase/supabase-js'
 
 export default function Login() {
     // 获取url参数
@@ -12,24 +11,30 @@ export default function Login() {
     const router = useRouter()
 
     const [loginState, setLoginState] = useState("login")
-    const [session, setSession] = useState<Session | null>(null)
     const [user, setUser] = useState({})
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     const [navigation, setNavigation] = useState([
     ])
 
-    const handleOpenApp = () => {
-        if (session) {
-            NativeRouter.login(session.access_token, session.refresh_token, Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
+    const showLoginForm = () => {
+        setLoginState("login")
+        setUser(null)
+        setNavigation([])
+    }
+    const handleOpenApp = async () => {
+        const result = await NativeRouter.openApp(Array.isArray(router.query.source) ? router.query.source[0] : router.query.source)
+        if (result === 'signed_out') {
+            // The browser's session ended elsewhere: sign in again on this page,
+            // which keeps from/source for the hand-off.
+            showLoginForm()
+        } else if (result !== 'opened') {
+            alert(result.error)
         }
     }
     const handleLogout = () => {
-        supabase.auth.signOut().then(() => {
-            setLoginState("login")
-            setUser(null)
-            setNavigation([])
-        })
+        // Only this browser: Enconvo and other devices stay signed in.
+        supabase.auth.signOut({ scope: 'local' }).then(showLoginForm)
     }
 
 
@@ -37,7 +42,6 @@ export default function Login() {
         supabase.auth.getSession().then(async ({ data, error }) => {
             console.log("data--", data)
             if (data.session) {
-                setSession(data.session)
                 const expires_at = data.session.expires_at
                 console.log("session--", expires_at, new Date().getTime())
                 const { data: { user }, error } = await supabase.auth.getUser()
@@ -54,10 +58,10 @@ export default function Login() {
                         { name: "Logout", href: "/" },
                         { name: "Account", href: "/account" },
                     ])
-
-                }
-                if (router.query['from'] === "app") {
-                    handleOpenApp()
+                    // Only a session the auth service still has goes to the app.
+                    if (router.query['from'] === "app") {
+                        handleOpenApp()
+                    }
                 }
             }
         })

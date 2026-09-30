@@ -16,7 +16,8 @@ export default function LoginSuccess({ handleOpenApp, user }) {
     const supabase = createClientComponentClient()
 
     const handleSignOut = async () => {
-        await supabase.auth.signOut()
+        // Only this browser: Enconvo and other devices stay signed in.
+        await supabase.auth.signOut({ scope: 'local' })
         window.location.href = '/'
     }
 
