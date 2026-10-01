@@ -7,6 +7,7 @@ import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroBackdrop } from '@/components/HeroBackdrop'
 import { HeroLayout } from '@/components/home/HeroLayout'
 import { trackEvent } from '@/lib/analytics'
+import { IPHONE_APP_SECTION_ID } from '@/data/iphoneApp'
 
 declare global {
   interface Window {
@@ -127,7 +128,18 @@ export function Hero() {
                   </Menu.Items>
                 </Menu>
 
-                <a href="#features" className={styles.browseButton}>Explore what you can do <span aria-hidden="true">↓</span></a>
+                <a
+                  href={`#${IPHONE_APP_SECTION_ID}`}
+                  onClick={() => trackEvent('iphone_app_click', { placement: 'hero' })}
+                  className={styles.browseButton}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="6" y="2" width="12" height="20" rx="2.5" strokeWidth={1.8} />
+                    <path strokeLinecap="round" strokeWidth={1.8} d="M11 18h2" />
+                  </svg>
+                  <span>Get the iPhone app</span>
+                  <span className={styles.betaTag}>Beta</span>
+                </a>
               </div>
               <p className={styles.requirements}>Free to start · macOS 14+ · Intel &amp; Apple Silicon</p>
             </div>

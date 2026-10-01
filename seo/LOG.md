@@ -112,3 +112,16 @@ deployed yet.
   alone until at least 2026-10-22, then compare against `STATE.md`.
 - Owner to do: star `download_click` and `begin_checkout` as key events in
   GA4 477108245 once they show under Recent events (usually within 24 hours).
+
+## 2026-10-01 — iPhone app links on the homepage (not yet deployed)
+
+- Added an "iPhone app · Beta" card (new H3, TestFlight button, QR code, link
+  to `/use-cases#pair-your-iphone`) at the end of the "Always with you"
+  section, with the anchor `#iphone-app`. Existing H1/H2 copy is unchanged.
+- Hero buttons are now "Download for macOS" plus "Get the iPhone app (Beta)",
+  which scrolls to `#iphone-app`. The "Explore what you can do" button
+  (`#features`) was removed; the nav and footer still link to `#features`.
+- New GA4 event `iphone_app_click` with `placement: hero | always_with_you`.
+  It is separate from `download_click`, so Mac download conversions stay
+  comparable.
+- Keep this in mind when comparing the heading change on or after 2026-10-22.
