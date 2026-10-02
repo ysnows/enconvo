@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { affiliateCode, affiliateSub, readAffiliateJourney, recordAffiliateVisit, reportAffiliateSignIn } from '@/lib/affiliate-journey'
+import { affiliateCode, affiliateSub, readAffiliateJourney, recordAffiliateVisit, reportAffiliateSignIn, retryPendingAffiliateVisit } from '@/lib/affiliate-journey'
 
 /**
  * The website's Affiliate journey hook, mounted once in `_app`. A page opened with a
- * `?via=` code records the visit, with the link's `?sub=` sub ID if it has one. Once the browser carries a journey, its Supabase
+ * `?via=` code records the visit, with the link's `?sub=` sub ID if it has one; any other page (or
+ * coming back online) sends again a visit that didn't get through. Once the browser carries a journey, its Supabase
  * session (the existing one, then every SIGNED_IN: password, sign-up, OAuth callback)
  * is reported so the Worker can record the signup or sign-in. Supabase loads only for
  * a browser with a journey.
@@ -15,6 +16,7 @@ export function useAffiliateJourney() {
     let cancelled = false
     let listening = false
     let unsubscribe: (() => void) | null = null
+    let reportSession: (() => Promise<void>) | null = null
     let lastVisit = ''
 
     const listen = () => {
@@ -27,29 +29,37 @@ export function useAffiliateJourney() {
             if (event === 'SIGNED_IN') void reportAffiliateSignIn(session?.access_token, session?.user?.id)
           })
           unsubscribe = () => data.subscription.unsubscribe()
-          return supabase.auth.getSession().then(({ data: { session } }) => {
+          reportSession = () => supabase.auth.getSession().then(({ data: { session } }) => {
             if (!cancelled) void reportAffiliateSignIn(session?.access_token, session?.user?.id)
           })
+          return reportSession()
         })
         .catch(() => {})
     }
+    // A visit that got through late: report the session again, since the first report found no journey.
+    const retry = () => retryPendingAffiliateVisit()
+      .then(recorded => (recorded ? reportSession?.() : undefined))
+      .catch(() => null)
 
     const onPage = () => {
       const params = new URLSearchParams(window.location.search)
       const via = affiliateCode(params.get('via'))
       const sub = affiliateSub(params.get('sub'))
       const page = via ? `${window.location.pathname}?via=${via}&sub=${sub ?? ''}` : ''
-      if (!via || page === lastVisit) return listen()
-      lastVisit = page
       // The visit is stored before the session is reported, so the report finds the journey.
+      if (!via || page === lastVisit) return void retry().then(listen)
+      lastVisit = page
       recordAffiliateVisit(via, sub).catch(() => null).then(listen)
     }
+    const onOnline = () => void retry()
 
     onPage()
     router.events.on('routeChangeComplete', onPage)
+    window.addEventListener('online', onOnline)
     return () => {
       cancelled = true
       router.events.off('routeChangeComplete', onPage)
+      window.removeEventListener('online', onOnline)
       unsubscribe?.()
     }
     // `router.events` is one emitter for the app's lifetime.

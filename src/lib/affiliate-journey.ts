@@ -6,12 +6,20 @@ import { workerPost, workerRequest } from './worker-api'
 // holds the latest Affiliate code; the Worker stores each step (visit, signup or
 // sign-in, Checkout, purchase) and decides which journey a step joins. A link's sub ID
 // (`?sub=youtube`) goes only to the visit; later steps take it from there.
+//
+// Every later step joins the journey through its stored visit, so a visit that never
+// reached the Worker (offline, a server error) would lose the Affiliate its sale. It waits
+// in localStorage and is sent again on the next page, or when the browser is back online.
 
 export const AFFILIATE_COOKIE = 'enconvo_via'
 const MAX_AGE_SECONDS = 90 * 24 * 60 * 60
 const CODE = /^[A-Za-z0-9_-]{1,64}$/
 const VISITOR = /^[A-Za-z0-9-]{16,64}$/
 const SUB = /^[a-z0-9][a-z0-9_.-]{0,63}$/
+const PENDING_VISIT = `${AFFILIATE_COOKIE}:pending`
+// The Worker dates a visit when it arrives, so a late one only stretches the window a little.
+const PENDING_MAX_AGE_MS = 48 * 60 * 60 * 1000
+const PENDING_MAX_TRIES = 10
 
 export interface AffiliateJourney {
   visitor: string
@@ -55,14 +63,71 @@ export async function recordAffiliateVisit(via: string, sub: string | null = nul
     ?? Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('')
   const secure = location.protocol === 'https:' ? '; Secure' : ''
   document.cookie = `${AFFILIATE_COOKIE}=${visitor}.${code}; Max-Age=${MAX_AGE_SECONDS}; Path=/; SameSite=Lax${secure}`
+  await sendVisit({ visitor, via: code, sub: affiliateSub(sub), path: location.pathname, referrer: document.referrer, at: Date.now(), tries: 0 })
+  return { visitor, via: code }
+}
+
+interface PendingVisit {
+  visitor: string
+  via: string
+  sub: string | null
+  path: string
+  referrer: string
+  at: number
+  tries: number
+}
+
+/** Send again a visit that didn't reach the Worker, while this browser's journey still names it. True once it got through. */
+export async function retryPendingAffiliateVisit(): Promise<boolean> {
+  const visit = readPendingVisit()
+  if (!visit) return false
+  const journey = readAffiliateJourney()
+  const current = journey?.visitor === visit.visitor && journey.via === visit.via
+  if (current && Date.now() - visit.at <= PENDING_MAX_AGE_MS && visit.tries < PENDING_MAX_TRIES) return sendVisit(visit)
+  clearPendingVisit(visit)
+  return false
+}
+
+async function sendVisit(visit: PendingVisit): Promise<boolean> {
+  writePendingVisit({ ...visit, tries: visit.tries + 1 })
   // The Worker keeps only the path and the referring host.
-  await workerRequest('/api/affiliate/visit', {
+  const result = await workerRequest('/api/affiliate/visit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ visitor, via: code, sub: affiliateSub(sub) ?? undefined, path: location.pathname, referrer: document.referrer }),
+    body: JSON.stringify({ visitor: visit.visitor, via: visit.via, sub: visit.sub ?? undefined, path: visit.path, referrer: visit.referrer }),
     keepalive: true,
   })
-  return { visitor, via: code }
+  // Recorded (or left out on purpose) or refused for good: either way, don't send it again.
+  if (result.ok || result.terminal) clearPendingVisit(visit)
+  return result.ok
+}
+
+function readPendingVisit(): PendingVisit | null {
+  try {
+    const visit = JSON.parse(localStorage.getItem(PENDING_VISIT) ?? 'null')
+    return visit && typeof visit.at === 'number' && typeof visit.tries === 'number' ? visit : null
+  } catch {
+    return null
+  }
+}
+
+function writePendingVisit(visit: PendingVisit) {
+  try {
+    localStorage.setItem(PENDING_VISIT, JSON.stringify(visit))
+  } catch {
+    // Storage blocked: the visit gets this one try.
+  }
+}
+
+/** Forget `visit`, unless a newer visit took its place in the meantime. */
+function clearPendingVisit(visit: PendingVisit) {
+  try {
+    const stored = readPendingVisit()
+    if (stored && (stored.at !== visit.at || stored.via !== visit.via)) return
+    localStorage.removeItem(PENDING_VISIT)
+  } catch {
+    // See above.
+  }
 }
 
 /** This browser's journey has a session: the Worker records a signup or sign-in. Once per tab session, visitor and account. */
@@ -75,8 +140,9 @@ export async function reportAffiliateSignIn(accessToken: string | undefined, use
   } catch {
     // Storage blocked: report again; the Worker records each step once.
   }
-  const result = await workerPost('/api/affiliate/sign_in', accessToken, { visitor: journey.visitor })
-  if (!result.ok) return
+  const result = await workerPost<{ recorded: boolean; via?: string }>('/api/affiliate/sign_in', accessToken, { visitor: journey.visitor })
+  // No `via`: the Worker has no visit for this browser yet (one still waiting to be sent), so report again later.
+  if (!result.ok || !result.data.via) return
   try {
     sessionStorage.setItem(key, '1')
   } catch {
