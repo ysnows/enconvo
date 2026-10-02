@@ -1,10 +1,11 @@
 import { Check, Download, X } from 'lucide-react'
 import Link from 'next/link'
 import { affiliateLink, SITE_ORIGIN } from '@/lib/affiliate-program'
+import { ShareButtons } from './ShareButtons'
 import { card, CopyButton } from './ui'
 
-// The promotion kit on the Affiliate dashboard: the app icon, share images and
-// ready-to-copy text with the Affiliate's own link in it. The text sticks to
+// The promotion kit on the Affiliate dashboard: the app icon, share images,
+// ready-to-copy text with the Affiliate's own link in it, and share buttons. The text sticks to
 // what the homepage and llms.txt state, and leaves prices to the pricing page,
 // so it can't promise anything the terms forbid or go stale when plans change.
 
@@ -14,11 +15,16 @@ const IMAGES = [
     { src: '/og/enconvo-use-cases-v1.jpg', file: 'enconvo-use-cases-1200x630.jpg', name: 'Share image: use cases', size: '1200 × 630 JPG', square: false },
 ] as const
 
+const shortPost = (link: string) =>
+    `Enconvo is a native AI assistant for Mac that works across your apps. Automate tasks, dictate, search your documents, and use cloud AI or local models. ${link}`
+
+const DISCLOSURE = 'I earn a commission if you buy Enconvo through my link, at no extra cost to you.'
+
 function snippets(link: string) {
     return [
         {
             name: 'Short post',
-            text: `Enconvo is a native AI assistant for Mac that works across your apps. Automate tasks, dictate, search your documents, and use cloud AI or local models. ${link}`,
+            text: shortPost(link),
         },
         {
             name: 'Description',
@@ -31,7 +37,7 @@ function snippets(link: string) {
         },
         {
             name: 'Disclosure',
-            text: 'I earn a commission if you buy Enconvo through my link, at no extra cost to you.',
+            text: DISCLOSURE,
         },
     ]
 }
@@ -103,6 +109,8 @@ export function AffiliateKit({ code }: { code: string }) {
                     </div>
                 ))}
             </div>
+
+            <ShareButtons code={code} post={shortPost} disclosure={DISCLOSURE} />
 
             <div className="mt-6 grid gap-6 border-t border-hairline pt-5 sm:grid-cols-2">
                 <div>
