@@ -10,6 +10,10 @@ import { workerPost, workerRequest } from './worker-api'
 // Every later step joins the journey through its stored visit, so a visit that never
 // reached the Worker (offline, a server error) would lose the Affiliate its sale. It waits
 // in localStorage and is sent again on the next page, or when the browser is back online.
+//
+// Safari keeps a cookie a script wrote for at most 7 days, or 24 hours when the visitor came
+// from a link on a site it classes as a tracker, so the website's own server sends the cookie
+// back (`/api/affiliate/journey`): a cookie set by the site's response keeps all 90 days.
 
 export const AFFILIATE_COOKIE = 'enconvo_via'
 const MAX_AGE_SECONDS = 90 * 24 * 60 * 60
@@ -46,6 +50,11 @@ export function parseAffiliateCookie(value: unknown): AffiliateJourney | null {
   return dot > 0 && VISITOR.test(visitor) && CODE.test(via) ? { visitor, via } : null
 }
 
+/** The `enconvo_via` cookie for `journey`, the same whether the page or the server sets it. */
+export function affiliateCookie(journey: AffiliateJourney, secure: boolean): string {
+  return `${AFFILIATE_COOKIE}=${journey.visitor}.${journey.via}; Max-Age=${MAX_AGE_SECONDS}; Path=/; SameSite=Lax${secure ? '; Secure' : ''}`
+}
+
 export function readAffiliateJourney(): AffiliateJourney | null {
   try {
     const cookie = document.cookie.split(';').map(item => item.trim()).find(item => item.startsWith(`${AFFILIATE_COOKIE}=`))
@@ -61,8 +70,8 @@ export async function recordAffiliateVisit(via: string, sub: string | null = nul
   if (!code) return null
   const visitor = readAffiliateJourney()?.visitor
     ?? Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('')
-  const secure = location.protocol === 'https:' ? '; Secure' : ''
-  document.cookie = `${AFFILIATE_COOKIE}=${visitor}.${code}; Max-Age=${MAX_AGE_SECONDS}; Path=/; SameSite=Lax${secure}`
+  document.cookie = affiliateCookie({ visitor, via: code }, location.protocol === 'https:')
+  void fetch('/api/affiliate/journey', { method: 'POST', credentials: 'same-origin', keepalive: true }).catch(() => null)
   await sendVisit({ visitor, via: code, sub: affiliateSub(sub), path: location.pathname, referrer: document.referrer, at: Date.now(), tries: 0 })
   return { visitor, via: code }
 }
