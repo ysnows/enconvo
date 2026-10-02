@@ -416,9 +416,11 @@ const openWindowsNote = (count: number) =>
         ? `${count === 1 ? 'One sign-up' : `${count.toLocaleString('en-US')} sign-ups`} can still earn you commission if they buy by the day shown, unless they come through another Affiliate's link first. `
         : ''
 
-const renewingNote = (count: number) =>
+const renewingNote = (count: number, recurring: number) =>
     count > 0
-        ? `${count === 1 ? 'One customer has a Cloud plan that renews' : `${count.toLocaleString('en-US')} customers have a Cloud plan that renews`}; each renewal of a plan bought through you earns commission. `
+        ? `${count === 1 ? 'One customer has a Cloud plan that renews' : `${count.toLocaleString('en-US')} customers have a Cloud plan that renews`}${
+              recurring > 0 ? `, about ${formatCents(recurring)} a month in commission going by their latest payments` : ''
+          }; each renewal of a plan bought through you earns commission. `
         : ''
 
 export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboard; accessToken: string }) {
@@ -694,7 +696,7 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                         : data.referrals_truncated
                           ? `Showing the newest ${referrals.length.toLocaleString('en-US')} referrals. `
                           : '') +
-                        renewingNote(data.totals?.renewing ?? 0) +
+                        renewingNote(data.totals?.renewing ?? 0, data.totals?.recurring ?? 0) +
                         openWindowsNote(data.totals?.open_windows ?? 0) +
                         "Emails are masked to protect your referrals' privacy. Sign-ups show up even before they buy."}
                 {tab === 'commissions' &&

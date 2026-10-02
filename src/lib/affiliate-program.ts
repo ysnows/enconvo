@@ -211,8 +211,10 @@ export interface AffiliateDashboard {
     /**
      * The link's results; `commission` (net, in cents) leaves out customers of the promotion code alone.
      * `renewing` counts the paying referrals whose Cloud plan renews, `open_windows` the referrals with an open window.
+     * `recurring` is about what those renewals earn a month, in cents: each one's latest payment at today's rate, a
+     * yearly plan's spread over twelve months.
      */
-    totals?: { visitors: number; signups: number; customers: number; commission?: number; renewing?: number; open_windows?: number }
+    totals?: { visitors: number; signups: number; customers: number; commission?: number; renewing?: number; recurring?: number; open_windows?: number }
     balances?: AffiliateBalances
     /**
      * The unpaid commissions in review: the referrals (customers) they belong to and their total in cents. `holds_payout` once one is

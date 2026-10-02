@@ -279,6 +279,13 @@ function Activity({ data }: { data: Dashboard }) {
         { label: 'Customers', value: totals.customers.toLocaleString('en-US') },
         { label: 'Visitor → customer', value: rate ?? '—' },
         { label: 'Earned per visitor', value: earningsPerVisitor(totals.visitors, totals.commission) ?? '—' },
+        {
+            label: 'From renewals a month',
+            value: totals.recurring ? `≈${formatCents(totals.recurring)}` : '—',
+            hint: totals.recurring
+                ? `About what the Cloud plans that renew earn you each month: each customer's latest payment at your current rate, a yearly plan spread over 12 months. Discounts, upgrades and cancellations change it.`
+                : 'Customers whose Cloud plan renews earn you commission on every renewal; about how much a month shows here.',
+        },
     ]
     return (
         <section className={`${card} p-6`}>
@@ -286,9 +293,9 @@ function Activity({ data }: { data: Dashboard }) {
                 <h2 className="text-lg font-semibold text-content">Your link&apos;s results</h2>
                 <span className="text-xs text-content-muted">All time</span>
             </div>
-            <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-5">
+            <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
                 {stats.map((stat) => (
-                    <div key={stat.label}>
+                    <div key={stat.label} title={'hint' in stat ? stat.hint : undefined}>
                         <dd className="text-2xl font-semibold tabular-nums text-content">{stat.value}</dd>
                         <dt className="mt-1 text-xs text-content-muted">{stat.label}</dt>
                     </div>
