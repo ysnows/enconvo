@@ -96,6 +96,14 @@ export default function AffiliatePage() {
     const updateAffiliate = (next: AffiliateApplication) => {
         setLoad((current) => (current.state === 'loaded' ? { state: 'loaded', data: { ...current.data, affiliate: next } } : current))
     }
+    // A change made on the dashboard also fetches it again, quietly, so the account's history shows it.
+    const changedOnDashboard = (next: AffiliateApplication) => {
+        updateAffiliate(next)
+        if (!token) return
+        void getAffiliateDashboard(token).then((result) => {
+            if (result.ok) setLoad((current) => (current.state === 'loaded' ? { state: 'loaded', data: result.data } : current))
+        })
+    }
     const submitted = (application: AffiliateApplication) => {
         updateAffiliate(application)
         setEditing(false)
@@ -105,7 +113,7 @@ export default function AffiliatePage() {
 
     let content: React.ReactNode
     if (affiliate && (affiliate.status === 'approved' || affiliate.status === 'suspended') && load.state === 'loaded') {
-        content = <AffiliateDashboard data={load.data} accessToken={token} email={session?.email ?? null} onAffiliateChanged={updateAffiliate} />
+        content = <AffiliateDashboard data={load.data} accessToken={token} email={session?.email ?? null} onAffiliateChanged={changedOnDashboard} />
     } else if (affiliate?.status === 'pending' && !editing) {
         content = <PendingApplication application={affiliate} onEdit={() => setEditing(true)} />
     } else if (affiliate) {

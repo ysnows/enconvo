@@ -227,6 +227,21 @@ export interface AffiliateDashboard {
     commissions?: AffiliateCommission[]
     commissions_truncated?: boolean
     payouts?: AffiliatePayout[]
+    /** The latest 20 changes to the account, newest first (kept since Oct 2, 2026). */
+    account_changes?: AffiliateAccountChange[]
+    account_changes_truncated?: boolean
+}
+
+/**
+ * One field of the account one change set. Values are text, null for none: a rate is `25`, a payout account
+ * `paypal you@example.com`, accepted terms the version's day. `by` is "you" or "enconvo" (an admin).
+ */
+export interface AffiliateAccountChange {
+    field: 'status' | 'code' | 'commission_rate' | 'promotion_code' | 'payout_account' | 'terms_version' | (string & {})
+    old_value: string | null
+    new_value: string | null
+    by: 'you' | 'enconvo'
+    changed_at: string
 }
 
 export interface ApplicationInput {
@@ -315,6 +330,55 @@ export function earningsPerVisitor(visitors: number, commission: number | undefi
 /** "Oct 2026" for a `YYYY-MM` month. */
 export function formatMonth(month: string): string {
     return new Date(`${month}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+}
+
+const ACCOUNT_FIELD_LABEL: Record<string, string> = {
+    status: 'Status',
+    code: 'Link code',
+    commission_rate: 'Commission rate',
+    promotion_code: 'Promotion code',
+    payout_account: 'Payout account',
+    terms_version: 'Program terms',
+}
+const STATUS_LABEL: Record<string, string> = { pending: 'In review', approved: 'Approved', rejected: 'Not approved', suspended: 'Paused' }
+
+/** A history value as the dashboard shows it: `paypal you@example.com` → `PayPal you@example.com`. */
+export function accountValue(field: string, value: string | null): string {
+    if (value === null) return 'none'
+    if (field === 'status') return STATUS_LABEL[value] ?? value
+    if (field === 'commission_rate') return `${value}%`
+    if (field === 'promotion_code') return value.toUpperCase()
+    if (field === 'terms_version') return `the ${formatUtcDay(value)} version`
+    if (field === 'payout_account') {
+        const space = value.indexOf(' ')
+        if (space < 0) return value
+        const method = value.slice(0, space)
+        return `${PAYOUT_METHOD_LABEL[method as PayoutMethod] ?? method} ${value.slice(space + 1)}`
+    }
+    return value
+}
+
+/** `{ label: 'Commission rate', text: '20% → 25%' }`; a first value reads `Set to …`, accepted terms `Accepted …`. */
+export function accountChangeText(change: AffiliateAccountChange): { label: string; text: string } {
+    const label = ACCOUNT_FIELD_LABEL[change.field] ?? change.field
+    const to = accountValue(change.field, change.new_value)
+    if (change.field === 'terms_version' && change.new_value) return { label, text: `Accepted ${to}` }
+    if (change.old_value === null) return { label, text: `Set to ${to}` }
+    if (change.new_value === null) return { label, text: `Removed ${accountValue(change.field, change.old_value)}` }
+    return { label, text: `${accountValue(change.field, change.old_value)} → ${to}` }
+}
+
+/** How long the dashboard points out a payout account change. */
+export const PAYOUT_CHANGE_NOTICE_DAYS = 14
+
+/**
+ * The latest payout account change, when it moved the payouts from one account to another in the last
+ * {@link PAYOUT_CHANGE_NOTICE_DAYS} days, so whoever owns the Affiliate account can tell if it wasn't them.
+ */
+export function recentPayoutAccountChange(changes: AffiliateAccountChange[] | undefined, now = Date.now()): AffiliateAccountChange | null {
+    const change = changes?.find((c) => c.field === 'payout_account')
+    if (!change?.old_value || !change.new_value) return null
+    return now - Date.parse(change.changed_at) <= PAYOUT_CHANGE_NOTICE_DAYS * 86_400_000 ? change : null
 }
 
 /** RFC 4180 CSV, with a byte order mark so spreadsheet apps read it as UTF-8. */

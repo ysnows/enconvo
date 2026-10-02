@@ -20,6 +20,7 @@ import {
     type AffiliateDay,
     type PayoutMethod,
 } from '@/lib/affiliate-program'
+import { AccountChanges, PayoutAccountNotice } from './AccountChanges'
 import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
@@ -27,8 +28,8 @@ import { card, CopyButton, fieldLabel, input, Notice, Pill } from './ui'
 
 // /affiliate for an approved (or suspended) Affiliate: its link and link builder, balances and
 // when pending money becomes payable, link results overall and per sub ID, payout method,
-// monthly statement, and its referrals, commissions and payouts, and the promotion kit. An
-// Affiliate that hasn't accepted the current program terms is asked to first.
+// monthly statement, its referrals, commissions and payouts, the changes to its account, and the
+// promotion kit. An Affiliate that hasn't accepted the current program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -578,6 +579,7 @@ export function AffiliateDashboard({
                     We can&apos;t pay commissions until you add a PayPal or Wise account.
                 </Notice>
             )}
+            <PayoutAccountNotice changes={data.account_changes} />
 
             <LinkCard code={affiliate.code} formerCodes={data.former_codes ?? []} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
             <Review data={data} />
@@ -591,6 +593,7 @@ export function AffiliateDashboard({
             <AffiliateTraffic data={data} />
             <AffiliateMonths data={data} />
             <AffiliateTables data={data} accessToken={accessToken} />
+            <AccountChanges data={data} />
             {!suspended && <AffiliateKit code={affiliate.code} />}
         </div>
     )
