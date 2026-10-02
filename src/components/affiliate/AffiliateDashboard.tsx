@@ -28,7 +28,7 @@ import { card, CopyButton, fieldLabel, input, Notice, Pill } from './ui'
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-function LinkCard({ code, promotionCode, paused }: { code: string; promotionCode: string | null; paused: boolean }) {
+function LinkCard({ code, formerCodes, promotionCode, paused }: { code: string; formerCodes: string[]; promotionCode: string | null; paused: boolean }) {
     const [path, setPath] = useState<string>('/')
     const [subInput, setSubInput] = useState('')
     const sub = affiliateSub(subInput)
@@ -48,6 +48,18 @@ function LinkCard({ code, promotionCode, paused }: { code: string; promotionCode
                 </div>
                 {!paused && <CopyButton text={link} />}
             </div>
+            {formerCodes.length > 0 && (
+                <p className="mt-2 text-xs leading-5 text-content-muted">
+                    Links you already shared with{' '}
+                    {formerCodes.map((former, i) => (
+                        <span key={former}>
+                            {i > 0 && ', '}
+                            <span className="font-mono text-content-body">?via={former}</span>
+                        </span>
+                    ))}{' '}
+                    still count as yours.
+                </p>
+            )}
             {promotionCode && (
                 <div className="mt-5 flex flex-col gap-4 border-t border-hairline pt-5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
@@ -486,7 +498,7 @@ export function AffiliateDashboard({
                 </Notice>
             )}
 
-            <LinkCard code={affiliate.code} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
+            <LinkCard code={affiliate.code} formerCodes={data.former_codes ?? []} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
             <Review data={data} />
             <Balances data={data} payoutMethodSet={payoutMethodSet} />
             <Releases data={data} />

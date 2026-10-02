@@ -189,6 +189,8 @@ export interface AffiliateDashboard {
     program: ProgramTerms
     affiliate: AffiliateApplication | null
     /** The rest is only there for an approved or suspended Affiliate. */
+    /** Codes the Affiliate had before we changed it, newest first: links with them still count. */
+    former_codes?: string[]
     /**
      * The link's results; `commission` (net, in cents) leaves out customers of the promotion code alone.
      * `renewing` counts the paying referrals whose Cloud plan renews, `open_windows` the referrals with an open window.
