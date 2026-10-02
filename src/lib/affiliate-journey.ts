@@ -4,12 +4,14 @@ import { workerPost, workerRequest } from './worker-api'
 // arrived through an Affiliate link (`?via=<code>`), kept apart from Endorsely's
 // attribution. The `enconvo_via` cookie names the browser with a random visitor id and
 // holds the latest Affiliate code; the Worker stores each step (visit, signup or
-// sign-in, Checkout, purchase) and decides which journey a step joins.
+// sign-in, Checkout, purchase) and decides which journey a step joins. A link's sub ID
+// (`?sub=youtube`) goes only to the visit; later steps take it from there.
 
 export const AFFILIATE_COOKIE = 'enconvo_via'
 const MAX_AGE_SECONDS = 90 * 24 * 60 * 60
 const CODE = /^[A-Za-z0-9_-]{1,64}$/
 const VISITOR = /^[A-Za-z0-9-]{16,64}$/
+const SUB = /^[a-z0-9][a-z0-9_.-]{0,63}$/
 
 export interface AffiliateJourney {
   visitor: string
@@ -18,6 +20,13 @@ export interface AffiliateJourney {
 
 export function affiliateCode(value: unknown): string | null {
   return typeof value === 'string' && CODE.test(value) ? value : null
+}
+
+/** A link's sub ID, lowercased the way the Worker stores it; anything else is left out. */
+export function affiliateSub(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  const sub = value.trim().toLowerCase()
+  return SUB.test(sub) ? sub : null
 }
 
 /** `<visitor>.<via>`: neither part can hold a character a cookie would need escaped. */
@@ -39,7 +48,7 @@ export function readAffiliateJourney(): AffiliateJourney | null {
 }
 
 /** Start or continue this browser's journey under `via` (the latest code wins, the visitor stays) and record the visit. */
-export async function recordAffiliateVisit(via: string): Promise<AffiliateJourney | null> {
+export async function recordAffiliateVisit(via: string, sub: string | null = null): Promise<AffiliateJourney | null> {
   const code = affiliateCode(via)
   if (!code) return null
   const visitor = readAffiliateJourney()?.visitor
@@ -50,7 +59,7 @@ export async function recordAffiliateVisit(via: string): Promise<AffiliateJourne
   await workerRequest('/api/affiliate/visit', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ visitor, via: code, path: location.pathname, referrer: document.referrer }),
+    body: JSON.stringify({ visitor, via: code, sub: affiliateSub(sub) ?? undefined, path: location.pathname, referrer: document.referrer }),
     keepalive: true,
   })
   return { visitor, via: code }

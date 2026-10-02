@@ -43,9 +43,9 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
 
         const returnUrlParams = router?.query?.returnUrl ? `?returnUrl=${router.query.returnUrl}` : '';
         const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : router.query.returnUrl;
-        // Web offer signups must return to the selected offer after email
+        // Web offer and Affiliate signups must return to their page after email
         // confirmation rather than opening the native app.
-        const emailRedirectTo = typeof returnUrl === 'string' && /^\/ltd(?:\?|$)/.test(returnUrl)
+        const emailRedirectTo = typeof returnUrl === 'string' && /^\/(?:ltd|affiliate)(?:[?#/]|$)/.test(returnUrl)
             ? `${window.location.origin}/auth/callback?${new URLSearchParams({ returnUrl })}`
             : `${window.location.origin}/login?from=app${returnUrlParams}`;
 

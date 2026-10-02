@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import { affiliateCode, readAffiliateJourney, recordAffiliateVisit, reportAffiliateSignIn } from '@/lib/affiliate-journey'
+import { affiliateCode, affiliateSub, readAffiliateJourney, recordAffiliateVisit, reportAffiliateSignIn } from '@/lib/affiliate-journey'
 
 /**
  * The website's Affiliate journey hook, mounted once in `_app`. A page opened with a
- * `?via=` code records the visit. Once the browser carries a journey, its Supabase
+ * `?via=` code records the visit, with the link's `?sub=` sub ID if it has one. Once the browser carries a journey, its Supabase
  * session (the existing one, then every SIGNED_IN: password, sign-up, OAuth callback)
  * is reported so the Worker can record the signup or sign-in. Supabase loads only for
  * a browser with a journey.
@@ -35,12 +35,14 @@ export function useAffiliateJourney() {
     }
 
     const onPage = () => {
-      const via = affiliateCode(new URLSearchParams(window.location.search).get('via'))
-      const page = via ? `${window.location.pathname}?via=${via}` : ''
+      const params = new URLSearchParams(window.location.search)
+      const via = affiliateCode(params.get('via'))
+      const sub = affiliateSub(params.get('sub'))
+      const page = via ? `${window.location.pathname}?via=${via}&sub=${sub ?? ''}` : ''
       if (!via || page === lastVisit) return listen()
       lastVisit = page
       // The visit is stored before the session is reported, so the report finds the journey.
-      recordAffiliateVisit(via).catch(() => null).then(listen)
+      recordAffiliateVisit(via, sub).catch(() => null).then(listen)
     }
 
     onPage()
