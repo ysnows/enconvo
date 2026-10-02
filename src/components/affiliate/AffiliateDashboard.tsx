@@ -29,6 +29,7 @@ import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
 import { GettingStarted, startSteps } from './GettingStarted'
+import { LatestVisits } from './LatestVisits'
 import { LinkQr } from './LinkQr'
 import { ProfileCard } from './ProfileCard'
 import { SinceLastVisit } from './SinceLastVisit'
@@ -710,6 +711,7 @@ export function AffiliateDashboard({
             </div>
             <AffiliateSources data={data} />
             <AffiliateTraffic data={data} />
+            <LatestVisits visits={data.recent_visits ?? []} />
             <AffiliateMonths data={data} />
             <AffiliateTables data={data} accessToken={accessToken} />
             <ProfileCard affiliate={affiliate} accessToken={accessToken} onSaved={onAffiliateChanged} />

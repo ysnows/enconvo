@@ -198,6 +198,16 @@ export interface AffiliateTrafficRow {
     customers: number
 }
 
+/** One visit through the link: the referring host without `www.` (null when the browser sent none), the landing path and the sub ID. */
+export interface AffiliateVisit {
+    at: string
+    sub: string | null
+    referrer: string | null
+    path: string | null
+    /** The visitor had opened the link before. */
+    returning: boolean
+}
+
 /**
  * One UTC month (`YYYY-MM`) of the monthly statement. Commissions count in the month of the payment, and refunds,
  * disputes, voids (net of disputes won) and adjustments in the month they happened, so `net` can be negative. A bonus
@@ -245,6 +255,8 @@ export interface AffiliateDashboard {
     sources_truncated?: boolean
     /** The top 10 of each, by visitors; the rest is `totals.visitors` minus what they add up to. */
     traffic?: { referrers: AffiliateTrafficRow[]; landing_pages: AffiliateTrafficRow[] }
+    /** The latest 20 visits through the link, newest first. */
+    recent_visits?: AffiliateVisit[]
     /** Up to the last 12 months, newest first. */
     months?: AffiliateMonth[]
     referrals?: AffiliateReferral[]
