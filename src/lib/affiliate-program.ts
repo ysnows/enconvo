@@ -207,8 +207,10 @@ export interface AffiliateDashboard {
     program: ProgramTerms
     affiliate: AffiliateApplication | null
     /** The rest is only there for an approved or suspended Affiliate. */
-    /** Codes the Affiliate had before we changed it, newest first: links with them still count. */
+    /** Codes the Affiliate had before, newest first: links with them still count. */
     former_codes?: string[]
+    /** When the Affiliate can change its code again, if it changed it in the last 30 days. */
+    code_changeable_at?: string | null
     /**
      * The link's results; `commission` (net, in cents) leaves out customers of the promotion code alone.
      * `renewing` counts the paying referrals whose Cloud plan renews, `open_windows` the referrals with an open window.
@@ -486,4 +488,9 @@ export interface ProfileInput {
 /** Name, audience and promotion plan are required, as in an application; an empty website removes it. */
 export function saveAffiliateProfile(accessToken: string, profile: ProfileInput) {
     return workerPost<AffiliateApplication>('/api/affiliate/profile', accessToken, profile)
+}
+
+/** An approved Affiliate's new link code, once every 30 days; the old code keeps crediting it. */
+export function changeAffiliateCode(accessToken: string, code: string) {
+    return workerPost<AffiliateApplication>('/api/affiliate/code', accessToken, { code })
 }

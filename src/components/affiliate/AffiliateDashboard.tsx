@@ -22,6 +22,7 @@ import {
 } from '@/lib/affiliate-program'
 import { AccountChanges, PayoutAccountNotice } from './AccountChanges'
 import { Announcement } from './Announcement'
+import { ChangeCode } from './ChangeCode'
 import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
@@ -32,15 +33,31 @@ import { SinceLastVisit } from './SinceLastVisit'
 import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from './ui'
 
 // /affiliate for an approved (or suspended) Affiliate: the program's announcement, the first steps
-// until its link earns, what changed since its last visit, its link, link builder and QR code,
-// balances and when pending money becomes payable, link results overall and per sub ID, payout
-// method, monthly statement, its referrals, commissions and payouts, its profile, the changes to
-// its account, and the promotion kit. An Affiliate that hasn't accepted the current program terms
-// is asked to first.
+// until its link earns, what changed since its last visit, its link (and changing its code), link
+// builder and QR code, balances and when pending money becomes payable, link results overall and
+// per sub ID, payout method, monthly statement, its referrals, commissions and payouts, its
+// profile, the changes to its account, and the promotion kit. An Affiliate that hasn't accepted the
+// current program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-function LinkCard({ code, formerCodes, promotionCode, paused }: { code: string; formerCodes: string[]; promotionCode: string | null; paused: boolean }) {
+function LinkCard({
+    code,
+    formerCodes,
+    promotionCode,
+    paused,
+    accessToken,
+    codeChangeableAt,
+    onChanged,
+}: {
+    code: string
+    formerCodes: string[]
+    promotionCode: string | null
+    paused: boolean
+    accessToken: string
+    codeChangeableAt: string | null
+    onChanged: (affiliate: AffiliateApplication) => void
+}) {
     const [path, setPath] = useState<string>('/')
     const [subInput, setSubInput] = useState('')
     const [qrOpen, setQrOpen] = useState(false)
@@ -61,6 +78,7 @@ function LinkCard({ code, formerCodes, promotionCode, paused }: { code: string; 
                 </div>
                 {!paused && <CopyButton text={link} />}
             </div>
+            {!paused && <ChangeCode code={code} accessToken={accessToken} changeableAt={codeChangeableAt} onChanged={onChanged} />}
             {formerCodes.length > 0 && (
                 <p className="mt-2 text-xs leading-5 text-content-muted">
                     Links you already shared with{' '}
@@ -620,7 +638,15 @@ export function AffiliateDashboard({
             {starting && <GettingStarted data={data} termsAccepted={termsAccepted} />}
             <SinceLastVisit data={data} />
 
-            <LinkCard code={affiliate.code} formerCodes={data.former_codes ?? []} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
+            <LinkCard
+                code={affiliate.code}
+                formerCodes={data.former_codes ?? []}
+                promotionCode={affiliate.promotion_code ?? null}
+                paused={suspended}
+                accessToken={accessToken}
+                codeChangeableAt={data.code_changeable_at ?? null}
+                onChanged={onAffiliateChanged}
+            />
             <Review data={data} />
             <Balances data={data} payoutMethodSet={payoutMethodSet} />
             <Releases data={data} />
