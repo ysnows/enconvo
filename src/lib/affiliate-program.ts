@@ -116,6 +116,8 @@ export interface AffiliateCommission {
     earned_at: string
     available_at: string
     status: CommissionStatus
+    /** Unpaid, and waiting for Enconvo to review its referral (it looks like the Affiliate's own purchase). */
+    in_review?: boolean
 }
 
 export interface AffiliatePayout {
@@ -193,6 +195,11 @@ export interface AffiliateDashboard {
      */
     totals?: { visitors: number; signups: number; customers: number; commission?: number; renewing?: number; open_windows?: number }
     balances?: AffiliateBalances
+    /**
+     * The unpaid commissions in review: the referrals they belong to and their total in cents. `holds_payout` once one is
+     * past its refund window, since no payout goes out until the review is done.
+     */
+    review?: { referrals: number; amount: number; holds_payout: boolean }
     releases?: AffiliateRelease[]
     daily?: AffiliateDay[]
     sources?: AffiliateSource[]

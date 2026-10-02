@@ -59,6 +59,7 @@ export const KIND_LABEL: Record<AffiliateCommission['kind'], string> = {
 }
 
 function commissionStatus(entry: AffiliateCommission): { label: string; tone: PillTone } {
+    if (entry.in_review && (entry.status === 'pending' || entry.status === 'payable')) return { label: 'In review', tone: 'yellow' }
     switch (entry.status) {
         case 'pending':
             return { label: `Pending until ${formatDay(entry.available_at)}`, tone: 'gray' }
@@ -115,7 +116,7 @@ function exportCommissions(code: string, rows: AffiliateCommission[]) {
                     adjustment ? '' : dollars(row.base_amount),
                     adjustment ? '' : row.rate,
                     dollars(row.amount),
-                    row.status,
+                    row.in_review && (row.status === 'pending' || row.status === 'payable') ? 'in_review' : row.status,
                     isoDay(row.available_at),
                     row.note ?? '',
                 ]

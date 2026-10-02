@@ -116,6 +116,24 @@ function LinkCard({ code, promotionCode, paused }: { code: string; promotionCode
     )
 }
 
+/** Referrals in review: why a commission says so, and whether it holds up the payout. Never which referral looked like what. */
+function Review({ data }: { data: Dashboard }) {
+    const review = data.review
+    if (!review || review.referrals <= 0) return null
+    const referrals = review.referrals === 1 ? '1 referral' : `${review.referrals} referrals`
+    return (
+        <Notice tone={review.holds_payout ? 'warn' : 'info'} title={`${referrals} in review`}>
+            We review referrals that look like your own purchases, as the{' '}
+            <Link href="/affiliate/terms" className="text-signal-blue hover:underline">
+                program terms
+            </Link>{' '}
+            say. {formatCents(review.amount)} of commission waits for that review
+            {review.holds_payout ? ', and your next payout goes out once it is done' : ''}. A referral we clear is paid as usual; one
+            we void is taken back.
+        </Notice>
+    )
+}
+
 function Balances({ data, payoutMethodSet }: { data: Dashboard; payoutMethodSet: boolean }) {
     const b = data.balances
     const minimum = data.program.minimum_payout
@@ -130,7 +148,9 @@ function Balances({ data, payoutMethodSet }: { data: Dashboard; payoutMethodSet:
             note:
                 b.payable <= 0
                     ? 'Nothing past the refund window yet'
-                    : short > 0
+                    : data.review?.holds_payout
+                      ? 'On hold until we finish a review'
+                      : short > 0
                       ? `${formatCents(short)} more to reach the ${formatCents(minimum, { cents: false })} minimum`
                       : payoutMethodSet
                         ? 'In the next monthly payout'
@@ -467,6 +487,7 @@ export function AffiliateDashboard({
             )}
 
             <LinkCard code={affiliate.code} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
+            <Review data={data} />
             <Balances data={data} payoutMethodSet={payoutMethodSet} />
             <Releases data={data} />
             <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
