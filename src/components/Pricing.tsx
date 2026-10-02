@@ -3,6 +3,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
 import { Button } from '@/components/Button'
+import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { supabase } from '@/lib/supabase'
 import { trackEvent } from '@/lib/analytics'
 
@@ -494,6 +495,8 @@ export function Pricing() {
             Two ways to pay for AI — and they stack.
           </p>
         </div>
+
+        <AffiliateOffer />
 
         <div className={styles.pricingGroup}>
           <div className={styles.pricingGroupHeading} data-reveal>

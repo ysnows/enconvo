@@ -459,6 +459,8 @@
 .pricingEyebrow { grid-column: 1 / -1; color: #9cbdcd; font-size: 12px; font-weight: 500; }
 .pricingHeading h2 { max-width: 560px; font-size: 42px; font-weight: 600; line-height: 1.16; text-wrap: balance; }
 .pricingHeading > p:last-child { max-width: 340px; margin: 0 0 4px; justify-self: end; font-size: 16px; line-height: 1.65; color: #9c9c9d; }
+.offerNote { margin: 32px 0 0; padding: 12px 16px; border: 1px solid rgba(182,214,232,.2); border-radius: 8px; background: rgba(182,214,232,.08); color: #c6dce8; font-size: 14px; line-height: 1.6; }
+.offerNote strong { color: #f4f4f6; font-weight: 600; letter-spacing: .02em; }
 .pricingGroup { margin-top: 48px; }
 .cloudGroup { margin-top: 56px; padding-top: 48px; border-top: 1px solid var(--home-stroke); }
 .pricingGroupHeading { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px 24px; text-align: left; }
