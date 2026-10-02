@@ -169,9 +169,12 @@ export function affiliateMetadata(journey: AffiliateJourney | null): Record<stri
   return journey ? { via: journey.via, via_visitor: journey.visitor } : {}
 }
 
-/** Record the Checkout step. Bookkeeping only: it gives up after `timeoutMs` and never throws. */
-/** The promotion code of the Affiliate whose link brought this journey, for its Checkout; null for none or no answer in time. */
-export async function affiliatePromotionCode(accessToken: string | undefined, journey: AffiliateJourney | null, timeoutMs = 1500): Promise<string | null> {
+/**
+ * The promotion code of the Affiliate whose link brought this journey, for its Checkout; null for
+ * none or no answer in time. The Worker opens a new database connection for it, which takes about
+ * 1.5 seconds, so it gets 4.
+ */
+export async function affiliatePromotionCode(accessToken: string | undefined, journey: AffiliateJourney | null, timeoutMs = 4000): Promise<string | null> {
   if (!journey || !accessToken) return null
   try {
     const result = await workerRequest<{ promotion_code: string | null }>('/api/affiliate/discount', {
@@ -187,6 +190,7 @@ export async function affiliatePromotionCode(accessToken: string | undefined, jo
   }
 }
 
+/** Record the Checkout step. Bookkeeping only: it gives up after `timeoutMs` and never throws; the Worker answers before it writes. */
 export async function reportAffiliateCheckout(accessToken: string | undefined, journey: AffiliateJourney | null, session: string | undefined, plan: string, timeoutMs = 1500) {
   if (!journey || !accessToken || !session) return
   try {

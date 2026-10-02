@@ -28,8 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ via }),
-            // Nothing waits on this note, so it gets longer than a Checkout's 1.5 seconds.
-            signal: AbortSignal.timeout(3000),
+            // The Worker opens a new database connection for it, which takes about 1.5 seconds.
+            signal: AbortSignal.timeout(4000),
         })
         if (!result.ok) throw new Error(`Worker answered ${result.status} ${result.reason}`)
         const code = result.data.promotion_code
