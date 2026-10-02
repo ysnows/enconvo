@@ -81,7 +81,7 @@ function exportReferrals(code: string, rows: AffiliateReferral[]) {
     downloadCsv(
         `enconvo-affiliate-${code}-referrals.csv`,
         toCsv(
-            ['Customer', 'Sub ID', 'Promotion code', 'Joined', 'Signed up', 'Plan', 'Plan status', 'Purchases', 'Paid (USD)', 'Commission (USD)', 'Status', 'Can earn until (UTC)'],
+            ['Customer', 'Sub ID', 'Promotion code', 'Joined', 'Signed up', 'Plan', 'Plan status', 'Purchases', 'Paid (USD)', 'Commission (USD)', 'Status', 'Can earn until (UTC)', 'Added by Enconvo'],
             rows.map((row) => [
                 row.customer,
                 row.sub ?? '',
@@ -95,6 +95,7 @@ function exportReferrals(code: string, rows: AffiliateReferral[]) {
                 dollars(row.commission),
                 REFERRAL_STATUS[row.status].label,
                 creditWindowLabel(row),
+                row.added_by_enconvo ? 'yes' : 'no',
             ]),
         ),
     )
@@ -375,6 +376,16 @@ function CreditWindow({ row }: { row: AffiliateReferral }) {
     )
 }
 
+/** A customer Enconvo credited to the Affiliate by hand, since no link or promotion code did. */
+function AddedByEnconvo({ row }: { row: AffiliateReferral }) {
+    if (!row.added_by_enconvo) return null
+    return (
+        <span className="mt-1 block font-sans text-xs text-content-muted" title="Enconvo credited this customer's subscription to you by hand. Its payments from that day on earn you commission.">
+            Added by Enconvo
+        </span>
+    )
+}
+
 const creditWindowLabel = (row: AffiliateReferral) =>
     row.status !== 'signed_up' || !row.credit_window ? '' : row.credit_window === 'open' ? row.credit_until ?? '' : 'ended'
 
@@ -475,6 +486,7 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                                         <td className={`${td} font-mono text-content`}>
                                             {row.customer}
                                             <SourceTag sub={row.sub} promotionCode={row.promotion_code ?? null} />
+                                            <AddedByEnconvo row={row} />
                                         </td>
                                         <td className={td}>{formatDay(row.joined_at)}</td>
                                         <td className={td}>

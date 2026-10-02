@@ -107,6 +107,11 @@ export interface AffiliateReferral {
     credit_window?: 'open' | 'closed' | null
     /** The last UTC day (`YYYY-MM-DD`) of an open window. */
     credit_until?: string | null
+    /**
+     * Enconvo credited the customer's subscription to the Affiliate by hand, for a customer no link or promotion
+     * code credited: its payments from that day on earn commission. Old Workers don't say.
+     */
+    added_by_enconvo?: boolean
 }
 
 export type ReferralPlan = 'renewing' | 'cancelling' | 'ended' | 'lifetime'
