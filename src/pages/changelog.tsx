@@ -1,21 +1,22 @@
 import fs from 'fs/promises'
 import path from 'path'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+} from 'react'
+import { flushSync } from 'react-dom'
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import {
-  ArrowRight,
-  CalendarDays,
-  ChevronRight,
-  Search,
-  X,
-} from 'lucide-react'
+import clsx from 'clsx'
+import { ChevronDown, Search, X } from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
-import mainVisual from '@/images/main.jpg'
-import appScreenshot from '@/images/screenshots/app-screenshot.png'
 
 interface ReleaseSection {
   title: string
@@ -59,22 +60,16 @@ function formatInlineMarkdown(value: string) {
   return escapeHtml(value)
     .replace(
       /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g,
-      '<a href="$2" target="_blank" rel="noreferrer" class="font-semibold text-cyan-200 underline decoration-cyan-200/30 underline-offset-4 hover:text-white">$1</a>'
+      '<a href="$2" target="_blank" rel="noreferrer" class="text-signal-blue underline decoration-signal-blue/35 underline-offset-[3px] transition-colors hover:decoration-signal-blue">$1</a>'
     )
     .replace(
       /\*\*([^*]+)\*\*/g,
-      '<strong class="font-semibold text-white">$1</strong>'
+      '<strong class="font-semibold text-content">$1</strong>'
     )
     .replace(
       /`([^`]+)`/g,
-      '<code class="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[0.9em] text-cyan-100">$1</code>'
+      '<code class="rounded bg-white/[0.08] px-[5px] py-px font-mono text-[0.88em] text-content">$1</code>'
     )
-}
-
-function FormattedText({ text }: { text: string }) {
-  return (
-    <span dangerouslySetInnerHTML={{ __html: formatInlineMarkdown(text) }} />
-  )
 }
 
 function plainText(value: string) {
@@ -373,537 +368,1006 @@ async function readBetaReleases(): Promise<BetaRelease[]> {
   return betas
 }
 
-function CrystalShard({
-  className,
-  points,
-}: {
-  className: string
-  points: string
-}) {
-  return (
-    <div
-      className={className}
-      style={{ clipPath: `polygon(${points})` }}
-      aria-hidden="true"
-    />
-  )
-}
+const DOWNLOAD_URL = 'https://api.enconvo.com/app/download'
+// Fixed site nav height plus a little air, used for anchors and scroll targets.
+const NAV_OFFSET = 88
+const EASE = 'ease-[cubic-bezier(0.22,1,0.36,1)]'
 
-const sectionAccentClasses = [
-  {
-    marker: 'bg-cyan-200',
-    bar: 'from-cyan-200/80 via-cyan-200/30 to-transparent',
-    title: 'text-cyan-50',
-  },
-  {
-    marker: 'bg-amber-200',
-    bar: 'from-amber-200/80 via-amber-200/30 to-transparent',
-    title: 'text-amber-50',
-  },
-  {
-    marker: 'bg-emerald-200',
-    bar: 'from-emerald-200/80 via-emerald-200/30 to-transparent',
-    title: 'text-emerald-50',
-  },
-  {
-    marker: 'bg-[#ff6161]',
-    bar: 'from-[#ff6161]/80 via-[#ff6161]/30 to-transparent',
-    title: 'text-rose-50',
-  },
+const CHANGE_VERB =
+  /^(Added|Fixed|Resolved|Changed|Improved|Updated|Enhanced|Removed|Deprecated)\b/
+// Section titles too generic to stand in as a release headline.
+const GENERIC_SECTION =
+  /^(new features?|features|improvements?|optimi[sz]ations?|optimi[sz]ed features?|bug ?fixes|fixes|others?|changes|enhancements?)$/i
+
+type Channel = 'all' | 'stable' | 'beta'
+
+const CHANNELS: { value: Channel; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'stable', label: 'Stable' },
+  { value: 'beta', label: 'Beta' },
 ]
 
-const verbBadgeClasses: Record<string, string> = {
-  Added: 'border-emerald-200/25 bg-emerald-200/10 text-emerald-100',
-  Fixed: 'border-cyan-200/25 bg-cyan-200/10 text-cyan-100',
-  Resolved: 'border-cyan-200/25 bg-cyan-200/10 text-cyan-100',
-  Changed: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
-  Improved: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
-  Updated: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
-  Enhanced: 'border-amber-200/25 bg-amber-200/10 text-amber-100',
-  Removed: 'border-[#ff6161]/25 bg-[#ff6161]/10 text-rose-100',
-  Deprecated: 'border-[#ff6161]/25 bg-[#ff6161]/10 text-rose-100',
+interface Entry {
+  kind: 'stable' | 'beta'
+  id: string
+  version: string
+  build: number
+  title: string
+  label: string
+  date: string
+  dateLabel: string
+  shortDateLabel: string
+  intro: string
+  highlights: string[]
+  sections: ReleaseSection[]
+  count: number
+  searchText: string
+  headline: string
+  summary: string
+  latest: boolean
+  // Set on the newest build of a version that has no stable release yet.
+  groupId: string | null
+  buildCount: number
 }
 
-function splitChangeVerb(item: string): { verb: string | null; rest: string } {
-  const match = item.match(
-    /^(Added|Fixed|Resolved|Changed|Improved|Updated|Enhanced|Removed|Deprecated)\b[:,]?\s+(.+)$/
-  )
+interface ChangelogData {
+  stable: Entry[]
+  builds: Entry[]
+  heads: Entry[]
+}
 
-  if (!match) {
-    return { verb: null, rest: item }
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
+
+function prefersReducedMotion() {
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
+}
+
+function plural(count: number, one: string, many = `${one}s`) {
+  return `${count} ${count === 1 ? one : many}`
+}
+
+function clip(value: string, max: number) {
+  if (value.length <= max) {
+    return value
   }
 
-  return { verb: match[1], rest: match[2] }
+  return `${value.slice(0, max - 1).replace(/\s+\S*$/, '')}…`
 }
 
-function Stat({ label, value }: { label: string; value: string | number }) {
-  return (
-    <div className="border-white/15 border-l pl-4">
-      <div className="text-2xl font-semibold text-white">{value}</div>
-      <div className="mt-1 text-xs uppercase tracking-[0.2em] text-slate-400">
-        {label}
-      </div>
-    </div>
-  )
-}
-
-function BetaBadge({ label }: { label: string }) {
-  return (
-    <span className="w-fit shrink-0 rounded-md border border-amber-200/25 bg-amber-200/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-amber-100">
-      {label}
-    </span>
-  )
-}
-
-function ReleaseBody({ release }: { release: Release }) {
-  return (
-    <>
-      {release.intro && (
-        <p className="max-w-3xl pb-6 text-[15px] leading-7 text-[#9c9c9d] [overflow-wrap:anywhere]">
-          <FormattedText text={release.intro} />
-        </p>
-      )}
-
-      {release.highlights.length > 0 && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          {release.highlights.map((highlight) => (
-            <div
-              key={highlight}
-              className="min-w-0 border-l border-[#ffc533]/50 bg-[#0d0d0d] px-4 py-3 text-sm leading-6 text-[#cdcdcd] [overflow-wrap:anywhere]"
-            >
-              <FormattedText text={highlight} />
-            </div>
-          ))}
-        </div>
-      )}
-
-      <div className="mt-8 grid gap-4 lg:grid-cols-2 first:mt-0">
-        {release.sections.map((section, sectionIndex) => {
-          const accent =
-            sectionAccentClasses[sectionIndex % sectionAccentClasses.length]
-
-          return (
-            <section
-              key={`${release.slug}-${section.title}`}
-              className="min-w-0 rounded-lg border border-[#242728] bg-[#121212] p-4 transition hover:border-white/20 hover:bg-[#101111]"
-            >
-              <div
-                className={`mb-4 h-0.5 w-16 bg-gradient-to-r ${accent.bar}`}
-              />
-              <h3 className={`text-base font-semibold ${accent.title}`}>
-                {section.title}
-              </h3>
-              {section.lede && (
-                <p className="mt-2 text-sm leading-6 text-slate-400 [overflow-wrap:anywhere]">
-                  <FormattedText text={section.lede} />
-                </p>
-              )}
-              <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-300">
-                {section.items.map((item, itemIndex) => {
-                  const { verb, rest } = splitChangeVerb(item)
-
-                  return (
-                    <li
-                      key={`${section.title}-${itemIndex}`}
-                      className="flex gap-3"
-                    >
-                      {verb ? (
-                        <span
-                          className={`mt-0.5 inline-flex h-fit shrink-0 items-center rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${verbBadgeClasses[verb]}`}
-                        >
-                          {verb}
-                        </span>
-                      ) : (
-                        <span
-                          className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-sm ${accent.marker}`}
-                        />
-                      )}
-                      <span className="min-w-0 [overflow-wrap:anywhere]">
-                        <FormattedText text={verb ? rest : item} />
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </section>
-          )
-        })}
-      </div>
-    </>
-  )
-}
-
-function BetaRow({
-  beta,
-  expanded,
-  onToggle,
-}: {
-  beta: BetaRelease
-  expanded: boolean
-  onToggle: () => void
-}) {
-  return (
-    <div
-      id={beta.slug}
-      className="scroll-mt-28 rounded-lg border border-[#242728] bg-[#0d0d0d] transition hover:border-white/20"
-    >
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={expanded}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left"
-      >
-        <ChevronRight
-          aria-hidden="true"
-          className={`h-4 w-4 shrink-0 text-slate-500 transition-transform ${
-            expanded ? 'rotate-90' : ''
-          }`}
-        />
-        <span className="shrink-0 font-semibold text-white">
-          Beta {beta.betaNumber}
-        </span>
-        <time
-          dateTime={beta.date}
-          className="shrink-0 text-xs uppercase tracking-[0.14em] text-slate-500"
-        >
-          {beta.shortDateLabel}
-        </time>
-        {!expanded && beta.intro && (
-          <span className="hidden min-w-0 flex-1 truncate text-sm text-slate-500 sm:block">
-            {plainText(beta.intro)}
-          </span>
-        )}
-        <a
-          href={`#${beta.slug}`}
-          onClick={(event) => {
-            event.stopPropagation()
-            event.preventDefault()
-            window.history.replaceState(null, '', `#${beta.slug}`)
-          }}
-          aria-label={`Link to Beta ${beta.betaNumber}`}
-          className="ml-auto shrink-0 text-slate-600 transition hover:text-white"
-        >
-          #
-        </a>
-      </button>
-      {expanded && (
-        <div className="border-t border-[#242728] px-4 pb-6 pt-5 sm:px-5">
-          <ReleaseBody release={beta} />
-        </div>
-      )}
-    </div>
-  )
-}
-
-function scrollToRelease(slug: string) {
-  const target = document.getElementById(slug)
-  if (!target) {
-    return
+function compareVersions(a: string, b: string) {
+  const x = a.split('.').map(Number)
+  const y = b.split('.').map(Number)
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    const diff = (x[i] || 0) - (y[i] || 0)
+    if (diff) {
+      return diff
+    }
   }
 
-  target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  window.history.replaceState(null, '', `#${slug}`)
+  return 0
 }
 
-function narrowToQuery<T extends Release>(release: T, query: string): T | null {
-  if (!release.searchText.includes(query)) {
+function boldLead(value: string) {
+  const match = value.match(/^\*\*(.+?)\*\*/)
+  return match ? match[1].replace(/[:：]\s*$/, '') : null
+}
+
+function headlineFor(release: Release, fallback: string) {
+  const lead = release.highlights.length ? boldLead(release.highlights[0]) : null
+  if (lead) {
+    return lead
+  }
+
+  for (const section of release.sections) {
+    for (const item of section.items) {
+      const itemLead = boldLead(item)
+      if (itemLead) {
+        return itemLead
+      }
+    }
+  }
+
+  const named = release.sections.find(
+    (section) => !GENERIC_SECTION.test(section.title.trim())
+  )
+  if (named) {
+    return plainText(named.title)
+  }
+
+  const first = release.sections[0]?.items[0]
+  return first ? clip(plainText(first), 84) : fallback
+}
+
+function summaryFor(release: Release, headline: string) {
+  if (release.highlights.length > 1) {
+    const rest = release.highlights
+      .slice(1)
+      .map((highlight) => boldLead(highlight) || plainText(highlight))
+    return (
+      rest.slice(0, 2).join(' · ') +
+      (rest.length > 2 ? ` · +${rest.length - 2} more` : '')
+    )
+  }
+
+  return release.sections
+    .flatMap((section) => section.items)
+    .map(plainText)
+    .filter((item) => !item.startsWith(headline))
+    .slice(0, 3)
+    .map((item) => clip(item, 90))
+    .join(' · ')
+}
+
+function buildEntries(
+  releases: Release[],
+  betas: BetaRelease[]
+): ChangelogData {
+  function toEntry(
+    release: Release,
+    meta: Pick<Entry, 'kind' | 'id' | 'version' | 'build' | 'title' | 'label'>
+  ): Entry {
+    const headline = headlineFor(release, meta.title)
+    return {
+      ...meta,
+      date: release.date,
+      dateLabel: release.dateLabel,
+      shortDateLabel: release.shortDateLabel,
+      intro: release.intro,
+      highlights: release.highlights,
+      sections: release.sections,
+      count: release.itemCount,
+      searchText: release.searchText,
+      headline,
+      summary: summaryFor(release, headline),
+      latest: false,
+      groupId: null,
+      buildCount: 0,
+    }
+  }
+
+  const stable = releases.map((release) =>
+    toEntry(release, {
+      kind: 'stable',
+      id: release.slug,
+      version: release.version,
+      build: 0,
+      title: `Enconvo ${release.version}`,
+      label: `v${release.version}`,
+    })
+  )
+  if (stable[0]) {
+    stable[0].latest = true
+  }
+
+  const builds = betas
+    .map((beta) =>
+      toEntry(beta, {
+        kind: 'beta',
+        id: beta.slug,
+        version: beta.targetVersion,
+        build: beta.betaNumber,
+        title: `Enconvo ${beta.targetVersion} Beta ${beta.betaNumber}`,
+        label: `v${beta.targetVersion} Beta ${beta.betaNumber}`,
+      })
+    )
+    .sort(
+      (a, b) =>
+        b.date.localeCompare(a.date) ||
+        compareVersions(b.version, a.version) ||
+        b.build - a.build
+    )
+
+  // In "All", a version still in beta shows only its newest build.
+  const released = new Set(stable.map((entry) => entry.version))
+  const heads: Entry[] = []
+  for (const build of builds) {
+    if (
+      released.has(build.version) ||
+      heads.some((head) => head.version === build.version)
+    ) {
+      continue
+    }
+
+    heads.push({
+      ...build,
+      groupId: slugForVersion(build.version),
+      buildCount: builds.filter((item) => item.version === build.version)
+        .length,
+    })
+  }
+
+  return { stable, builds, heads }
+}
+
+function entriesFor(data: ChangelogData, channel: Channel, query: string) {
+  if (channel === 'stable') {
+    return data.stable
+  }
+
+  if (channel === 'beta') {
+    return data.builds
+  }
+
+  if (query) {
+    return [...data.stable, ...data.builds].sort(
+      (a, b) =>
+        b.date.localeCompare(a.date) ||
+        (a.kind === b.kind ? 0 : a.kind === 'stable' ? -1 : 1)
+    )
+  }
+
+  return [...data.heads, ...data.stable]
+}
+
+function includesQuery(value: string, query: string) {
+  return plainText(value).toLowerCase().includes(query)
+}
+
+function narrowToQuery(entry: Entry, query: string): Entry | null {
+  if (!query) {
+    return entry
+  }
+
+  const meta = [
+    entry.version,
+    entry.label,
+    entry.title,
+    entry.date,
+    entry.dateLabel,
+    entry.shortDateLabel,
+  ]
+    .join(' | ')
+    .toLowerCase()
+  if (meta.includes(query)) {
+    return entry
+  }
+
+  if (!entry.searchText.includes(query)) {
     return null
   }
 
-  const metaMatch =
-    `v${release.version}`.toLowerCase().includes(query) ||
-    release.date.includes(query) ||
-    release.dateLabel.toLowerCase().includes(query)
-
-  if (metaMatch) {
-    return release
-  }
-
-  const highlights = release.highlights.filter((highlight) =>
-    plainText(highlight).toLowerCase().includes(query)
+  const intro = entry.intro && includesQuery(entry.intro, query) ? entry.intro : ''
+  const highlights = entry.highlights.filter((highlight) =>
+    includesQuery(highlight, query)
   )
-  const sections = release.sections
+  const sections = entry.sections
     .map((section) => {
-      if (
-        plainText(`${section.title} ${section.lede}`)
-          .toLowerCase()
-          .includes(query)
-      ) {
-        return section
-      }
-
+      // A matching section heading keeps every change under it.
+      const sectionHit = includesQuery(`${section.title} ${section.lede}`, query)
       return {
         ...section,
-        items: section.items.filter((item) =>
-          plainText(item).toLowerCase().includes(query)
-        ),
+        items: sectionHit
+          ? section.items
+          : section.items.filter((item) => includesQuery(item, query)),
       }
     })
     .filter((section) => section.items.length)
 
-  if (!highlights.length && !sections.length) {
-    return release
+  if (!intro && !highlights.length && !sections.length) {
+    return null
   }
 
-  return { ...release, highlights, sections }
+  return {
+    ...entry,
+    intro,
+    highlights,
+    sections,
+    count: sections.reduce((total, section) => total + section.items.length, 0),
+  }
 }
 
-interface InBetaGroup {
-  version: string
-  slug: string
-  betas: BetaRelease[]
+function unescapeHtml(value: string) {
+  return value
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, '&')
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+// Wraps query hits in <mark>, touching only text between tags so links,
+// attributes, and entities stay intact.
+function markQuery(html: string, query: string) {
+  if (!query) {
+    return html
+  }
+
+  const pattern = new RegExp(`(${escapeRegExp(query)})`, 'gi')
+  return html
+    .split(/(<[^>]+>)/)
+    .map((part) => {
+      if (part.startsWith('<')) {
+        return part
+      }
+
+      return unescapeHtml(part)
+        .split(pattern)
+        .map((piece, index) =>
+          index % 2
+            ? `<mark class="rounded-[3px] bg-signal-yellow/[0.26] px-px text-content">${escapeHtml(piece)}</mark>`
+            : escapeHtml(piece)
+        )
+        .join('')
+    })
+    .join('')
+}
+
+function richText(value: string, query: string) {
+  return { __html: markQuery(formatInlineMarkdown(value), query) }
+}
+
+function changeItemHtml(item: string, query: string) {
+  const verb = item.match(CHANGE_VERB)?.[1]
+  if (!verb) {
+    return richText(item, query)
+  }
+
+  return {
+    __html: `<span class="font-medium text-content">${verb}</span>${markQuery(
+      formatInlineMarkdown(item.slice(verb.length)),
+      query
+    )}`,
+  }
+}
+
+function ReleaseTag({ tone }: { tone: 'latest' | 'beta' }) {
+  return (
+    <span className="inline-flex items-center gap-[7px] whitespace-nowrap text-[12.5px] font-medium text-content-muted">
+      <span
+        aria-hidden="true"
+        className={clsx(
+          'h-1.5 w-1.5 rounded-full',
+          tone === 'latest'
+            ? 'bg-signal-green shadow-[0_0_0_3px_rgba(89,212,153,0.15)]'
+            : 'bg-signal-yellow shadow-[0_0_0_3px_rgba(255,197,51,0.15)]'
+        )}
+      />
+      {tone === 'latest' ? 'Latest' : 'Beta'}
+    </span>
+  )
+}
+
+function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
+  return (
+    <>
+      {entry.intro && (
+        <p
+          className="mb-7 text-[16px] leading-[1.75] text-content-body [overflow-wrap:anywhere]"
+          dangerouslySetInnerHTML={richText(entry.intro, query)}
+        />
+      )}
+      {entry.highlights.length > 0 && (
+        <div className="grid gap-[18px]">
+          {entry.highlights.map((highlight, index) => (
+            <p
+              key={index}
+              className="text-[16px] leading-[1.7] text-content-muted [overflow-wrap:anywhere]"
+              dangerouslySetInnerHTML={richText(highlight, query)}
+            />
+          ))}
+        </div>
+      )}
+      {entry.sections.length > 0 && (
+        <div className="mt-2">
+          {entry.sections.map((section, index) => (
+            <section key={`${section.title}-${index}`} className="mt-8 first:mt-6">
+              <h3
+                className="mb-3 text-[15px] font-semibold leading-[1.4] text-content"
+                dangerouslySetInnerHTML={richText(section.title, query)}
+              />
+              {section.lede && (
+                <p
+                  className="-mt-1 mb-3 text-[14px] text-content-muted"
+                  dangerouslySetInnerHTML={richText(section.lede, query)}
+                />
+              )}
+              <ul className="grid gap-3">
+                {section.items.map((item, itemIndex) => (
+                  <li
+                    key={itemIndex}
+                    className="relative pl-5 text-[15px] leading-[1.7] text-content-body [overflow-wrap:anywhere] before:absolute before:left-[5px] before:top-[0.78em] before:h-1 before:w-1 before:rounded-full before:bg-content-ash"
+                    dangerouslySetInnerHTML={changeItemHtml(item, query)}
+                  />
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )}
+    </>
+  )
+}
+
+function ReleaseEntry({
+  entry,
+  query,
+  open,
+  onToggle,
+  onShowBetas,
+}: {
+  entry: Entry
+  query: string
+  open: boolean
+  onToggle: () => void
+  onShowBetas: () => void
+}) {
+  const anchor = entry.groupId ?? entry.id
+  const notesId = `notes-${entry.id}`
+  const titleClass =
+    'text-[23px] font-medium leading-[1.22] text-content [overflow-wrap:anywhere] [text-wrap:balance] sm:text-[28px]'
+
+  return (
+    <article
+      id={anchor}
+      className="group relative grid scroll-mt-[88px] md:grid-cols-[148px_minmax(0,640px)] md:gap-x-12 lg:grid-cols-[176px_minmax(0,640px)] lg:gap-x-[72px]"
+    >
+      {anchor !== entry.id && <span id={entry.id} className="sr-only" />}
+      <div className="border-t border-white/[0.06] group-first:border-t-0 md:border-l md:border-t-0 md:border-hairline md:group-last:[border-image:linear-gradient(#242728,transparent)_1]">
+        <a
+          href={`#${anchor}`}
+          className="relative block pt-[26px] text-[13.5px] tabular-nums text-content-muted transition-colors duration-300 md:pl-5 md:pt-[37px] md:text-content-body md:before:absolute md:before:left-0 md:before:top-[calc(37px+0.72em)] md:before:h-px md:before:w-2.5 md:before:bg-white/[0.16] md:before:transition-all md:before:duration-[450ms] md:group-hover:text-content md:group-hover:before:w-[15px] md:group-hover:before:bg-content"
+        >
+          <time dateTime={entry.date}>{entry.shortDateLabel}</time>
+        </a>
+      </div>
+
+      <div className="pb-[52px] pt-2 md:pt-[34px]">
+        <div className="mb-2.5 flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-[13.5px] text-content-muted">
+          <span
+            dangerouslySetInnerHTML={{
+              __html: markQuery(escapeHtml(entry.title), query),
+            }}
+          />
+          {entry.latest ? (
+            <ReleaseTag tone="latest" />
+          ) : entry.kind === 'beta' ? (
+            <ReleaseTag tone="beta" />
+          ) : null}
+        </div>
+
+        {query ? (
+          <>
+            <h2
+              className={titleClass}
+              dangerouslySetInnerHTML={{
+                __html: markQuery(escapeHtml(entry.headline), query),
+              }}
+            />
+            <div className="mt-[22px]">
+              <ReleaseNotes entry={entry} query={query} />
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className={titleClass}>
+              <button
+                type="button"
+                aria-controls={notesId}
+                aria-expanded={open}
+                onClick={onToggle}
+                className="text-left transition-colors duration-[250ms] hover:text-white"
+              >
+                {entry.headline}
+              </button>
+            </h2>
+            {entry.summary && (
+              <p className="mt-3 line-clamp-2 text-[15.5px] leading-[1.6] text-content-muted [overflow-wrap:anywhere]">
+                {entry.summary}
+              </p>
+            )}
+            <div className="mt-[18px] flex flex-wrap items-center gap-x-[18px] gap-y-2 text-[14px]">
+              <button
+                type="button"
+                aria-controls={notesId}
+                aria-expanded={open}
+                onClick={onToggle}
+                className="inline-flex items-center gap-1.5 font-medium text-content"
+              >
+                {open ? 'Hide the notes' : 'Read the notes'}
+                <ChevronDown
+                  aria-hidden="true"
+                  className={clsx(
+                    'h-3.5 w-3.5 flex-none text-content-muted transition-transform duration-[550ms]',
+                    EASE,
+                    open && 'rotate-180'
+                  )}
+                />
+              </button>
+              <span className="tabular-nums text-content-ash">
+                {entry.count
+                  ? plural(entry.count, 'change')
+                  : plural(entry.highlights.length, 'highlight')}
+              </span>
+              {entry.groupId && (
+                <button
+                  type="button"
+                  onClick={onShowBetas}
+                  className="text-signal-blue underline-offset-[3px] hover:underline"
+                >
+                  All {entry.buildCount} beta builds
+                </button>
+              )}
+            </div>
+            <div id={notesId} className="cl-fold" data-open={open ? '' : undefined}>
+              {/* React 18 has no inert prop; an empty string sets the attribute. */}
+              <div {...(open ? {} : ({ inert: '' } as Record<string, string>))}>
+                <div className="pt-[30px]">
+                  <ReleaseNotes entry={entry} query="" />
+                  <button
+                    type="button"
+                    aria-controls={notesId}
+                    onClick={onToggle}
+                    className="mt-7 text-[14px] text-content-muted transition-colors duration-[250ms] hover:text-content"
+                  >
+                    Hide the notes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </article>
+  )
+}
+
+// Kept in its own component so styled-jsx does not tag the page's elements.
+function ChangelogStyles() {
+  return (
+    <style jsx global>{`
+      .cl-page {
+        --cl-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .cl-page :focus-visible {
+        outline: 2px solid #57c1ff;
+        outline-offset: 3px;
+        border-radius: 4px;
+      }
+      .cl-page input:focus-visible {
+        outline: none;
+      }
+      .cl-rise {
+        animation: cl-rise 0.9s var(--cl-ease) both;
+      }
+      @keyframes cl-rise {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+      }
+      .cl-pill[data-ready] {
+        transition: transform 0.5s var(--cl-ease), width 0.5s var(--cl-ease);
+      }
+      /* Height animates through grid rows, so content never jumps. */
+      .cl-fold {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.6s var(--cl-ease);
+      }
+      .cl-fold[data-open] {
+        grid-template-rows: 1fr;
+      }
+      .cl-fold > div {
+        min-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-6px);
+        transition: opacity 0.25s ease, transform 0.6s var(--cl-ease);
+      }
+      .cl-fold[data-open] > div {
+        opacity: 1;
+        transform: none;
+        transition: opacity 0.5s ease 0.08s, transform 0.6s var(--cl-ease);
+      }
+      .cl-page article[data-reveal='wait'] {
+        opacity: 0;
+        transform: translateY(22px);
+      }
+      .cl-page article[data-reveal='in'] {
+        opacity: 1;
+        transform: none;
+        transition: opacity 0.9s var(--cl-ease), transform 0.9s var(--cl-ease);
+      }
+      ::view-transition-group(*) {
+        animation-duration: 0.5s;
+        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 0.32s;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cl-page *,
+        .cl-page *::before,
+        .cl-page *::after {
+          animation-duration: 0.01ms !important;
+          animation-delay: 0ms !important;
+          transition-duration: 0.01ms !important;
+          transition-delay: 0ms !important;
+        }
+        .cl-page article[data-reveal] {
+          opacity: 1;
+          transform: none;
+        }
+      }
+    `}</style>
+  )
 }
 
 export default function ChangelogPage({
   releases,
   betas,
 }: ChangelogPageProps) {
-  const latest = releases[0]
-  const firstRelease = releases[releases.length - 1]
-  const totalItems = releases.reduce(
-    (total, release) => total + release.itemCount,
+  const data = useMemo(() => buildEntries(releases, betas), [releases, betas])
+  const latest = data.stable[0]
+
+  const [channel, setChannel] = useState<Channel>('all')
+  const [input, setInput] = useState('')
+  const [query, setQuery] = useState('')
+  const [openNotes, setOpenNotes] = useState<Set<string>>(() => new Set())
+
+  const controlsRef = useRef<HTMLDivElement>(null)
+  const feedRef = useRef<HTMLDivElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
+  const pillRef = useRef<HTMLSpanElement>(null)
+  const tabRefs = useRef<Record<Channel, HTMLButtonElement | null>>({
+    all: null,
+    stable: null,
+    beta: null,
+  })
+  const channelRef = useRef(channel)
+  const queryRef = useRef('')
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const revealStartedRef = useRef(false)
+  const staggerRef = useRef(false)
+  const pendingHashRef = useRef<string | null>(null)
+  channelRef.current = channel
+
+  const shown = useMemo(
+    () =>
+      entriesFor(data, channel, query)
+        .map((entry) => narrowToQuery(entry, query))
+        .filter((entry): entry is Entry => entry !== null),
+    [data, channel, query]
+  )
+  const matchCount = shown.reduce(
+    (total, entry) =>
+      total + entry.count + entry.highlights.length + (entry.intro ? 1 : 0),
     0
   )
 
-  const betasByVersion = useMemo(() => {
-    const map = new Map<string, BetaRelease[]>()
-    for (const beta of betas) {
-      const list = map.get(beta.targetVersion) ?? []
-      list.push(beta)
-      map.set(beta.targetVersion, list)
-    }
-    for (const list of Array.from(map.values())) {
-      list.sort((a, b) => b.betaNumber - a.betaNumber)
-    }
-    return map
-  }, [betas])
-
-  const inBetaGroups = useMemo<InBetaGroup[]>(() => {
-    const releasedVersions = new Set(releases.map((release) => release.version))
-    return Array.from(betasByVersion.entries())
-      .filter(([version]) => !releasedVersions.has(version))
-      .map(([version, list]) => ({
-        version,
-        slug: slugForVersion(version),
-        betas: list,
-      }))
-      .sort((a, b) => b.betas[0].date.localeCompare(a.betas[0].date))
-  }, [betasByVersion, releases])
-
-  const defaultExpandedBetas = useMemo(
-    () =>
-      new Set(
-        inBetaGroups
-          .map((group) => group.betas[0]?.slug)
-          .filter(Boolean) as string[]
-      ),
-    [inBetaGroups]
-  )
-
-  const [query, setQuery] = useState('')
-  const [activeSlug, setActiveSlug] = useState(
-    inBetaGroups[0]?.slug ?? latest?.slug ?? ''
-  )
-  const [expandedBetas, setExpandedBetas] = useState<Set<string> | null>(null)
-  const [openHistories, setOpenHistories] = useState<Set<string>>(
-    () => new Set()
-  )
-  const articleRefs = useRef(new Map<string, HTMLElement>())
-  const indexListRef = useRef<HTMLDivElement>(null)
-
-  const normalizedQuery = query.trim().toLowerCase()
-  const searching = normalizedQuery.length > 0
-  const effectiveExpanded = expandedBetas ?? defaultExpandedBetas
-
-  function toggleBeta(slug: string) {
-    setExpandedBetas((previous) => {
-      const next = new Set(previous ?? defaultExpandedBetas)
-      if (next.has(slug)) {
-        next.delete(slug)
-      } else {
-        next.add(slug)
-      }
-      return next
-    })
-  }
-
-  function toggleHistory(version: string) {
-    setOpenHistories((previous) => {
-      const next = new Set(previous)
-      if (next.has(version)) {
-        next.delete(version)
-      } else {
-        next.add(version)
-      }
-      return next
-    })
-  }
-
-  const display = useMemo(() => {
-    if (!searching) {
-      return {
-        inBeta: inBetaGroups,
-        stable: releases,
-        betaMatches: null as Map<string, BetaRelease[]> | null,
-      }
+  const applyQuery = useCallback((value: string) => {
+    const next = value.trim().toLowerCase()
+    if (next === queryRef.current) {
+      return
     }
 
-    const inBeta = inBetaGroups
-      .map((group) => ({
-        ...group,
-        betas: group.betas
-          .map((beta) => narrowToQuery(beta, normalizedQuery))
-          .filter(Boolean) as BetaRelease[],
-      }))
-      .filter((group) => group.betas.length)
-
-    const stable: Release[] = []
-    const betaMatches = new Map<string, BetaRelease[]>()
-
-    for (const release of releases) {
-      const narrowed = narrowToQuery(release, normalizedQuery)
-      const matchedBetas = (betasByVersion.get(release.version) ?? [])
-        .map((beta) => narrowToQuery(beta, normalizedQuery))
-        .filter(Boolean) as BetaRelease[]
-
-      if (!narrowed && !matchedBetas.length) {
-        continue
-      }
-
-      if (matchedBetas.length) {
-        betaMatches.set(release.version, matchedBetas)
-      }
-
-      stable.push(
-        narrowed ?? { ...release, intro: '', highlights: [], sections: [] }
-      )
+    queryRef.current = next
+    const doc = document as Document & {
+      startViewTransition?: (update: () => void) => unknown
     }
-
-    return { inBeta, stable, betaMatches }
-  }, [searching, normalizedQuery, inBetaGroups, releases, betasByVersion])
-
-  function historyBetasFor(version: string): BetaRelease[] {
-    if (display.betaMatches) {
-      return display.betaMatches.get(version) ?? []
+    if (doc.startViewTransition && !prefersReducedMotion() && !document.hidden) {
+      doc.startViewTransition(() => flushSync(() => setQuery(next)))
+    } else {
+      setQuery(next)
     }
-    return betasByVersion.get(version) ?? []
-  }
-
-  const indexEntries = useMemo(
-    () => [
-      ...display.inBeta.map((group) => ({
-        slug: group.slug,
-        title: `v${group.version}`,
-        subtitle: `In beta · ${group.betas.length} builds`,
-        isBeta: true,
-      })),
-      ...display.stable.map((release) => ({
-        slug: release.slug,
-        title: `v${release.version}`,
-        subtitle: release.shortDateLabel,
-        isBeta: false,
-      })),
-    ],
-    [display]
-  )
-
-  // Deep link: scroll to a version or expand a specific beta build, both on
-  // initial load and on same-page hash navigation.
-  useEffect(() => {
-    function revealFromHash() {
-      const slug = window.location.hash.replace(/^#/, '')
-      if (!slug) {
-        return
-      }
-
-      const beta = betas.find((candidate) => candidate.slug === slug)
-      if (beta) {
-        setOpenHistories((previous) => {
-          const next = new Set(previous)
-          next.add(beta.targetVersion)
-          return next
-        })
-        setExpandedBetas((previous) => {
-          const next = new Set(previous ?? defaultExpandedBetas)
-          next.add(slug)
-          return next
-        })
-        window.setTimeout(() => {
-          document.getElementById(slug)?.scrollIntoView({ block: 'start' })
-        }, 80)
-        return
-      }
-
-      document.getElementById(slug)?.scrollIntoView({ block: 'start' })
-    }
-
-    revealFromHash()
-    window.addEventListener('hashchange', revealFromHash)
-    return () => window.removeEventListener('hashchange', revealFromHash)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Scroll spy: keep the release index in sync with the reading position.
   useEffect(() => {
-    let ticking = false
+    const timer = window.setTimeout(() => applyQuery(input), 140)
+    return () => window.clearTimeout(timer)
+  }, [input, applyQuery])
 
-    function update() {
-      ticking = false
-      let currentSlug = indexEntries[0]?.slug ?? ''
+  function clearSearch(focus: boolean) {
+    setInput('')
+    applyQuery('')
+    if (focus) {
+      searchRef.current?.focus()
+    }
+  }
 
-      for (const entry of indexEntries) {
-        const element = articleRefs.current.get(entry.slug)
-        if (!element) {
-          continue
-        }
-        if (element.getBoundingClientRect().top <= 176) {
-          currentSlug = entry.slug
-        } else {
-          break
-        }
+  function selectChannel(next: Channel) {
+    if (next === channel) {
+      return
+    }
+
+    staggerRef.current = true
+    setChannel(next)
+  }
+
+  function onTabsKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    const step =
+      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+        ? 1
+        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+          ? -1
+          : 0
+    if (!step) {
+      return
+    }
+
+    event.preventDefault()
+    const index = CHANNELS.findIndex((item) => item.value === channel)
+    const next = CHANNELS[(index + step + CHANNELS.length) % CHANNELS.length].value
+    selectChannel(next)
+    tabRefs.current[next]?.focus()
+  }
+
+  function toggleNotes(entry: Entry) {
+    const closing = openNotes.has(entry.id)
+    setOpenNotes((current) => {
+      const next = new Set(current)
+      if (closing) {
+        next.delete(entry.id)
+      } else {
+        next.add(entry.id)
+      }
+      return next
+    })
+
+    // Closing a long note from far below would leave the reader stranded.
+    const article = document.getElementById(entry.groupId ?? entry.id)
+    if (closing && article) {
+      const top = article.getBoundingClientRect().top
+      if (top < NAV_OFFSET) {
+        window.scrollTo({
+          top: window.scrollY + top - NAV_OFFSET,
+          behavior: prefersReducedMotion() ? ('instant' as ScrollBehavior) : 'smooth',
+        })
+      }
+    }
+  }
+
+  const placePill = useCallback((animate: boolean) => {
+    const pill = pillRef.current
+    const tab = tabRefs.current[channelRef.current]
+    if (!pill || !tab) {
+      return
+    }
+
+    if (!animate) {
+      pill.removeAttribute('data-ready')
+    }
+    pill.style.width = `${tab.offsetWidth}px`
+    pill.style.transform = `translateX(${tab.offsetLeft}px)`
+    pill.style.opacity = '1'
+    if (!animate) {
+      void pill.offsetWidth
+      pill.setAttribute('data-ready', '')
+    }
+  }, [])
+
+  useIsomorphicLayoutEffect(() => {
+    placePill(pillRef.current?.hasAttribute('data-ready') ?? false)
+  }, [channel, placePill])
+
+  useEffect(() => {
+    const place = () => placePill(false)
+    window.addEventListener('resize', place)
+    document.fonts?.ready.then(place)
+    return () => window.removeEventListener('resize', place)
+  }, [placePill])
+
+  const feedArticles = useCallback(
+    () =>
+      Array.from(
+        feedRef.current?.querySelectorAll<HTMLElement>(':scope > article') ?? []
+      ),
+    []
+  )
+
+  const settleReveal = useCallback(() => {
+    observerRef.current?.disconnect()
+    for (const article of feedArticles()) {
+      article.removeAttribute('data-reveal')
+      article.style.transitionDelay = ''
+    }
+  }, [feedArticles])
+
+  const landOn = useCallback(
+    (id: string) => {
+      const target = document.getElementById(id)
+      if (!target) {
+        return
       }
 
-      setActiveSlug((previous) =>
-        previous === currentSlug ? previous : currentSlug
+      settleReveal()
+      const article = target.closest('article') ?? target
+      article.scrollIntoView({
+        block: 'start',
+        behavior: 'instant' as ScrollBehavior,
+      })
+    },
+    [settleReveal]
+  )
+
+  // Progressive enhancement: server-rendered entries are always visible.
+  // Script only hides entries below the fold and lets them rise in on scroll.
+  useIsomorphicLayoutEffect(() => {
+    const feed = feedRef.current
+    if (!feed) {
+      return
+    }
+
+    const pending = pendingHashRef.current
+    if (pending) {
+      pendingHashRef.current = null
+      staggerRef.current = false
+      revealStartedRef.current = true
+      landOn(pending)
+      return
+    }
+
+    const firstRun = !revealStartedRef.current
+    const stagger = staggerRef.current
+    revealStartedRef.current = true
+    staggerRef.current = false
+
+    if (stagger && controlsRef.current) {
+      const top =
+        controlsRef.current.getBoundingClientRect().top +
+        window.scrollY -
+        NAV_OFFSET
+      if (window.scrollY > top) {
+        window.scrollTo({ top, behavior: 'instant' as ScrollBehavior })
+      }
+    }
+
+    if (
+      (!firstRun && !stagger) ||
+      prefersReducedMotion() ||
+      !('IntersectionObserver' in window)
+    ) {
+      settleReveal()
+      return
+    }
+
+    observerRef.current?.disconnect()
+    const observer =
+      observerRef.current ??
+      new IntersectionObserver(
+        (records) => {
+          let order = 0
+          for (const record of records) {
+            if (!record.isIntersecting) {
+              continue
+            }
+
+            const article = record.target as HTMLElement
+            article.style.transitionDelay = `${Math.min(order++, 3) * 90}ms`
+            article.dataset.reveal = 'in'
+            observer.unobserve(article)
+          }
+        },
+        { rootMargin: '0px 0px -6% 0px' }
       )
-    }
+    observerRef.current = observer
 
-    function onScroll() {
-      if (!ticking) {
-        ticking = true
-        window.requestAnimationFrame(update)
+    const fold = window.innerHeight * 0.94
+    const rising: HTMLElement[] = []
+    for (const article of feedArticles()) {
+      const top = article.getBoundingClientRect().top
+      if (top >= fold) {
+        article.style.transitionDelay = ''
+        article.dataset.reveal = 'wait'
+        observer.observe(article)
+      } else if (stagger && top > -article.offsetHeight) {
+        article.style.transitionDelay = ''
+        article.dataset.reveal = 'wait'
+        rising.push(article)
+      } else {
+        article.removeAttribute('data-reveal')
       }
     }
 
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+    if (rising.length) {
+      void feed.offsetHeight
+      rising.forEach((article, index) => {
+        article.style.transitionDelay = `${Math.min(index, 3) * 90}ms`
+        article.dataset.reveal = 'in'
+      })
     }
-  }, [indexEntries])
+  }, [channel, query, feedArticles, landOn, settleReveal])
+
+  useEffect(() => () => observerRef.current?.disconnect(), [])
+
+  // Deep links keep the existing slugs: #v-2-5-5, #v-2-5-6 (still in beta),
+  // and #v-2-5-6-beta-3 (a single build).
+  useEffect(() => {
+    function follow(initial: boolean) {
+      let id = ''
+      try {
+        id = decodeURIComponent(window.location.hash.slice(1))
+      } catch {
+        return
+      }
+      if (!id) {
+        return
+      }
+
+      // A shared link should show its notes, not just the headline.
+      const noteId = data.heads.find((entry) => entry.groupId === id)?.id ?? id
+      setOpenNotes((current) =>
+        current.has(noteId) ? current : new Set(current).add(noteId)
+      )
+
+      if (document.getElementById(id)) {
+        if (initial) {
+          landOn(id)
+        }
+        return
+      }
+
+      const target: Channel | null = data.builds.some((entry) => entry.id === id)
+        ? 'beta'
+        : data.stable.some((entry) => entry.id === id) ||
+            data.heads.some((entry) => entry.groupId === id)
+          ? 'all'
+          : null
+      if (!target || (target === channelRef.current && !queryRef.current)) {
+        return
+      }
+
+      // The next render shows the entry; the reveal effect then lands on it.
+      pendingHashRef.current = id
+      setInput('')
+      queryRef.current = ''
+      setQuery('')
+      setChannel(target)
+    }
+
+    follow(true)
+    const onHashChange = () => follow(false)
+    // Fonts and late layout can move the target, so land on it again once loaded.
+    const onLoad = () => {
+      if (window.scrollY < 40) {
+        follow(true)
+      }
+    }
+    window.addEventListener('hashchange', onHashChange)
+    window.addEventListener('load', onLoad)
+    return () => {
+      window.removeEventListener('hashchange', onHashChange)
+      window.removeEventListener('load', onLoad)
+    }
+  }, [data, landOn])
 
   useEffect(() => {
-    const list = indexListRef.current
-    if (!list || !activeSlug) {
-      return
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) {
+        return
+      }
+
+      const active = document.activeElement as HTMLElement | null
+      if (
+        active &&
+        (/^(input|textarea|select)$/i.test(active.tagName) ||
+          active.isContentEditable)
+      ) {
+        return
+      }
+
+      event.preventDefault()
+      if (window.scrollY > 200) {
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion() ? ('instant' as ScrollBehavior) : 'smooth',
+        })
+      }
+      searchRef.current?.focus({ preventScroll: true })
     }
 
-    const item = list.querySelector<HTMLElement>(`[data-slug="${activeSlug}"]`)
-    if (!item) {
-      return
-    }
-
-    const top = item.offsetTop
-    const bottom = top + item.offsetHeight
-    if (top < list.scrollTop || bottom > list.scrollTop + list.clientHeight) {
-      list.scrollTop = top - list.clientHeight / 2 + item.offsetHeight / 2
-    }
-  }, [activeSlug])
-
-  const totalMatches = display.stable.length + display.inBeta.length
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   return (
     <>
@@ -915,405 +1379,174 @@ export default function ChangelogPage({
           content="Read the latest Enconvo release notes, beta build updates, product improvements, and fixes."
         />
       </Head>
-      <div
-        className="min-h-screen bg-[#07080a] text-[#f4f4f6]"
-        style={{ fontFeatureSettings: '"calt", "kern", "liga", "ss03"' }}
-      >
+      <div className="cl-page min-h-screen bg-canvas text-content">
         <SiteNav />
 
-        <main>
-          <section className="relative isolate overflow-hidden">
-            <Image
-              src={mainVisual}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="absolute inset-0 -z-20 scale-105 object-cover opacity-10 blur-sm"
-            />
-            <div className="absolute inset-0 -z-10 bg-[linear-gradient(115deg,rgba(7,8,10,0.98)_0%,rgba(7,16,20,0.94)_48%,rgba(13,13,13,0.9)_100%)]" />
-            <div className="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-[#07080a] to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-gradient-to-r from-transparent via-cyan-200/40 to-transparent" />
-            <div
-              className="pointer-events-none absolute left-0 top-0 -z-10 h-24 w-full overflow-hidden"
-              aria-hidden="true"
-            >
-              <div className="from-[#ff6161]/45 absolute left-[7%] top-0 h-20 w-64 -skew-x-12 bg-gradient-to-r to-[#a1131a]/20" />
-              <div className="absolute left-[19%] top-0 h-20 w-40 -skew-x-12 bg-gradient-to-r from-[#ff6161]/30 to-[#a1131a]/10" />
-              <div className="absolute left-[31%] top-0 h-20 w-24 -skew-x-12 bg-gradient-to-r from-[#ff6161]/20 to-transparent" />
-            </div>
-            <CrystalShard
-              className="pointer-events-none absolute -left-16 top-24 h-72 w-44 border border-cyan-100/20 bg-cyan-100/10 opacity-50 backdrop-blur-md sm:left-[3%]"
-              points="50% 0%, 100% 28%, 78% 100%, 10% 86%, 0% 25%"
-            />
-            <CrystalShard
-              className="pointer-events-none absolute right-[7%] top-20 hidden h-96 w-64 border border-amber-100/20 bg-amber-100/10 opacity-60 backdrop-blur-md lg:block"
-              points="24% 0%, 100% 18%, 76% 100%, 0% 82%"
-            />
-            <CrystalShard
-              className="border-[#ff6161]/15 opacity-45 pointer-events-none absolute bottom-12 right-[26%] hidden h-48 w-72 border bg-[#ff6161]/10 backdrop-blur-md md:block"
-              points="0% 35%, 64% 0%, 100% 72%, 22% 100%"
-            />
-
-            <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-4 pb-20 pt-20 sm:px-6 sm:pb-28 sm:pt-28 lg:grid-cols-[minmax(0,1fr)_480px] lg:px-8">
-              <div className="max-w-3xl">
-                <div className="border-white/15 inline-flex items-center gap-2 rounded-md border bg-white/10 px-3 py-2 text-sm font-medium text-cyan-50 backdrop-blur-md">
-                  <CalendarDays className="h-4 w-4" aria-hidden="true" />
-                  {latest
-                    ? `Latest release: ${latest.dateLabel}`
-                    : 'Release notes'}
-                </div>
-                <h1 className="mt-8 text-5xl font-semibold tracking-normal text-white sm:text-6xl lg:text-7xl">
-                  Enconvo releases
-                </h1>
-                <div className="mt-5 h-1 w-24 rounded-full bg-gradient-to-r from-cyan-200 via-amber-200 to-transparent" />
-                <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-                  Product updates, model providers, workflow improvements, and
-                  fixes from the Enconvo changelog — including every beta
-                  build.
-                </p>
-                <div className="mt-8 flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-                  <span className="rounded-md border border-cyan-200/20 bg-cyan-200/10 px-3 py-2 text-cyan-100">
-                    Crystal timeline
-                  </span>
-                  <span className="rounded-md border border-amber-200/20 bg-amber-200/10 px-3 py-2 text-amber-100">
-                    {firstRelease
-                      ? `${firstRelease.date} to ${latest?.date}`
-                      : 'Release history'}
-                  </span>
-                </div>
+        <main className="mx-auto max-w-[1120px] px-4 sm:px-8">
+          <header className="pt-32 [view-transition-name:cl-head] sm:pt-[168px]">
+            <div className="cl-rise">
+              <h1 className="text-[44px] font-semibold leading-[1.04] text-content sm:text-[64px]">
+                Changelog
+              </h1>
+              <p className="mt-4 max-w-[60ch] text-[15.5px] leading-[1.6] text-content-muted sm:text-[16.5px]">
+                New features, improvements, and fixes in every Enconvo release.
                 {latest && (
-                  <div className="mt-10 flex flex-wrap gap-3">
+                  <>
+                    {' '}
                     <a
-                      href={`#${latest.slug}`}
-                      onClick={(event) => {
-                        event.preventDefault()
-                        scrollToRelease(latest.slug)
-                      }}
-                      className="inline-flex items-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-[#e8e8e8]"
+                      href={DOWNLOAD_URL}
+                      className="text-content underline decoration-white/25 underline-offset-4 transition-[text-decoration-color] duration-[250ms] hover:decoration-content"
                     >
-                      Read v{latest.version}
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      Download Enconvo {latest.version} for macOS
                     </a>
-                    {inBetaGroups[0] && (
-                      <a
-                        href={`#${inBetaGroups[0].slug}`}
-                        onClick={(event) => {
-                          event.preventDefault()
-                          scrollToRelease(inBetaGroups[0].slug)
-                        }}
-                        className="inline-flex items-center gap-2 rounded-md border border-amber-200/25 bg-amber-200/10 px-5 py-3 text-sm font-semibold text-amber-100 transition hover:border-amber-200/50"
-                      >
-                        v{inBetaGroups[0].version} beta
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </a>
-                    )}
-                  </div>
+                  </>
                 )}
-              </div>
-
-              <div className="relative">
-                <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] p-3 backdrop-blur-xl">
-                  <div className="mb-3 h-1 rounded-full bg-gradient-to-r from-[#57c1ff] via-[#ffc533] to-[#ff6161]" />
-                  <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-white/10 bg-slate-950">
-                    <Image
-                      src={appScreenshot}
-                      alt="Enconvo app interface"
-                      fill
-                      sizes="(min-width: 1024px) 480px, 100vw"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-5 px-3 py-5">
-                    <Stat
-                      label="Latest"
-                      value={latest ? `v${latest.version}` : '--'}
-                    />
-                    <Stat label="Releases" value={releases.length} />
-                    <Stat label="Beta builds" value={betas.length} />
-                    <Stat label="Updates" value={totalItems} />
-                  </div>
-                </div>
-              </div>
+              </p>
             </div>
-          </section>
 
-          <section className="mx-auto grid max-w-7xl gap-8 px-4 py-24 sm:px-6 lg:grid-cols-[260px_minmax(0,1fr)] lg:px-8">
-            <aside className="lg:sticky lg:top-28 lg:self-start">
-              <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] p-4">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">
-                  Release index
-                </h2>
-                <div className="mt-3 h-px bg-gradient-to-r from-cyan-200/70 to-transparent" />
-                <div className="relative mt-4">
-                  <Search
-                    className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
-                    aria-hidden="true"
-                  />
-                  <input
-                    type="text"
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    placeholder="Search updates"
-                    aria-label="Search release notes"
-                    className="w-full rounded-md border border-[#242728] bg-white/5 py-2 pl-9 pr-8 text-sm text-white placeholder:text-slate-500 focus:border-cyan-200/40 focus:outline-none"
-                  />
-                  {query && (
+            <div
+              ref={controlsRef}
+              className="cl-rise mt-7 flex flex-wrap items-center gap-4 [animation-delay:100ms] sm:mt-10 sm:flex-nowrap"
+            >
+              <div
+                role="radiogroup"
+                aria-label="Release channel"
+                onKeyDown={onTabsKeyDown}
+                className="relative flex items-center gap-0.5"
+              >
+                <span
+                  ref={pillRef}
+                  aria-hidden="true"
+                  className="cl-pill pointer-events-none absolute left-0 top-0 h-8 rounded-full bg-white/10 opacity-0"
+                />
+                {CHANNELS.map((item) => {
+                  const checked = item.value === channel
+                  return (
                     <button
+                      key={item.value}
+                      ref={(node) => {
+                        tabRefs.current[item.value] = node
+                      }}
                       type="button"
-                      onClick={() => setQuery('')}
-                      aria-label="Clear search"
-                      className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-0.5 text-slate-500 transition hover:text-white"
+                      role="radio"
+                      aria-checked={checked}
+                      tabIndex={checked ? 0 : -1}
+                      onClick={() => selectChannel(item.value)}
+                      className={clsx(
+                        'relative z-10 h-8 whitespace-nowrap rounded-full px-3.5 text-[14.5px] font-medium transition-colors duration-300',
+                        checked
+                          ? 'text-content'
+                          : 'text-content-muted hover:text-content'
+                      )}
                     >
-                      <X className="h-4 w-4" aria-hidden="true" />
+                      {item.label}
                     </button>
-                  )}
-                </div>
-                {searching && (
-                  <p className="mt-2 text-xs text-slate-500">
-                    {totalMatches} {totalMatches === 1 ? 'release' : 'releases'}{' '}
-                    match
-                  </p>
-                )}
-
-                <select
-                  value={activeSlug}
-                  onChange={(event) => scrollToRelease(event.target.value)}
-                  aria-label="Jump to release"
-                  className="mt-4 w-full rounded-md border border-[#242728] bg-[#101111] px-3 py-2 text-sm text-white focus:border-cyan-200/40 focus:outline-none lg:hidden"
-                >
-                  {indexEntries.map((entry) => (
-                    <option key={entry.slug} value={entry.slug}>
-                      {entry.title}
-                      {entry.isBeta ? ' (beta)' : ''} - {entry.subtitle}
-                    </option>
-                  ))}
-                </select>
-
-                <div
-                  ref={indexListRef}
-                  className="relative mt-4 hidden max-h-[60vh] space-y-1 overflow-y-auto pr-1 lg:block"
-                >
-                  {indexEntries.map((entry) => {
-                    const isActive = entry.slug === activeSlug
-
-                    return (
-                      <a
-                        key={entry.slug}
-                        data-slug={entry.slug}
-                        href={`#${entry.slug}`}
-                        onClick={(event) => {
-                          event.preventDefault()
-                          scrollToRelease(entry.slug)
-                        }}
-                        aria-current={isActive ? 'true' : undefined}
-                        className={`block rounded-md border-l-2 px-3 py-2 text-sm transition ${
-                          isActive
-                            ? `${
-                                entry.isBeta
-                                  ? 'border-amber-200'
-                                  : 'border-cyan-200'
-                              } bg-white/10 text-white`
-                            : 'border-transparent text-slate-300 hover:bg-white/10 hover:text-white'
-                        }`}
-                      >
-                        <span className="flex items-center gap-2 font-semibold">
-                          {entry.title}
-                          {entry.isBeta && (
-                            <span className="rounded border border-amber-200/25 bg-amber-200/10 px-1 py-px text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-100">
-                              Beta
-                            </span>
-                          )}
-                        </span>
-                        <span
-                          className={`mt-1 block text-xs ${
-                            isActive ? 'text-slate-400' : 'text-slate-500'
-                          }`}
-                        >
-                          {entry.subtitle}
-                        </span>
-                      </a>
-                    )
-                  })}
-                </div>
+                  )
+                })}
               </div>
-            </aside>
 
-            <div className="min-w-0 space-y-8">
-              {totalMatches === 0 && (
-                <div className="rounded-lg border border-[#242728] bg-[#0d0d0d] px-6 py-16 text-center">
-                  <p className="text-lg font-semibold text-white">
-                    No releases match &ldquo;{query.trim()}&rdquo;
-                  </p>
-                  <p className="mt-2 text-sm text-slate-400">
-                    Try a different keyword, version number, or date.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => setQuery('')}
-                    className="mt-6 inline-flex items-center gap-2 rounded-md border border-[#242728] bg-[#101111] px-4 py-2 text-sm font-semibold text-white transition hover:border-white/20"
-                  >
-                    Clear search
-                  </button>
-                </div>
-              )}
-
-              {display.inBeta.map((group) => (
-                <article
-                  key={group.slug}
-                  id={group.slug}
-                  ref={(element) => {
-                    if (element) {
-                      articleRefs.current.set(group.slug, element)
-                    } else {
-                      articleRefs.current.delete(group.slug)
+              <div
+                className={clsx(
+                  'relative ml-auto transition-[width] duration-500 max-sm:order-first max-sm:ml-0 max-sm:!w-full',
+                  EASE,
+                  input ? 'w-[320px]' : 'w-[240px] focus-within:w-[320px]'
+                )}
+              >
+                <Search
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-3.5 top-1/2 h-[15px] w-[15px] -translate-y-1/2 text-content-ash"
+                />
+                <input
+                  ref={searchRef}
+                  type="search"
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Escape') {
+                      clearSearch(false)
+                      event.currentTarget.blur()
                     }
                   }}
-                  className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-height:auto_900px] first:border-t-0 first:pt-0"
-                >
-                  <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <time
-                        dateTime={group.betas[0]?.date}
-                        className="text-sm font-semibold uppercase tracking-[0.18em] text-amber-200"
-                      >
-                        {group.betas[0]?.dateLabel}
-                      </time>
-                      <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white">
-                        <a
-                          href={`#${group.slug}`}
-                          onClick={(event) => {
-                            event.preventDefault()
-                            scrollToRelease(group.slug)
-                          }}
-                          className="group inline-flex items-baseline gap-2"
-                        >
-                          Enconvo {group.version}
-                          <span
-                            aria-hidden="true"
-                            className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"
-                          >
-                            #
-                          </span>
-                        </a>
-                      </h2>
-                      <div className="mt-4 h-px w-32 bg-gradient-to-r from-amber-200/80 to-transparent" />
-                    </div>
-                    <BetaBadge
-                      label={`In Beta · ${group.betas.length} builds`}
-                    />
-                  </div>
-
-                  <div className="space-y-3">
-                    {group.betas.map((beta) => (
-                      <BetaRow
-                        key={beta.slug}
-                        beta={beta}
-                        expanded={searching || effectiveExpanded.has(beta.slug)}
-                        onToggle={() => toggleBeta(beta.slug)}
-                      />
-                    ))}
-                  </div>
-                </article>
-              ))}
-
-              {display.stable.map((release) => {
-                const historyBetas = historyBetasFor(release.version)
-                const historyOpen =
-                  searching || openHistories.has(release.version)
-
-                return (
-                  <article
-                    key={release.slug}
-                    id={release.slug}
-                    ref={(element) => {
-                      if (element) {
-                        articleRefs.current.set(release.slug, element)
-                      } else {
-                        articleRefs.current.delete(release.slug)
-                      }
-                    }}
-                    className="scroll-mt-28 border-t border-[#242728] pt-8 [content-visibility:auto] [contain-intrinsic-height:auto_900px] first:border-t-0 first:pt-0"
+                  placeholder="Search releases"
+                  aria-label="Search releases"
+                  autoComplete="off"
+                  spellCheck={false}
+                  className="h-[38px] w-full rounded-full border border-hairline bg-white/[0.025] px-[38px] text-[14px] text-content outline-none transition-colors duration-300 placeholder:text-content-ash focus:border-white/[0.22] focus:bg-white/5 [&::-webkit-search-cancel-button]:hidden"
+                />
+                {input ? (
+                  <button
+                    type="button"
+                    aria-label="Clear search"
+                    onClick={() => clearSearch(true)}
+                    className="absolute right-2 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-content-muted transition-colors hover:bg-white/[0.08] hover:text-content"
                   >
-                    <div className="flex flex-col gap-5 pb-6 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <time
-                          dateTime={release.date}
-                          className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-200"
-                        >
-                          {release.dateLabel}
-                        </time>
-                        <h2 className="mt-3 text-3xl font-semibold tracking-normal text-white">
-                          <a
-                            href={`#${release.slug}`}
-                            onClick={(event) => {
-                              event.preventDefault()
-                              scrollToRelease(release.slug)
-                            }}
-                            className="group inline-flex items-baseline gap-2"
-                          >
-                            Enconvo {release.version}
-                            <span
-                              aria-hidden="true"
-                              className="text-xl text-slate-600 opacity-0 transition group-hover:opacity-100"
-                            >
-                              #
-                            </span>
-                          </a>
-                        </h2>
-                        <div className="mt-4 h-px w-32 bg-gradient-to-r from-cyan-200/80 to-transparent" />
-                      </div>
-                      {release.slug === latest?.slug && (
-                        <span className="w-fit rounded-md border border-emerald-200/25 bg-emerald-200/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">
-                          Latest
-                        </span>
-                      )}
-                    </div>
-
-                    <ReleaseBody release={release} />
-
-                    {historyBetas.length > 0 && (
-                      <div className="mt-8">
-                        <button
-                          type="button"
-                          onClick={() => toggleHistory(release.version)}
-                          aria-expanded={historyOpen}
-                          className="flex items-center gap-2 text-sm font-semibold text-slate-400 transition hover:text-white"
-                        >
-                          <ChevronRight
-                            aria-hidden="true"
-                            className={`h-4 w-4 transition-transform ${
-                              historyOpen ? 'rotate-90' : ''
-                            }`}
-                          />
-                          Beta history · {historyBetas.length}{' '}
-                          {historyBetas.length === 1 ? 'build' : 'builds'}
-                        </button>
-                        {historyOpen && (
-                          <div className="mt-4 space-y-3">
-                            {historyBetas.map((beta) => (
-                              <BetaRow
-                                key={beta.slug}
-                                beta={beta}
-                                expanded={
-                                  searching || effectiveExpanded.has(beta.slug)
-                                }
-                                onToggle={() => toggleBeta(beta.slug)}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </article>
-                )
-              })}
+                    <X aria-hidden="true" className="h-[13px] w-[13px]" />
+                  </button>
+                ) : (
+                  <kbd className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 rounded-[5px] border border-hairline px-1.5 font-mono text-[11.5px] leading-[18px] text-content-ash [@media(hover:none)]:hidden">
+                    /
+                  </kbd>
+                )}
+              </div>
             </div>
-          </section>
+          </header>
+
+          <div aria-live="polite">
+            {query &&
+              (shown.length ? (
+                <p className="mt-9 text-[14px] text-content-muted">
+                  <b className="font-semibold text-content">
+                    {plural(matchCount, 'match', 'matches')}
+                  </b>{' '}
+                  in {plural(shown.length, 'release')} for “{query}” ·{' '}
+                  <button
+                    type="button"
+                    onClick={() => clearSearch(true)}
+                    className="text-signal-blue underline-offset-[3px] hover:underline"
+                  >
+                    Clear
+                  </button>
+                </p>
+              ) : (
+                <div className="py-24 text-center">
+                  <h2 className="text-[22px] font-semibold text-content">
+                    No results for “{query}”
+                  </h2>
+                  <p className="mt-2.5 text-content-muted">
+                    Try a feature like “Dynamic Island”, or a version like{' '}
+                    {latest?.version ?? '2.5.5'}.{' '}
+                    <button
+                      type="button"
+                      onClick={() => clearSearch(true)}
+                      className="text-signal-blue underline-offset-[3px] hover:underline"
+                    >
+                      Clear search
+                    </button>
+                  </p>
+                </div>
+              ))}
+          </div>
+
+          <div
+            ref={feedRef}
+            className="cl-rise pb-[120px] pt-4 [animation-delay:200ms] md:pt-10"
+          >
+            {shown.map((entry) => (
+              <ReleaseEntry
+                key={entry.groupId ?? entry.id}
+                entry={entry}
+                query={query}
+                open={openNotes.has(entry.id)}
+                onToggle={() => toggleNotes(entry)}
+                onShowBetas={() => selectChannel('beta')}
+              />
+            ))}
+          </div>
         </main>
 
         <Footer />
       </div>
+      <ChangelogStyles />
     </>
   )
 }
