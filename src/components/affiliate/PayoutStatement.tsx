@@ -7,7 +7,7 @@ import { card } from './ui'
 // Enconvo cancelled because the money never arrived keeps its statement, which then lists no entries:
 // they went back to the balance for a later payout.
 
-const ISSUER = 'THE GREAT LIONHEART PTE. LTD.'
+export const ISSUER = 'THE GREAT LIONHEART PTE. LTD.'
 
 const ink = 'text-content print:text-black'
 const body = 'text-content-body print:text-neutral-800'

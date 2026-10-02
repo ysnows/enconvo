@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronRight, Download, Loader2 } from 'lucide-react'
+import { ChevronRight, Download, FileText, Loader2 } from 'lucide-react'
 import {
     conversionRate,
     downloadCsv,
@@ -302,10 +302,16 @@ export function AffiliateMonths({ data }: { data: AffiliateDashboard }) {
         <section className={card}>
             <div className="flex flex-wrap items-center justify-between gap-3 px-6 pt-5">
                 <h2 className="text-lg font-semibold text-content">Earnings by month</h2>
-                <button type="button" onClick={() => exportMonths(code, months)} className={downloadButton}>
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                    Download CSV
-                </button>
+                <div className="flex flex-wrap items-center gap-1">
+                    <Link href={`/affiliate/statements/${new Date().getUTCFullYear()}`} className={downloadButton}>
+                        <FileText className="h-4 w-4" aria-hidden="true" />
+                        Year statements
+                    </Link>
+                    <button type="button" onClick={() => exportMonths(code, months)} className={downloadButton}>
+                        <Download className="h-4 w-4" aria-hidden="true" />
+                        Download CSV
+                    </button>
+                </div>
             </div>
             <div className="mt-3 overflow-x-auto">
                 <table className="w-full min-w-[640px]">

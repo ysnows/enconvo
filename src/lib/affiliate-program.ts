@@ -164,6 +164,25 @@ export interface AffiliatePayoutStatement {
     totals: { entries: number; added: number; taken_back: number }
 }
 
+/**
+ * One UTC calendar year for the Affiliate's books (the current year runs through this month): money by month, the
+ * payouts sent that year (cancelled ones left out) and the unpaid balance at both ends, which includes commissions still
+ * in their refund window. `unpaid_at_start + totals.net - totals.paid` is `unpaid_at_end`. Amounts in cents.
+ */
+export interface AffiliateYearStatement {
+    affiliate: { name: string | null; code: string; billing_details: string | null }
+    year: number
+    /** False for the current year, which isn't over. */
+    complete: boolean
+    /** Every year with a statement, newest first. */
+    years: number[]
+    months: { month: string; earned: number; taken_back: number; net: number; paid: number }[]
+    payouts: Pick<AffiliatePayout, 'id' | 'amount' | 'currency' | 'method' | 'reference' | 'paid_at'>[]
+    totals: { earned: number; taken_back: number; net: number; paid: number }
+    unpaid_at_start: number
+    unpaid_at_end: number
+}
+
 export interface AffiliateDay {
     day: string
     visitors: number
@@ -499,6 +518,11 @@ export function getAffiliateDashboard(accessToken: string) {
 /** Refused with status 404 when the payout isn't the signed-in Affiliate's. */
 export function getPayoutStatement(accessToken: string, id: string) {
     return workerPost<AffiliatePayoutStatement>('/api/affiliate/payout', accessToken, { id })
+}
+
+/** Refused with status 400 for a year without a statement, and 404 for an account that isn't an Affiliate. */
+export function getYearStatement(accessToken: string, year: number) {
+    return workerPost<AffiliateYearStatement>('/api/affiliate/year_statement', accessToken, { year })
 }
 
 /**
