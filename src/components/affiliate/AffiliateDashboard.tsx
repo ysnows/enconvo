@@ -25,13 +25,14 @@ import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
 import { GettingStarted, startSteps } from './GettingStarted'
+import { SinceLastVisit } from './SinceLastVisit'
 import { card, CopyButton, fieldLabel, input, Notice, Pill } from './ui'
 
-// /affiliate for an approved (or suspended) Affiliate: the first steps until its link earns, its
-// link and link builder, balances and when pending money becomes payable, link results overall
-// and per sub ID, payout method, monthly statement, its referrals, commissions and payouts, the
-// changes to its account, and the promotion kit. An Affiliate that hasn't accepted the current
-// program terms is asked to first.
+// /affiliate for an approved (or suspended) Affiliate: the first steps until its link earns, what
+// changed since its last visit, its link and link builder, balances and when pending money
+// becomes payable, link results overall and per sub ID, payout method, monthly statement, its
+// referrals, commissions and payouts, the changes to its account, and the promotion kit. An
+// Affiliate that hasn't accepted the current program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -593,6 +594,7 @@ export function AffiliateDashboard({
             )}
             <PayoutAccountNotice changes={data.account_changes} />
             {starting && <GettingStarted data={data} termsAccepted={termsAccepted} />}
+            <SinceLastVisit data={data} />
 
             <LinkCard code={affiliate.code} formerCodes={data.former_codes ?? []} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
             <Review data={data} />
