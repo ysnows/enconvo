@@ -1,9 +1,11 @@
 export const LTD_OFFER = {
   path: '/ltd',
   discountPercent: 40,
-  // A new stable ID per discount level: checkout refuses a coupon whose
-  // percent differs, so changing the discount must not reuse an old coupon.
-  couponId: 'enconvo-ltd-40-v1',
+  // Both live in Stripe: the coupon (40% once, license products only) and the
+  // promotion code applied at checkout. Checkout refuses a coupon whose percent
+  // differs, so a new discount level needs a new coupon and code.
+  couponId: 'KENMOO2026',
+  promotionCode: 'KENMOO2026',
   affiliateCode: 'kenmoo',
   communityUrl: 'https://www.facebook.com/groups/softwarelifetimedealsappsumosaasltdkenmoo',
   communityIcon: '/ltd/kenmoo.png',

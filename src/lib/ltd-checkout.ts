@@ -8,7 +8,7 @@ export class LtdCheckoutError extends Error {
   }
 }
 
-type PaymentClient = Pick<Stripe, 'prices' | 'coupons'>
+type PaymentClient = Pick<Stripe, 'prices' | 'coupons' | 'promotionCodes'>
 
 /** Preserve existing price IDs so the current webhook grants the same license. */
 export async function ltdCheckoutParams(
@@ -33,35 +33,34 @@ export async function ltdCheckoutParams(
   // must carry the same explicit KenMoo entry code as the displayed offer.
   if (!isLtdOfferEligible(input.via)) return { line_items }
 
+  // KENMOO2026 is set up in Stripe ahead of the campaign, never created here:
+  // a coupon limited to the three license products, plus the promotion code
+  // buyers see applied at checkout. Deactivating that code in Stripe ends the offer.
   let coupon: Stripe.Coupon
   try {
-    coupon = await stripe.coupons.retrieve(LTD_OFFER.couponId)
+    coupon = await stripe.coupons.retrieve(LTD_OFFER.couponId, { expand: ['applies_to'] })
   } catch (error) {
     if ((error as { code?: string }).code !== 'resource_missing') throw error
-    try {
-      coupon = await stripe.coupons.create({
-        id: LTD_OFFER.couponId,
-        name: `Enconvo LTD ${LTD_OFFER.discountPercent}% off`,
-        percent_off: LTD_OFFER.discountPercent,
-        duration: 'once',
-      }, { idempotencyKey: `${LTD_OFFER.couponId}-create` })
-    } catch (creationError) {
-      // Two checkouts can create the same coupon concurrently. Retrieve only
-      // when Stripe reports that the stable ID already exists.
-      if ((creationError as { code?: string }).code !== 'resource_already_exists') throw creationError
-      coupon = await stripe.coupons.retrieve(LTD_OFFER.couponId)
-    }
+    throw new LtdCheckoutError('This offer is temporarily unavailable. No payment has been started.')
   }
 
   const productId = typeof price.product === 'string' ? price.product : price.product.id
   if (!coupon.valid || coupon.percent_off !== LTD_OFFER.discountPercent ||
-      coupon.duration !== 'once' ||
-      (coupon.applies_to && !coupon.applies_to.products.includes(productId))) {
+      coupon.duration !== 'once' || !coupon.applies_to?.products.includes(productId)) {
     throw new LtdCheckoutError('This offer is temporarily unavailable. No payment has been started.')
+  }
+
+  const { data: [promotionCode] } = await stripe.promotionCodes.list({
+    code: LTD_OFFER.promotionCode, coupon: coupon.id, active: true, limit: 1,
+  })
+  if (!promotionCode ||
+      (promotionCode.expires_at && promotionCode.expires_at * 1000 <= Date.now()) ||
+      (promotionCode.max_redemptions && promotionCode.times_redeemed >= promotionCode.max_redemptions)) {
+    throw new LtdCheckoutError('The KenMoo offer has ended. No payment has been started.', 410)
   }
 
   return {
     line_items,
-    discounts: [{ coupon: coupon.id }],
+    discounts: [{ promotion_code: promotionCode.id }],
   }
 }

@@ -7,6 +7,7 @@ import { AppProps } from 'next/app'
 import { SocialMetadata } from '@/components/SocialMetadata'
 import { InviteToast } from '@/components/InviteToast'
 import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
+import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
 
 const privateRoutes = new Set(['/account', '/login', '/register', '/auth', '/auth/callback', '/payment', '/pay_success', '/cloud-points', '/reset_password', '/reset_password_send'])
 // Placeholder and deep-link pages that should not compete in search.
@@ -14,6 +15,7 @@ const noindexRoutes = new Set(['/developer', '/mcp/install', '/i/[code]', '/rede
 
 const App = ({ Component, pageProps, router }: AppProps) => {
     useInviteAutoRedeem()
+    useAffiliateJourney()
     return (
         <>
             <SocialMetadata pathname={router.pathname} />

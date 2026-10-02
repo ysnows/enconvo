@@ -24,35 +24,39 @@ const checkout = load('src/lib/ltd-checkout.ts', { '../data/ltdOffer': data })
 const clone = value => JSON.parse(JSON.stringify(value))
 
 function fakeStripe(plan = data.ltdPlans[0], overrides = {}) {
-  const calls = { price: [], coupon: [], created: [], sessions: [] }
+  const calls = { price: [], coupon: [], promo: [], created: [], sessions: [] }
   const price = { active: true, type: 'one_time', currency: 'usd', unit_amount: plan.originalCents, product: 'product_license', ...overrides.price }
-  const coupon = { id: data.LTD_OFFER.couponId, valid: true, percent_off: data.LTD_OFFER.discountPercent, duration: 'once', ...overrides.coupon }
-  let missing = Boolean(overrides.missing)
+  const coupon = { id: data.LTD_OFFER.couponId, valid: true, percent_off: data.LTD_OFFER.discountPercent, duration: 'once', applies_to: { products: ['product_license'] }, ...overrides.coupon }
+  const promotionCode = { id: 'promo_kenmoo', code: data.LTD_OFFER.promotionCode, active: true, coupon, expires_at: null, max_redemptions: null, times_redeemed: 0, ...overrides.promotionCode }
   const stripe = {
     prices: { async retrieve(id) { calls.price.push(id); return price } },
     coupons: {
-      async retrieve(id) {
-        calls.coupon.push(id)
+      async retrieve(id, params) {
+        calls.coupon.push(clone({ id, params }))
         if (overrides.retrieveError) throw overrides.retrieveError
-        if (missing) { missing = false; throw { code: 'resource_missing' } }
+        if (overrides.missing) throw { code: 'resource_missing' }
         return coupon
       },
-      async create(params, options) {
-        calls.created.push(clone({ params, options }))
-        if (overrides.createError) throw overrides.createError
-        return coupon
+      async create(params) { calls.created.push(clone(params)); return coupon },
+    },
+    promotionCodes: {
+      async list(params) {
+        calls.promo.push(clone(params))
+        if (overrides.listError) throw overrides.listError
+        return { data: overrides.noPromotionCode ? [] : [promotionCode] }
       },
+      async create(params) { calls.created.push(clone(params)); return promotionCode },
     },
     checkout: { sessions: { async create(params) {
       calls.sessions.push(clone(params))
       if (overrides.sessionError) throw overrides.sessionError
-      return { url: 'https://checkout.stripe.com/c/pay/test_session' }
+      return { id: 'cs_test_a1b2c3d4e5f6g7h8', url: 'https://checkout.stripe.com/c/pay/test_session' }
     } } },
   }
   return { stripe, calls }
 }
 
-test('All offer amounts are exactly half of the existing USD license prices', () => {
+test('All offer amounts are 40% off the existing USD license prices', () => {
   assert.equal(data.LTD_OFFER.discountPercent, 40)
   assert.deepEqual(clone(data.ltdPlans.map(p => data.ltdPriceCents(p, 'kenmoo'))), [2940, 5940, 8340])
   assert.deepEqual(clone(data.ltdPlans.map(p => data.formatUsd(data.ltdPriceCents(p, 'kenmoo')))), ['$29.40', '$59.40', '$83.40'])
@@ -68,11 +72,13 @@ test('Sign-in return links retain the plan, offer route, and escaped affiliate r
   }
 })
 
-test('Every offer uses one existing license price and the server-controlled 40% coupon', async () => {
+test('Every offer uses one existing license price and applies the server-controlled KENMOO2026 promotion code', async () => {
   for (const plan of data.ltdPlans) {
     const { stripe, calls } = fakeStripe(plan)
-    const params = await checkout.ltdCheckoutParams(stripe, { lookupKey: plan.key, via: 'kenmoo', unit_amount: 1, coupon: 'attacker_coupon', email: 'attacker@example.com' })
-    assert.deepEqual(clone(params), { line_items: [{ price: plan.priceId, quantity: 1 }], discounts: [{ coupon: data.LTD_OFFER.couponId }] })
+    const params = await checkout.ltdCheckoutParams(stripe, { lookupKey: plan.key, via: 'kenmoo', unit_amount: 1, coupon: 'attacker_coupon', promotion_code: 'promo_attacker', email: 'attacker@example.com' })
+    assert.deepEqual(clone(params), { line_items: [{ price: plan.priceId, quantity: 1 }], discounts: [{ promotion_code: 'promo_kenmoo' }] })
+    assert.deepEqual(calls.coupon, [{ id: 'KENMOO2026', params: { expand: ['applies_to'] } }])
+    assert.deepEqual(calls.promo, [{ code: 'KENMOO2026', coupon: 'KENMOO2026', active: true, limit: 1 }])
     assert.equal(calls.created.length, 0)
   }
 })
@@ -97,41 +103,49 @@ test('Changed price, currency, recurring price, and inactive price fail before c
 })
 
 test('Expired, changed, or inapplicable coupons never fall back to a full-price checkout', async () => {
-  for (const coupon of [{ valid: false }, { percent_off: 25 }, { duration: 'forever' }, { applies_to: { products: ['another_product'] } }]) {
+  for (const coupon of [{ valid: false }, { percent_off: 25 }, { duration: 'forever' }, { applies_to: { products: ['another_product'] } }, { applies_to: undefined }]) {
     const { stripe } = fakeStripe(undefined, { coupon })
     await assert.rejects(checkout.ltdCheckoutParams(stripe, { lookupKey: 'standard', via: 'kenmoo' }), error => error.statusCode === 503)
   }
 })
 
-test('A missing coupon is created once with a stable ID and idempotency key; concurrent creation can recover', async () => {
-  for (const createError of [undefined, { code: 'resource_already_exists' }]) {
-    const { stripe, calls } = fakeStripe(undefined, { missing: true, createError })
-    await checkout.ltdCheckoutParams(stripe, { lookupKey: 'standard', via: 'kenmoo' })
-    assert.equal(calls.created.length, 1)
-    assert.deepEqual(calls.created[0], { params: { id: data.LTD_OFFER.couponId, name: 'Enconvo LTD 40% off', percent_off: 40, duration: 'once' }, options: { idempotencyKey: `${data.LTD_OFFER.couponId}-create` } })
-    assert.equal(calls.coupon.length, createError ? 2 : 1)
+test('Checkout never creates the coupon or code; a missing coupon is unavailable and a deactivated, expired, or used-up code ends the offer', async () => {
+  const { stripe: missingStripe, calls: missingCalls } = fakeStripe(undefined, { missing: true })
+  await assert.rejects(checkout.ltdCheckoutParams(missingStripe, { lookupKey: 'standard', via: 'kenmoo' }), error => error.statusCode === 503)
+  assert.equal(missingCalls.promo.length + missingCalls.created.length, 0)
+  for (const overrides of [{ noPromotionCode: true }, { promotionCode: { expires_at: Math.floor(Date.now() / 1000) - 60 } }, { promotionCode: { max_redemptions: 10, times_redeemed: 10 } }]) {
+    const { stripe, calls } = fakeStripe(undefined, overrides)
+    await assert.rejects(checkout.ltdCheckoutParams(stripe, { lookupKey: 'standard', via: 'kenmoo' }), error => error.statusCode === 410 && /ended/.test(error.message))
+    assert.equal(calls.created.length, 0)
   }
+  const { stripe } = fakeStripe(undefined, { promotionCode: { expires_at: Math.floor(Date.now() / 1000) + 3600, max_redemptions: 10, times_redeemed: 9 } })
+  assert.deepEqual(clone((await checkout.ltdCheckoutParams(stripe, { lookupKey: 'standard', via: 'kenmoo' })).discounts), [{ promotion_code: 'promo_kenmoo' }])
 })
 
 test('Stripe failures propagate without a checkout fallback', async () => {
-  for (const overrides of [{ retrieveError: { code: 'api_connection_error' } }, { missing: true, createError: { code: 'idempotency_key_in_use' } }]) {
+  for (const overrides of [{ retrieveError: { code: 'api_connection_error' } }, { listError: { code: 'api_connection_error' } }]) {
     const { stripe, calls } = fakeStripe(undefined, overrides)
     await assert.rejects(checkout.ltdCheckoutParams(stripe, { lookupKey: 'standard', via: 'kenmoo' }))
     assert.equal(calls.sessions.length, 0)
   }
 })
 
-function handlerFor(stripe, route = 'ltd_checkout', env = {}) {
+function affiliateJourneyLib(fetch = async () => { throw new Error('No Worker call expected') }) {
+  const globals = { fetch, AbortSignal, JSON }
+  const workerApi = load('src/lib/worker-api.ts', {}, { globals })
+  return load('src/lib/affiliate-journey.ts', { './worker-api': workerApi }, { globals })
+}
+function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
   const auth = load('src/utils/auth.ts', { '@supabase/supabase-js': { createClient: () => ({ auth: { async getUser(token) {
     return token === 'verified_token'
       ? { data: { user: { id: 'user_1', email: 'verified@example.com' } } }
       : { error: new Error('Invalid token') }
   } } }) } }, { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test_key' })
   function Stripe() { return stripe }
-  return load(`src/pages/api/subscription/${route}.ts`, { stripe: Stripe, '@/utils/auth': auth, '@/data/ltdOffer': data, '@/lib/ltd-checkout': checkout }, { NODE_ENV: 'production', STRIPE_SECRET_KEY: 'test_key', ...env }).default
+  return load(`src/pages/api/subscription/${route}.ts`, { stripe: Stripe, '@/utils/auth': auth, '@/data/ltdOffer': data, '@/lib/ltd-checkout': checkout, '@/lib/affiliate-journey': affiliateJourneyLib(fetch) }, { NODE_ENV: 'production', STRIPE_SECRET_KEY: 'test_key', ...env }).default
 }
 function response() {
-  return { statusCode: 200, headers: {}, body: undefined, setHeader(k, v) { this.headers[k] = v }, status(code) { this.statusCode = code; return this }, json(value) { this.body = clone(value); return this }, end(value) { this.body = value; return this } }
+  return { statusCode: 200, headers: {}, body: undefined, setHeader(k, v) { this.headers[k] = v }, status(code) { this.statusCode = code; return this }, json(value) { this.body = clone(value); return this }, end(value) { if (value !== undefined) this.body = value; return this } }
 }
 function request(body = {}, options = {}) {
   return { method: 'POST', body, cookies: { 'sb-uihahglfncxadigplxnw-auth-token': '[]' }, headers: { authorization: 'Bearer verified_token', origin: 'https://attacker.example', host: 'attacker.example' }, ...options }
@@ -173,6 +187,7 @@ test('Wrong HTTP method, invalid plan, coupon failure, and session failure retur
     { options: { method: 'GET' }, status: 405 },
     { body: { lookupKey: 'monthly' }, status: 400 },
     { overrides: { coupon: { percent_off: 20 } }, status: 503 },
+    { overrides: { noPromotionCode: true }, status: 410 },
     { overrides: { sessionError: new Error('Stripe unavailable') }, status: 503 },
   ]) {
     const { stripe } = fakeStripe(undefined, scenario.overrides)
@@ -181,6 +196,82 @@ test('Wrong HTTP method, invalid plan, coupon failure, and session failure retur
     assert.equal(res.statusCode, scenario.status)
     assert.equal(typeof res.body.error, 'string')
   }
+})
+
+const VISITOR = '0f6c2a8e3b1d4c5e9a7f1234567890ab'
+function workerFetch(reply = async () => ({ ok: true, status: 200, async json() { return { code: 200, data: { recorded: true } } } })) {
+  const calls = []
+  return { calls, fetch: async (url, init) => { calls.push({ url, init: { ...init, signal: undefined }, signal: init.signal }); return reply(url, init) } }
+}
+const withJourney = (body, cookie = `${VISITOR}.kenmoo`) => request(body, { cookies: { 'sb-uihahglfncxadigplxnw-auth-token': '[]', enconvo_via: cookie } })
+
+test('Both checkouts name the Affiliate journey in Stripe metadata and record the Checkout step with the verified token', async () => {
+  for (const route of ['ltd_checkout', 'checkout_sessions']) {
+    const { stripe, calls } = fakeStripe()
+    const worker = workerFetch()
+    const res = response()
+    await handlerFor(stripe, route, {}, worker.fetch)(withJourney({ lookupKey: 'standard', via: 'kenmoo' }), res)
+    assert.equal(res.statusCode, 200)
+    assert.equal(calls.sessions[0].metadata.via, 'kenmoo')
+    assert.equal(calls.sessions[0].metadata.via_visitor, VISITOR)
+    assert.equal(worker.calls.length, 1)
+    assert.equal(worker.calls[0].url, 'https://api.enconvo.com/api/affiliate/checkout')
+    assert.equal(worker.calls[0].init.headers.accessToken, 'verified_token')
+    assert.deepEqual(JSON.parse(worker.calls[0].init.body), { visitor: VISITOR, session: 'cs_test_a1b2c3d4e5f6g7h8', plan: 'standard' })
+    assert(worker.calls[0].signal, 'the Worker call is bounded by a timeout')
+  }
+})
+
+test('A checkout without a valid journey cookie adds no journey metadata and calls no Worker', async () => {
+  for (const route of ['ltd_checkout', 'checkout_sessions']) {
+    for (const cookie of [undefined, 'not-a-journey', `${VISITOR}.ken moo`, `short.kenmoo`]) {
+      const { stripe, calls } = fakeStripe()
+      const worker = workerFetch()
+      const res = response()
+      const req = cookie === undefined ? request({ lookupKey: 'standard', via: 'kenmoo' }) : withJourney({ lookupKey: 'standard', via: 'kenmoo' }, cookie)
+      await handlerFor(stripe, route, {}, worker.fetch)(req, res)
+      assert.equal(res.statusCode, 200)
+      assert.equal(calls.sessions[0].metadata.via, undefined)
+      assert.equal(calls.sessions[0].metadata.via_visitor, undefined)
+      assert.equal(worker.calls.length, 0)
+    }
+  }
+})
+
+test('A failing or refusing Worker never blocks the Checkout', async () => {
+  for (const reply of [
+    async () => { throw new Error('network down') },
+    async () => ({ ok: false, status: 500, async json() { throw new Error('not json') } }),
+    async () => ({ ok: false, status: 400, async json() { return { code: 400, reason: 'invalid_checkout', message: 'no' } } }),
+  ]) {
+    for (const route of ['ltd_checkout', 'checkout_sessions']) {
+      const { stripe } = fakeStripe()
+      const res = response()
+      await handlerFor(stripe, route, {}, workerFetch(reply).fetch)(withJourney({ lookupKey: 'standard', via: 'kenmoo' }), res)
+      assert.equal(res.statusCode, 200)
+      assert.equal(res.body.url, 'https://checkout.stripe.com/c/pay/test_session')
+    }
+  }
+})
+
+test('A ?via visit starts a journey cookie, keeps its visitor across codes, and reports only path and referrer', async () => {
+  const worker = workerFetch()
+  let jar = ''
+  const document = { get cookie() { return jar }, set cookie(value) { jar = value.split(';')[0] }, referrer: 'https://www.kenmoo.com/deals/enconvo' }
+  const workerApi = load('src/lib/worker-api.ts', {}, { globals: { fetch: worker.fetch, JSON } })
+  const lib = load('src/lib/affiliate-journey.ts', { './worker-api': workerApi }, { globals: {
+    fetch: worker.fetch, JSON, document, crypto: globalThis.crypto, Uint8Array, Array,
+    location: { protocol: 'https:', pathname: '/ltd' },
+  } })
+  const first = await lib.recordAffiliateVisit('kenmoo')
+  assert.match(first.visitor, /^[0-9a-f]{32}$/)
+  assert.equal(jar, `enconvo_via=${first.visitor}.kenmoo`)
+  assert.deepEqual(JSON.parse(worker.calls[0].init.body), { visitor: first.visitor, via: 'kenmoo', path: '/ltd', referrer: 'https://www.kenmoo.com/deals/enconvo' })
+  const second = await lib.recordAffiliateVisit('another-partner')
+  assert.equal(second.visitor, first.visitor)
+  assert.equal(lib.readAffiliateJourney().via, 'another-partner')
+  assert.equal(await lib.recordAffiliateVisit('bad code'), null)
+  assert.equal(worker.calls.length, 2)
 })
 
 test('Regular checkout remains full price and uses the same license IDs required by fulfillment', async () => {
@@ -283,7 +374,7 @@ test('The same referral visit ID survives all three offer checkouts and cancel r
     await handlerFor(stripe)(request({ lookupKey: plan.key, endorsely_referral: 'visit_kenmoo_123', via: 'kenmoo' }), res)
     assert.equal(res.statusCode, 200)
     assert.equal(calls.sessions[0].metadata.endorsely_referral, 'visit_kenmoo_123')
-    assert.deepEqual(calls.sessions[0].discounts, [{ coupon: data.LTD_OFFER.couponId }])
+    assert.deepEqual(calls.sessions[0].discounts, [{ promotion_code: 'promo_kenmoo' }])
     const cancel = new URL(calls.sessions[0].cancel_url)
     assert.equal(cancel.searchParams.get('via'), 'kenmoo')
     assert.equal(cancel.searchParams.get('plan'), plan.key)
@@ -341,7 +432,7 @@ test('Only the exact KenMoo code grants the discount; attribution and client cou
       assert.equal(calls.sessions[0].discounts, undefined)
       assert.equal(calls.sessions[0].metadata.campaign, 'enconvo-ltd')
       assert.equal(calls.sessions[0].metadata.endorsely_referral, 'visit_kenmoo_123')
-      assert.equal(calls.coupon.length + calls.created.length, 0)
+      assert.equal(calls.coupon.length + calls.promo.length + calls.created.length, 0)
     }
   }
 })

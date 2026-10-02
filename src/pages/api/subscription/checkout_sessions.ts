@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { withAuth } from '@/utils/auth';
+import { affiliateJourneyFrom, affiliateMetadata, reportAffiliateCheckout } from '@/lib/affiliate-journey';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
@@ -78,6 +79,8 @@ async function handler(req, res) {
       line_items = [{ price: priceId, quantity: qty }];
     }
 
+    const journey = affiliateJourneyFrom(req.cookies);
+
     // Create a checkout session with Stripe
     // For one-time payments, we enable invoice creation to ensure customers receive an invoice
     const session_data: Stripe.Checkout.SessionCreateParams = {
@@ -91,13 +94,15 @@ async function handler(req, res) {
       // Send invoice for one-time payments (when mode is 'payment')
       invoice_creation: mode === 'payment' ? { enabled: true } : undefined,
       metadata: {
-        endorsely_referral: endorsely_referral
+        endorsely_referral: endorsely_referral,
+        ...affiliateMetadata(journey),
       }
     }
 
     session_data.allow_promotion_codes = true;
 
     const session = await stripe.checkout.sessions.create(session_data);
+    await reportAffiliateCheckout(req.accessToken, journey, session.id, lookupKey);
 
     res.json({ url: session.url });
     res.end();

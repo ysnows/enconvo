@@ -93,7 +93,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
     : 'Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: $49, $99, and $139.'
   const pageUrl = `https://www.enconvo.com${LTD_OFFER.path}${discounted ? '?via=kenmoo' : ''}`
   const purchaseFaq = discounted
-    ? ['How do I get the KenMoo discount?', `Choose a plan using this KenMoo community offer, sign in or create your Enconvo account, and continue to checkout. Your ${percent}% discount is applied automatically. No coupon code is needed.`]
+    ? ['How do I get the KenMoo discount?', `Choose a plan using this KenMoo community offer, sign in or create your Enconvo account, and continue to checkout. Code ${LTD_OFFER.promotionCode} is applied automatically at checkout, so there is nothing to enter.`]
     : ['How do I buy a lifetime license?', 'Choose a plan, sign in or create your Enconvo account, and continue to secure checkout. Your license is a one-time payment.']
   // Returning buyers already took the ticket and picked a plan.
   const ticketClaimed = claimed || Boolean(selected)
@@ -232,7 +232,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                   </span>
                 </button>
                 <p className={styles.ticketHint} role="status">
-                  {ticketClaimed ? <>Ticket claimed. <a href="#plans">Pick your plan<ArrowRightIcon aria-hidden="true" /></a></> : 'No code needed. Your discount travels with this link.'}
+                  {ticketClaimed ? <>Ticket claimed. <a href="#plans">Pick your plan<ArrowRightIcon aria-hidden="true" /></a></> : `Code ${LTD_OFFER.promotionCode} applies automatically at checkout.`}
                 </p>
               </div>
             )}

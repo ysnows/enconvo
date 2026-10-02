@@ -24,6 +24,8 @@ export interface UserData {
 
 export interface AuthenticatedRequest extends NextApiRequest {
     user: UserData;
+    /** The verified Supabase access token, for calls made on the user's behalf. */
+    accessToken: string;
 }
 
 export class AuthError extends Error {
@@ -132,6 +134,7 @@ export const withAuth = (handler: ApiHandler) => {
 
             const userData = await verifyAuth(authToken);
             (req as AuthenticatedRequest).user = userData;
+            (req as AuthenticatedRequest).accessToken = authToken;
             return await handler(req as AuthenticatedRequest, res);
         } catch (error) {
             if (error instanceof AuthError) {

@@ -3,6 +3,7 @@ import type { NextApiResponse } from 'next'
 import { withAuth, type AuthenticatedRequest } from '@/utils/auth'
 import { isLtdOfferEligible, LTD_OFFER } from '@/data/ltdOffer'
 import { ltdCheckoutParams, LtdCheckoutError } from '@/lib/ltd-checkout'
+import { affiliateJourneyFrom, affiliateMetadata, reportAffiliateCheckout } from '@/lib/affiliate-journey'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -26,6 +27,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     const cancelParams = new URLSearchParams({ canceled: 'true', plan: req.body.lookupKey })
     if (typeof req.body.via === 'string' && req.body.via) cancelParams.set('via', req.body.via.slice(0, 200))
     if (referral) cancelParams.set('referral', referral)
+    const journey = affiliateJourneyFrom(req.cookies)
     const session = await stripe.checkout.sessions.create({
       ...discount,
       mode: 'payment',
@@ -38,9 +40,11 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       metadata: {
         campaign: isLtdOfferEligible(req.body.via) ? LTD_OFFER.couponId : 'enconvo-ltd',
         ...(referral ? { endorsely_referral: referral } : {}),
+        ...affiliateMetadata(journey),
       },
     })
     if (!session.url) throw new LtdCheckoutError('Checkout is temporarily unavailable. Please try again.')
+    await reportAffiliateCheckout(req.accessToken, journey, session.id, req.body.lookupKey)
     return res.status(200).json({ url: session.url })
   } catch (error) {
     if (error instanceof LtdCheckoutError) {
