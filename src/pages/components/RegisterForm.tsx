@@ -42,12 +42,18 @@ export default function RegisterForm({ loginState, setLoginState, email, setEmai
         setEmailIsLoading(true)
 
         const returnUrlParams = router?.query?.returnUrl ? `?returnUrl=${router.query.returnUrl}` : '';
+        const returnUrl = Array.isArray(router.query.returnUrl) ? router.query.returnUrl[0] : router.query.returnUrl;
+        // Web offer signups must return to the selected offer after email
+        // confirmation rather than opening the native app.
+        const emailRedirectTo = typeof returnUrl === 'string' && /^\/ltd(?:\?|$)/.test(returnUrl)
+            ? `${window.location.origin}/auth/callback?${new URLSearchParams({ returnUrl })}`
+            : `${window.location.origin}/login?from=app${returnUrlParams}`;
 
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
-                emailRedirectTo: `${window.location.origin}/login?from=app${returnUrlParams}`,
+                emailRedirectTo,
                 data: {
                     name: name,
                     product_updates_subscribed: productUpdatesSubscribed,
