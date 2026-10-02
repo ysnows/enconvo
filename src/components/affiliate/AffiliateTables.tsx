@@ -77,9 +77,9 @@ export const signed = (amount: number) => (amount < 0 ? `−${formatCents(-amoun
 export const dollars = (amount: number) => ((Number(amount) || 0) / 100).toFixed(2)
 export const isoDay = (value: string) => (value ? new Date(value).toISOString().slice(0, 10) : '')
 
-function exportReferrals(code: string, rows: AffiliateReferral[]) {
+function exportReferrals(code: string, rows: AffiliateReferral[], suffix = '') {
     downloadCsv(
-        `enconvo-affiliate-${code}-referrals.csv`,
+        `enconvo-affiliate-${code}-referrals${suffix}.csv`,
         toCsv(
             ['Customer', 'Sub ID', 'Promotion code', 'Joined', 'Signed up', 'Plan', 'Plan status', 'Purchases', 'Paid (USD)', 'Commission (USD)', 'Status', 'Can earn until (UTC)', 'Added by Enconvo'],
             rows.map((row) => [
@@ -386,6 +386,28 @@ function AddedByEnconvo({ row }: { row: AffiliateReferral }) {
     )
 }
 
+type ReferralFilter = 'all' | 'customers' | 'renewing' | 'open' | 'signed_up' | 'lost'
+
+// Narrower views of the Referrals tab, like the lead and customer states other affiliate dashboards filter by.
+const REFERRAL_FILTERS: { key: ReferralFilter; label: string; match: (row: AffiliateReferral) => boolean }[] = [
+    { key: 'all', label: 'All', match: () => true },
+    { key: 'customers', label: 'Customers', match: (row) => row.status === 'customer' },
+    { key: 'renewing', label: 'Renewing', match: (row) => row.subscription === 'renewing' },
+    { key: 'open', label: 'Can still earn', match: (row) => row.status === 'signed_up' && row.credit_window === 'open' },
+    { key: 'signed_up', label: 'Signed up', match: (row) => row.status === 'signed_up' },
+    { key: 'lost', label: 'Refunded or voided', match: (row) => row.status === 'refunded' || row.status === 'voided' },
+]
+
+/** Where a referral came from, as a filter value: its sub ID, the promotion code it used, Enconvo, or the plain link. */
+function referralSource(row: AffiliateReferral): { value: string; label: string } {
+    if (row.sub) return { value: `sub:${row.sub}`, label: row.sub }
+    if (row.promotion_code) return { value: `code:${row.promotion_code.toLowerCase()}`, label: `Code ${row.promotion_code.toUpperCase()}` }
+    if (row.added_by_enconvo) return { value: 'enconvo', label: 'Added by Enconvo' }
+    return { value: 'link', label: 'Link without a sub ID' }
+}
+
+const fileSlug = (value: string) => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
 const creditWindowLabel = (row: AffiliateReferral) =>
     row.status !== 'signed_up' || !row.credit_window ? '' : row.credit_window === 'open' ? row.credit_until ?? '' : 'ended'
 
@@ -403,6 +425,8 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
     const [tab, setTab] = useState<Tab>('referrals')
     const [exporting, setExporting] = useState(false)
     const [exportError, setExportError] = useState<string | null>(null)
+    const [filter, setFilter] = useState<ReferralFilter>('all')
+    const [source, setSource] = useState('')
     const code = data.affiliate?.code ?? 'affiliate'
     const referrals = data.referrals ?? []
     const commissions = data.commissions ?? []
@@ -410,9 +434,35 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
     const counts: Record<Tab, number> = { referrals: referrals.length, commissions: commissions.length, payouts: payouts.length }
     const labels: Record<Tab, string> = { referrals: 'Referrals', commissions: 'Commissions', payouts: 'Payouts' }
 
+    const sources = new Map<string, { label: string; count: number }>()
+    for (const row of referrals) {
+        const { value, label } = referralSource(row)
+        sources.set(value, { label, count: (sources.get(value)?.count ?? 0) + 1 })
+    }
+    const sourceOptions = Array.from(sources).sort((a, b) => b[1].count - a[1].count || a[1].label.localeCompare(b[1].label))
+    const fromSource = source && sources.has(source) ? referrals.filter((row) => referralSource(row).value === source) : referrals
+    const statusFilter = REFERRAL_FILTERS.find((entry) => entry.key === filter) ?? REFERRAL_FILTERS[0]
+    const visible = fromSource.filter(statusFilter.match)
+    // A view is offered only when it narrows the list; the one in use stays so it can be switched back.
+    const chips = REFERRAL_FILTERS.map((entry) => ({ ...entry, count: fromSource.filter(entry.match).length })).filter(
+        (entry) => entry.key === 'all' || entry.key === filter || (entry.count > 0 && entry.count < fromSource.length),
+    )
+    const filtered = visible.length !== referrals.length
+    const showFilters = chips.length > 1 || sourceOptions.length > 1
+    const clearFilters = () => {
+        setFilter('all')
+        setSource('')
+    }
+    const referralsSuffix = [filter !== 'all' ? filter : '', source && sources.has(source) ? source.replace(/^(sub|code):/, '') : '']
+        .map(fileSlug)
+        .filter(Boolean)
+        .map((part) => `-${part}`)
+        .join('')
+    const exportCount = tab === 'referrals' ? visible.length : counts[tab]
+
     const download = async () => {
         setExportError(null)
-        if (tab === 'referrals') exportReferrals(code, referrals)
+        if (tab === 'referrals') exportReferrals(code, visible, referralsSuffix)
         else if (tab === 'payouts') exportPayouts(code, payouts)
         else if (!data.commissions_truncated) exportCommissions(code, commissions)
         else {
@@ -455,7 +505,7 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                     <button
                         type="button"
                         onClick={() => void download()}
-                        disabled={counts[tab] === 0 || exporting}
+                        disabled={exportCount === 0 || exporting}
                         className={downloadButton}
                     >
                         {exporting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Download className="h-4 w-4" aria-hidden="true" />}
@@ -464,10 +514,54 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                 </div>
             </div>
 
+            {tab === 'referrals' && showFilters && (
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                    <div role="radiogroup" aria-label="Show referrals" className="flex flex-wrap gap-2">
+                        {chips.map((entry) => (
+                            <button
+                                key={entry.key}
+                                type="button"
+                                role="radio"
+                                aria-checked={filter === entry.key}
+                                onClick={() => setFilter(entry.key)}
+                                className={`inline-flex min-h-[32px] items-center gap-1.5 rounded-full border px-3 text-xs font-medium transition-colors ${filter === entry.key ? 'border-content bg-content text-canvas' : 'border-hairline text-content-muted hover:text-content'}`}
+                            >
+                                {entry.label}
+                                <span className={`tabular-nums ${filter === entry.key ? 'text-canvas/70' : 'text-content-ash'}`}>{entry.count.toLocaleString('en-US')}</span>
+                            </button>
+                        ))}
+                    </div>
+                    {sourceOptions.length > 1 && (
+                        <label className="flex w-full items-center gap-2 sm:w-auto">
+                            <span className="flex-none text-xs text-content-muted">Source</span>
+                            <select
+                                value={source && sources.has(source) ? source : ''}
+                                onChange={(e) => setSource(e.target.value)}
+                                className="h-9 w-full min-w-0 rounded-lg border border-[#2C3033] bg-[#0B0C0D] px-3 text-sm text-content focus:border-signal-green focus:outline-none sm:w-56"
+                            >
+                                <option value="">All sources</option>
+                                {sourceOptions.map(([value, option]) => (
+                                    <option key={value} value={value}>
+                                        {option.label} ({option.count.toLocaleString('en-US')})
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+                    )}
+                </div>
+            )}
+
             <div className={`mt-4 overflow-x-auto ${card}`} role="tabpanel">
                 {tab === 'referrals' &&
                     (referrals.length === 0 ? (
                         <Empty>No referrals yet. People who sign up or buy after opening your link appear here.</Empty>
+                    ) : visible.length === 0 ? (
+                        <p className="px-4 py-12 text-center text-sm text-content-muted">
+                            No referrals match this view.{' '}
+                            <button type="button" onClick={clearFilters} className="font-medium text-signal-blue hover:underline">
+                                Show all referrals
+                            </button>
+                        </p>
                     ) : (
                         <table className="w-full min-w-[720px]">
                             <thead className="border-b border-hairline">
@@ -481,7 +575,7 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-hairline">
-                                {referrals.map((row, index) => (
+                                {visible.map((row, index) => (
                                     <tr key={`${row.customer}-${row.joined_at}-${index}`}>
                                         <td className={`${td} font-mono text-content`}>
                                             {row.customer}
@@ -595,9 +689,11 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
 
             <p className="mt-3 text-xs leading-5 text-content-ash">
                 {tab === 'referrals' &&
-                    (data.referrals_truncated
-                        ? `Showing the newest ${referrals.length} referrals. `
-                        : '') +
+                    (filtered
+                        ? `Showing ${visible.length.toLocaleString('en-US')} of ${data.referrals_truncated ? 'the newest ' : ''}${referrals.length.toLocaleString('en-US')} referrals; the CSV holds the ones shown. `
+                        : data.referrals_truncated
+                          ? `Showing the newest ${referrals.length.toLocaleString('en-US')} referrals. `
+                          : '') +
                         renewingNote(data.totals?.renewing ?? 0) +
                         openWindowsNote(data.totals?.open_windows ?? 0) +
                         "Emails are masked to protect your referrals' privacy. Sign-ups show up even before they buy."}
