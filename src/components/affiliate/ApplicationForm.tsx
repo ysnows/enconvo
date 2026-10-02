@@ -3,6 +3,7 @@ import { useState, type FormEvent } from 'react'
 import { ArrowRight, Loader2 } from 'lucide-react'
 import { primaryButton, secondaryButton } from '@/components/landing-styles'
 import {
+    AFFILIATE_TERMS_VERSION,
     affiliateLink,
     applyForAffiliate,
     formatCents,
@@ -66,6 +67,7 @@ export function ApplicationForm({ terms, accessToken, email, previous, onSubmitt
             audience: audience.trim(),
             promotion_plan: plan.trim(),
             accept_terms: true,
+            terms_version: AFFILIATE_TERMS_VERSION,
         })
         setSubmitting(false)
         if (result.ok) onSubmitted(result.data)

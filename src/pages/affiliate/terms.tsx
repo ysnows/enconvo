@@ -4,12 +4,13 @@ import Link from 'next/link'
 import { Footer } from '@/components/Footer'
 import { metaLabel } from '@/components/landing-styles'
 import { SiteNav } from '@/components/SiteNav'
-import { DEFAULT_TERMS, fetchProgramTerms, formatCents, SUPPORT_EMAIL, type ProgramTerms } from '@/lib/affiliate-program'
+import { AFFILIATE_TERMS_VERSION, DEFAULT_TERMS, fetchProgramTerms, formatCents, SUPPORT_EMAIL, type ProgramTerms } from '@/lib/affiliate-program'
 
 // The Affiliate program terms that /affiliate links to and every applicant accepts.
 // Numbers come from the Worker's program terms so the page never drifts from the ledger.
+// Any change to this page's terms moves AFFILIATE_TERMS_VERSION, which dates it.
 
-const LAST_UPDATED = 'October 2, 2026'
+const LAST_UPDATED = new Date(`${AFFILIATE_TERMS_VERSION}T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
 
 function sections(terms: ProgramTerms) {
     const minimum = formatCents(terms.minimum_payout, { cents: false })

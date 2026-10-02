@@ -2,12 +2,15 @@ import Link from 'next/link'
 import { useState, type FormEvent } from 'react'
 import { Loader2 } from 'lucide-react'
 import {
+    acceptAffiliateTerms,
+    AFFILIATE_TERMS_VERSION,
     affiliateLink,
     affiliateSub,
     conversionRate,
     earningsPerVisitor,
     formatCents,
     formatDay,
+    formatUtcDay,
     LINK_PAGES,
     PAYOUT_METHOD_LABEL,
     savePayoutMethod,
@@ -24,7 +27,8 @@ import { card, CopyButton, fieldLabel, input, Notice, Pill } from './ui'
 
 // /affiliate for an approved (or suspended) Affiliate: its link and link builder, balances and
 // when pending money becomes payable, link results overall and per sub ID, payout method,
-// monthly statement, and its referrals, commissions and payouts, and the promotion kit.
+// monthly statement, and its referrals, commissions and payouts, and the promotion kit. An
+// Affiliate that hasn't accepted the current program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -343,6 +347,82 @@ function Activity({ data }: { data: Dashboard }) {
     )
 }
 
+/**
+ * Whether the account accepted the program terms as they are now: a version on or after
+ * AFFILIATE_TERMS_VERSION, or, from a page that didn't say which version, a day on or after it.
+ * Unknown (true) from a Worker that doesn't report acceptance.
+ */
+function acceptedCurrentTerms(affiliate: AffiliateApplication): boolean {
+    if (affiliate.terms_accepted_at === undefined) return true
+    if (!affiliate.terms_accepted_at) return false
+    const accepted = affiliate.terms_version ?? new Date(affiliate.terms_accepted_at).toISOString().slice(0, 10)
+    return accepted >= AFFILIATE_TERMS_VERSION
+}
+
+function TermsNotice({
+    affiliate,
+    accessToken,
+    onAccepted,
+}: {
+    affiliate: AffiliateApplication
+    accessToken: string
+    onAccepted: (affiliate: AffiliateApplication) => void
+}) {
+    const [saving, setSaving] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const never = !affiliate.terms_accepted_at
+
+    async function accept() {
+        if (saving) return
+        setSaving(true)
+        setError(null)
+        const result = await acceptAffiliateTerms(accessToken)
+        setSaving(false)
+        if (result.ok) onAccepted(result.data)
+        else setError(result.message)
+    }
+
+    const terms = (
+        <Link href="/affiliate/terms" className="text-signal-blue hover:underline">
+            Affiliate program terms
+        </Link>
+    )
+    return (
+        <Notice
+            tone="warn"
+            title={never ? 'Accept the program terms' : 'The program terms changed'}
+            action={
+                <button
+                    type="button"
+                    onClick={accept}
+                    disabled={saving}
+                    className="inline-flex min-h-[40px] items-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition-colors hover:border-hairline-strong hover:bg-white/[0.06] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                    {saving && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
+                    I accept the terms
+                </button>
+            }
+        >
+            {never ? (
+                <>
+                    You joined the program without accepting the {terms} on this site, so your account has no record of it. Read
+                    them, then accept them. Your link keeps earning either way, but we ask for this before we send a payout.
+                </>
+            ) : (
+                <>
+                    We updated the {terms} on {formatUtcDay(AFFILIATE_TERMS_VERSION)}. Read them, then accept them to keep your record
+                    current. Commissions already recorded are paid under the terms in place when they were earned.
+                </>
+            )}
+            {error && (
+                <span role="alert" className="mt-2 block text-xs text-signal-red">
+                    {error}
+                </span>
+            )}
+        </Notice>
+    )
+}
+
 function PayoutMethodCard({
     affiliate,
     accessToken,
@@ -484,6 +564,7 @@ export function AffiliateDashboard({
                     this account if you have questions.
                 </Notice>
             )}
+            {!acceptedCurrentTerms(affiliate) && <TermsNotice affiliate={affiliate} accessToken={accessToken} onAccepted={onAffiliateChanged} />}
             {!suspended && !payoutMethodSet && (
                 <Notice
                     tone="warn"

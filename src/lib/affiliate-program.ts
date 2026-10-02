@@ -27,6 +27,14 @@ export interface ProgramTerms {
     payout_methods: PayoutMethod[]
 }
 
+/**
+ * The day the program terms on /affiliate/terms last changed (`YYYY-MM-DD`, UTC). Applying and
+ * accepting send it, so the Worker records which terms each Affiliate accepted, and an Affiliate
+ * that accepted an earlier day is asked to accept again. Change it with any change to the terms
+ * text or to the Worker's PROGRAM_TERMS numbers the page shows.
+ */
+export const AFFILIATE_TERMS_VERSION = '2026-10-02'
+
 /** What the Worker answers before its terms arrive; kept equal to PROGRAM_TERMS there. */
 export const DEFAULT_TERMS: ProgramTerms = {
     commission_rate: 20,
@@ -51,6 +59,10 @@ export interface AffiliateApplication {
     payout_account: string | null
     applied_at: string
     approved_at: string | null
+    /** The AFFILIATE_TERMS_VERSION the account last accepted; null when it never did, or applied before versions were kept. */
+    terms_version?: string | null
+    /** When the account last accepted the terms; null for an Affiliate an admin added. */
+    terms_accepted_at?: string | null
 }
 
 export interface AffiliateBalances {
@@ -226,6 +238,7 @@ export interface ApplicationInput {
     payout_method?: PayoutMethod
     payout_account?: string
     accept_terms: boolean
+    terms_version?: string
 }
 
 /** Mirrors the Worker's `affiliateProgramCode`. */
@@ -362,6 +375,10 @@ function getCommissionPage(accessToken: string, after: string | null, payout?: s
 
 export function applyForAffiliate(accessToken: string, input: ApplicationInput) {
     return workerPost<AffiliateApplication>('/api/affiliate/apply', accessToken, input)
+}
+
+export function acceptAffiliateTerms(accessToken: string) {
+    return workerPost<AffiliateApplication>('/api/affiliate/accept_terms', accessToken, { accept_terms: true, terms_version: AFFILIATE_TERMS_VERSION })
 }
 
 export function savePayoutMethod(accessToken: string, payout_method: PayoutMethod, payout_account: string) {
