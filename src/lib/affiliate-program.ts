@@ -4,7 +4,7 @@
 // The Worker owns the terms and the ledger; this file only calls it and formats results.
 // Amounts are in cents (USD).
 
-import { workerPost, workerRequest } from '@/lib/worker-api'
+import { workerPost, workerRequest, type WorkerResult } from '@/lib/worker-api'
 import { affiliateSub } from '@/lib/affiliate-journey'
 
 export { affiliateSub }
@@ -133,7 +133,7 @@ export interface AffiliatePayout {
 export interface AffiliatePayoutStatement {
     affiliate: { name: string | null; code: string }
     payout: AffiliatePayout & { account: string }
-    /** Newest first; cut short at 1,000, while the totals still cover every entry. */
+    /** Newest first; cut short at 1,000, while the totals still cover every entry and the CSV fetches the rest. */
     entries: AffiliateCommission[]
     entries_truncated: boolean
     totals: { entries: number; added: number; taken_back: number }
@@ -336,6 +336,26 @@ export function getAffiliateDashboard(accessToken: string) {
 /** Refused with status 404 when the payout isn't the signed-in Affiliate's. */
 export function getPayoutStatement(accessToken: string, id: string) {
     return workerPost<AffiliatePayoutStatement>('/api/affiliate/payout', accessToken, { id })
+}
+
+/**
+ * Every ledger entry of the signed-in Affiliate, newest first, or only those one of its payouts
+ * settled: the dashboard and a payout statement list just the newest, so a CSV fetches the rest
+ * a page at a time.
+ */
+export async function getAllCommissions(accessToken: string, payout?: string): Promise<WorkerResult<AffiliateCommission[]>> {
+    const entries: AffiliateCommission[] = []
+    for (let after: string | null = null; ; ) {
+        const page = await getCommissionPage(accessToken, after, payout)
+        if (page.ok === false) return page
+        entries.push(...page.data.commissions)
+        if (!page.data.next) return { ok: true, data: entries }
+        after = page.data.next
+    }
+}
+
+function getCommissionPage(accessToken: string, after: string | null, payout?: string) {
+    return workerPost<{ commissions: AffiliateCommission[]; next: string | null }>('/api/affiliate/commissions', accessToken, { after, payout })
 }
 
 export function applyForAffiliate(accessToken: string, input: ApplicationInput) {

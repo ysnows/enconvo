@@ -497,7 +497,7 @@ export function AffiliateDashboard({
             <AffiliateSources data={data} />
             <AffiliateTraffic data={data} />
             <AffiliateMonths data={data} />
-            <AffiliateTables data={data} />
+            <AffiliateTables data={data} accessToken={accessToken} />
             {!suspended && <AffiliateKit code={affiliate.code} />}
         </div>
     )

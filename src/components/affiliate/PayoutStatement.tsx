@@ -15,12 +15,13 @@ const th = `whitespace-nowrap px-4 py-3 text-left text-xs font-medium uppercase 
 const td = `whitespace-nowrap px-4 py-3 text-sm ${body} print:px-2 print:py-2`
 const num = 'text-right tabular-nums'
 
-export function exportPayoutStatement(data: AffiliatePayoutStatement) {
+/** `entries` defaults to the statement's own list; pass every entry when that list was cut short. */
+export function exportPayoutStatement(data: AffiliatePayoutStatement, entries = data.entries) {
     downloadCsv(
         `enconvo-affiliate-${data.affiliate.code}-payout-${isoDay(data.payout.paid_at)}.csv`,
         toCsv(
             ['Date', 'Kind', 'Customer', 'Sub ID', 'Promotion code', 'Plan', 'Paid before tax (USD)', 'Rate (%)', 'Commission (USD)', 'Note'],
-            data.entries.map((row) => {
+            entries.map((row) => {
                 const adjustment = row.kind === 'adjustment'
                 return [
                     isoDay(row.earned_at),
@@ -144,8 +145,8 @@ export function PayoutStatement({ data }: { data: AffiliatePayoutStatement }) {
             <footer className={`mt-10 space-y-1.5 border-t pt-6 text-xs leading-5 ${rule} ${muted}`}>
                 {data.entries_truncated && (
                     <p>
-                        Showing the newest {entries.length.toLocaleString('en-US')} of {totals.entries.toLocaleString('en-US')} entries. The totals cover all of them, and
-                        support can send the full list.
+                        Showing the newest {entries.length.toLocaleString('en-US')} of {totals.entries.toLocaleString('en-US')} entries. The totals and the CSV download
+                        cover all of them.
                     </p>
                 )}
                 <p>Commissions are calculated on what the customer paid after discounts and before tax. Customer emails are masked to protect their privacy.</p>

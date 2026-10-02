@@ -8,7 +8,7 @@ import { exportPayoutStatement, PayoutStatement } from '@/components/affiliate/P
 import { Notice } from '@/components/affiliate/ui'
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
-import { getPayoutStatement, type AffiliatePayoutStatement } from '@/lib/affiliate-program'
+import { getAllCommissions, getPayoutStatement, type AffiliatePayoutStatement } from '@/lib/affiliate-program'
 import { supabase } from '@/lib/supabase'
 
 // One payout's statement for the signed-in Affiliate (ADR 0090), linked from the dashboard's
@@ -24,7 +24,7 @@ type Load =
     | { state: 'loaded'; data: AffiliatePayoutStatement }
     | { state: 'error'; message: string; status: number }
 
-const action = 'inline-flex min-h-[40px] items-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition-colors hover:border-hairline-strong hover:bg-white/[0.06]'
+const action = 'inline-flex min-h-[40px] items-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition-colors hover:border-hairline-strong hover:bg-white/[0.06] disabled:cursor-wait disabled:opacity-60'
 const textLink = 'flex-none text-sm font-medium text-signal-blue hover:underline'
 
 export default function PayoutStatementPage() {
@@ -33,6 +33,8 @@ export default function PayoutStatementPage() {
     // undefined while the stored session is read.
     const [session, setSession] = useState<Session | null | undefined>(undefined)
     const [load, setLoad] = useState<Load>({ state: 'loading' })
+    const [exporting, setExporting] = useState(false)
+    const [exportError, setExportError] = useState<string | null>(null)
     const userId = session?.userId
     const token = session?.token
 
@@ -61,6 +63,17 @@ export default function PayoutStatementPage() {
         void fetchStatement(token, id)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userId, id, fetchStatement])
+
+    // A statement lists the newest 1,000 entries; its CSV fetches every entry the payout settled.
+    const download = async (statement: AffiliatePayoutStatement) => {
+        setExportError(null)
+        if (!statement.entries_truncated || !token) return exportPayoutStatement(statement)
+        setExporting(true)
+        const result = await getAllCommissions(token, statement.payout.id)
+        setExporting(false)
+        if (result.ok) exportPayoutStatement(statement, result.data)
+        else setExportError(`We couldn't prepare the CSV. ${result.message}`)
+    }
 
     const signOut = () => void supabase.auth.signOut({ scope: 'local' })
     const signIn = `/login?returnUrl=${encodeURIComponent(id ? `/affiliate/payouts/${id}` : '/affiliate')}`
@@ -146,9 +159,9 @@ export default function PayoutStatementPage() {
                         </Link>
                         {data && (
                             <div className="flex flex-wrap gap-2">
-                                <button type="button" onClick={() => exportPayoutStatement(data)} className={action}>
-                                    <Download className="h-4 w-4" aria-hidden="true" />
-                                    Download CSV
+                                <button type="button" onClick={() => void download(data)} disabled={exporting} className={action}>
+                                    {exporting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Download className="h-4 w-4" aria-hidden="true" />}
+                                    {exporting ? 'Preparing CSV…' : 'Download CSV'}
                                 </button>
                                 <button type="button" onClick={() => window.print()} className={action}>
                                     <Printer className="h-4 w-4" aria-hidden="true" />
@@ -157,6 +170,11 @@ export default function PayoutStatementPage() {
                             </div>
                         )}
                     </div>
+                    {exportError && (
+                        <p role="alert" className="-mt-3 mb-6 text-right text-xs leading-5 text-signal-red print:hidden">
+                            {exportError}
+                        </p>
+                    )}
                     {content}
                 </main>
                 <div className="print:hidden">

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronRight, Download } from 'lucide-react'
+import { ChevronRight, Download, Loader2 } from 'lucide-react'
 import {
     conversionRate,
     downloadCsv,
@@ -9,6 +9,7 @@ import {
     formatDay,
     formatMonth,
     formatUtcDay,
+    getAllCommissions,
     PAYOUT_METHOD_LABEL,
     planLabel,
     toCsv,
@@ -387,8 +388,10 @@ const renewingNote = (count: number) =>
         ? `${count === 1 ? 'One customer has a Cloud plan that renews' : `${count.toLocaleString('en-US')} customers have a Cloud plan that renews`}; each renewal of a plan bought through you earns commission. `
         : ''
 
-export function AffiliateTables({ data }: { data: AffiliateDashboard }) {
+export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboard; accessToken: string }) {
     const [tab, setTab] = useState<Tab>('referrals')
+    const [exporting, setExporting] = useState(false)
+    const [exportError, setExportError] = useState<string | null>(null)
     const code = data.affiliate?.code ?? 'affiliate'
     const referrals = data.referrals ?? []
     const commissions = data.commissions ?? []
@@ -396,10 +399,19 @@ export function AffiliateTables({ data }: { data: AffiliateDashboard }) {
     const counts: Record<Tab, number> = { referrals: referrals.length, commissions: commissions.length, payouts: payouts.length }
     const labels: Record<Tab, string> = { referrals: 'Referrals', commissions: 'Commissions', payouts: 'Payouts' }
 
-    const download = () => {
+    const download = async () => {
+        setExportError(null)
         if (tab === 'referrals') exportReferrals(code, referrals)
-        else if (tab === 'commissions') exportCommissions(code, commissions)
-        else exportPayouts(code, payouts)
+        else if (tab === 'payouts') exportPayouts(code, payouts)
+        else if (!data.commissions_truncated) exportCommissions(code, commissions)
+        else {
+            // The tab lists only the newest entries; the CSV is for bookkeeping, so it holds them all.
+            setExporting(true)
+            const result = await getAllCommissions(accessToken)
+            setExporting(false)
+            if (result.ok) exportCommissions(code, result.data)
+            else setExportError(`We couldn't prepare the CSV. ${result.message}`)
+        }
     }
 
     return (
@@ -412,7 +424,10 @@ export function AffiliateTables({ data }: { data: AffiliateDashboard }) {
                             type="button"
                             role="tab"
                             aria-selected={tab === key}
-                            onClick={() => setTab(key)}
+                            onClick={() => {
+                                setTab(key)
+                                setExportError(null)
+                            }}
                             className={`flex-1 whitespace-nowrap rounded-lg px-2 py-2 text-sm font-medium transition-colors sm:flex-none sm:px-4 ${tab === key ? 'bg-[#1B1E20] text-content' : 'text-content-muted hover:text-content'}`}
                         >
                             {labels[key]}
@@ -420,15 +435,22 @@ export function AffiliateTables({ data }: { data: AffiliateDashboard }) {
                         </button>
                     ))}
                 </div>
-                <button
-                    type="button"
-                    onClick={download}
-                    disabled={counts[tab] === 0}
-                    className={downloadButton}
-                >
-                    <Download className="h-4 w-4" aria-hidden="true" />
-                    Download CSV
-                </button>
+                <div className="flex flex-wrap items-center justify-end gap-x-3 gap-y-1">
+                    {exportError && (
+                        <span role="alert" className="text-xs leading-5 text-signal-red">
+                            {exportError}
+                        </span>
+                    )}
+                    <button
+                        type="button"
+                        onClick={() => void download()}
+                        disabled={counts[tab] === 0 || exporting}
+                        className={downloadButton}
+                    >
+                        {exporting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Download className="h-4 w-4" aria-hidden="true" />}
+                        {exporting ? 'Preparing CSV…' : 'Download CSV'}
+                    </button>
+                </div>
             </div>
 
             <div className={`mt-4 overflow-x-auto ${card}`} role="tabpanel">
@@ -568,7 +590,7 @@ export function AffiliateTables({ data }: { data: AffiliateDashboard }) {
                         openWindowsNote(data.totals?.open_windows ?? 0) +
                         "Emails are masked to protect your referrals' privacy. Sign-ups show up even before they buy."}
                 {tab === 'commissions' &&
-                    (data.commissions_truncated ? `Showing the newest ${commissions.length} entries. ` : '') +
+                    (data.commissions_truncated ? `Showing the newest ${commissions.length} entries; the CSV includes all of them. ` : '') +
                         'Commissions are calculated on what the customer paid after discounts and before tax.'}
                 {tab === 'payouts' &&
                     'The reference is the PayPal or Wise transaction we noted for each transfer. Each statement lists the commissions a payout covered and can be printed or saved as a PDF.'}
