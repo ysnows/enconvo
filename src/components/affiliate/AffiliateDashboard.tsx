@@ -24,12 +24,14 @@ import { AccountChanges, PayoutAccountNotice } from './AccountChanges'
 import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
+import { GettingStarted, startSteps } from './GettingStarted'
 import { card, CopyButton, fieldLabel, input, Notice, Pill } from './ui'
 
-// /affiliate for an approved (or suspended) Affiliate: its link and link builder, balances and
-// when pending money becomes payable, link results overall and per sub ID, payout method,
-// monthly statement, its referrals, commissions and payouts, the changes to its account, and the
-// promotion kit. An Affiliate that hasn't accepted the current program terms is asked to first.
+// /affiliate for an approved (or suspended) Affiliate: the first steps until its link earns, its
+// link and link builder, balances and when pending money becomes payable, link results overall
+// and per sub ID, payout method, monthly statement, its referrals, commissions and payouts, the
+// changes to its account, and the promotion kit. An Affiliate that hasn't accepted the current
+// program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -530,6 +532,9 @@ export function AffiliateDashboard({
     const affiliate = data.affiliate
     const suspended = affiliate.status === 'suspended'
     const payoutMethodSet = !!(affiliate.payout_method && affiliate.payout_account)
+    const termsAccepted = acceptedCurrentTerms(affiliate)
+    // A new Affiliate's steps cover the payout method, so the warning waits until the link earns.
+    const starting = !suspended && startSteps(data, termsAccepted) !== null
 
     return (
         <div className="space-y-6">
@@ -565,8 +570,8 @@ export function AffiliateDashboard({
                     this account if you have questions.
                 </Notice>
             )}
-            {!acceptedCurrentTerms(affiliate) && <TermsNotice affiliate={affiliate} accessToken={accessToken} onAccepted={onAffiliateChanged} />}
-            {!suspended && !payoutMethodSet && (
+            {!termsAccepted && <TermsNotice affiliate={affiliate} accessToken={accessToken} onAccepted={onAffiliateChanged} />}
+            {!suspended && !starting && !payoutMethodSet && (
                 <Notice
                     tone="warn"
                     title="Add where we should send your payouts"
@@ -580,6 +585,7 @@ export function AffiliateDashboard({
                 </Notice>
             )}
             <PayoutAccountNotice changes={data.account_changes} />
+            {starting && <GettingStarted data={data} termsAccepted={termsAccepted} />}
 
             <LinkCard code={affiliate.code} formerCodes={data.former_codes ?? []} promotionCode={affiliate.promotion_code ?? null} paused={suspended} />
             <Review data={data} />

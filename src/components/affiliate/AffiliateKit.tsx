@@ -54,7 +54,7 @@ export function AffiliateKit({ code }: { code: string }) {
     return (
         <section className={`${card} p-6`} aria-labelledby="affiliate-kit">
             <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
-                <h2 id="affiliate-kit" className="text-lg font-semibold text-content">
+                <h2 id="affiliate-kit" className="scroll-mt-28 text-lg font-semibold text-content">
                     Promotion kit
                 </h2>
                 <p className="text-sm text-content-muted">Images and text you can use. Your link is already in the text.</p>
