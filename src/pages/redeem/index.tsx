@@ -7,7 +7,7 @@ import { metaLabel, primaryButton } from '@/components/landing-styles'
 import { SiteNav } from '@/components/SiteNav'
 import { formatTrialCode, normalizeTrialCode } from '@/lib/trial-code'
 
-const TRIAL_CODE_LENGTH = 12
+const CODE_LENGTH = 12
 
 export default function RedeemPage() {
     const router = useRouter()
@@ -17,8 +17,8 @@ export default function RedeemPage() {
     function submit(event: FormEvent) {
         event.preventDefault()
         const code = normalizeTrialCode(value)
-        if (code.length !== TRIAL_CODE_LENGTH) {
-            setError('Trial codes have 12 letters and numbers, like ABCD-EFGH-JKMN.')
+        if (code.length !== CODE_LENGTH) {
+            setError('Codes have 12 letters and numbers, like ABCD-EFGH-JKMN.')
             return
         }
         void router.push(`/redeem/${formatTrialCode(code)}`)
@@ -27,22 +27,22 @@ export default function RedeemPage() {
     return (
         <>
             <Head>
-                <title>Redeem a trial code - Enconvo</title>
-                <meta name="description" content="Redeem an Enconvo trial code for a free month of the Plus Cloud plan." />
+                <title>Redeem a code - Enconvo</title>
+                <meta name="description" content="Redeem an Enconvo license code or trial code." />
             </Head>
             <div className="min-h-screen bg-canvas text-content">
                 <SiteNav />
                 <main className="mx-auto max-w-[1240px] px-6 pb-24 pt-36 lg:px-12">
-                    <p className={metaLabel}>Trial code</p>
+                    <p className={metaLabel}>Redeem</p>
                     <h1 className="mt-4 max-w-2xl text-4xl font-semibold leading-tight sm:text-5xl sm:leading-[1.1]">
-                        Redeem a trial code
+                        Redeem a code
                     </h1>
                     <p className="mt-5 max-w-xl text-base leading-7 text-content-body">
-                        Enter your code for a free month of the Plus Cloud plan.
+                        Enter a license code for a lifetime Enconvo license, or a trial code for a free month of the Plus Cloud plan.
                     </p>
                     <form onSubmit={submit} className="mt-8 flex max-w-xl flex-col gap-3 sm:flex-row" noValidate>
                         <label htmlFor="trial-code" className="sr-only">
-                            Trial code
+                            Code
                         </label>
                         <input
                             id="trial-code"

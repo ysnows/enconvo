@@ -39,12 +39,12 @@ export function startTrialCheckout(accessToken: string, code: string) {
 }
 
 /** Why a code can't be redeemed, for the redeem page. */
-export function unavailableCopy(status: TrialCodeStatus): { title: string; body: string } {
+export function unavailableCopy(status: TrialCodeStatus, kind: 'trial' | 'license' = 'trial'): { title: string; body: string } {
     switch (status) {
         case 'used':
-            return { title: 'This code has already been used', body: 'Each trial code works once.' }
+            return { title: 'This code has already been used', body: `Each ${kind} code works once.` }
         case 'expired':
-            return { title: 'This code has expired', body: 'Trial codes can only be redeemed until their end date.' }
+            return { title: 'This code has expired', body: 'Codes can only be redeemed until their end date.' }
         case 'disabled':
             return { title: 'This code is no longer active', body: 'It was turned off by Enconvo.' }
         default:

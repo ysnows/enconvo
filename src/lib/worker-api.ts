@@ -1,5 +1,5 @@
 // JSON routes on the Enconvo Worker (api.enconvo.com) that answer `{ code: 200, data }`
-// or `{ code, reason, message }`: Invites and Trial codes. Signed-in calls pass the
+// or `{ code, reason, message }`: Invites, Trial codes and License codes. Signed-in calls pass the
 // Supabase access token in the `accessToken` header.
 
 export const WORKER_API_ORIGIN = process.env.NEXT_PUBLIC_WORKER_API_ORIGIN || 'https://api.enconvo.com'
