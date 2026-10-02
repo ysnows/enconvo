@@ -65,7 +65,7 @@ function sections(terms: ProgramTerms) {
         {
             title: 'Pausing and ending',
             body: [
-                "We may pause your link or close your Affiliate account if you break these terms or if we see fraud or abuse. We review referrals that look like your own purchases. Commissions from referrals that broke these terms are voided: they are not paid, any already paid come off your next payout, and the referral's renewals earn nothing. While your link is paused, new payments do not earn a commission.",
+                "We may pause your link or close your Affiliate account if you break these terms or if we see fraud or abuse. We review referrals that look like your own purchases. Commissions from a referral that broke these terms are voided, for every purchase of that customer: they are not paid, any already paid come off your next payout, and the customer's later payments earn you nothing. While your link is paused, new payments do not earn a commission.",
                 'You can leave the program at any time by emailing us. Unless your account was closed for breaking these terms, we pay your remaining payable balance once it reaches the minimum.',
                 'We may change or end the program. Changes take effect when we publish them on this page; commissions already recorded are paid under the terms in place when they were earned. If we end the program we will pay every balance that becomes payable, regardless of the minimum.',
             ],

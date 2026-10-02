@@ -90,7 +90,7 @@ export interface AffiliateReferral {
     purchases: number
     paid: number
     commission: number
-    /** Voided: Enconvo took back the referral's commissions after review, and its renewals earn nothing. */
+    /** Voided: Enconvo took back the customer's commissions after review, and its later payments earn nothing. */
     status: 'signed_up' | 'customer' | 'refunded' | 'voided'
     /** The sub ID of the link the customer first came through. */
     sub: string | null
@@ -215,7 +215,7 @@ export interface AffiliateDashboard {
     totals?: { visitors: number; signups: number; customers: number; commission?: number; renewing?: number; open_windows?: number }
     balances?: AffiliateBalances
     /**
-     * The unpaid commissions in review: the referrals they belong to and their total in cents. `holds_payout` once one is
+     * The unpaid commissions in review: the referrals (customers) they belong to and their total in cents. `holds_payout` once one is
      * past its refund window, since no payout goes out until the review is done.
      */
     review?: { referrals: number; amount: number; holds_payout: boolean }
