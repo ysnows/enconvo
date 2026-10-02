@@ -147,6 +147,10 @@ export interface AffiliatePayout {
     method: PayoutMethod
     reference: string | null
     paid_at: string
+    /** Set when Enconvo cancelled the payout because the money never arrived; its entries went back to the balance. */
+    cancelled_at?: string | null
+    /** Why, in Enconvo's words. */
+    cancel_reason?: string | null
 }
 
 /** One payout with every ledger entry it settled. `added` plus `taken_back` (negative) is the payout's amount. */
@@ -439,6 +443,22 @@ export function recentPayoutAccountChange(changes: AffiliateAccountChange[] | un
     const change = changes?.find((c) => c.field === 'payout_account')
     if (!change?.old_value || !change.new_value) return null
     return now - Date.parse(change.changed_at) <= PAYOUT_CHANGE_NOTICE_DAYS * 86_400_000 ? change : null
+}
+
+/** The payouts that went out, newest first: a cancelled payout never arrived and pays nothing. */
+export function sentPayouts(payouts: AffiliatePayout[] | undefined): AffiliatePayout[] {
+    return (payouts ?? []).filter((payout) => !payout.cancelled_at)
+}
+
+/** How long the dashboard points out a cancelled payout. */
+export const CANCELLED_PAYOUT_NOTICE_DAYS = 30
+
+/** The latest payout Enconvo cancelled in the last {@link CANCELLED_PAYOUT_NOTICE_DAYS} days, so the Affiliate checks its payout account. */
+export function recentlyCancelledPayout(payouts: AffiliatePayout[] | undefined, now = Date.now()): AffiliatePayout | null {
+    const cancelled = (payouts ?? [])
+        .filter((payout) => payout.cancelled_at && now - Date.parse(payout.cancelled_at) <= CANCELLED_PAYOUT_NOTICE_DAYS * 86_400_000)
+        .sort((a, b) => Date.parse(b.cancelled_at as string) - Date.parse(a.cancelled_at as string))
+    return cancelled[0] ?? null
 }
 
 /** RFC 4180 CSV, with a byte order mark so spreadsheet apps read it as UTF-8. */

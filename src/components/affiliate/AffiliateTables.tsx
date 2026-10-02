@@ -131,8 +131,16 @@ function exportPayouts(code: string, rows: AffiliatePayout[]) {
     downloadCsv(
         `enconvo-affiliate-${code}-payouts.csv`,
         toCsv(
-            ['Paid', 'Amount (USD)', 'Method', 'Reference'],
-            rows.map((row) => [isoDay(row.paid_at), dollars(row.amount), PAYOUT_METHOD_LABEL[row.method] ?? row.method, row.reference ?? '']),
+            ['Paid', 'Amount (USD)', 'Method', 'Reference', 'Status', 'Cancelled', 'Cancel reason'],
+            rows.map((row) => [
+                isoDay(row.paid_at),
+                dollars(row.amount),
+                PAYOUT_METHOD_LABEL[row.method] ?? row.method,
+                row.reference ?? '',
+                row.cancelled_at ? 'cancelled' : 'sent',
+                row.cancelled_at ? isoDay(row.cancelled_at) : '',
+                row.cancel_reason ?? '',
+            ]),
         ),
     )
 }
@@ -669,9 +677,30 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                             <tbody className="divide-y divide-hairline">
                                 {payouts.map((row) => (
                                     <tr key={row.id}>
-                                        <td className={td}>{formatDay(row.paid_at)}</td>
-                                        <td className={`${td} ${num} font-medium text-content`}>{formatCents(row.amount)}</td>
-                                        <td className={td}>{PAYOUT_METHOD_LABEL[row.method] ?? row.method}</td>
+                                        <td className={td}>
+                                            {formatDay(row.paid_at)}
+                                            {row.cancelled_at && (
+                                                <span className="mt-1 block whitespace-normal">
+                                                    <Pill tone="yellow">Cancelled {formatDay(row.cancelled_at)}</Pill>
+                                                </span>
+                                            )}
+                                        </td>
+                                        <td className={`${td} ${num} font-medium ${row.cancelled_at ? 'text-content-muted' : 'text-content'}`}>
+                                            {row.cancelled_at ? (
+                                                <s>
+                                                    <span className="sr-only">Cancelled, </span>
+                                                    {formatCents(row.amount)}
+                                                </s>
+                                            ) : (
+                                                formatCents(row.amount)
+                                            )}
+                                        </td>
+                                        <td className={td}>
+                                            {PAYOUT_METHOD_LABEL[row.method] ?? row.method}
+                                            {row.cancel_reason && (
+                                                <span className="mt-1 block min-w-[200px] max-w-[260px] whitespace-normal text-xs leading-5 text-content-muted">{row.cancel_reason}</span>
+                                            )}
+                                        </td>
                                         <td className={`${td} font-mono`}>{row.reference || '—'}</td>
                                         <td className={`${td} text-right`}>
                                             <Link
@@ -703,7 +732,10 @@ export function AffiliateTables({ data, accessToken }: { data: AffiliateDashboar
                     (data.commissions_truncated ? `Showing the newest ${commissions.length} entries; the CSV includes all of them. ` : '') +
                         'Commissions are calculated on what the customer paid after discounts and before tax.'}
                 {tab === 'payouts' &&
-                    'The reference is the PayPal or Wise transaction we noted for each transfer. Each statement lists the commissions a payout covered and can be printed or saved as a PDF.'}
+                    'The reference is the PayPal or Wise transaction we noted for each transfer. Each statement lists the commissions a payout covered and can be printed or saved as a PDF.' +
+                        (payouts.some((row) => row.cancelled_at)
+                            ? ' A cancelled payout never reached you: the commissions it covered went back to your balance, and a later payout sends them.'
+                            : '')}
             </p>
         </section>
     )

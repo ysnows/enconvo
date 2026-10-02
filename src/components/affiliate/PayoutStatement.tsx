@@ -3,7 +3,9 @@ import { dollars, isoDay, KIND_LABEL, signed } from './AffiliateTables'
 import { card } from './ui'
 
 // A payout statement: who was paid, how, and every commission, refund and adjustment the payout
-// settled. On paper (or a saved PDF) it prints black on white, without the site around it.
+// settled. On paper (or a saved PDF) it prints black on white, without the site around it. A payout
+// Enconvo cancelled because the money never arrived keeps its statement, which then lists no entries:
+// they went back to the balance for a later payout.
 
 const ISSUER = 'THE GREAT LIONHEART PTE. LTD.'
 
@@ -51,6 +53,7 @@ function Fact({ label, children }: { label: string; children: React.ReactNode })
 
 export function PayoutStatement({ data }: { data: AffiliatePayoutStatement }) {
     const { affiliate, payout, entries, totals } = data
+    const cancelled = !!payout.cancelled_at
     return (
         <article className={`${card} p-5 sm:p-10 print:rounded-none print:border-0 print:bg-transparent print:p-0`}>
             <header className={`flex flex-col gap-6 border-b pb-8 sm:flex-row sm:items-start sm:justify-between ${rule}`}>
@@ -67,9 +70,17 @@ export function PayoutStatement({ data }: { data: AffiliatePayoutStatement }) {
                 </div>
             </header>
 
+            {payout.cancelled_at && (
+                <div role="status" className="mt-8 rounded-lg border border-[#4A3D1C] bg-[#2A2313] p-4 text-sm leading-6 print:border-neutral-400 print:bg-transparent">
+                    <p className="font-medium text-signal-yellow print:text-black">Cancelled on {formatDay(payout.cancelled_at)}: this payout never reached you.</p>
+                    {payout.cancel_reason && <p className={ink}>{payout.cancel_reason}</p>}
+                    <p className={body}>The commissions it covered went back to your balance, and a later payout sends them. This statement stays for your records.</p>
+                </div>
+            )}
+
             <dl className={`grid gap-6 border-b py-8 sm:grid-cols-2 lg:grid-cols-4 print:grid-cols-4 ${rule}`}>
-                <Fact label="Amount paid">
-                    <span className={`text-2xl font-semibold tabular-nums ${ink}`}>{formatCents(payout.amount)}</span>
+                <Fact label={cancelled ? 'Amount, cancelled' : 'Amount paid'}>
+                    <span className={`text-2xl font-semibold tabular-nums ${cancelled ? `line-through ${muted}` : ink}`}>{formatCents(payout.amount)}</span>
                     <span className={`ml-1.5 text-xs uppercase ${muted}`}>{payout.currency}</span>
                 </Fact>
                 <Fact label="Paid to">
@@ -96,50 +107,56 @@ export function PayoutStatement({ data }: { data: AffiliatePayoutStatement }) {
                 </Fact>
             </dl>
 
-            <div className="-mx-5 overflow-x-auto pt-4 sm:mx-0 print:mx-0 print:overflow-visible">
-                <table className="w-full min-w-[640px] print:min-w-0">
-                    <thead className={`border-b ${rule}`}>
-                        <tr>
-                            <th className={`${th} pl-5 sm:pl-0 print:pl-0`}>Date</th>
-                            <th className={th}>Customer or note</th>
-                            <th className={th}>Kind</th>
-                            <th className={`${th} ${num}`}>Paid before tax</th>
-                            <th className={`${th} ${num} pr-5 sm:pr-0 print:pr-0`}>Commission</th>
-                        </tr>
-                    </thead>
-                    <tbody className="divide-y divide-hairline print:divide-neutral-200">
-                        {entries.map((row) => {
-                            const adjustment = row.kind === 'adjustment'
-                            return (
-                                <tr key={row.id} className="break-inside-avoid">
-                                    <td className={`${td} pl-5 sm:pl-0 print:pl-0`}>{formatDay(row.earned_at)}</td>
-                                    {adjustment ? (
-                                        <td className={`min-w-[200px] max-w-[320px] break-words px-4 py-3 text-sm print:px-2 print:py-2 ${ink}`}>{row.note || '—'}</td>
-                                    ) : (
-                                        <td className={`${td} font-mono ${ink}`}>{row.customer}</td>
-                                    )}
-                                    <td className={td}>
-                                        {KIND_LABEL[row.kind] ?? row.kind}
-                                        {row.plan && <span className={muted}> · {planLabel(row.plan)}</span>}
-                                    </td>
-                                    <td className={`${td} ${num}`}>{adjustment ? '—' : formatCents(Math.abs(row.base_amount))}</td>
-                                    <td
-                                        className={`${td} ${num} pr-5 font-medium sm:pr-0 print:pr-0 print:text-black ${row.amount < 0 ? 'text-signal-yellow' : 'text-signal-green'}`}
-                                    >
-                                        {signed(row.amount)}
-                                        {!adjustment && <span className={`ml-1 text-xs font-normal ${muted}`}>{row.rate}%</span>}
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-            </div>
+            {entries.length === 0 ? (
+                <p className={`py-6 text-sm leading-6 ${muted}`}>
+                    {cancelled ? 'No entries: the payout was cancelled and they went back to your balance.' : 'No entries.'}
+                </p>
+            ) : (
+                <div className="-mx-5 overflow-x-auto pt-4 sm:mx-0 print:mx-0 print:overflow-visible">
+                    <table className="w-full min-w-[640px] print:min-w-0">
+                        <thead className={`border-b ${rule}`}>
+                            <tr>
+                                <th className={`${th} pl-5 sm:pl-0 print:pl-0`}>Date</th>
+                                <th className={th}>Customer or note</th>
+                                <th className={th}>Kind</th>
+                                <th className={`${th} ${num}`}>Paid before tax</th>
+                                <th className={`${th} ${num} pr-5 sm:pr-0 print:pr-0`}>Commission</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-hairline print:divide-neutral-200">
+                            {entries.map((row) => {
+                                const adjustment = row.kind === 'adjustment'
+                                return (
+                                    <tr key={row.id} className="break-inside-avoid">
+                                        <td className={`${td} pl-5 sm:pl-0 print:pl-0`}>{formatDay(row.earned_at)}</td>
+                                        {adjustment ? (
+                                            <td className={`min-w-[200px] max-w-[320px] break-words px-4 py-3 text-sm print:px-2 print:py-2 ${ink}`}>{row.note || '—'}</td>
+                                        ) : (
+                                            <td className={`${td} font-mono ${ink}`}>{row.customer}</td>
+                                        )}
+                                        <td className={td}>
+                                            {KIND_LABEL[row.kind] ?? row.kind}
+                                            {row.plan && <span className={muted}> · {planLabel(row.plan)}</span>}
+                                        </td>
+                                        <td className={`${td} ${num}`}>{adjustment ? '—' : formatCents(Math.abs(row.base_amount))}</td>
+                                        <td
+                                            className={`${td} ${num} pr-5 font-medium sm:pr-0 print:pr-0 print:text-black ${row.amount < 0 ? 'text-signal-yellow' : 'text-signal-green'}`}
+                                        >
+                                            {signed(row.amount)}
+                                            {!adjustment && <span className={`ml-1 text-xs font-normal ${muted}`}>{row.rate}%</span>}
+                                        </td>
+                                    </tr>
+                                )
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             <dl className={`ml-auto mt-2 w-full max-w-sm border-t pt-4 text-sm sm:max-w-md ${rule}`}>
                 <div className="flex justify-between gap-6 py-1.5">
                     <dt className={body}>Commissions and bonuses</dt>
-                    <dd className={`whitespace-nowrap tabular-nums ${ink}`}>{signed(totals.added)}</dd>
+                    <dd className={`whitespace-nowrap tabular-nums ${ink}`}>{totals.added !== 0 ? signed(totals.added) : formatCents(0)}</dd>
                 </div>
                 <div className="flex justify-between gap-6 py-1.5">
                     <dt className={body}>Refunds, chargebacks and deductions</dt>
@@ -147,7 +164,7 @@ export function PayoutStatement({ data }: { data: AffiliatePayoutStatement }) {
                 </div>
                 <div className={`mt-2 flex justify-between gap-6 border-t pt-3 ${rule}`}>
                     <dt className={`font-semibold ${ink}`}>Total paid</dt>
-                    <dd className={`whitespace-nowrap text-base font-semibold tabular-nums ${ink}`}>{formatCents(payout.amount)}</dd>
+                    <dd className={`whitespace-nowrap text-base font-semibold tabular-nums ${ink}`}>{formatCents(cancelled ? 0 : payout.amount)}</dd>
                 </div>
             </dl>
 

@@ -14,7 +14,9 @@ import {
     formatUtcDay,
     LINK_PAGES,
     PAYOUT_METHOD_LABEL,
+    recentlyCancelledPayout,
     savePayoutMethod,
+    sentPayouts,
     SUPPORT_EMAIL,
     type AffiliateApplication,
     type AffiliateDashboard as Dashboard,
@@ -213,10 +215,31 @@ function Review({ data }: { data: Dashboard }) {
     )
 }
 
+/** A payout Enconvo cancelled lately: the money never arrived, so the Affiliate should check where it goes. */
+export function CancelledPayoutNotice({ data }: { data: Dashboard }) {
+    const payout = recentlyCancelledPayout(data.payouts)
+    if (!payout) return null
+    return (
+        <Notice
+            tone="warn"
+            title={`We cancelled your ${formatCents(payout.amount)} payout of ${formatDay(payout.paid_at)}`}
+            action={
+                <a href="#payout" className="flex-none text-sm font-medium text-signal-blue hover:underline">
+                    Check payout method
+                </a>
+            }
+        >
+            {payout.cancel_reason && <span className="block text-content-body">{payout.cancel_reason}</span>}
+            The commissions it covered are back in your balance, and a later payout sends them. Check that your payout method is right;
+            questions go to <a href={`mailto:${SUPPORT_EMAIL}`} className="text-signal-blue hover:underline">{SUPPORT_EMAIL}</a>.
+        </Notice>
+    )
+}
+
 function Balances({ data, payoutMethodSet }: { data: Dashboard; payoutMethodSet: boolean }) {
     const b = data.balances
     const minimum = data.program.minimum_payout
-    const last = data.payouts?.[0]
+    const last = sentPayouts(data.payouts)[0]
     const net = b.earned - b.reversed
     const short = minimum - b.payable
     const tiles = [
@@ -690,6 +713,7 @@ export function AffiliateDashboard({
                 </Notice>
             )}
             <PayoutAccountNotice changes={data.account_changes} />
+            <CancelledPayoutNotice data={data} />
             <Announcement announcement={data.announcement} />
             {starting && <GettingStarted data={data} termsAccepted={termsAccepted} />}
             <SinceLastVisit data={data} />

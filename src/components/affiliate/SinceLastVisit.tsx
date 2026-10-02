@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { formatCents, type AffiliateDashboard } from '@/lib/affiliate-program'
+import { formatCents, sentPayouts, type AffiliateDashboard } from '@/lib/affiliate-program'
 import { card } from './ui'
 
 // What changed on /affiliate since the Affiliate last opened it in this browser: new referrals,
@@ -55,7 +55,7 @@ export function visitNews(data: AffiliateDashboard, since: string): VisitNews | 
     const after = (value: string) => Date.parse(value) > from
     const referrals = (data.referrals ?? []).filter((row) => after(row.joined_at))
     const entries = (data.commissions ?? []).filter((entry) => after(entry.earned_at))
-    const payouts = (data.payouts ?? []).filter((payout) => after(payout.paid_at))
+    const payouts = sentPayouts(data.payouts).filter((payout) => after(payout.paid_at))
     const earned = entries.filter((entry) => entry.amount > 0)
     const news: VisitNews = {
         referrals: referrals.length,
