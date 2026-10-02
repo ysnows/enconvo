@@ -73,7 +73,16 @@ export function PayoutStatement({ data }: { data: AffiliatePayoutStatement }) {
                     <span className={`ml-1.5 text-xs uppercase ${muted}`}>{payout.currency}</span>
                 </Fact>
                 <Fact label="Paid to">
-                    <span className={`block font-medium ${ink}`}>{affiliate.name || affiliate.code}</span>
+                    {payout.billing_details ? (
+                        // The first line is the name, as without billing details; a blank line stays one.
+                        payout.billing_details.split('\n').map((line, i) => (
+                            <span key={i} className={`block ${i === 0 ? 'font-medium' : ''} ${ink}`}>
+                                {line || '\u00a0'}
+                            </span>
+                        ))
+                    ) : (
+                        <span className={`block font-medium ${ink}`}>{affiliate.name || affiliate.code}</span>
+                    )}
                     <span className={`block ${muted}`}>
                         Affiliate code <span className="font-mono">{affiliate.code}</span>
                     </span>

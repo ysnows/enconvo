@@ -32,6 +32,7 @@ import { GettingStarted, startSteps } from './GettingStarted'
 import { LatestVisits } from './LatestVisits'
 import { LinkQr } from './LinkQr'
 import { ProfileCard } from './ProfileCard'
+import { BillingDetails } from './BillingDetails'
 import { SinceLastVisit } from './SinceLastVisit'
 import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from './ui'
 
@@ -715,6 +716,7 @@ export function AffiliateDashboard({
             <AffiliateMonths data={data} />
             <AffiliateTables data={data} accessToken={accessToken} />
             <ProfileCard affiliate={affiliate} accessToken={accessToken} onSaved={onAffiliateChanged} />
+            <BillingDetails affiliate={affiliate} accessToken={accessToken} onSaved={onAffiliateChanged} />
             <AccountChanges data={data} />
             {!suspended && <AffiliateKit code={affiliate.code} />}
         </div>

@@ -58,6 +58,8 @@ export interface AffiliateApplication {
     promotion_plan: string | null
     payout_method: PayoutMethod | null
     payout_account: string | null
+    /** The name, address and tax ID for payout statements, as lines of text; null for none. A Worker from before them leaves it out. */
+    billing_details?: string | null
     applied_at: string
     approved_at: string | null
     /** The AFFILIATE_TERMS_VERSION the account last accepted; null when it never did, or applied before versions were kept. */
@@ -150,7 +152,8 @@ export interface AffiliatePayout {
 /** One payout with every ledger entry it settled. `added` plus `taken_back` (negative) is the payout's amount. */
 export interface AffiliatePayoutStatement {
     affiliate: { name: string | null; code: string }
-    payout: AffiliatePayout & { account: string }
+    /** `billing_details` is what the Affiliate had when the payout was recorded; null for none. */
+    payout: AffiliatePayout & { account: string; billing_details?: string | null }
     /** Newest first; cut short at 1,000, while the totals still cover every entry and the CSV fetches the rest. */
     entries: AffiliateCommission[]
     entries_truncated: boolean
@@ -520,6 +523,14 @@ export interface ProfileInput {
 /** Name, audience and promotion plan are required, as in an application; an empty website removes it. */
 export function saveAffiliateProfile(accessToken: string, profile: ProfileInput) {
     return workerPost<AffiliateApplication>('/api/affiliate/profile', accessToken, profile)
+}
+
+export const BILLING_MAX_LENGTH = 500
+export const BILLING_MAX_LINES = 8
+
+/** The billing details for statements of payouts recorded from now on; empty removes them. */
+export function saveBillingDetails(accessToken: string, billing_details: string) {
+    return workerPost<AffiliateApplication>('/api/affiliate/billing', accessToken, { billing_details })
 }
 
 /** An approved Affiliate's new link code, once every 30 days; the old code keeps crediting it. */
