@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { useState, type FormEvent } from 'react'
-import { Loader2 } from 'lucide-react'
+import { Loader2, QrCode } from 'lucide-react'
 import {
     acceptAffiliateTerms,
     AFFILIATE_TERMS_VERSION,
@@ -25,13 +25,14 @@ import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
 import { GettingStarted, startSteps } from './GettingStarted'
+import { LinkQr } from './LinkQr'
 import { SinceLastVisit } from './SinceLastVisit'
-import { card, CopyButton, fieldLabel, input, Notice, Pill } from './ui'
+import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from './ui'
 
 // /affiliate for an approved (or suspended) Affiliate: the first steps until its link earns, what
-// changed since its last visit, its link and link builder, balances and when pending money
-// becomes payable, link results overall and per sub ID, payout method, monthly statement, its
-// referrals, commissions and payouts, the changes to its account, and the promotion kit. An
+// changed since its last visit, its link, link builder and QR code, balances and when pending
+// money becomes payable, link results overall and per sub ID, payout method, monthly statement,
+// its referrals, commissions and payouts, the changes to its account, and the promotion kit. An
 // Affiliate that hasn't accepted the current program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -39,6 +40,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 function LinkCard({ code, formerCodes, promotionCode, paused }: { code: string; formerCodes: string[]; promotionCode: string | null; paused: boolean }) {
     const [path, setPath] = useState<string>('/')
     const [subInput, setSubInput] = useState('')
+    const [qrOpen, setQrOpen] = useState(false)
     const sub = affiliateSub(subInput)
     const subInvalid = subInput.trim() !== '' && !sub
     const link = affiliateLink(code)
@@ -129,7 +131,25 @@ function LinkCard({ code, formerCodes, promotionCode, paused }: { code: string; 
                             <span className="min-w-0 flex-1 truncate py-2.5 font-mono text-sm text-content-body">{built}</span>
                         </div>
                         <CopyButton text={built} label="Copy" />
+                        <button
+                            type="button"
+                            onClick={() => setQrOpen(!qrOpen)}
+                            aria-expanded={qrOpen}
+                            aria-controls="affiliate-qr"
+                            className={toolButton}
+                        >
+                            <QrCode className="h-4 w-4" aria-hidden="true" />
+                            QR code
+                        </button>
                     </div>
+                    {qrOpen && (
+                        <LinkQr
+                            id="affiliate-qr"
+                            link={built}
+                            sub={sub}
+                            fileName={['enconvo', code, path.replace(/^\/+|\/+$/g, '').replace(/\//g, '-'), sub, 'qr'].filter(Boolean).join('-')}
+                        />
+                    )}
                 </div>
             )}
         </section>

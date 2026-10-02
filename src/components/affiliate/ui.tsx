@@ -28,6 +28,10 @@ export async function copyText(text: string) {
     }
 }
 
+/** The small bordered button beside a link: copy, QR code, download. */
+export const toolButton =
+    'inline-flex min-h-[40px] flex-none items-center justify-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition-colors hover:border-hairline-strong hover:bg-white/[0.06] disabled:pointer-events-none disabled:opacity-50'
+
 /** A copy button that says "Copied" for two seconds. */
 export function CopyButton({ text, label = 'Copy link', className = '' }: { text: string; label?: string; className?: string }) {
     const [copied, setCopied] = useState(false)
@@ -40,7 +44,7 @@ export function CopyButton({ text, label = 'Copy link', className = '' }: { text
         <button
             type="button"
             onClick={async () => setCopied(await copyText(text))}
-            className={`inline-flex min-h-[40px] flex-none items-center justify-center gap-2 rounded-lg border border-hairline bg-surface-elevated px-4 text-sm font-medium text-content transition-colors hover:border-hairline-strong hover:bg-white/[0.06] ${className}`}
+            className={`${toolButton} ${className}`}
         >
             {copied ? <Check className="h-4 w-4 text-signal-green" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
             <span aria-live="polite">{copied ? 'Copied' : label}</span>

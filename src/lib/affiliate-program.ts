@@ -401,7 +401,11 @@ export function toCsv(header: string[], rows: (string | number | null | undefine
 }
 
 export function downloadCsv(filename: string, csv: string) {
-    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+    downloadBlob(filename, new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+}
+
+export function downloadBlob(filename: string, blob: Blob) {
+    const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
     anchor.download = filename
