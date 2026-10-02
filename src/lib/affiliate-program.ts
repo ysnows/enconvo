@@ -237,6 +237,21 @@ export interface AffiliateDashboard {
     /** The latest 20 changes to the account, newest first (kept since Oct 2, 2026). */
     account_changes?: AffiliateAccountChange[]
     account_changes_truncated?: boolean
+    /** The program's announcement, null for none. */
+    announcement?: AffiliateAnnouncement | null
+}
+
+/** One notice from Enconvo for every Affiliate, such as when this month's payouts go out. */
+export interface AffiliateAnnouncement {
+    /** New for each posted announcement; an edit keeps it. */
+    id: string
+    title: string
+    /** Plain text with line breaks. */
+    body: string
+    /** The last UTC day it shows, or null until it's removed. */
+    ends_on: string | null
+    posted_at: string
+    edited_at: string | null
 }
 
 /**

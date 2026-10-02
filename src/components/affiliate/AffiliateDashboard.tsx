@@ -21,6 +21,7 @@ import {
     type PayoutMethod,
 } from '@/lib/affiliate-program'
 import { AccountChanges, PayoutAccountNotice } from './AccountChanges'
+import { Announcement } from './Announcement'
 import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
 import { AffiliateTraffic } from './AffiliateTraffic'
@@ -29,11 +30,12 @@ import { LinkQr } from './LinkQr'
 import { SinceLastVisit } from './SinceLastVisit'
 import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from './ui'
 
-// /affiliate for an approved (or suspended) Affiliate: the first steps until its link earns, what
-// changed since its last visit, its link, link builder and QR code, balances and when pending
-// money becomes payable, link results overall and per sub ID, payout method, monthly statement,
-// its referrals, commissions and payouts, the changes to its account, and the promotion kit. An
-// Affiliate that hasn't accepted the current program terms is asked to first.
+// /affiliate for an approved (or suspended) Affiliate: the program's announcement, the first steps
+// until its link earns, what changed since its last visit, its link, link builder and QR code,
+// balances and when pending money becomes payable, link results overall and per sub ID, payout
+// method, monthly statement, its referrals, commissions and payouts, the changes to its account,
+// and the promotion kit. An Affiliate that hasn't accepted the current program terms is asked to
+// first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -613,6 +615,7 @@ export function AffiliateDashboard({
                 </Notice>
             )}
             <PayoutAccountNotice changes={data.account_changes} />
+            <Announcement announcement={data.announcement} />
             {starting && <GettingStarted data={data} termsAccepted={termsAccepted} />}
             <SinceLastVisit data={data} />
 
