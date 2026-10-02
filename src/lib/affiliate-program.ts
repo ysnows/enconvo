@@ -51,10 +51,11 @@ export interface AffiliateApplication {
     /** A promotion code we linked to the Affiliate, lowercase; customers who enter it at checkout count as theirs. */
     promotion_code: string | null
     commission_rate: number
-    name: string
+    /** The profile from the application, which the Affiliate can edit; null for an Affiliate an admin added. */
+    name: string | null
     website: string | null
-    audience: string
-    promotion_plan: string
+    audience: string | null
+    promotion_plan: string | null
     payout_method: PayoutMethod | null
     payout_account: string | null
     applied_at: string
@@ -473,4 +474,16 @@ export function acceptAffiliateTerms(accessToken: string) {
 
 export function savePayoutMethod(accessToken: string, payout_method: PayoutMethod, payout_account: string) {
     return workerPost<AffiliateApplication>('/api/affiliate/payout_method', accessToken, { payout_method, payout_account })
+}
+
+export interface ProfileInput {
+    name: string
+    website: string
+    audience: string
+    promotion_plan: string
+}
+
+/** Name, audience and promotion plan are required, as in an application; an empty website removes it. */
+export function saveAffiliateProfile(accessToken: string, profile: ProfileInput) {
+    return workerPost<AffiliateApplication>('/api/affiliate/profile', accessToken, profile)
 }
