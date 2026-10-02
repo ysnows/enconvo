@@ -35,7 +35,7 @@ function sections(terms: ProgramTerms) {
                 `A visitor becomes your referral when they open your link and then pay within ${terms.cookie_days} days on the same browser. If they open another Affiliate's link before paying, the most recent link gets the referral.`,
                 `Someone who signs up or signs in to Enconvo after opening your link also stays your referral for ${terms.cookie_days} days from their latest sign-up or sign-in through it, so a purchase in the app or on another device still counts, unless they come through another Affiliate's link in between. Your dashboard shows until when each sign-up can still earn you commission.`,
                 'Renewals and upgrades of a plan bought through your link stay yours for as long as the customer keeps paying.',
-                'Tracking relies on a first-party cookie. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited, and we cannot add them by hand.',
+                'Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited, and we cannot add them by hand.',
             ],
         },
         {
