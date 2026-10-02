@@ -136,7 +136,7 @@ export function AffiliateFaq({ terms }: { terms: ProgramTerms }) {
     const faqs = [
         {
             q: 'What counts as a referral?',
-            a: `Anyone who opens your link and pays on enconvo.com within ${terms.cookie_days} days, on the same browser. Licenses, extra seats, Cloud plans and their renewals, and Cloud points packs all earn a commission. If they later open another Affiliate's link, the newest link wins.`,
+            a: `Anyone who opens your link and pays on enconvo.com within ${terms.cookie_days} days, on the same browser. Licenses, extra seats, Cloud plans and their renewals, and Cloud points packs all earn a commission, and the customer stays yours for their later purchases. If they buy through another Affiliate's link, the newest link wins.`,
         },
         {
             q: 'When do I get paid?',

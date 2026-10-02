@@ -345,8 +345,8 @@ export function AffiliateMonths({ data }: { data: AffiliateDashboard }) {
             </div>
             <p className="px-6 pb-5 pt-3 text-xs leading-5 text-content-ash">
                 Months are in UTC. A commission counts in the month of the payment, and a refund, dispute, voided referral or
-                adjustment in the month it happened, so a month&apos;s net can be negative. Purchases are first payments; renewals
-                and bonuses add to earned.
+                adjustment in the month it happened, so a month&apos;s net can be negative. Purchases count every checkout, a customer&apos;s later ones
+                included; renewals and bonuses add to earned.
             </p>
         </section>
     )
