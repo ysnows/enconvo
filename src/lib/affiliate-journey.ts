@@ -170,6 +170,23 @@ export function affiliateMetadata(journey: AffiliateJourney | null): Record<stri
 }
 
 /** Record the Checkout step. Bookkeeping only: it gives up after `timeoutMs` and never throws. */
+/** The promotion code of the Affiliate whose link brought this journey, for its Checkout; null for none or no answer in time. */
+export async function affiliatePromotionCode(accessToken: string | undefined, journey: AffiliateJourney | null, timeoutMs = 1500): Promise<string | null> {
+  if (!journey || !accessToken) return null
+  try {
+    const result = await workerRequest<{ promotion_code: string | null }>('/api/affiliate/discount', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', accessToken },
+      body: JSON.stringify({ visitor: journey.visitor }),
+      signal: AbortSignal.timeout(timeoutMs),
+    })
+    return result.ok ? result.data.promotion_code : null
+  } catch {
+    // The Checkout opens with the promotion code box instead.
+    return null
+  }
+}
+
 export async function reportAffiliateCheckout(accessToken: string | undefined, journey: AffiliateJourney | null, session: string | undefined, plan: string, timeoutMs = 1500) {
   if (!journey || !accessToken || !session) return
   try {

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { withAuth } from '@/utils/auth';
-import { affiliateJourneyFrom, affiliateMetadata, reportAffiliateCheckout } from '@/lib/affiliate-journey';
+import { affiliateJourneyFrom, affiliateMetadata, affiliatePromotionCode, reportAffiliateCheckout } from '@/lib/affiliate-journey';
+import { affiliateDiscounts, isInvalidRequest } from '@/lib/affiliate-discount';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const PRICE_IDS = {
@@ -99,9 +100,17 @@ async function handler(req, res) {
       }
     }
 
-    session_data.allow_promotion_codes = true;
-
-    const session = await stripe.checkout.sessions.create(session_data);
+    // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied;
+    // everyone else can type one. Stripe takes one or the other, never both.
+    const discounts = await affiliateDiscounts(stripe, await affiliatePromotionCode(req.accessToken, journey), line_items);
+    let session: Stripe.Checkout.Session;
+    try {
+      session = await stripe.checkout.sessions.create(discounts ? { ...session_data, discounts } : { ...session_data, allow_promotion_codes: true });
+    } catch (err) {
+      if (!discounts || !isInvalidRequest(err)) throw err;
+      console.warn('Affiliate promotion code refused at Checkout:', err.message);
+      session = await stripe.checkout.sessions.create({ ...session_data, allow_promotion_codes: true });
+    }
     await reportAffiliateCheckout(req.accessToken, journey, session.id, lookupKey);
 
     res.json({ url: session.url });

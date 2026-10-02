@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Mail, Share2 } from 'lucide-react'
-import { affiliateLink } from '@/lib/affiliate-program'
+import { affiliateLink, affiliateShortLink } from '@/lib/affiliate-program'
 import { toolButton } from './ui'
 
 // One-click sharing in the promotion kit. Each button opens a post with the kit's short post and
 // the disclosure, and tags the link with the network as its sub ID, so the link results show which
-// network brings customers. Only networks that keep the link exactly as written are offered:
-// Facebook and LinkedIn credit a share to the page's canonical URL (og:url), which has no `?via=`.
+// network brings customers. Facebook and LinkedIn take only a link, and credit it to the og:url of
+// the page it lands on, so they get the short link (src/pages/go keeps og:url on it) and the post
+// and disclosure go to the clipboard for pasting.
 
 const NETWORKS = [
     { sub: 'x', label: 'X', url: (text: string) => `https://x.com/intent/post?text=${encodeURIComponent(text)}` },
@@ -14,13 +15,19 @@ const NETWORKS = [
     { sub: 'bluesky', label: 'Bluesky', url: (text: string) => `https://bsky.app/intent/compose?text=${encodeURIComponent(text)}` },
 ] as const
 
+const LINK_NETWORKS = [
+    { sub: 'facebook', label: 'Facebook', url: (link: string) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}` },
+    { sub: 'linkedin', label: 'LinkedIn', url: (link: string) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}` },
+] as const
+
 const SUBJECT = 'Enconvo, an AI assistant for Mac'
 
 export function ShareButtons({ code, post, disclosure }: { code: string; post: (link: string) => string; disclosure: string }) {
-    const text = (sub: string) => `${post(affiliateLink(code, '/', sub))}\n\n${disclosure}`
+    const text = (sub: string, link = affiliateLink(code, '/', sub)) => `${post(link)}\n\n${disclosure}`
     // The share sheet exists only in some browsers, so it's offered after mounting to keep the first render the same as the server's.
     const [canShare, setCanShare] = useState(false)
     useEffect(() => setCanShare(typeof navigator.share === 'function'), [])
+    const [copiedFor, setCopiedFor] = useState<string | null>(null)
 
     return (
         <div className="mt-6 border-t border-hairline pt-4">
@@ -35,6 +42,27 @@ export function ShareButtons({ code, post, disclosure }: { code: string; post: (
                         {network.label}
                     </a>
                 ))}
+                {LINK_NETWORKS.map((network) => {
+                    const link = affiliateShortLink(code, network.sub)
+                    return (
+                        <a
+                            key={network.sub}
+                            href={network.url(link)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => {
+                                // The post opens either way; without clipboard access the kit's copy buttons remain.
+                                navigator.clipboard
+                                    ?.writeText(text(network.sub, link))
+                                    .then(() => setCopiedFor(network.label))
+                                    .catch(() => {})
+                            }}
+                            className={toolButton}
+                        >
+                            {network.label}
+                        </a>
+                    )
+                })}
                 <a href={`mailto:?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(text('email'))}`} className={toolButton}>
                     <Mail className="h-4 w-4" aria-hidden="true" />
                     Email
@@ -53,6 +81,11 @@ export function ShareButtons({ code, post, disclosure }: { code: string; post: (
                     </button>
                 )}
             </div>
+            <p role="status" className="mt-2 text-xs leading-5 text-content-muted">
+                {copiedFor
+                    ? `Post and disclosure copied: paste them into your ${copiedFor} post.`
+                    : 'Facebook and LinkedIn open with your link only, and copy the post and disclosure for you to paste.'}
+            </p>
         </div>
     )
 }
