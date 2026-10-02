@@ -43,7 +43,7 @@ const defaultNav: NavigationItem[] = [
   { name: 'Pricing', href: '/#pricing' },
   { name: 'Docs', href: 'https://docs.enconvo.ai/' },
   { name: 'Releases', href: '/changelog' },
-  { name: 'Affiliate', href: 'https://affiliate.enconvo.com/' },
+  { name: 'Affiliate', href: '/affiliate' },
   { name: 'Log in', href: '/login' },
 ]
 
@@ -61,7 +61,7 @@ export function SiteNav() {
           { name: 'Pricing', href: '/#pricing' },
           { name: 'Docs', href: 'https://docs.enconvo.ai/' },
           { name: 'Releases', href: '/changelog' },
-          { name: 'Affiliate', href: 'https://affiliate.enconvo.com/' },
+          { name: 'Affiliate', href: '/affiliate' },
           { name: 'Privacy', href: '/privacy' },
           { name: data.session.user.user_metadata.name, href: '/account' },
         ])
