@@ -19,6 +19,7 @@ import {
     type AffiliateApplication,
     type AffiliateDashboard as Dashboard,
     type AffiliateDay,
+    type AffiliatePeriod,
     type PayoutMethod,
 } from '@/lib/affiliate-program'
 import { AccountChanges, PayoutAccountNotice } from './AccountChanges'
@@ -321,38 +322,76 @@ function Releases({ data }: { data: Dashboard }) {
 }
 
 function Activity({ data }: { data: Dashboard }) {
-    const days: AffiliateDay[] = data.daily ?? []
+    const periods: AffiliatePeriod[] = data.periods ?? []
+    // Days of the period shown, 0 for all time: the last 30 days, or all time from a Worker without periods.
+    const [shown, setShown] = useState(() => (periods.some((p) => p.days === 30) ? 30 : 0))
+    const period = periods.find((p) => p.days === shown) ?? null
+    const daily: AffiliateDay[] = data.daily ?? []
+    // The chart shows the period's days, and every day there is (the last 90) for all time.
+    const days = period ? daily.slice(-period.days) : daily
     const totals = data.totals ?? { visitors: 0, signups: 0, customers: 0 }
-    const month = days.reduce((sum, d) => ({ visitors: sum.visitors + d.visitors, signups: sum.signups + d.signups, purchases: sum.purchases + d.purchases }), {
+    const results = period ?? totals
+    const sums = days.reduce((sum, d) => ({ visitors: sum.visitors + d.visitors, signups: sum.signups + d.signups, purchases: sum.purchases + d.purchases }), {
         visitors: 0,
         signups: 0,
         purchases: 0,
     })
     const max = Math.max(1, ...days.map((d) => d.visitors))
-    const rate = conversionRate(totals.visitors, totals.customers)
     const stats = [
-        { label: 'Visitors', value: totals.visitors.toLocaleString('en-US') },
-        { label: 'Signed up', value: totals.signups.toLocaleString('en-US') },
-        { label: 'Customers', value: totals.customers.toLocaleString('en-US') },
-        { label: 'Visitor → customer', value: rate ?? '—' },
-        { label: 'Earned per visitor', value: earningsPerVisitor(totals.visitors, totals.commission) ?? '—' },
+        { label: 'Visitors', value: results.visitors.toLocaleString('en-US') },
+        { label: 'Signed up', value: results.signups.toLocaleString('en-US') },
         {
-            label: 'From renewals a month',
-            value: totals.recurring ? `≈${formatCents(totals.recurring)}` : '—',
-            hint: totals.recurring
-                ? `About what the Cloud plans that renew earn you each month: each customer's latest payment at your current rate, a yearly plan spread over 12 months. Discounts, upgrades and cancellations change it.`
-                : 'Customers whose Cloud plan renews earn you commission on every renewal; about how much a month shows here.',
+            label: 'Customers',
+            value: results.customers.toLocaleString('en-US'),
+            hint: period ? `People who bought through your link in the last ${period.days} days.` : undefined,
         },
+        {
+            label: 'Visitor → customer',
+            value: (period ? conversionRate(period.visitors, period.converted) : conversionRate(totals.visitors, totals.customers)) ?? '—',
+            hint: period ? `Of the people who opened your link in the last ${period.days} days, the share who have bought.` : undefined,
+        },
+        { label: 'Earned per visitor', value: earningsPerVisitor(results.visitors, results.commission) ?? '—' },
+        period
+            ? {
+                  label: 'Commission',
+                  value: formatCents(period.commission),
+                  hint: `What your link earned in the last ${period.days} days, net of refunds. Customers of your promotion code alone and adjustments are left out.`,
+              }
+            : {
+                  label: 'From renewals a month',
+                  value: totals.recurring ? `≈${formatCents(totals.recurring)}` : '—',
+                  hint: totals.recurring
+                      ? `About what the Cloud plans that renew earn you each month: each customer's latest payment at your current rate, a yearly plan spread over 12 months. Discounts, upgrades and cancellations change it.`
+                      : 'Customers whose Cloud plan renews earn you commission on every renewal; about how much a month shows here.',
+              },
     ]
     return (
         <section className={`${card} p-6`}>
-            <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-lg font-semibold text-content">Your link&apos;s results</h2>
-                <span className="text-xs text-content-muted">All time</span>
+                {periods.length > 0 ? (
+                    <div role="group" aria-label="Period" className="flex rounded-lg border border-hairline p-0.5 text-xs">
+                        {[...periods.map((p) => p.days), 0].map((option) => (
+                            <button
+                                key={option}
+                                type="button"
+                                aria-pressed={shown === option}
+                                onClick={() => setShown(option)}
+                                className={`min-h-[28px] whitespace-nowrap rounded-md px-2.5 font-medium transition-colors ${
+                                    shown === option ? 'bg-white/[0.08] text-content' : 'text-content-muted hover:text-content'
+                                }`}
+                            >
+                                {option ? `${option} days` : 'All time'}
+                            </button>
+                        ))}
+                    </div>
+                ) : (
+                    <span className="text-xs text-content-muted">All time</span>
+                )}
             </div>
             <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
                 {stats.map((stat) => (
-                    <div key={stat.label} title={'hint' in stat ? stat.hint : undefined}>
+                    <div key={stat.label} title={stat.hint}>
                         <dd className="text-2xl font-semibold tabular-nums text-content">{stat.value}</dd>
                         <dt className="mt-1 text-xs text-content-muted">{stat.label}</dt>
                     </div>
@@ -360,30 +399,30 @@ function Activity({ data }: { data: Dashboard }) {
             </dl>
 
             <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-                <h3 className="text-sm font-medium text-content">Last 30 days</h3>
+                <h3 className="text-sm font-medium text-content">Last {days.length} days</h3>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 whitespace-nowrap text-xs text-content-muted">
                     <span className="inline-flex items-center gap-1.5">
                         <span className="h-2 w-2 rounded-sm bg-[#2E4A5C]" aria-hidden="true" />
-                        {month.visitors.toLocaleString('en-US')} visitors
+                        Visitors
                     </span>
                     <span className="inline-flex items-center gap-1.5">
                         <span className="h-2 w-2 rounded-sm bg-signal-blue" aria-hidden="true" />
-                        {month.signups.toLocaleString('en-US')} sign-ups
+                        Sign-ups
                     </span>
                     <span className="inline-flex items-center gap-1.5">
                         <span className="h-2 w-2 rounded-full bg-signal-green" aria-hidden="true" />
-                        {month.purchases.toLocaleString('en-US')} purchases
+                        Purchases
                     </span>
                 </div>
             </div>
             <div
-                className="relative mt-4 flex h-32 items-end gap-0.5 sm:gap-1"
+                className={`relative mt-4 flex h-32 items-end ${days.length > 31 ? 'gap-px' : 'gap-0.5 sm:gap-1'}`}
                 role="img"
-                aria-label={`Last 30 days: ${month.visitors} visitors, ${month.signups} sign-ups, ${month.purchases} purchases.`}
+                aria-label={`Last ${days.length} days: ${sums.visitors} visits, ${sums.signups} sign-ups, ${sums.purchases} purchases.`}
             >
-                {month.visitors === 0 && (
+                {sums.visitors === 0 && (
                     <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-content-muted">
-                        No visits in the last 30 days. Share your link and visits appear here as they happen.
+                        No visits in the last {days.length} days. Share your link and visits appear here as they happen.
                     </p>
                 )}
                 {days.map((d) => (

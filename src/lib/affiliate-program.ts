@@ -164,6 +164,18 @@ export interface AffiliateDay {
     purchases: number
 }
 
+/** The link's results over the last `days` UTC days, today included, counted the way `totals` counts all time. */
+export interface AffiliatePeriod {
+    days: number
+    visitors: number
+    signups: number
+    customers: number
+    /** Of `visitors`, the ones who have bought through the link, then or later. */
+    converted: number
+    /** Net, in cents, by when each entry was recorded. */
+    commission: number
+}
+
 /**
  * One sub ID's results (`sub` is null for the link without one), or the promotion code's for the customers who used it
  * without the link. Paid and commission are net of reversals.
@@ -225,7 +237,10 @@ export interface AffiliateDashboard {
      */
     review?: { referrals: number; amount: number; holds_payout: boolean }
     releases?: AffiliateRelease[]
+    /** The last 90 days (30 from an older Worker), oldest first. */
     daily?: AffiliateDay[]
+    /** The last 7, 30 and 90 days. */
+    periods?: AffiliatePeriod[]
     sources?: AffiliateSource[]
     sources_truncated?: boolean
     /** The top 10 of each, by visitors; the rest is `totals.visitors` minus what they add up to. */
