@@ -38,6 +38,19 @@ const nextConfig = {
                 destination: '/#pricing',
                 permanent: false,
             },
+            {
+                // Short Affiliate links for videos, podcasts and print: /go/kenmoo opens
+                // /?via=kenmoo and /go/kenmoo/podcast adds the sub ID. Other query values
+                // pass through. The patterns mirror the Worker's code and sub ID rules.
+                source: '/go/:code([A-Za-z0-9][A-Za-z0-9_-]{2,31})/:sub([A-Za-z0-9][A-Za-z0-9_.-]{0,63})',
+                destination: '/?via=:code&sub=:sub',
+                permanent: false,
+            },
+            {
+                source: '/go/:code([A-Za-z0-9][A-Za-z0-9_-]{2,31})',
+                destination: '/?via=:code',
+                permanent: false,
+            },
         ]
     },
 }

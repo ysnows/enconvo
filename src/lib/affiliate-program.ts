@@ -309,6 +309,11 @@ export function affiliateLink(code: string, path = '/', sub: string | null = nul
     return sub ? `${link}&sub=${encodeURIComponent(sub)}` : link
 }
 
+/** `https://enconvo.com/go/kenmoo`, short enough to say out loud or print; `/go/kenmoo/podcast` adds a sub ID. */
+export function affiliateShortLink(code: string, sub: string | null = null): string {
+    return `${SITE_ORIGIN}/go/${encodeURIComponent(code)}${sub ? `/${encodeURIComponent(sub)}` : ''}`
+}
+
 /** `4780` → `$47.80`; whole dollars drop the cents unless `cents` is set. */
 export function formatCents(amount: number, { cents = true }: { cents?: boolean } = {}): string {
     const value = (Number(amount) || 0) / 100

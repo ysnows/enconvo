@@ -5,6 +5,7 @@ import {
     acceptAffiliateTerms,
     AFFILIATE_TERMS_VERSION,
     affiliateLink,
+    affiliateShortLink,
     affiliateSub,
     conversionRate,
     earningsPerVisitor,
@@ -65,6 +66,7 @@ function LinkCard({
     const subInvalid = subInput.trim() !== '' && !sub
     const link = affiliateLink(code)
     const built = affiliateLink(code, path, sub)
+    const shortLink = affiliateShortLink(code)
     return (
         <section className={`${card} p-6`}>
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -91,6 +93,19 @@ function LinkCard({
                     still count as yours.
                 </p>
             )}
+            <div className="mt-5 flex flex-col gap-4 border-t border-hairline pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                    <div className="text-sm text-content-muted">Short link</div>
+                    <div className={`mt-1 break-all font-mono text-lg ${paused ? 'text-content-muted line-through' : 'text-content'}`}>
+                        {shortLink.replace(/^https:\/\//, '')}
+                    </div>
+                    <p className="mt-1 text-xs leading-5 text-content-muted">
+                        Easy to say out loud or print. It opens the home page and counts the same as your link. Add a sub ID after it, such as{' '}
+                        <span className="break-all font-mono text-content-body">/go/{code}/podcast</span>.
+                    </p>
+                </div>
+                {!paused && <CopyButton text={shortLink} />}
+            </div>
             {promotionCode && (
                 <div className="mt-5 flex flex-col gap-4 border-t border-hairline pt-5 sm:flex-row sm:items-center sm:justify-between">
                     <div className="min-w-0">
