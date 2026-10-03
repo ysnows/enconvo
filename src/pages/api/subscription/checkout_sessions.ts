@@ -16,8 +16,7 @@ async function handler(req, res) {
     return;
   }
 
-  const { lookupKey, endorsely_referral, seats, quantity } = req.body;
-  console.log("endorsely_referral", endorsely_referral, lookupKey)
+  const { lookupKey, seats, quantity } = req.body;
   const email = req.user.email
 
   let mode: 'payment' | 'subscription' = 'payment';
@@ -74,10 +73,7 @@ async function handler(req, res) {
       customer_email: email,
       // Send invoice for one-time payments (when mode is 'payment')
       invoice_creation: mode === 'payment' ? { enabled: true } : undefined,
-      metadata: {
-        endorsely_referral: endorsely_referral,
-        ...affiliateMetadata(journey),
-      }
+      metadata: affiliateMetadata(journey),
     }
 
     // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied;

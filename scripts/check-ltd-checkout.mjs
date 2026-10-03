@@ -142,7 +142,9 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
       : { error: new Error('Invalid token') }
   } } }) } }, { NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co', NEXT_PUBLIC_SUPABASE_ANON_KEY: 'test_key' })
   function Stripe() { return stripe }
-  return load(`src/pages/api/subscription/${route}.ts`, { stripe: Stripe, '@/utils/auth': auth, '@/data/ltdOffer': data, '@/lib/ltd-checkout': checkout, '@/lib/affiliate-journey': affiliateJourneyLib(fetch) }, { NODE_ENV: 'production', STRIPE_SECRET_KEY: 'test_key', ...env }).default
+  const prices = load('src/lib/stripe-prices.ts')
+  const discount = load('src/lib/affiliate-discount.ts', { './stripe-prices': prices }, { globals: { Date, Promise } })
+  return load(`src/pages/api/subscription/${route}.ts`, { stripe: Stripe, '@/utils/auth': auth, '@/data/ltdOffer': data, '@/lib/ltd-checkout': checkout, '@/lib/affiliate-journey': affiliateJourneyLib(fetch), '@/lib/affiliate-discount': discount, '@/lib/stripe-prices': prices }, { NODE_ENV: 'production', STRIPE_SECRET_KEY: 'test_key', ...env }).default
 }
 function response() {
   return { statusCode: 200, headers: {}, body: undefined, setHeader(k, v) { this.headers[k] = v }, status(code) { this.statusCode = code; return this }, json(value) { this.body = clone(value); return this }, end(value) { if (value !== undefined) this.body = value; return this } }
@@ -173,11 +175,11 @@ test('The API preserves fulfillment identity, Stripe tax, and invoices; ignores 
     assert.equal(params.client_reference_id, 'verified@example.com')
     assert.equal(params.customer_email, 'verified@example.com')
     assert(params.success_url.startsWith('https://www.enconvo.com/pay_success?'))
-    assert.equal(params.cancel_url, `https://www.enconvo.com/ltd?canceled=true&plan=${plan.key}&via=kenmoo&referral=partner`)
+    assert.equal(params.cancel_url, `https://www.enconvo.com/ltd?canceled=true&plan=${plan.key}&via=kenmoo`)
     assert.equal(params.allow_promotion_codes, undefined)
     assert.deepEqual(params.automatic_tax, { enabled: true })
     assert.deepEqual(params.invoice_creation, { enabled: true })
-    assert.equal(params.metadata.endorsely_referral, 'partner')
+    assert.equal(params.metadata.endorsely_referral, undefined, 'Endorsely is retired (ADR 0090)')
     assert.equal(params.metadata.campaign, data.LTD_OFFER.couponId)
   }
 })
@@ -214,11 +216,11 @@ test('Both checkouts name the Affiliate journey in Stripe metadata and record th
     assert.equal(res.statusCode, 200)
     assert.equal(calls.sessions[0].metadata.via, 'kenmoo')
     assert.equal(calls.sessions[0].metadata.via_visitor, VISITOR)
-    assert.equal(worker.calls.length, 1)
-    assert.equal(worker.calls[0].url, 'https://api.enconvo.com/api/affiliate/checkout')
-    assert.equal(worker.calls[0].init.headers.accessToken, 'verified_token')
-    assert.deepEqual(JSON.parse(worker.calls[0].init.body), { visitor: VISITOR, session: 'cs_test_a1b2c3d4e5f6g7h8', plan: 'standard' })
-    assert(worker.calls[0].signal, 'the Worker call is bounded by a timeout')
+    const steps = worker.calls.filter(call => call.url === 'https://api.enconvo.com/api/affiliate/checkout')
+    assert.equal(steps.length, 1)
+    assert.equal(steps[0].init.headers.accessToken, 'verified_token')
+    assert.deepEqual(JSON.parse(steps[0].init.body), { visitor: VISITOR, session: 'cs_test_a1b2c3d4e5f6g7h8', plan: 'standard' })
+    assert(steps[0].signal, 'the Worker call is bounded by a timeout')
   }
 })
 
@@ -263,15 +265,16 @@ test('A ?via visit starts a journey cookie, keeps its visitor across codes, and 
     fetch: worker.fetch, JSON, document, crypto: globalThis.crypto, Uint8Array, Array,
     location: { protocol: 'https:', pathname: '/ltd' },
   } })
+  const visits = () => worker.calls.filter(call => call.url === 'https://api.enconvo.com/api/affiliate/visit')
   const first = await lib.recordAffiliateVisit('kenmoo')
   assert.match(first.visitor, /^[0-9a-f]{32}$/)
   assert.equal(jar, `enconvo_via=${first.visitor}.kenmoo`)
-  assert.deepEqual(JSON.parse(worker.calls[0].init.body), { visitor: first.visitor, via: 'kenmoo', path: '/ltd', referrer: 'https://www.kenmoo.com/deals/enconvo' })
+  assert.deepEqual(JSON.parse(visits()[0].init.body), { visitor: first.visitor, via: 'kenmoo', path: '/ltd', referrer: 'https://www.kenmoo.com/deals/enconvo' })
   const second = await lib.recordAffiliateVisit('another-partner')
   assert.equal(second.visitor, first.visitor)
   assert.equal(lib.readAffiliateJourney().via, 'another-partner')
   assert.equal(await lib.recordAffiliateVisit('bad code'), null)
-  assert.equal(worker.calls.length, 2)
+  assert.equal(visits().length, 2)
 })
 
 test('Regular checkout remains full price and uses the same license IDs required by fulfillment', async () => {
@@ -288,8 +291,8 @@ test('Regular checkout remains full price and uses the same license IDs required
 
 // useState call order in LtdPage, so a test can render a later UI state.
 const PAGE_STATE = { loadingPlan: 0, error: 1, claimed: 2, fit: 3 }
-function pageFor({ state = {}, session = null, sessionError = null, status = 200, result = { url: 'https://checkout.stripe.com/c/pay/test_session' }, query = { via: 'kenmoo' }, isReady = true, initialAffiliateCode = typeof query.via === 'string' ? query.via : null, referral = 'visit_kenmoo_123', referralError = null, noReferral = false } = {}) {
-  const calls = { pushes: [], fetches: [], redirects: [], states: [], referralRequests: [] }
+function pageFor({ state = {}, session = null, sessionError = null, status = 200, result = { url: 'https://checkout.stripe.com/c/pay/test_session' }, query = { via: 'kenmoo' }, isReady = true, initialAffiliateCode = typeof query.via === 'string' ? query.via : null } = {}) {
+  const calls = { pushes: [], fetches: [], redirects: [], states: [] }
   const router = { isReady, query, async push(url) { calls.pushes.push(url) } }
   const jsx = (type, props) => ({ type, props })
   const initial = Object.fromEntries(Object.entries(state).map(([name, value]) => [PAGE_STATE[name], value]))
@@ -306,7 +309,6 @@ function pageFor({ state = {}, session = null, sessionError = null, status = 200
     '@/components/home/HeroLayout': { HeroLayout: () => null },
     '@/lib/analytics': { trackEvent() {} },
     '@/lib/ltd-confetti': { burstConfetti() { calls.confetti = (calls.confetti || 0) + 1 } },
-    '@/lib/ltd-referral': { async getLtdReferral(...args) { calls.referralRequests.push(args); if (referralError) throw referralError; return noReferral ? undefined : referral } },
     '@/data/ltdOffer': data,
     '@/styles/Ltd.module.css': {},
     '@/styles/Home.module.css': {},
@@ -334,7 +336,7 @@ test('Purchase buttons send signed-out buyers back to the selected discounted of
   for (let index = 0; index < data.ltdPlans.length; index++) {
     const { calls, buttons } = pageFor()
     await buttons[index].props.onClick()
-    assert.equal(calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[index], 'kenmoo', 'visit_kenmoo_123'))
+    assert.equal(calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[index], 'kenmoo'))
     assert.equal(calls.fetches.length, 0)
     assert.equal(calls.redirects.length, 0)
   }
@@ -346,14 +348,14 @@ test('Signed-in purchases use the dedicated offer endpoint, verified token, and 
   assert.equal(calls.fetches.length, 1)
   assert.equal(calls.fetches[0].url, '/api/subscription/ltd_checkout')
   assert.equal(calls.fetches[0].headers.Authorization, 'Bearer verified_token')
-  assert.deepEqual(JSON.parse(calls.fetches[0].body), { lookupKey: 'premium', endorsely_referral: 'visit_kenmoo_123', via: 'kenmoo' })
+  assert.deepEqual(JSON.parse(calls.fetches[0].body), { lookupKey: 'premium', via: 'kenmoo' })
   assert.deepEqual(calls.redirects, ['https://checkout.stripe.com/c/pay/test_session'])
 })
 
 test('Expired sign-in returns to the same offer; unavailable checkout and unsafe redirects show an error', async () => {
   const expired = pageFor({ session: { access_token: 'expired' }, status: 401 })
   await expired.buttons[2].props.onClick()
-  assert.equal(expired.calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[2], 'kenmoo', 'visit_kenmoo_123'))
+  assert.equal(expired.calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[2], 'kenmoo'))
   for (const scenario of [
     { sessionError: new Error('Sign-in service unavailable') },
     { status: 503, result: { error: 'This offer is temporarily unavailable.' } },
@@ -367,54 +369,42 @@ test('Expired sign-in returns to the same offer; unavailable checkout and unsafe
   }
 })
 
-test('The same referral visit ID survives all three offer checkouts and cancel redirects keep the public affiliate code', async () => {
+test('A KenMoo buyer goes straight to checkout without waiting for a tracking script, and cancel keeps the public code', async () => {
+  const { calls, buttons } = pageFor({ session: { access_token: 'verified_token' } })
+  await buttons[0].props.onClick()
+  assert.deepEqual(JSON.parse(calls.fetches[0].body), { lookupKey: 'standard', via: 'kenmoo' })
   for (const plan of data.ltdPlans) {
     const { stripe, calls } = fakeStripe(plan)
     const res = response()
     await handlerFor(stripe)(request({ lookupKey: plan.key, endorsely_referral: 'visit_kenmoo_123', via: 'kenmoo' }), res)
     assert.equal(res.statusCode, 200)
-    assert.equal(calls.sessions[0].metadata.endorsely_referral, 'visit_kenmoo_123')
+    assert.equal(calls.sessions[0].metadata.endorsely_referral, undefined)
     assert.deepEqual(calls.sessions[0].discounts, [{ promotion_code: 'promo_kenmoo' }])
     const cancel = new URL(calls.sessions[0].cancel_url)
     assert.equal(cancel.searchParams.get('via'), 'kenmoo')
     assert.equal(cancel.searchParams.get('plan'), plan.key)
-    assert.equal(cancel.searchParams.get('referral'), 'visit_kenmoo_123')
-    assert(cancel.searchParams.get('via') !== calls.sessions[0].metadata.endorsely_referral)
+    assert.equal(cancel.searchParams.has('referral'), false)
   }
 })
 
-test('Visitors arriving from the homepage retain attribution even without via on the offer URL', async () => {
-  const { calls, buttons } = pageFor({ session: { access_token: 'verified_token' }, query: {}, referral: 'visit_from_homepage' })
-  await buttons[0].props.onClick()
-  assert.deepEqual(JSON.parse(calls.fetches[0].body), { lookupKey: 'standard', endorsely_referral: 'visit_from_homepage' })
-})
-
-test('The offer page passes its retained attribution context to the Endorsely resolver', async () => {
-  const { calls, buttons } = pageFor({ session: { access_token: 'verified_token' }, query: { via: 'kenmoo', referral: 'visit_kenmoo_123' } })
-  await buttons[0].props.onClick()
-  assert.deepEqual(clone(calls.referralRequests), [['kenmoo', 3000, 'visit_kenmoo_123']])
-})
-
-test('An unresolved affiliate never becomes Stripe metadata and allows retry before checkout', async () => {
-  const { calls, buttons } = pageFor({ session: { access_token: 'verified_token' }, referralError: new Error('Your referral link is still loading.') })
-  await buttons[0].props.onClick()
-  assert.equal(calls.fetches.length, 0)
-  assert.equal(calls.redirects.length, 0)
-  assert(calls.states.some(state => state?.message === 'Your referral link is still loading.'))
-})
-
-test('Non-affiliate purchases omit the referral metadata and keep the normal five-device fulfillment', async () => {
-  const plain = pageFor({ session: { access_token: 'verified_token' }, query: {}, noReferral: true })
+test('Plain visitors buy without a code and keep the normal five-device fulfillment', async () => {
+  const plain = pageFor({ session: { access_token: 'verified_token' }, query: {} })
   await plain.buttons[2].props.onClick()
   const body = JSON.parse(plain.calls.fetches[0].body)
-  assert.equal(body.lookupKey, 'teams')
-  assert.equal(body.endorsely_referral, undefined)
+  assert.deepEqual(body, { lookupKey: 'teams' })
   const { stripe, calls: stripeCalls } = fakeStripe(data.ltdPlans[2])
   const res = response()
   await handlerFor(stripe)(request(body), res)
   assert.equal(res.statusCode, 200)
-  assert.equal(stripeCalls.sessions[0].metadata.endorsely_referral, undefined)
   assert.equal(stripeCalls.sessions[0].discounts, undefined)
+})
+
+test('The regular checkout no longer sends Endorsely attribution to Stripe', async () => {
+  const { stripe, calls } = fakeStripe()
+  const res = response()
+  await handlerFor(stripe, 'checkout_sessions')(request({ lookupKey: 'standard', endorsely_referral: 'visit_kenmoo_123' }), res)
+  assert.equal(res.statusCode, 200)
+  assert.deepEqual(calls.sessions[0].metadata, {})
 })
 
 const nonKenmooCodes = [undefined, null, '', 'another-partner', 'KenMoo', 'KENMOO', 'kenmoo ', ['kenmoo'], ['kenmoo', 'another-partner'], { via: 'kenmoo' }]
@@ -426,12 +416,11 @@ test('Only the exact KenMoo code grants the discount; attribution and client cou
       assert.equal(data.ltdPriceCents(plan, via), plan.originalCents)
       const { stripe, calls } = fakeStripe(plan, { missing: true, coupon: { valid: false } })
       const res = response()
-      await handlerFor(stripe)(request({ lookupKey: plan.key, via, endorsely_referral: 'visit_kenmoo_123', coupon: data.LTD_OFFER.couponId, discountPercent: 50 }), res)
+      await handlerFor(stripe)(request({ lookupKey: plan.key, via, coupon: data.LTD_OFFER.couponId, discountPercent: 50 }), res)
       assert.equal(res.statusCode, 200)
       assert.deepEqual(calls.sessions[0].line_items, [{ price: plan.priceId, quantity: 1 }])
       assert.equal(calls.sessions[0].discounts, undefined)
       assert.equal(calls.sessions[0].metadata.campaign, 'enconvo-ltd')
-      assert.equal(calls.sessions[0].metadata.endorsely_referral, 'visit_kenmoo_123')
       assert.equal(calls.coupon.length + calls.promo.length + calls.created.length, 0)
     }
   }
@@ -491,56 +480,23 @@ test('Server-rendered offers have the correct branding and price before hydratio
 })
 
 test('Full-price returns retain the affiliate attribution and never silently regain the KenMoo discount', async () => {
-  const { calls, buttons } = pageFor({ query: { via: 'another-partner', referral: 'visit_partner' }, referral: 'visit_partner' })
+  const { calls, buttons } = pageFor({ query: { via: 'another-partner' } })
   await buttons[1].props.onClick()
   const login = new URL(calls.pushes[0], 'https://www.enconvo.com')
   const back = new URL(login.searchParams.get('returnUrl'), login.origin)
   assert.equal(back.searchParams.get('via'), 'another-partner')
-  assert.equal(back.searchParams.get('referral'), 'visit_partner')
   assert.equal(data.ltdPriceCents(data.ltdPlans[1], back.searchParams.get('via')), 9900)
 })
 
-function referralFor(window, cookie = '') {
-  return load('src/lib/ltd-referral.ts', {}, { globals: { window, document: { cookie }, setTimeout } }).getLtdReferral
-}
-
-test('Endorsely resolves a public code asynchronously, and checkout waits for the actual visit ID', async () => {
-  const window = {}
-  const getReferral = referralFor(window)
-  setTimeout(() => { window.endorsely_referral = 'visit_kenmoo_async' }, 10)
-  assert.equal(await getReferral('kenmoo', 500), 'visit_kenmoo_async')
-  assert.equal(await referralFor({ endorsely_referral: null })(), undefined)
-})
-
-test('Existing homepage attribution is read from Endorsely only, including its cookie across sign-in', async () => {
-  assert.equal(await referralFor({ endorsely_referral: 'visit_existing' })(), 'visit_existing')
-  assert.equal(await referralFor({}, 'other=value; endorsely_referral=visit_home%2B123; auth_cookie=unread')(), 'visit_home+123')
-  for (const cookie of ['endorsely_referral=null', 'endorsely_referral=%bad', 'not_endorsely_referral=incorrect']) {
-    assert.equal(await referralFor({ endorsely_referral: null }, cookie)(), undefined)
-  }
-})
-
-test('Sign-in and registration return contexts retain the visit ID separately from via, including homepage arrivals', async () => {
+test('Sign-in and registration return to the offer with its plan and public code', () => {
   for (const code of ['kenmoo', undefined]) {
-    const login = new URL(data.ltdLoginUrl(data.ltdPlans[1], code, 'visit_from_homepage'), 'https://www.enconvo.com')
+    const login = new URL(data.ltdLoginUrl(data.ltdPlans[1], code), 'https://www.enconvo.com')
     const offer = new URL(login.searchParams.get('returnUrl'), login.origin)
+    assert.equal(offer.pathname, data.LTD_OFFER.path)
+    assert.equal(offer.searchParams.get('plan'), 'premium')
     assert.equal(offer.searchParams.get('via'), code || null)
-    assert.equal(offer.searchParams.get('referral'), 'visit_from_homepage')
-    assert.equal(await referralFor({ endorsely_referral: null })(code, 0, offer.searchParams.get('referral')), 'visit_from_homepage')
+    assert.equal(offer.searchParams.has('referral'), false)
   }
-  assert.equal(await referralFor({ endorsely_referral: 'visit_active' })(undefined, 0, 'visit_retained'), 'visit_active')
-})
-
-test('A blocked tracking script does not convert via into a visit ID; plain visitors can still buy', async () => {
-  await assert.rejects(referralFor({})('kenmoo', 0), /referral link is still loading/)
-  assert.equal(await referralFor({})(undefined, 0), undefined)
-})
-
-test('Unavailable browser cookies do not break non-affiliate purchases or retained referral returns', async () => {
-  const document = { get cookie() { throw new Error('Cookies unavailable') } }
-  const getReferral = load('src/lib/ltd-referral.ts', {}, { globals: { window: { endorsely_referral: null }, document, setTimeout } }).getLtdReferral
-  assert.equal(await getReferral(undefined, 0), undefined)
-  assert.equal(await getReferral('kenmoo', 0, 'visit_retained'), 'visit_retained')
 })
 
 test('Email registration confirmation retains the LTD plan and affiliate, and preserves existing native signup', async () => {
@@ -589,7 +545,7 @@ test('Buyers returning with a selected plan can continue straight to checkout fo
     const label = nodesIn(buttons[0]).filter(n => typeof n === 'string').join(' ')
     assert(label.includes(canceled ? 'Return to checkout' : 'Continue to checkout'))
     await buttons[0].props.onClick()
-    assert.equal(calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[2], 'kenmoo', 'visit_kenmoo_123'))
+    assert.equal(calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[2], 'kenmoo'))
   }
   assert.equal(pageFor({ query: { via: 'kenmoo', plan: 'lifetime' } }).buttons.length, data.ltdPlans.length)
 })

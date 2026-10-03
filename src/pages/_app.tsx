@@ -24,12 +24,6 @@ const App = ({ Component, pageProps, router }: AppProps) => {
                 <Head><meta name="robots" content="noindex, follow" /></Head>
             )}
             <Script
-                src="https://assets.endorsely.com/endorsely.js"
-                data-endorsely="2006ac68-b1bd-4140-ab76-aa957e3c2016"
-                strategy="afterInteractive"
-            />
-
-            <Script
                 src="https://www.googletagmanager.com/gtag/js?id=G-JBLMBKBEN2"
                 strategy="afterInteractive"
             />

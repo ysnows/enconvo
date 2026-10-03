@@ -69,9 +69,8 @@ export function formatUsd(cents: number): string {
   }).format(cents / 100)
 }
 
-export function ltdLoginUrl(plan: LtdPlan, affiliateCode?: string, referral?: string): string {
+export function ltdLoginUrl(plan: LtdPlan, affiliateCode?: string): string {
   const params = new URLSearchParams({ plan: plan.key })
   if (affiliateCode) params.set('via', affiliateCode)
-  if (referral) params.set('referral', referral)
   return `/login?returnUrl=${encodeURIComponent(`${LTD_OFFER.path}?${params}`)}`
 }

@@ -10,7 +10,6 @@ import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroLayout } from '@/components/home/HeroLayout'
 import { trackEvent } from '@/lib/analytics'
 import { burstConfetti } from '@/lib/ltd-confetti'
-import { getLtdReferral } from '@/lib/ltd-referral'
 import { formatUsd, getLtdPlan, isLtdOfferEligible, LTD_OFFER, ltdLoginUrl, ltdPlans, ltdPriceCents, type LtdPlan, type LtdPlanKey } from '@/data/ltdOffer'
 import styles from '@/styles/Ltd.module.css'
 import homeStyles from '@/styles/Home.module.css'
@@ -128,21 +127,19 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
       const { supabase } = await import('@/lib/supabase')
       const { data: { session }, error: sessionError } = await supabase.auth.getSession()
       if (sessionError) throw new Error('Could not check your sign-in. Please try again.')
-      const retainedReferral = typeof router.query.referral === 'string' ? router.query.referral : undefined
-      const referral = await getLtdReferral(affiliateCode, 3000, retainedReferral)
       trackEvent('begin_checkout', { plan: plan.key, signed_in: Boolean(session) })
       if (!session) {
-        await router.push(ltdLoginUrl(plan, affiliateCode, referral))
+        await router.push(ltdLoginUrl(plan, affiliateCode))
         return
       }
 
       const response = await fetch('/api/subscription/ltd_checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session.access_token}` },
-        body: JSON.stringify({ lookupKey: plan.key, endorsely_referral: referral, via: affiliateCode }),
+        body: JSON.stringify({ lookupKey: plan.key, via: affiliateCode }),
       })
       if (response.status === 401) {
-        await router.push(ltdLoginUrl(plan, affiliateCode, referral))
+        await router.push(ltdLoginUrl(plan, affiliateCode))
         return
       }
       const result = await response.json()

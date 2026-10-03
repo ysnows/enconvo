@@ -1,9 +1,8 @@
 import { WORKER_API_ORIGIN, workerPost, workerRequest } from './worker-api'
 
 // Affiliate journeys (CONTEXT.md "Affiliate journey"): our own record of a visitor who
-// arrived through an Affiliate link (`?via=<code>`), kept apart from Endorsely's
-// attribution. The `enconvo_via` cookie names the browser with a random visitor id and
-// holds the latest Affiliate code; the Worker stores each step (visit, app download,
+// arrived through an Affiliate link (`?via=<code>`). The `enconvo_via` cookie names the
+// browser with a random visitor id and holds the latest Affiliate code; the Worker stores each step (visit, app download,
 // signup or sign-in, Checkout, purchase) and decides which journey a step joins. A link's sub ID
 // (`?sub=youtube`) goes only to the visit; later steps take it from there.
 //

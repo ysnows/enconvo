@@ -22,11 +22,8 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       const candidate = new URL(req.headers.origin)
       if (['localhost', '127.0.0.1'].includes(candidate.hostname)) origin.href = candidate.href
     }
-    const referral = typeof req.body.endorsely_referral === 'string'
-      ? req.body.endorsely_referral.slice(0, 200) : undefined
     const cancelParams = new URLSearchParams({ canceled: 'true', plan: req.body.lookupKey })
     if (typeof req.body.via === 'string' && req.body.via) cancelParams.set('via', req.body.via.slice(0, 200))
-    if (referral) cancelParams.set('referral', referral)
     const journey = affiliateJourneyFrom(req.cookies)
     const session = await stripe.checkout.sessions.create({
       ...discount,
@@ -39,7 +36,6 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       invoice_creation: { enabled: true },
       metadata: {
         campaign: isLtdOfferEligible(req.body.via) ? LTD_OFFER.couponId : 'enconvo-ltd',
-        ...(referral ? { endorsely_referral: referral } : {}),
         ...affiliateMetadata(journey),
       },
     })

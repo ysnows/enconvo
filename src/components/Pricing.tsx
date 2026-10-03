@@ -70,7 +70,6 @@ async function startCheckout(
       body: JSON.stringify({
         lookupKey,
         email: session.user.email,
-        endorsely_referral: window.endorsely_referral,
         ...extra,
       }),
     })
