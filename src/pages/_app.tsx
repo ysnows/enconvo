@@ -6,6 +6,7 @@ import Head from 'next/head'
 import { AppProps } from 'next/app'
 import { SocialMetadata } from '@/components/SocialMetadata'
 import { InviteToast } from '@/components/InviteToast'
+import { AffiliateOfferToast } from '@/components/AffiliateOfferToast'
 import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
 import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
 
@@ -44,6 +45,7 @@ const App = ({ Component, pageProps, router }: AppProps) => {
 
             <Component {...pageProps} />
             <InviteToast />
+            <AffiliateOfferToast />
         </>
     );
 };
