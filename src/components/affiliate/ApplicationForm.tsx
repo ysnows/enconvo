@@ -75,7 +75,7 @@ export function ApplicationForm({ terms, accessToken, email, previous, onSubmitt
     }
 
     return (
-        <section id="apply" className="scroll-mt-28 grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+        <section id="apply" className="scroll-mt-28 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
             <div>
                 <h2 className="text-3xl font-semibold text-content">{reapplying ? 'Apply again' : previous ? 'Update your application' : 'Apply'}</h2>
                 <p className="mt-4 text-base leading-7 text-content-body">

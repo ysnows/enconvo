@@ -3,7 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
 import { AffiliateDashboard } from '@/components/affiliate/AffiliateDashboard'
-import { AffiliateFaq, AffiliateHero, HowItWorks, TermsCards } from '@/components/affiliate/AffiliateLanding'
+import { AffiliateFaq, AffiliateHero, EarningsCalculator, HowItWorks, TermsCards } from '@/components/affiliate/AffiliateLanding'
 import { ApplicationForm } from '@/components/affiliate/ApplicationForm'
 import { PendingApplication, RejectedNotice } from '@/components/affiliate/ApplicationStatus'
 import { TeamMessage } from '@/components/affiliate/Announcement'
@@ -176,6 +176,7 @@ export default function AffiliatePage() {
             <div className="space-y-20 lg:space-y-24">
                 <AffiliateHero terms={terms} />
                 <TermsCards terms={terms} />
+                <EarningsCalculator terms={terms} />
                 <HowItWorks />
                 {apply}
                 <AffiliateFaq terms={terms} />
