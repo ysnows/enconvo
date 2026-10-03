@@ -6,7 +6,8 @@ import { useAffiliateOffer } from '@/components/AffiliateOffer'
 import { offerTerms } from '@/lib/affiliate-offer'
 
 // The public pages a referred visitor browses before choosing a plan.
-const OFFER_PAGES = new Set(['/', '/use-cases', '/changelog', '/cloud-pricing', '/downloads'])
+// /downloads is the privacy policy, not a place to choose a plan.
+const OFFER_PAGES = new Set(['/', '/use-cases', '/changelog', '/cloud-pricing'])
 // The code whose notice this browser dismissed; another Affiliate's code shows again.
 const DISMISSED_KEY = 'enconvo_offer_dismissed'
 
