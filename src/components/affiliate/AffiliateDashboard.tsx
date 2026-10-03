@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Loader2, QrCode } from 'lucide-react'
 import {
     acceptAffiliateTerms,
@@ -37,6 +37,7 @@ import { LinkQr } from './LinkQr'
 import { ProfileCard } from './ProfileCard'
 import { BillingDetails } from './BillingDetails'
 import { SinceLastVisit } from './SinceLastVisit'
+import { offerTerms, type AffiliateOffer } from '@/lib/affiliate-offer'
 import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from './ui'
 
 // /affiliate for an approved (or suspended) Affiliate: the program's announcement, the first steps
@@ -49,6 +50,34 @@ import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from '.
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 /** The link builder's choice for a page it doesn't list, pasted as an address */
 const OTHER_PAGE = 'other'
+
+/**
+ * What the Affiliate's audience gets from its promotion code, as the pricing section tells a
+ * visitor its link brought (ADR 0090), so posts and videos can promise the right discount. Says
+ * nothing while the code wouldn't take at Checkout, which the admins see and fix.
+ */
+function PromotionOffer({ code }: { code: string }) {
+    const [offer, setOffer] = useState<AffiliateOffer | null>(null)
+    useEffect(() => {
+        let cancelled = false
+        fetch(`/api/affiliate/offer?via=${encodeURIComponent(code)}`)
+            .then((response) => (response.ok ? response.json() : null))
+            .then((body: { offer?: AffiliateOffer | null } | null) => {
+                if (!cancelled) setOffer(body?.offer ?? null)
+            })
+            .catch(() => {})
+        return () => {
+            cancelled = true
+        }
+    }, [code])
+    if (!offer) return null
+    return (
+        <p className="mt-1 text-xs leading-5 text-content-muted">
+            <span className="text-content-body">Your audience gets {offerTerms(offer)}</span> Your link applies it at checkout by itself, so
+            mention the code mainly where a link can&apos;t go.
+        </p>
+    )
+}
 
 function LinkCard({
     code,
@@ -126,6 +155,7 @@ function LinkCard({
                         <p className="mt-1 text-xs leading-5 text-content-muted">
                             Customers who enter it at checkout count as yours, even if they never opened your link. Handy for podcasts and videos.
                         </p>
+                        {!paused && <PromotionOffer code={code} />}
                     </div>
                     {!paused && <CopyButton text={promotionCode.toUpperCase()} label="Copy" />}
                 </div>
