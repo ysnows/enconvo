@@ -68,6 +68,10 @@
   padding: 12px 24px;
 }
 
+@media (min-width: 1280px) and (max-width: 1599px) {
+  .hero header nav { padding-right: 180px; }
+}
+
 .hero header nav > div > a > svg {
   height: 28px;
 }

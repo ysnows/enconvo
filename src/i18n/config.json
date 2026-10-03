@@ -1,0 +1,18 @@
+{
+  "locales": [
+    "en",
+    "zh-CN",
+    "zh-TW",
+    "ja",
+    "ko",
+    "es",
+    "de",
+    "fr",
+    "it",
+    "pt",
+    "nl",
+    "pl"
+  ],
+  "defaultLocale": "en",
+  "localeDetection": true
+}

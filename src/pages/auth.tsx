@@ -1,37 +1,43 @@
-import {
-    createClientComponentClient
-} from '@supabase/auth-helpers-nextjs'
+import { i18nStaticProps } from '@/i18n/server'
+import { useI18n } from '@/i18n/I18nProvider'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import LoginForm from './components/LoginForm'
 // import {useRouter} from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import LoginSuccess from "@/pages/components/LoginSuccess";
-import { NativeRouter } from "@/utils/app/native_router";
+import LoginSuccess from '@/pages/components/LoginSuccess'
+import { NativeRouter } from '@/utils/app/native_router'
 
 import { useSearchParams } from 'next/navigation'
 
 export default function Login() {
-    // 获取url参数
+  const { t, locale } = useI18n()
 
-    const [loginState, setLoginState] = useState("login")
-    const handleOpenApp = () => {
-        // TODO: Get session from context or prop
-        // NativeRouter.login(session.access_token, session.refresh_token)
-    }
+  // 获取url参数
 
-    // console.log("router", window.location.href)
+  const [loginState, setLoginState] = useState('login')
+  const handleOpenApp = () => {
+    // TODO: Get session from context or prop
+    // NativeRouter.login(session.access_token, session.refresh_token)
+  }
 
-    useEffect(() => {
-        console.log("useEffect")
-        setLoginState("successlll" + window.location.href)
-        // const params = new URLSearchParams(window.location.search)
-        // console.log("params", params.get("name"))
-    })
+  // console.log("router", window.location.href)
 
-    return <>
-        <div>
-            {loginState}
-            Authorization successful
-        </div>
+  useEffect(() => {
+    console.log('useEffect')
+    setLoginState('successlll' + window.location.href)
+    // const params = new URLSearchParams(window.location.search)
+    // console.log("params", params.get("name"))
+  })
+
+  return (
+    <>
+      <div>
+        {loginState}
+        {t('Authorization successful')}
+      </div>
     </>
+  )
 }
+
+export const getStaticProps = i18nStaticProps('/auth')

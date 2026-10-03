@@ -1,3 +1,5 @@
+import { I18nText } from '@/i18n/I18nText'
+import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState } from 'react'
 import styles from '@/styles/Home.module.css'
 import { affiliateCode, readAffiliateJourney } from '@/lib/affiliate-journey'
@@ -11,28 +13,33 @@ const offers = new Map<string, Promise<Offer | null>>()
  * Checkout gets applied and what it takes off. Null for anyone else, or when the code wouldn't take.
  */
 export function useAffiliateOffer(): Offer | null {
-    const [offer, setOffer] = useState<Offer | null>(null)
+  const [offer, setOffer] = useState<Offer | null>(null)
 
-    useEffect(() => {
-        // The address bar first: the journey cookie is written by the app's effect, which runs after this one.
-        const via = affiliateCode(new URLSearchParams(window.location.search).get('via')) ?? readAffiliateJourney()?.via
-        if (!via) return
-        let cancelled = false
-        if (!offers.has(via)) {
-            offers.set(via, fetch(`/api/affiliate/offer?via=${encodeURIComponent(via)}`)
-                .then((response) => (response.ok ? response.json() : null))
-                .then((body) => body?.offer ?? null)
-                .catch(() => null))
-        }
-        offers.get(via)?.then((value) => {
-            if (!cancelled) setOffer(value)
-        })
-        return () => {
-            cancelled = true
-        }
-    }, [])
+  useEffect(() => {
+    // The address bar first: the journey cookie is written by the app's effect, which runs after this one.
+    const via =
+      affiliateCode(new URLSearchParams(window.location.search).get('via')) ??
+      readAffiliateJourney()?.via
+    if (!via) return
+    let cancelled = false
+    if (!offers.has(via)) {
+      offers.set(
+        via,
+        fetch(`/api/affiliate/offer?via=${encodeURIComponent(via)}`)
+          .then((response) => (response.ok ? response.json() : null))
+          .then((body) => body?.offer ?? null)
+          .catch(() => null)
+      )
+    }
+    offers.get(via)?.then((value) => {
+      if (!cancelled) setOffer(value)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
-    return offer
+  return offer
 }
 
 /**
@@ -40,11 +47,16 @@ export function useAffiliateOffer(): Offer | null {
  * Checkout gets applied, so the price they see at Checkout is no surprise.
  */
 export function AffiliateOffer() {
-    const offer = useAffiliateOffer()
-    if (!offer) return null
-    return (
-        <p className={styles.offerNote} role="status">
-            Code <strong>{offer.code}</strong> is applied for you at checkout: {offerTerms(offer)}
-        </p>
-    )
+  const { t, locale } = useI18n()
+
+  const offer = useAffiliateOffer()
+  if (!offer) return null
+  return (
+    <p className={styles.offerNote} role="status">
+      <I18nText
+        source={'Code {p0} is applied for you at checkout: {p1}'}
+        values={{ p0: <strong>{offer.code}</strong>, p1: t(offerTerms(offer)) }}
+      />
+    </p>
+  )
 }

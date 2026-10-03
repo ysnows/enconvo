@@ -16,6 +16,7 @@ const layout = `
 .${styles.hero} { position: relative; z-index: 2; isolation: isolate; overflow: hidden; }
 .${styles.hero} header { isolation: isolate; background: transparent; border-color: transparent; backdrop-filter: none; }
 .${styles.hero} header nav { max-width: 1240px; min-height: 64px; margin: 0 auto; padding: 12px 24px; }
+@media (min-width: 1280px) and (max-width: 1599px) { .${styles.hero} header nav { padding-right: 180px; } }
 .${styles.hero} header nav > div > a > svg { height: 28px; }
 .${styles.hero} header nav a { font-weight: 500; }
 .${styles.heroContent} { position: relative; z-index: 1; padding: 108px 24px 64px; }

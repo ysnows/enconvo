@@ -12,12 +12,17 @@ const normalize = (text: string) =>
 export function filterUseCases(
   items: UseCase[],
   category: string,
-  query: string
+  query: string,
+  translate: (text: string) => string = (text) => text
 ) {
   const terms = normalize(query).trim().split(/\s+/).filter(Boolean)
   return items.filter((item) => {
     if (category !== ALL_USE_CASES && item.category !== category) return false
-    const text = normalize(`${item.title} ${item.description} ${item.category}`)
+    const text = normalize(
+      `${item.title} ${item.description} ${item.category} ${translate(
+        item.title
+      )} ${translate(item.description)} ${translate(item.category)}`
+    )
     return terms.every((term) => text.includes(term))
   })
 }

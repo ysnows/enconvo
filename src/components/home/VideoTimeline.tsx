@@ -1,3 +1,4 @@
+import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState, type RefObject } from 'react'
 import styles from '@/styles/Home.module.css'
 
@@ -16,6 +17,8 @@ export function VideoTimeline({
   videoRef: RefObject<HTMLVideoElement>
   onSeek: () => void
 }) {
+  const { t, locale } = useI18n()
+
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   useEffect(() => {
@@ -35,7 +38,7 @@ export function VideoTimeline({
     <>
       <input
         type="range"
-        aria-label="Seek"
+        aria-label={t('Seek')}
         min={0}
         max={duration || 0}
         step={0.1}

@@ -1,3 +1,8 @@
+import { I18nText } from '@/i18n/I18nText'
+import { localizePath } from '@/i18n/locale'
+import { withI18nProps } from '@/i18n/server'
+import { useI18n } from '@/i18n/I18nProvider'
+import { canonicalUrl } from '@/i18n/locale'
 import fs from 'fs/promises'
 import path from 'path'
 import {
@@ -77,13 +82,15 @@ function formatInlineMarkdown(value: string) {
 }
 
 function plainText(value: string) {
-  return value
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/[*_`]/g, '')
+  return value.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`]/g, '')
 }
 
-function formatDate(date: string, month: 'long' | 'short' = 'long') {
-  return new Intl.DateTimeFormat('en', {
+function formatDate(
+  date: string,
+  month: 'long' | 'short' = 'long',
+  locale = 'en'
+) {
+  return new Intl.DateTimeFormat(locale, {
     month,
     day: 'numeric',
     year: 'numeric',
@@ -99,10 +106,7 @@ function slugForVersion(version: string) {
 }
 
 function cleanHeading(value: string) {
-  return value
-    .replace(/🚀/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
+  return value.replace(/🚀/g, '').replace(/\s+/g, ' ').trim()
 }
 
 function isProseLine(trimmed: string) {
@@ -321,7 +325,8 @@ function parseBetaRelease(
 
   return {
     ...parsed,
-    searchText: `${parsed.searchText}\nbeta ${entry.beta}\n${entry.version} beta ${entry.beta}`.toLowerCase(),
+    searchText:
+      `${parsed.searchText}\nbeta ${entry.beta}\n${entry.version} beta ${entry.beta}`.toLowerCase(),
     targetVersion: entry.version,
     betaNumber: entry.beta,
   }
@@ -461,7 +466,9 @@ function boldLead(value: string) {
 }
 
 function headlineFor(release: Release, fallback: string) {
-  const lead = release.highlights.length ? boldLead(release.highlights[0]) : null
+  const lead = release.highlights.length
+    ? boldLead(release.highlights[0])
+    : null
   if (lead) {
     return lead
   }
@@ -634,14 +641,18 @@ function narrowToQuery(entry: Entry, query: string): Entry | null {
     return null
   }
 
-  const intro = entry.intro && includesQuery(entry.intro, query) ? entry.intro : ''
+  const intro =
+    entry.intro && includesQuery(entry.intro, query) ? entry.intro : ''
   const highlights = entry.highlights.filter((highlight) =>
     includesQuery(highlight, query)
   )
   const sections = entry.sections
     .map((section) => {
       // A matching section heading keeps every change under it.
-      const sectionHit = includesQuery(`${section.title} ${section.lede}`, query)
+      const sectionHit = includesQuery(
+        `${section.title} ${section.lede}`,
+        query
+      )
       return {
         ...section,
         items: sectionHit
@@ -696,7 +707,9 @@ function markQuery(html: string, query: string) {
         .split(pattern)
         .map((piece, index) =>
           index % 2
-            ? `<mark class="rounded-[3px] bg-signal-yellow/[0.26] px-px text-content">${escapeHtml(piece)}</mark>`
+            ? `<mark class="rounded-[3px] bg-signal-yellow/[0.26] px-px text-content">${escapeHtml(
+                piece
+              )}</mark>`
             : escapeHtml(piece)
         )
         .join('')
@@ -723,6 +736,8 @@ function changeItemHtml(item: string, query: string) {
 }
 
 function ReleaseTag({ tone }: { tone: 'latest' | 'beta' }) {
+  const { t, locale } = useI18n()
+
   return (
     <span className="inline-flex items-center gap-[7px] whitespace-nowrap text-[12.5px] font-medium text-content-muted">
       <span
@@ -734,14 +749,14 @@ function ReleaseTag({ tone }: { tone: 'latest' | 'beta' }) {
             : 'bg-signal-yellow shadow-[0_0_0_3px_rgba(255,197,51,0.15)]'
         )}
       />
-      {tone === 'latest' ? 'Latest' : 'Beta'}
+      {tone === 'latest' ? t('Latest') : t('Beta')}
     </span>
   )
 }
 
 function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
   return (
-    <>
+    <div lang="en">
       {entry.intro && (
         <p
           className="mb-7 text-[16px] leading-[1.75] text-content-body [overflow-wrap:anywhere]"
@@ -762,7 +777,10 @@ function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
       {entry.sections.length > 0 && (
         <div className="mt-2">
           {entry.sections.map((section, index) => (
-            <section key={`${section.title}-${index}`} className="mt-8 first:mt-6">
+            <section
+              key={`${section.title}-${index}`}
+              className="mt-8 first:mt-6"
+            >
               <h3
                 className="mb-3 text-[15px] font-semibold leading-[1.4] text-content"
                 dangerouslySetInnerHTML={richText(section.title, query)}
@@ -786,7 +804,7 @@ function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
           ))}
         </div>
       )}
-    </>
+    </div>
   )
 }
 
@@ -803,6 +821,8 @@ function ReleaseEntry({
   onToggle: () => void
   onShowBetas: () => void
 }) {
+  const { t, locale } = useI18n()
+
   const anchor = entry.groupId ?? entry.id
   const notesId = `notes-${entry.id}`
   const titleClass =
@@ -816,10 +836,12 @@ function ReleaseEntry({
       {anchor !== entry.id && <span id={entry.id} className="sr-only" />}
       <div className="border-t border-white/[0.06] group-first:border-t-0 md:border-l md:border-t-0 md:border-hairline md:group-last:[border-image:linear-gradient(#242728,transparent)_1]">
         <a
-          href={`#${anchor}`}
-          className="relative block pt-[26px] text-[13.5px] tabular-nums text-content-muted transition-colors duration-300 md:pl-5 md:pt-[37px] md:text-content-body md:before:absolute md:before:left-0 md:before:top-[calc(37px+0.72em)] md:before:h-px md:before:w-2.5 md:before:bg-white/[0.16] md:before:transition-all md:before:duration-[450ms] md:group-hover:text-content md:group-hover:before:w-[15px] md:group-hover:before:bg-content"
+          href={localizePath(`#${anchor}`, locale)}
+          className="md:before:duration-[450ms] relative block pt-[26px] text-[13.5px] tabular-nums text-content-muted transition-colors duration-300 md:pl-5 md:pt-[37px] md:text-content-body md:before:absolute md:before:left-0 md:before:top-[calc(37px+0.72em)] md:before:h-px md:before:w-2.5 md:before:bg-white/[0.16] md:before:transition-all md:group-hover:text-content md:group-hover:before:w-[15px] md:group-hover:before:bg-content"
         >
-          <time dateTime={entry.date}>{entry.shortDateLabel}</time>
+          <time dateTime={entry.date}>
+            {formatDate(entry.date, 'short', locale)}
+          </time>
         </a>
       </div>
 
@@ -857,14 +879,14 @@ function ReleaseEntry({
                 aria-controls={notesId}
                 aria-expanded={open}
                 onClick={onToggle}
-                className="text-left transition-colors duration-[250ms] hover:text-white"
+                className="duration-[250ms] text-left transition-colors hover:text-white"
               >
                 {entry.headline}
               </button>
             </h2>
             {entry.summary && (
               <p className="mt-3 line-clamp-2 text-[15.5px] leading-[1.6] text-content-muted [overflow-wrap:anywhere]">
-                {entry.summary}
+                {t(entry.summary)}
               </p>
             )}
             <div className="mt-[18px] flex flex-wrap items-center gap-x-[18px] gap-y-2 text-[14px]">
@@ -875,11 +897,11 @@ function ReleaseEntry({
                 onClick={onToggle}
                 className="inline-flex items-center gap-1.5 font-medium text-content"
               >
-                {open ? 'Hide the notes' : 'Read the notes'}
+                {open ? t('Hide the notes') : t('Read the notes')}
                 <ChevronDown
                   aria-hidden="true"
                   className={clsx(
-                    'h-3.5 w-3.5 flex-none text-content-muted transition-transform duration-[550ms]',
+                    'duration-[550ms] h-3.5 w-3.5 flex-none text-content-muted transition-transform',
                     EASE,
                     open && 'rotate-180'
                   )}
@@ -896,11 +918,16 @@ function ReleaseEntry({
                   onClick={onShowBetas}
                   className="text-signal-blue underline-offset-[3px] hover:underline"
                 >
-                  All {entry.buildCount} beta builds
+                  {t('All ')}
+                  {entry.buildCount} {t(' beta builds')}
                 </button>
               )}
             </div>
-            <div id={notesId} className="cl-fold" data-open={open ? '' : undefined}>
+            <div
+              id={notesId}
+              className="cl-fold"
+              data-open={open ? '' : undefined}
+            >
               {/* React 18 has no inert prop; an empty string sets the attribute. */}
               <div {...(open ? {} : ({ inert: '' } as Record<string, string>))}>
                 <div className="pt-[30px]">
@@ -909,9 +936,9 @@ function ReleaseEntry({
                     type="button"
                     aria-controls={notesId}
                     onClick={onToggle}
-                    className="mt-7 text-[14px] text-content-muted transition-colors duration-[250ms] hover:text-content"
+                    className="duration-[250ms] mt-7 text-[14px] text-content-muted transition-colors hover:text-content"
                   >
-                    Hide the notes
+                    {t('Hide the notes')}
                   </button>
                 </div>
               </div>
@@ -942,6 +969,8 @@ function GuideStep({ step, children }: { step: number; children: ReactNode }) {
 // Betas ship through the app's own updater, so the page explains where to
 // switch the channel instead of linking a separate download.
 function BetaGuide({ entry }: { entry: Entry }) {
+  const { t, locale } = useI18n()
+
   const build = `${entry.version} Beta ${entry.build}`
   const strong = 'font-medium text-content'
   return (
@@ -964,11 +993,12 @@ function BetaGuide({ entry }: { entry: Entry }) {
                 : 'border-hairline bg-white/[0.04] text-content-body hover:border-white/20 hover:bg-white/[0.07] hover:text-content'
             )}
           >
-            Try the {entry.version} beta
+            {t('Try the ')}
+            {entry.version} {t(' beta')}
             <ArrowRight
               aria-hidden="true"
               className={clsx(
-                'h-4 w-4 transition-transform duration-[450ms]',
+                'duration-[450ms] h-4 w-4 transition-transform',
                 EASE,
                 open ? 'rotate-90' : 'group-hover:translate-x-[3px]'
               )}
@@ -985,61 +1015,82 @@ function BetaGuide({ entry }: { entry: Entry }) {
           >
             <Popover.Panel className="absolute left-0 top-full z-30 mt-3 w-[min(372px,calc(100vw-32px))] origin-top-left rounded-[18px] border border-white/10 bg-[#0d0f12] p-5 shadow-[0_24px_64px_rgba(0,0,0,0.55)]">
               <p className="flex items-center gap-2 text-[12.5px] font-medium text-signal-yellow">
-                <span
-                  aria-hidden="true"
-                  className="h-1.5 w-1.5 rounded-full bg-signal-yellow"
+                <I18nText
+                  source={'{p0} Beta channel'}
+                  values={{
+                    p0: (
+                      <span
+                        aria-hidden="true"
+                        className="h-1.5 w-1.5 rounded-full bg-signal-yellow"
+                      />
+                    ),
+                  }}
                 />
-                Beta channel
               </p>
               <h2 className="mt-2 text-[17px] font-semibold leading-snug text-content">
-                Get Enconvo {build}
+                {t('Get Enconvo ')}
+                {build}
               </h2>
               <p className="mt-1.5 text-[14px] leading-[1.55] text-content-muted">
-                Betas arrive through Enconvo’s own updates. Switch the update
-                channel in the app once:
+                {t(
+                  'Betas arrive through Enconvo’s own updates. Switch the update channel in the app once:'
+                )}
               </p>
               <ol className="mt-4 space-y-3.5">
                 <GuideStep step={1}>
-                  Click the Enconvo icon in the menu bar and choose{' '}
-                  <strong className={strong}>Settings</strong>.
+                  {t('Click the Enconvo icon in the menu bar and choose')}{' '}
+                  <strong className={strong}>{t('Settings')}</strong>.
                 </GuideStep>
                 <GuideStep step={2}>
-                  Open <strong className={strong}>General</strong>. Under{' '}
-                  <strong className={strong}>Updates</strong>, set{' '}
-                  <strong className={strong}>Update Channel</strong> to{' '}
-                  <strong className={strong}>Beta</strong>.
+                  {t('Open ')}
+                  <strong className={strong}>{t('General')}</strong>
+                  {t('. Under')}{' '}
+                  <strong className={strong}>{t('Updates')}</strong>
+                  {t(', set')}{' '}
+                  <strong className={strong}>{t('Update Channel')}</strong>{' '}
+                  {t(' to')} <strong className={strong}>{t('Beta')}</strong>.
                   <span
                     aria-hidden="true"
                     className="mt-2.5 flex items-center justify-between rounded-[10px] border border-white/[0.08] bg-white/[0.03] py-[7px] pl-3 pr-2 text-[13px]"
                   >
-                    <span className="text-content-body">Update Channel</span>
+                    <span className="text-content-body">
+                      {t('Update Channel')}
+                    </span>
                     <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.06] py-0.5 pl-2.5 pr-1.5 text-content">
-                      Beta
+                      {t('Beta')}
                       <ChevronDown className="h-3.5 w-3.5 text-content-muted" />
                     </span>
                   </span>
                 </GuideStep>
                 <GuideStep step={3}>
-                  From the menu bar icon again, choose{' '}
-                  <strong className={strong}>Check for Updates</strong> to
-                  install {build}.
+                  {t('From the menu bar icon again, choose')}{' '}
+                  <strong className={strong}>{t('Check for Updates')}</strong>{' '}
+                  {t(' to install ')}
+                  {build}.
                 </GuideStep>
               </ol>
               <p className="mt-5 border-t border-white/[0.07] pt-4 text-[13px] leading-[1.55] text-content-ash">
-                New to Enconvo?{' '}
-                <a
-                  href={DOWNLOAD_URL}
-                  onClick={() =>
-                    trackEvent('download_click', {
-                      arch: 'auto',
-                      placement: 'changelog_beta_guide',
-                    })
+                <I18nText
+                  source={
+                    'New to Enconvo? {p0} . To leave the beta, set the channel back to Production.'
                   }
-                  className="text-content-body underline decoration-white/25 underline-offset-[3px] transition-[text-decoration-color] duration-[250ms] hover:decoration-content-body"
-                >
-                  Download it first
-                </a>
-                . To leave the beta, set the channel back to Production.
+                  values={{
+                    p0: (
+                      <a
+                        href={localizePath(DOWNLOAD_URL, locale)}
+                        onClick={() =>
+                          trackEvent('download_click', {
+                            arch: 'auto',
+                            placement: 'changelog_beta_guide',
+                          })
+                        }
+                        className="duration-[250ms] text-content-body underline decoration-white/25 underline-offset-[3px] transition-[text-decoration-color] hover:decoration-content-body"
+                      >
+                        {t('Download it first')}
+                      </a>
+                    ),
+                  }}
+                />
               </p>
             </Popover.Panel>
           </Transition>
@@ -1052,102 +1103,103 @@ function BetaGuide({ entry }: { entry: Entry }) {
 // Kept in its own component so styled-jsx does not tag the page's elements.
 function ChangelogStyles() {
   return (
-    <style jsx global>{`
-      .cl-page {
-        --cl-ease: cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      .cl-page :focus-visible {
-        outline: 2px solid #57c1ff;
-        outline-offset: 3px;
-        border-radius: 4px;
-      }
-      .cl-page input:focus-visible {
-        outline: none;
-      }
-      .cl-rise {
-        animation: cl-rise 0.9s var(--cl-ease) both;
-      }
-      @keyframes cl-rise {
-        from {
+    <style jsx global>
+      {`
+        .cl-page {
+          --cl-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .cl-page :focus-visible {
+          outline: 2px solid #57c1ff;
+          outline-offset: 3px;
+          border-radius: 4px;
+        }
+        .cl-page input:focus-visible {
+          outline: none;
+        }
+        .cl-rise {
+          animation: cl-rise 0.9s var(--cl-ease) both;
+        }
+        @keyframes cl-rise {
+          from {
+            opacity: 0;
+            transform: translateY(14px);
+          }
+        }
+        .cl-glow {
+          background: radial-gradient(
+              42% 58% at 24% 26%,
+              rgba(87, 193, 255, 0.12),
+              transparent 72%
+            ),
+            radial-gradient(
+              30% 40% at 62% 6%,
+              rgba(89, 212, 153, 0.055),
+              transparent 70%
+            );
+        }
+        .cl-pill[data-ready] {
+          transition: transform 0.5s var(--cl-ease), width 0.5s var(--cl-ease);
+        }
+        /* Height animates through grid rows, so content never jumps. */
+        .cl-fold {
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows 0.6s var(--cl-ease);
+        }
+        .cl-fold[data-open] {
+          grid-template-rows: 1fr;
+        }
+        .cl-fold > div {
+          min-height: 0;
+          overflow: hidden;
           opacity: 0;
-          transform: translateY(14px);
+          transform: translateY(-6px);
+          transition: opacity 0.25s ease, transform 0.6s var(--cl-ease);
         }
-      }
-      .cl-glow {
-        background: radial-gradient(
-            42% 58% at 24% 26%,
-            rgba(87, 193, 255, 0.12),
-            transparent 72%
-          ),
-          radial-gradient(
-            30% 40% at 62% 6%,
-            rgba(89, 212, 153, 0.055),
-            transparent 70%
-          );
-      }
-      .cl-pill[data-ready] {
-        transition: transform 0.5s var(--cl-ease), width 0.5s var(--cl-ease);
-      }
-      /* Height animates through grid rows, so content never jumps. */
-      .cl-fold {
-        display: grid;
-        grid-template-rows: 0fr;
-        transition: grid-template-rows 0.6s var(--cl-ease);
-      }
-      .cl-fold[data-open] {
-        grid-template-rows: 1fr;
-      }
-      .cl-fold > div {
-        min-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        transform: translateY(-6px);
-        transition: opacity 0.25s ease, transform 0.6s var(--cl-ease);
-      }
-      .cl-fold[data-open] > div {
-        opacity: 1;
-        transform: none;
-        transition: opacity 0.5s ease 0.08s, transform 0.6s var(--cl-ease);
-      }
-      .cl-page article[data-reveal='wait'] {
-        opacity: 0;
-        transform: translateY(22px);
-      }
-      .cl-page article[data-reveal='in'] {
-        opacity: 1;
-        transform: none;
-        transition: opacity 0.9s var(--cl-ease), transform 0.9s var(--cl-ease);
-      }
-      ::view-transition-group(*) {
-        animation-duration: 0.5s;
-        animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-      }
-      ::view-transition-old(root),
-      ::view-transition-new(root) {
-        animation-duration: 0.32s;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .cl-page *,
-        .cl-page *::before,
-        .cl-page *::after {
-          animation-duration: 0.01ms !important;
-          animation-delay: 0ms !important;
-          transition-duration: 0.01ms !important;
-          transition-delay: 0ms !important;
-        }
-        .cl-page article[data-reveal] {
+        .cl-fold[data-open] > div {
           opacity: 1;
           transform: none;
+          transition: opacity 0.5s ease 0.08s, transform 0.6s var(--cl-ease);
         }
-      }
-    `}</style>
+        .cl-page article[data-reveal='wait'] {
+          opacity: 0;
+          transform: translateY(22px);
+        }
+        .cl-page article[data-reveal='in'] {
+          opacity: 1;
+          transform: none;
+          transition: opacity 0.9s var(--cl-ease), transform 0.9s var(--cl-ease);
+        }
+        ::view-transition-group(*) {
+          animation-duration: 0.5s;
+          animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation-duration: 0.32s;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .cl-page *,
+          .cl-page *::before,
+          .cl-page *::after {
+            animation-duration: 0.01ms !important;
+            animation-delay: 0ms !important;
+            transition-duration: 0.01ms !important;
+            transition-delay: 0ms !important;
+          }
+          .cl-page article[data-reveal] {
+            opacity: 1;
+            transform: none;
+          }
+        }
+      `}
+    </style>
   )
 }
 
-export default function ChangelogPage({
-  releases,
-  betas,
-}: ChangelogPageProps) {
+export default function ChangelogPage({ releases, betas }: ChangelogPageProps) {
+  const { t, locale } = useI18n()
+
   const data = useMemo(() => buildEntries(releases, betas), [releases, betas])
   const latest = data.stable[0]
   const oldest = data.stable[data.stable.length - 1]
@@ -1204,7 +1256,11 @@ export default function ChangelogPage({
     const doc = document as Document & {
       startViewTransition?: (update: () => void) => unknown
     }
-    if (doc.startViewTransition && !prefersReducedMotion() && !document.hidden) {
+    if (
+      doc.startViewTransition &&
+      !prefersReducedMotion() &&
+      !document.hidden
+    ) {
       doc.startViewTransition(() => flushSync(() => setQuery(next)))
     } else {
       setQuery(next)
@@ -1238,15 +1294,16 @@ export default function ChangelogPage({
       event.key === 'ArrowRight' || event.key === 'ArrowDown'
         ? 1
         : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
-          ? -1
-          : 0
+        ? -1
+        : 0
     if (!step) {
       return
     }
 
     event.preventDefault()
     const index = CHANNELS.findIndex((item) => item.value === channel)
-    const next = CHANNELS[(index + step + CHANNELS.length) % CHANNELS.length].value
+    const next =
+      CHANNELS[(index + step + CHANNELS.length) % CHANNELS.length].value
     selectChannel(next)
     tabRefs.current[next]?.focus()
   }
@@ -1270,7 +1327,9 @@ export default function ChangelogPage({
       if (top < NAV_OFFSET) {
         window.scrollTo({
           top: window.scrollY + top - NAV_OFFSET,
-          behavior: prefersReducedMotion() ? ('instant' as ScrollBehavior) : 'smooth',
+          behavior: prefersReducedMotion()
+            ? ('instant' as ScrollBehavior)
+            : 'smooth',
         })
       }
     }
@@ -1456,12 +1515,14 @@ export default function ChangelogPage({
         return
       }
 
-      const target: Channel | null = data.builds.some((entry) => entry.id === id)
+      const target: Channel | null = data.builds.some(
+        (entry) => entry.id === id
+      )
         ? 'beta'
         : data.stable.some((entry) => entry.id === id) ||
-            data.heads.some((entry) => entry.groupId === id)
-          ? 'all'
-          : null
+          data.heads.some((entry) => entry.groupId === id)
+        ? 'all'
+        : null
       if (!target || (target === channelRef.current && !queryRef.current)) {
         return
       }
@@ -1509,7 +1570,9 @@ export default function ChangelogPage({
       if (window.scrollY > 200) {
         window.scrollTo({
           top: 0,
-          behavior: prefersReducedMotion() ? ('instant' as ScrollBehavior) : 'smooth',
+          behavior: prefersReducedMotion()
+            ? ('instant' as ScrollBehavior)
+            : 'smooth',
         })
       }
       searchRef.current?.focus({ preventScroll: true })
@@ -1522,11 +1585,17 @@ export default function ChangelogPage({
   return (
     <>
       <Head>
-        <title>Enconvo Releases - Changelog</title>
-        <link rel="canonical" href="https://www.enconvo.com/changelog" />
+        <title>{t('Enconvo Releases - Changelog')}</title>
+        <link
+          rel="canonical"
+          href={canonicalUrl('/changelog', locale)}
+          key="canonical"
+        />
         <meta
           name="description"
-          content="Read the latest Enconvo release notes, beta build updates, product improvements, and fixes."
+          content={t(
+            'Read the latest Enconvo release notes, beta build updates, product improvements, and fixes.'
+          )}
         />
       </Head>
       <div className="cl-page min-h-screen overflow-x-clip bg-canvas text-content">
@@ -1541,7 +1610,7 @@ export default function ChangelogPage({
             <div className="cl-rise">
               {betaHead?.groupId && (
                 <a
-                  href={`#${betaHead.groupId}`}
+                  href={localizePath(`#${betaHead.groupId}`, locale)}
                   className="group inline-flex h-[34px] max-w-full items-center gap-2.5 rounded-full border border-hairline bg-white/[0.03] pl-1 pr-3 text-[13.5px] text-content-body transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.05]"
                 >
                   <span className="inline-flex h-[26px] flex-none items-center gap-[7px] whitespace-nowrap rounded-full bg-signal-yellow/10 px-2.5 text-[12.5px] font-semibold text-signal-yellow">
@@ -1549,13 +1618,14 @@ export default function ChangelogPage({
                       aria-hidden="true"
                       className="h-1.5 w-1.5 rounded-full bg-signal-yellow"
                     />
-                    {betaHead.version} Beta {betaHead.build}
+                    {betaHead.version} {t(' Beta ')}
+                    {betaHead.build}
                   </span>
                   <span className="min-w-0 truncate">{betaHead.headline}</span>
                   <ArrowRight
                     aria-hidden="true"
                     className={clsx(
-                      'h-3.5 w-3.5 flex-none text-content-muted transition-transform duration-[450ms] group-hover:translate-x-[3px]',
+                      'duration-[450ms] h-3.5 w-3.5 flex-none text-content-muted transition-transform group-hover:translate-x-[3px]',
                       EASE
                     )}
                   />
@@ -1567,14 +1637,21 @@ export default function ChangelogPage({
                   betaHead && 'mt-[26px]'
                 )}
               >
-                What’s new in Enconvo
+                {t('What’s new in Enconvo')}
               </h1>
               <p className="mt-4 max-w-[60ch] text-[15.5px] leading-[1.6] text-content-muted sm:text-[16.5px]">
-                New features, improvements, and fixes in every release
-                {oldest
-                  ? ` since Enconvo ${oldest.version.split('.').slice(0, 2).join('.')}`
-                  : ''}
-                .
+                <I18nText
+                  source={
+                    'New features, improvements, and fixes in every release{p0} .'
+                  }
+                  values={{
+                    p0: oldest
+                      ? t(' since Enconvo {p0}', {
+                          p0: oldest.version.split('.').slice(0, 2).join('.'),
+                        })
+                      : '',
+                  }}
+                />
               </p>
             </div>
 
@@ -1583,7 +1660,7 @@ export default function ChangelogPage({
               <div className="cl-rise relative z-20 mt-8 [animation-delay:60ms]">
                 <div className="flex flex-wrap items-center gap-3">
                   <a
-                    href={DOWNLOAD_URL}
+                    href={localizePath(DOWNLOAD_URL, locale)}
                     onClick={() =>
                       trackEvent('download_click', {
                         arch: 'auto',
@@ -1597,12 +1674,15 @@ export default function ChangelogPage({
                       strokeWidth={2.2}
                       className="h-4 w-4"
                     />
-                    Download for macOS
+                    {t('Download for macOS')}
                   </a>
                   {betaHead && <BetaGuide entry={betaHead} />}
                 </div>
                 <p className="mt-3.5 text-[13.5px] tabular-nums text-content-ash">
-                  Version {latest.version} · macOS 12 or later
+                  <I18nText
+                    source={'Version {p0} · macOS 12 or later'}
+                    values={{ p0: latest.version }}
+                  />
                 </p>
               </div>
             )}
@@ -1613,7 +1693,7 @@ export default function ChangelogPage({
             >
               <div
                 role="radiogroup"
-                aria-label="Release channel"
+                aria-label={t('Release channel')}
                 onKeyDown={onTabsKeyDown}
                 className="relative flex items-center gap-0.5"
               >
@@ -1642,7 +1722,7 @@ export default function ChangelogPage({
                           : 'text-content-muted hover:text-content'
                       )}
                     >
-                      {item.label}
+                      {t(item.label)}
                     </button>
                   )
                 })}
@@ -1670,8 +1750,8 @@ export default function ChangelogPage({
                       event.currentTarget.blur()
                     }
                   }}
-                  placeholder="Search releases"
-                  aria-label="Search releases"
+                  placeholder={t('Search releases')}
+                  aria-label={t('Search releases')}
                   autoComplete="off"
                   spellCheck={false}
                   className="h-[38px] w-full rounded-full border border-hairline bg-white/[0.025] px-[38px] text-[14px] text-content outline-none transition-colors duration-300 placeholder:text-content-ash focus:border-white/[0.22] focus:bg-white/5 [&::-webkit-search-cancel-button]:hidden"
@@ -1679,7 +1759,7 @@ export default function ChangelogPage({
                 {input ? (
                   <button
                     type="button"
-                    aria-label="Clear search"
+                    aria-label={t('Clear search')}
                     onClick={() => clearSearch(true)}
                     className="absolute right-2 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-content-muted transition-colors hover:bg-white/[0.08] hover:text-content"
                   >
@@ -1699,31 +1779,38 @@ export default function ChangelogPage({
               (shown.length ? (
                 <p className="mt-9 text-[14px] text-content-muted">
                   <b className="font-semibold text-content">
-                    {plural(matchCount, 'match', 'matches')}
+                    {t(plural(matchCount, 'match', 'matches'))}
                   </b>{' '}
-                  in {plural(shown.length, 'release')} for “{query}” ·{' '}
+                  {t('in ')}
+                  {t(plural(shown.length, 'release'))} {t(' for “')}
+                  {query}” ·{' '}
                   <button
                     type="button"
                     onClick={() => clearSearch(true)}
                     className="text-signal-blue underline-offset-[3px] hover:underline"
                   >
-                    Clear
+                    {t('Clear')}
                   </button>
                 </p>
               ) : (
                 <div className="py-24 text-center">
                   <h2 className="text-[22px] font-semibold text-content">
-                    No results for “{query}”
+                    <I18nText
+                      source={'No results for “{p0}”'}
+                      values={{ p0: query }}
+                    />
                   </h2>
                   <p className="mt-2.5 text-content-muted">
-                    Try a feature like “Dynamic Island”, or a version like{' '}
+                    {t(
+                      'Try a feature like “Dynamic Island”, or a version like'
+                    )}{' '}
                     {latest?.version ?? '2.5.5'}.{' '}
                     <button
                       type="button"
                       onClick={() => clearSearch(true)}
                       className="text-signal-blue underline-offset-[3px] hover:underline"
                     >
-                      Clear search
+                      {t('Clear search')}
                     </button>
                   </p>
                 </div>
@@ -1754,14 +1841,17 @@ export default function ChangelogPage({
   )
 }
 
-export const getStaticProps: GetStaticProps<ChangelogPageProps> = async () => {
-  const changelog = await readChangelogSource()
-  const betas = await readBetaReleases()
+export const getStaticProps: GetStaticProps<ChangelogPageProps> = withI18nProps(
+  async () => {
+    const changelog = await readChangelogSource()
+    const betas = await readBetaReleases()
 
-  return {
-    props: {
-      releases: parseChangelog(changelog),
-      betas,
-    },
-  }
-}
+    return {
+      props: {
+        releases: parseChangelog(changelog),
+        betas,
+      },
+    }
+  },
+  '/changelog'
+)

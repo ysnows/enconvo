@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prebuild": "node scripts/generate-i18n-message-map.mjs",
+    "check:i18n": "node scripts/generate-i18n-message-map.mjs && node scripts/check-i18n.mjs"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {

@@ -10,12 +10,24 @@ declare global {
   }
 }
 
-export function trackEvent(name: string, params: EventParams = {}) {
+export function trackEvent(
+  name: string,
+  params: EventParams = {},
+  options: { includePagePath?: boolean } = {}
+) {
   if (typeof window === 'undefined') return
   try {
     const payload = {
       ...params,
-      page_path: window.location.pathname,
+      ...(options.includePagePath === false
+        ? // GA also derives location, title and referrer when they are omitted.
+          // Use public brand context for events on private or deep-link pages.
+          {
+            page_location: 'https://www.enconvo.com/',
+            page_title: 'Enconvo',
+            page_referrer: '',
+          }
+        : { page_path: window.location.pathname }),
       // Beacon transport survives the navigation that usually follows a CTA click.
       transport_type: 'beacon',
     }

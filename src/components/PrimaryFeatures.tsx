@@ -1,37 +1,40 @@
+import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState } from 'react'
 import { Container } from '@/components/Container'
 import { Feature } from './features/Feature'
 import { features } from '@/data/features'
 
 export function PrimaryFeatures() {
-    let [_, setTabOrientation] = useState('horizontal')
+  const { t, locale } = useI18n()
 
-    useEffect(() => {
-        let lgMediaQuery = window.matchMedia('(min-width: 1024px)')
+  let [_, setTabOrientation] = useState('horizontal')
 
-        function onMediaQueryChange({ matches }) {
-            setTabOrientation(matches ? 'vertical' : 'horizontal')
-        }
+  useEffect(() => {
+    let lgMediaQuery = window.matchMedia('(min-width: 1024px)')
 
-        onMediaQueryChange(lgMediaQuery)
-        lgMediaQuery.addEventListener('change', onMediaQueryChange)
+    function onMediaQueryChange({ matches }) {
+      setTabOrientation(matches ? 'vertical' : 'horizontal')
+    }
 
-        return () => {
-            lgMediaQuery.removeEventListener('change', onMediaQueryChange)
-        }
-    }, [])
+    onMediaQueryChange(lgMediaQuery)
+    lgMediaQuery.addEventListener('change', onMediaQueryChange)
 
-    return (
-        <section
-            id="features"
-            aria-label="Features for running your books"
-            className="relative overflow-hidden bg-canvas pb-28 sm:pt-20 pt-6 sm:py-32"
-        >
-            <Container className="relative">
-                {features.map((feature, index) => (
-                    <Feature key={index} {...feature} index={index} />
-                ))}
-            </Container>
-        </section>
-    )
+    return () => {
+      lgMediaQuery.removeEventListener('change', onMediaQueryChange)
+    }
+  }, [])
+
+  return (
+    <section
+      id="features"
+      aria-label={t('Features for running your books')}
+      className="relative overflow-hidden bg-canvas pb-28 pt-6 sm:py-32 sm:pt-20"
+    >
+      <Container className="relative">
+        {features.map((feature, index) => (
+          <Feature key={index} {...feature} index={index} />
+        ))}
+      </Container>
+    </section>
+  )
 }

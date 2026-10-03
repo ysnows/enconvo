@@ -1,3 +1,5 @@
+import { I18nText } from '@/i18n/I18nText'
+import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
@@ -12,11 +14,11 @@ const OFFER_PAGES = new Set(['/', '/use-cases', '/changelog', '/cloud-pricing'])
 const DISMISSED_KEY = 'enconvo_offer_dismissed'
 
 function readDismissed(): string | null {
-    try {
-        return localStorage.getItem(DISMISSED_KEY)
-    } catch {
-        return null
-    }
+  try {
+    return localStorage.getItem(DISMISSED_KEY)
+  } catch {
+    return null
+  }
 }
 
 /**
@@ -26,59 +28,78 @@ function readDismissed(): string | null {
  * dismissed or followed.
  */
 export function AffiliateOfferToast() {
-    const router = useRouter()
-    const offer = useAffiliateOffer()
-    const [dismissed, setDismissed] = useState<string | null>(readDismissed)
-    const [pricingInView, setPricingInView] = useState(false)
-    const onPage = OFFER_PAGES.has(router.pathname)
+  const { t, locale } = useI18n()
 
-    useEffect(() => {
-        if (!offer || !onPage || typeof IntersectionObserver === 'undefined') return
-        const section = document.getElementById('pricing')
-        if (!section) return
-        const observer = new IntersectionObserver(([entry]) => setPricingInView(entry.isIntersecting))
-        observer.observe(section)
-        return () => {
-            observer.disconnect()
-            setPricingInView(false)
-        }
-    }, [offer, onPage, router.asPath])
+  const router = useRouter()
+  const offer = useAffiliateOffer()
+  const [dismissed, setDismissed] = useState<string | null>(readDismissed)
+  const [pricingInView, setPricingInView] = useState(false)
+  const onPage = OFFER_PAGES.has(router.pathname)
 
-    if (!offer || !onPage || pricingInView || dismissed === offer.code) return null
-
-    const dismiss = () => {
-        setDismissed(offer.code)
-        try {
-            localStorage.setItem(DISMISSED_KEY, offer.code)
-        } catch {}
-    }
-
-    return (
-        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[90] flex justify-center px-4 sm:inset-x-auto sm:bottom-6 sm:left-6">
-            <div
-                role="status"
-                aria-live="polite"
-                className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border border-hairline-strong bg-surface-card/95 py-3 pl-4 pr-1 text-left shadow-2xl backdrop-blur-md"
-            >
-                <BadgePercent className="mt-0.5 h-5 w-5 flex-none text-signal-blue" aria-hidden="true" />
-                <div className="min-w-0 flex-1 py-0.5">
-                    <p className="text-sm font-medium text-content">
-                        Code <span className="tracking-[0.02em]">{offer.code}</span> is applied for you at checkout
-                    </p>
-                    <p className="mt-0.5 text-[13px] leading-[18px] text-content-muted">{offerTerms(offer)}</p>
-                    <Link href="/#pricing" onClick={dismiss} className="mt-2 inline-block text-[13px] font-medium text-signal-blue hover:underline">
-                        See plans
-                    </Link>
-                </div>
-                <button
-                    type="button"
-                    onClick={dismiss}
-                    className="-my-1.5 flex h-10 w-10 flex-none items-center justify-center rounded-[10px] text-content-muted transition-colors hover:bg-white/[0.06] hover:text-content"
-                    aria-label="Dismiss"
-                >
-                    <X className="h-4 w-4" aria-hidden="true" />
-                </button>
-            </div>
-        </div>
+  useEffect(() => {
+    if (!offer || !onPage || typeof IntersectionObserver === 'undefined') return
+    const section = document.getElementById('pricing')
+    if (!section) return
+    const observer = new IntersectionObserver(([entry]) =>
+      setPricingInView(entry.isIntersecting)
     )
+    observer.observe(section)
+    return () => {
+      observer.disconnect()
+      setPricingInView(false)
+    }
+  }, [offer, onPage, router.asPath])
+
+  if (!offer || !onPage || pricingInView || dismissed === offer.code)
+    return null
+
+  const dismiss = () => {
+    setDismissed(offer.code)
+    try {
+      localStorage.setItem(DISMISSED_KEY, offer.code)
+    } catch {}
+  }
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[90] flex justify-center px-4 sm:inset-x-auto sm:bottom-6 sm:left-6">
+      <div
+        role="status"
+        aria-live="polite"
+        className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border border-hairline-strong bg-surface-card/95 py-3 pl-4 pr-1 text-left shadow-2xl backdrop-blur-md"
+      >
+        <BadgePercent
+          className="mt-0.5 h-5 w-5 flex-none text-signal-blue"
+          aria-hidden="true"
+        />
+        <div className="min-w-0 flex-1 py-0.5">
+          <p className="text-sm font-medium text-content">
+            <I18nText
+              source={'Code {p0} is applied for you at checkout'}
+              values={{
+                p0: <span className="tracking-[0.02em]">{offer.code}</span>,
+              }}
+            />
+          </p>
+          <p className="mt-0.5 text-[13px] leading-[18px] text-content-muted">
+            {t(offerTerms(offer))}
+          </p>
+          <Link
+            href="/#pricing"
+            onClick={dismiss}
+            className="mt-2 inline-block text-[13px] font-medium text-signal-blue hover:underline"
+          >
+            {t('See plans')}
+          </Link>
+        </div>
+        <button
+          type="button"
+          onClick={dismiss}
+          className="-my-1.5 flex h-10 w-10 flex-none items-center justify-center rounded-[10px] text-content-muted transition-colors hover:bg-white/[0.06] hover:text-content"
+          aria-label={t('Dismiss')}
+        >
+          <X className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  )
 }

@@ -1,3 +1,6 @@
+import { localizePath } from '@/i18n/locale'
+import { useI18n } from '@/i18n/I18nProvider'
+import { I18nText } from '@/i18n/I18nText'
 import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
 import { Menu } from '@headlessui/react'
@@ -25,13 +28,25 @@ function AppleLogoIcon({ className }: { className?: string }) {
 
 function DownloadRowArrow() {
   return (
-    <svg className="w-4 h-4 text-content-ash group-hover:text-content-muted transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3" />
+    <svg
+      className="h-4 w-4 text-content-ash transition-colors group-hover:text-content-muted"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M12 10v6m0 0l-3-3m3 3l3-3"
+      />
     </svg>
   )
 }
 
 export function Hero() {
+  const { t, locale } = useI18n()
+
   const [navElevated, setNavElevated] = useState(false)
 
   useEffect(() => {
@@ -46,7 +61,10 @@ export function Hero() {
   }, [])
 
   return (
-    <div className={`${styles.hero} bg-canvas relative overflow-hidden`} data-nav-elevated={navElevated}>
+    <div
+      className={`${styles.hero} relative overflow-hidden bg-canvas`}
+      data-nav-elevated={navElevated}
+    >
       <HeroLayout />
       <HeroBackdrop />
       <SiteNav />
@@ -56,43 +74,73 @@ export function Hero() {
           <div className="w-full">
             <div className={styles.heroCopy}>
               <h1 className={styles.heroTitle}>
-                The assistant your{' '}
-                <span className={styles.heroTitleAccent}>Mac was promised.</span>
+                <I18nText
+                  source="The assistant your {mac} was promised."
+                  values={{
+                    mac: <span className={styles.heroTitleAccent}>Mac</span>,
+                  }}
+                />
               </h1>
 
               <p className={styles.heroDescription}>
-                Enconvo is an AI agent that lives across your Mac — it sees your
-                screen, works inside your apps, and actually gets things done.
+                {t(
+                  'Enconvo is an AI agent that lives across your Mac — it sees your screen, works inside your apps, and actually gets things done.'
+                )}
               </p>
 
               <div className={styles.heroActions}>
                 <Menu as="div" className="relative">
-                  <Menu.Button className={`${styles.downloadButton} group inline-flex items-center justify-center font-semibold text-canvas bg-white hover:bg-content`}>
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                  <Menu.Button
+                    className={`${styles.downloadButton} group inline-flex items-center justify-center bg-white font-semibold text-canvas hover:bg-content`}
+                  >
+                    <svg
+                      className="mr-2 h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"
+                      />
                     </svg>
-                    <span>Download for macOS</span>
-                    <ChevronDownIcon className="w-4 h-4 ml-2" />
+                    <span>{t('Download for macOS')}</span>
+                    <ChevronDownIcon className="ml-2 h-4 w-4" />
                   </Menu.Button>
 
-                  <Menu.Items className={`${styles.downloadMenu} absolute top-full mt-2 bg-surface-elevated backdrop-blur-md shadow-2xl ring-1 ring-hairline focus:outline-none z-50`}>
+                  <Menu.Items
+                    className={`${styles.downloadMenu} absolute top-full z-50 mt-2 bg-surface-elevated shadow-2xl ring-1 ring-hairline backdrop-blur-md focus:outline-none`}
+                  >
                     <div className="p-3">
                       <div className="space-y-1">
                         <Menu.Item>
                           {({ active }) => (
                             <a
                               href="https://api.enconvo.com/app/download?arch=arm64&platform=darwin"
-                              onClick={() => trackEvent('download_click', { arch: 'arm64', placement: 'hero' })}
+                              onClick={() =>
+                                trackEvent('download_click', {
+                                  arch: 'arm64',
+                                  placement: 'hero',
+                                })
+                              }
                               target="_blank"
                               rel="noreferrer"
-                              className={`${active ? 'bg-surface-card' : ''} group flex items-center w-full px-4 py-3 text-sm font-medium text-content rounded-lg transition-colors`}
+                              className={`${
+                                active ? 'bg-surface-card' : ''
+                              } group flex w-full items-center rounded-lg px-4 py-3 text-sm font-medium text-content transition-colors`}
                             >
-                              <div className="flex items-center justify-between w-full">
+                              <div className="flex w-full items-center justify-between">
                                 <div className="flex items-center">
-                                  <AppleLogoIcon className="w-5 h-5 mr-3 text-content-muted" />
+                                  <AppleLogoIcon className="mr-3 h-5 w-5 text-content-muted" />
                                   <div>
-                                    <div className="text-content font-medium text-start">macOS (Apple Silicon)</div>
-                                    <div className="text-content-ash text-xs">For Macs with an Apple chip</div>
+                                    <div className="text-start font-medium text-content">
+                                      {t('macOS (Apple Silicon)')}
+                                    </div>
+                                    <div className="text-xs text-content-ash">
+                                      {t('For Macs with an Apple chip')}
+                                    </div>
                                   </div>
                                 </div>
                                 <DownloadRowArrow />
@@ -105,17 +153,28 @@ export function Hero() {
                           {({ active }) => (
                             <a
                               href="https://api.enconvo.com/app/download?arch=x64&platform=darwin"
-                              onClick={() => trackEvent('download_click', { arch: 'x64', placement: 'hero' })}
+                              onClick={() =>
+                                trackEvent('download_click', {
+                                  arch: 'x64',
+                                  placement: 'hero',
+                                })
+                              }
                               target="_blank"
                               rel="noreferrer"
-                              className={`${active ? 'bg-surface-card' : ''} group flex items-center w-full px-4 py-3 text-sm font-medium text-content rounded-lg transition-colors`}
+                              className={`${
+                                active ? 'bg-surface-card' : ''
+                              } group flex w-full items-center rounded-lg px-4 py-3 text-sm font-medium text-content transition-colors`}
                             >
-                              <div className="flex items-center justify-between w-full">
+                              <div className="flex w-full items-center justify-between">
                                 <div className="flex items-center">
-                                  <AppleLogoIcon className="w-5 h-5 mr-3 text-content-muted" />
+                                  <AppleLogoIcon className="mr-3 h-5 w-5 text-content-muted" />
                                   <div>
-                                    <div className="text-content font-medium text-start">macOS (Intel)</div>
-                                    <div className="text-content-ash text-xs">For Intel-based Macs</div>
+                                    <div className="text-start font-medium text-content">
+                                      {t('macOS (Intel)')}
+                                    </div>
+                                    <div className="text-xs text-content-ash">
+                                      {t('For Intel-based Macs')}
+                                    </div>
                                   </div>
                                 </div>
                                 <DownloadRowArrow />
@@ -129,19 +188,40 @@ export function Hero() {
                 </Menu>
 
                 <a
-                  href={`#${IPHONE_APP_SECTION_ID}`}
-                  onClick={() => trackEvent('iphone_app_click', { placement: 'hero' })}
+                  href={localizePath(`#${IPHONE_APP_SECTION_ID}`, locale)}
+                  onClick={() =>
+                    trackEvent('iphone_app_click', { placement: 'hero' })
+                  }
                   className={styles.browseButton}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <rect x="6" y="2" width="12" height="20" rx="2.5" strokeWidth={1.8} />
-                    <path strokeLinecap="round" strokeWidth={1.8} d="M11 18h2" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <rect
+                      x="6"
+                      y="2"
+                      width="12"
+                      height="20"
+                      rx="2.5"
+                      strokeWidth={1.8}
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeWidth={1.8}
+                      d="M11 18h2"
+                    />
                   </svg>
-                  <span>Get the iPhone app</span>
-                  <span className={styles.betaTag}>Beta</span>
+                  <span>{t('Get the iPhone app')}</span>
+                  <span className={styles.betaTag}>{t('Beta')}</span>
                 </a>
               </div>
-              <p className={styles.requirements}>Free to start · macOS 14+ · Intel &amp; Apple Silicon</p>
+              <p className={styles.requirements}>
+                {t('Free to start · macOS 14+ · Intel & Apple Silicon')}
+              </p>
             </div>
 
             <HeroShowcase />

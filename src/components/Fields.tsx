@@ -1,3 +1,4 @@
+import { useI18n } from '@/i18n/I18nProvider'
 import clsx from 'clsx'
 
 const formClasses =
@@ -21,18 +22,22 @@ export function TextField({
   className = '',
   ...props
 }) {
+  const { t, locale } = useI18n()
+
   return (
     <div className={className}>
-      {label && <Label id={id}>{label}</Label>}
+      {label && <Label id={id}>{t(label)}</Label>}
       <input id={id} type={type} {...props} className={formClasses} />
     </div>
   )
 }
 
 export function SelectField({ id, label, className = '', ...props }) {
+  const { t, locale } = useI18n()
+
   return (
     <div className={className}>
-      {label && <Label id={id}>{label}</Label>}
+      {label && <Label id={id}>{t(label)}</Label>}
       <select id={id} {...props} className={clsx(formClasses, 'pr-8')} />
     </div>
   )

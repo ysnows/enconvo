@@ -1,3 +1,4 @@
+import { canonicalUrl, locales, type Locale } from '@/i18n/locale'
 import { heroTabs } from './heroShowcase'
 
 export const SITE_URL = 'https://www.enconvo.com'
@@ -60,4 +61,41 @@ export const homepageStructuredData = {
       },
     },
   ],
+}
+
+export function getHomepageStructuredData(
+  locale: Locale,
+  t: (source: string) => string
+) {
+  const url = canonicalUrl('/', locale)
+  const graph = homepageStructuredData['@graph'].map((entry) => {
+    const item = { ...entry } as Record<string, any>
+    if (item['@type'] === 'WebSite') item.inLanguage = locales
+    if (
+      item['@type'] === 'WebPage' ||
+      item['@type'] === 'SoftwareApplication'
+    ) {
+      item.url = url
+      item['@id'] = `${url}#${
+        item['@type'] === 'WebPage' ? 'webpage' : 'application'
+      }`
+      item.description = t(SITE_DESCRIPTION)
+      item.inLanguage = locale
+      if (item['@type'] === 'WebPage') {
+        item.name = t(item.name)
+        item.mainEntity = { '@id': `${url}#application` }
+      } else {
+        item.featureList = heroTabs.map(
+          (tab) => `${tab.productName}: ${t(tab.tagline)}`
+        )
+        item.offers = {
+          ...item.offers,
+          name: t(item.offers.name),
+          url: `${url}#pricing`,
+        }
+      }
+    }
+    return item
+  })
+  return { '@context': 'https://schema.org', '@graph': graph }
 }

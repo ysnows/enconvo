@@ -6,7 +6,7 @@ export default function Document(props) {
   return (
     <Html
       className="h-full scroll-smooth bg-[#07080A] antialiased [font-feature-settings:'calt','kern','liga','ss03']"
-      lang="en"
+      lang={props.__NEXT_DATA__?.locale || 'en'}
     >
       <Head />
       <body className="flex h-full flex-col">

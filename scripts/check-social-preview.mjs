@@ -2,6 +2,7 @@
 // Local: node scripts/check-social-preview.mjs http://localhost:3116/
 // Live:  node scripts/check-social-preview.mjs https://www.enconvo.com/
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
 import sharp from 'sharp'
 
 const target = new URL(process.argv[2] || 'http://localhost:3116/')
@@ -46,7 +47,13 @@ const sitemapResponse = await fetch(new URL('/sitemap.xml', target))
 assert.equal(sitemapResponse.status, 200)
 const sitemap = await sitemapResponse.text()
 const sitemapPaths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => new URL(url).pathname)
-assert.deepEqual(sitemapPaths.sort(), Object.keys(publicPages).sort(), 'Every sitemap page needs a verified share card')
+const { locales } = JSON.parse(await readFile(new URL('../src/i18n/config.json', import.meta.url), 'utf8'))
+const basePaths = sitemapPaths.map(path => {
+  const language = path.split('/')[1]
+  return locales.includes(language) ? path.slice(language.length + 1) || '/' : path
+})
+assert.equal(sitemapPaths.length, Object.keys(publicPages).length * locales.length)
+assert.deepEqual([...new Set(basePaths)].sort(), Object.keys(publicPages).sort(), 'Every sitemap page needs a verified share card')
 
 const aliases = { '/downloads': '/privacy', '/pricing': '/', '/cloud-plan': '/cloud-pricing' }
 for (const agent of ['Twitterbot/1.0', 'facebookexternalhit/1.1']) {

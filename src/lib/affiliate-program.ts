@@ -14,17 +14,25 @@ export const SUPPORT_EMAIL = 'support@enconvo.com'
 
 export type AffiliateStatus = 'pending' | 'approved' | 'rejected' | 'suspended'
 export type PayoutMethod = 'paypal' | 'wise'
-export type CommissionKind = 'purchase' | 'renewal' | 'upgrade' | 'reversal' | 'chargeback' | 'reinstatement' | 'voided' | 'adjustment'
+export type CommissionKind =
+  | 'purchase'
+  | 'renewal'
+  | 'upgrade'
+  | 'reversal'
+  | 'chargeback'
+  | 'reinstatement'
+  | 'voided'
+  | 'adjustment'
 export type CommissionStatus = 'pending' | 'payable' | 'paid' | 'reversed'
 
 export interface ProgramTerms {
-    commission_rate: number
-    hold_days: number
-    cookie_days: number
-    /** Cents. */
-    minimum_payout: number
-    currency: string
-    payout_methods: PayoutMethod[]
+  commission_rate: number
+  hold_days: number
+  cookie_days: number
+  /** Cents. */
+  minimum_payout: number
+  currency: string
+  payout_methods: PayoutMethod[]
 }
 
 /**
@@ -37,136 +45,136 @@ export const AFFILIATE_TERMS_VERSION = '2026-10-02'
 
 /** What the Worker answers before its terms arrive; kept equal to PROGRAM_TERMS there. */
 export const DEFAULT_TERMS: ProgramTerms = {
-    commission_rate: 20,
-    hold_days: 30,
-    cookie_days: 90,
-    minimum_payout: 5000,
-    currency: 'usd',
-    payout_methods: ['paypal', 'wise'],
+  commission_rate: 20,
+  hold_days: 30,
+  cookie_days: 90,
+  minimum_payout: 5000,
+  currency: 'usd',
+  payout_methods: ['paypal', 'wise'],
 }
 
 export interface AffiliateApplication {
-    status: AffiliateStatus
-    code: string
-    /** A promotion code we linked to the Affiliate, lowercase; customers who enter it at checkout count as theirs. */
-    promotion_code: string | null
-    commission_rate: number
-    /** The profile from the application, which the Affiliate can edit; null for an Affiliate an admin added. */
-    name: string | null
-    website: string | null
-    audience: string | null
-    promotion_plan: string | null
-    payout_method: PayoutMethod | null
-    payout_account: string | null
-    /** The name, address and tax ID for payout statements, as lines of text; null for none. A Worker from before them leaves it out. */
-    billing_details?: string | null
-    applied_at: string
-    approved_at: string | null
-    /** The AFFILIATE_TERMS_VERSION the account last accepted; null when it never did, or applied before versions were kept. */
-    terms_version?: string | null
-    /** When the account last accepted the terms; null for an Affiliate an admin added. */
-    terms_accepted_at?: string | null
-    /**
-     * A note from Enconvo, such as why an application wasn't approved or what to send; null for none.
-     * It stays until an admin clears it or the account applies again. A Worker from before it leaves it out.
-     */
-    message?: string | null
+  status: AffiliateStatus
+  code: string
+  /** A promotion code we linked to the Affiliate, lowercase; customers who enter it at checkout count as theirs. */
+  promotion_code: string | null
+  commission_rate: number
+  /** The profile from the application, which the Affiliate can edit; null for an Affiliate an admin added. */
+  name: string | null
+  website: string | null
+  audience: string | null
+  promotion_plan: string | null
+  payout_method: PayoutMethod | null
+  payout_account: string | null
+  /** The name, address and tax ID for payout statements, as lines of text; null for none. A Worker from before them leaves it out. */
+  billing_details?: string | null
+  applied_at: string
+  approved_at: string | null
+  /** The AFFILIATE_TERMS_VERSION the account last accepted; null when it never did, or applied before versions were kept. */
+  terms_version?: string | null
+  /** When the account last accepted the terms; null for an Affiliate an admin added. */
+  terms_accepted_at?: string | null
+  /**
+   * A note from Enconvo, such as why an application wasn't approved or what to send; null for none.
+   * It stays until an admin clears it or the account applies again. A Worker from before it leaves it out.
+   */
+  message?: string | null
 }
 
 export interface AffiliateBalances {
-    pending: number
-    payable: number
-    earned: number
-    reversed: number
-    paid: number
-    currency: string
+  pending: number
+  payable: number
+  earned: number
+  reversed: number
+  paid: number
+  currency: string
 }
 
 /** Pending money that becomes payable on a UTC day (`YYYY-MM-DD`), soonest first. */
 export interface AffiliateRelease {
-    day: string
-    /** Net of refunds and deductions due the same day; can be negative. */
-    amount: number
+  day: string
+  /** Net of refunds and deductions due the same day; can be negative. */
+  amount: number
 }
 
 export interface AffiliateReferral {
-    /** Masked, e.g. `j***@gmail.com`. */
-    customer: string
-    joined_at: string
-    signed_up: boolean
-    plan: string | null
-    purchases: number
-    paid: number
-    commission: number
-    /** Voided: Enconvo took back the customer's commissions after review, and its later payments earn nothing. */
-    status: 'signed_up' | 'customer' | 'refunded' | 'voided'
-    /** The sub ID of the link the customer first came through. */
-    sub: string | null
-    /** The Affiliate's promotion code, when the customer used it at checkout instead of coming through the link. */
-    promotion_code: string | null
-    /** Where a paying customer's plan stands now; null for anyone else, or a customer with no plan. */
-    subscription?: ReferralPlan | null
-    /** The billing period of a renewing or cancelling Cloud plan. */
-    billing?: 'monthly' | 'yearly' | null
-    /**
-     * For a referral that signed up or signed in through the link and hasn't bought: `open` while a purchase would
-     * still credit the Affiliate, `closed` once the window passed or the account came through another link since.
-     */
-    credit_window?: 'open' | 'closed' | null
-    /** The last UTC day (`YYYY-MM-DD`) of an open window. */
-    credit_until?: string | null
-    /**
-     * Enconvo credited the customer's subscription to the Affiliate by hand, for a customer no link or promotion
-     * code credited: its payments from that day on earn commission. Old Workers don't say.
-     */
-    added_by_enconvo?: boolean
+  /** Masked, e.g. `j***@gmail.com`. */
+  customer: string
+  joined_at: string
+  signed_up: boolean
+  plan: string | null
+  purchases: number
+  paid: number
+  commission: number
+  /** Voided: Enconvo took back the customer's commissions after review, and its later payments earn nothing. */
+  status: 'signed_up' | 'customer' | 'refunded' | 'voided'
+  /** The sub ID of the link the customer first came through. */
+  sub: string | null
+  /** The Affiliate's promotion code, when the customer used it at checkout instead of coming through the link. */
+  promotion_code: string | null
+  /** Where a paying customer's plan stands now; null for anyone else, or a customer with no plan. */
+  subscription?: ReferralPlan | null
+  /** The billing period of a renewing or cancelling Cloud plan. */
+  billing?: 'monthly' | 'yearly' | null
+  /**
+   * For a referral that signed up or signed in through the link and hasn't bought: `open` while a purchase would
+   * still credit the Affiliate, `closed` once the window passed or the account came through another link since.
+   */
+  credit_window?: 'open' | 'closed' | null
+  /** The last UTC day (`YYYY-MM-DD`) of an open window. */
+  credit_until?: string | null
+  /**
+   * Enconvo credited the customer's subscription to the Affiliate by hand, for a customer no link or promotion
+   * code credited: its payments from that day on earn commission. Old Workers don't say.
+   */
+  added_by_enconvo?: boolean
 }
 
 export type ReferralPlan = 'renewing' | 'cancelling' | 'ended' | 'lifetime'
 
 export interface AffiliateCommission {
-    id: string
-    kind: CommissionKind
-    /** Masked; null for an adjustment, which belongs to no customer. */
-    customer: string | null
-    /** What an adjustment (a bonus, correction or carried-over balance) is for; null for every other kind. */
-    note?: string | null
-    sub: string | null
-    promotion_code: string | null
-    plan: string | null
-    base_amount: number
-    rate: number
-    amount: number
-    currency: string
-    earned_at: string
-    available_at: string
-    status: CommissionStatus
-    /** Unpaid, and waiting for Enconvo to review its referral (it looks like the Affiliate's own purchase). */
-    in_review?: boolean
+  id: string
+  kind: CommissionKind
+  /** Masked; null for an adjustment, which belongs to no customer. */
+  customer: string | null
+  /** What an adjustment (a bonus, correction or carried-over balance) is for; null for every other kind. */
+  note?: string | null
+  sub: string | null
+  promotion_code: string | null
+  plan: string | null
+  base_amount: number
+  rate: number
+  amount: number
+  currency: string
+  earned_at: string
+  available_at: string
+  status: CommissionStatus
+  /** Unpaid, and waiting for Enconvo to review its referral (it looks like the Affiliate's own purchase). */
+  in_review?: boolean
 }
 
 export interface AffiliatePayout {
-    id: string
-    amount: number
-    currency: string
-    method: PayoutMethod
-    reference: string | null
-    paid_at: string
-    /** Set when Enconvo cancelled the payout because the money never arrived; its entries went back to the balance. */
-    cancelled_at?: string | null
-    /** Why, in Enconvo's words. */
-    cancel_reason?: string | null
+  id: string
+  amount: number
+  currency: string
+  method: PayoutMethod
+  reference: string | null
+  paid_at: string
+  /** Set when Enconvo cancelled the payout because the money never arrived; its entries went back to the balance. */
+  cancelled_at?: string | null
+  /** Why, in Enconvo's words. */
+  cancel_reason?: string | null
 }
 
 /** One payout with every ledger entry it settled. `added` plus `taken_back` (negative) is the payout's amount. */
 export interface AffiliatePayoutStatement {
-    affiliate: { name: string | null; code: string }
-    /** `billing_details` is what the Affiliate had when the payout was recorded; null for none. */
-    payout: AffiliatePayout & { account: string; billing_details?: string | null }
-    /** Newest first; cut short at 1,000, while the totals still cover every entry and the CSV fetches the rest. */
-    entries: AffiliateCommission[]
-    entries_truncated: boolean
-    totals: { entries: number; added: number; taken_back: number }
+  affiliate: { name: string | null; code: string }
+  /** `billing_details` is what the Affiliate had when the payout was recorded; null for none. */
+  payout: AffiliatePayout & { account: string; billing_details?: string | null }
+  /** Newest first; cut short at 1,000, while the totals still cover every entry and the CSV fetches the rest. */
+  entries: AffiliateCommission[]
+  entries_truncated: boolean
+  totals: { entries: number; added: number; taken_back: number }
 }
 
 /**
@@ -175,38 +183,51 @@ export interface AffiliatePayoutStatement {
  * in their refund window. `unpaid_at_start + totals.net - totals.paid` is `unpaid_at_end`. Amounts in cents.
  */
 export interface AffiliateYearStatement {
-    affiliate: { name: string | null; code: string; billing_details: string | null }
-    year: number
-    /** False for the current year, which isn't over. */
-    complete: boolean
-    /** Every year with a statement, newest first. */
-    years: number[]
-    months: { month: string; earned: number; taken_back: number; net: number; paid: number }[]
-    payouts: Pick<AffiliatePayout, 'id' | 'amount' | 'currency' | 'method' | 'reference' | 'paid_at'>[]
-    totals: { earned: number; taken_back: number; net: number; paid: number }
-    unpaid_at_start: number
-    unpaid_at_end: number
+  affiliate: {
+    name: string | null
+    code: string
+    billing_details: string | null
+  }
+  year: number
+  /** False for the current year, which isn't over. */
+  complete: boolean
+  /** Every year with a statement, newest first. */
+  years: number[]
+  months: {
+    month: string
+    earned: number
+    taken_back: number
+    net: number
+    paid: number
+  }[]
+  payouts: Pick<
+    AffiliatePayout,
+    'id' | 'amount' | 'currency' | 'method' | 'reference' | 'paid_at'
+  >[]
+  totals: { earned: number; taken_back: number; net: number; paid: number }
+  unpaid_at_start: number
+  unpaid_at_end: number
 }
 
 export interface AffiliateDay {
-    day: string
-    visitors: number
-    signups: number
-    purchases: number
+  day: string
+  visitors: number
+  signups: number
+  purchases: number
 }
 
 /** The link's results over the last `days` UTC days, today included, counted the way `totals` counts all time. */
 export interface AffiliatePeriod {
-    days: number
-    visitors: number
-    /** Visitors who clicked to download the app; missing from a Worker that doesn't count them. */
-    downloads?: number
-    signups: number
-    customers: number
-    /** Of `visitors`, the ones who have bought through the link, then or later. */
-    converted: number
-    /** Net, in cents, by when each entry was recorded. */
-    commission: number
+  days: number
+  visitors: number
+  /** Visitors who clicked to download the app; missing from a Worker that doesn't count them. */
+  downloads?: number
+  signups: number
+  customers: number
+  /** Of `visitors`, the ones who have bought through the link, then or later. */
+  converted: number
+  /** Net, in cents, by when each entry was recorded. */
+  commission: number
 }
 
 /**
@@ -214,35 +235,35 @@ export interface AffiliatePeriod {
  * without the link. Paid and commission are net of reversals.
  */
 export interface AffiliateSource {
-    sub: string | null
-    promotion_code: string | null
-    visitors: number
-    /** Visitors who clicked to download the app, each once. */
-    downloads?: number
-    signups: number
-    customers: number
-    paid: number
-    commission: number
+  sub: string | null
+  promotion_code: string | null
+  visitors: number
+  /** Visitors who clicked to download the app, each once. */
+  downloads?: number
+  signups: number
+  customers: number
+  paid: number
+  commission: number
 }
 
 /** A referring host (without `www.`) or landing path, by each visitor's first visit through the link; null when the browser sent none. */
 export interface AffiliateTrafficRow {
-    value: string | null
-    visitors: number
-    /** Of those visitors, the ones who clicked to download the app. */
-    downloads?: number
-    /** Of those visitors, the accounts that bought. */
-    customers: number
+  value: string | null
+  visitors: number
+  /** Of those visitors, the ones who clicked to download the app. */
+  downloads?: number
+  /** Of those visitors, the accounts that bought. */
+  customers: number
 }
 
 /** One visit through the link: the referring host without `www.` (null when the browser sent none), the landing path and the sub ID. */
 export interface AffiliateVisit {
-    at: string
-    sub: string | null
-    referrer: string | null
-    path: string | null
-    /** The visitor had opened the link before. */
-    returning: boolean
+  at: string
+  sub: string | null
+  referrer: string | null
+  path: string | null
+  /** The visitor had opened the link before. */
+  returning: boolean
 }
 
 /**
@@ -251,74 +272,86 @@ export interface AffiliateVisit {
  * adds to `earned` and a deduction to `taken_back`. Amounts in cents.
  */
 export interface AffiliateMonth {
-    month: string
-    visitors: number
-    /** First payments that earned a commission; renewals and upgrades aren't counted. */
-    purchases: number
-    earned: number
-    taken_back: number
-    net: number
-    /** Payouts sent that month. */
-    paid: number
+  month: string
+  visitors: number
+  /** First payments that earned a commission; renewals and upgrades aren't counted. */
+  purchases: number
+  earned: number
+  taken_back: number
+  net: number
+  /** Payouts sent that month. */
+  paid: number
 }
 
 export interface AffiliateDashboard {
-    program: ProgramTerms
-    affiliate: AffiliateApplication | null
-    /** The rest is only there for an approved or suspended Affiliate. */
-    /** Codes the Affiliate had before, newest first: links with them still count. */
-    former_codes?: string[]
-    /** When the Affiliate can change its code again, if it changed it in the last 30 days. */
-    code_changeable_at?: string | null
-    /**
-     * The link's results; `commission` (net, in cents) leaves out customers of the promotion code alone.
-     * `renewing` counts the paying referrals whose Cloud plan renews, `open_windows` the referrals with an open window.
-     * `recurring` is about what those renewals earn a month, in cents: each one's latest payment at today's rate, a
-     * yearly plan's spread over twelve months.
-     */
-    totals?: { visitors: number; downloads?: number; signups: number; customers: number; commission?: number; renewing?: number; recurring?: number; open_windows?: number }
-    balances?: AffiliateBalances
-    /**
-     * The unpaid commissions in review: the referrals (customers) they belong to and their total in cents. `holds_payout` once one is
-     * past its refund window, since no payout goes out until the review is done.
-     */
-    review?: { referrals: number; amount: number; holds_payout: boolean }
-    releases?: AffiliateRelease[]
-    /** The last 90 days (30 from an older Worker), oldest first. */
-    daily?: AffiliateDay[]
-    /** The last 7, 30 and 90 days. */
-    periods?: AffiliatePeriod[]
-    sources?: AffiliateSource[]
-    sources_truncated?: boolean
-    /** The top 10 of each, by visitors; the rest is `totals.visitors` minus what they add up to. */
-    traffic?: { referrers: AffiliateTrafficRow[]; landing_pages: AffiliateTrafficRow[] }
-    /** The latest 20 visits through the link, newest first. */
-    recent_visits?: AffiliateVisit[]
-    /** Up to the last 12 months, newest first. */
-    months?: AffiliateMonth[]
-    referrals?: AffiliateReferral[]
-    referrals_truncated?: boolean
-    commissions?: AffiliateCommission[]
-    commissions_truncated?: boolean
-    payouts?: AffiliatePayout[]
-    /** The latest 20 changes to the account, newest first (kept since Oct 2, 2026). */
-    account_changes?: AffiliateAccountChange[]
-    account_changes_truncated?: boolean
-    /** The program's announcement, null for none. */
-    announcement?: AffiliateAnnouncement | null
+  program: ProgramTerms
+  affiliate: AffiliateApplication | null
+  /** The rest is only there for an approved or suspended Affiliate. */
+  /** Codes the Affiliate had before, newest first: links with them still count. */
+  former_codes?: string[]
+  /** When the Affiliate can change its code again, if it changed it in the last 30 days. */
+  code_changeable_at?: string | null
+  /**
+   * The link's results; `commission` (net, in cents) leaves out customers of the promotion code alone.
+   * `renewing` counts the paying referrals whose Cloud plan renews, `open_windows` the referrals with an open window.
+   * `recurring` is about what those renewals earn a month, in cents: each one's latest payment at today's rate, a
+   * yearly plan's spread over twelve months.
+   */
+  totals?: {
+    visitors: number
+    downloads?: number
+    signups: number
+    customers: number
+    commission?: number
+    renewing?: number
+    recurring?: number
+    open_windows?: number
+  }
+  balances?: AffiliateBalances
+  /**
+   * The unpaid commissions in review: the referrals (customers) they belong to and their total in cents. `holds_payout` once one is
+   * past its refund window, since no payout goes out until the review is done.
+   */
+  review?: { referrals: number; amount: number; holds_payout: boolean }
+  releases?: AffiliateRelease[]
+  /** The last 90 days (30 from an older Worker), oldest first. */
+  daily?: AffiliateDay[]
+  /** The last 7, 30 and 90 days. */
+  periods?: AffiliatePeriod[]
+  sources?: AffiliateSource[]
+  sources_truncated?: boolean
+  /** The top 10 of each, by visitors; the rest is `totals.visitors` minus what they add up to. */
+  traffic?: {
+    referrers: AffiliateTrafficRow[]
+    landing_pages: AffiliateTrafficRow[]
+  }
+  /** The latest 20 visits through the link, newest first. */
+  recent_visits?: AffiliateVisit[]
+  /** Up to the last 12 months, newest first. */
+  months?: AffiliateMonth[]
+  referrals?: AffiliateReferral[]
+  referrals_truncated?: boolean
+  commissions?: AffiliateCommission[]
+  commissions_truncated?: boolean
+  payouts?: AffiliatePayout[]
+  /** The latest 20 changes to the account, newest first (kept since Oct 2, 2026). */
+  account_changes?: AffiliateAccountChange[]
+  account_changes_truncated?: boolean
+  /** The program's announcement, null for none. */
+  announcement?: AffiliateAnnouncement | null
 }
 
 /** One notice from Enconvo for every Affiliate, such as when this month's payouts go out. */
 export interface AffiliateAnnouncement {
-    /** New for each posted announcement; an edit keeps it. */
-    id: string
-    title: string
-    /** Plain text with line breaks. */
-    body: string
-    /** The last UTC day it shows, or null until it's removed. */
-    ends_on: string | null
-    posted_at: string
-    edited_at: string | null
+  /** New for each posted announcement; an edit keeps it. */
+  id: string
+  title: string
+  /** Plain text with line breaks. */
+  body: string
+  /** The last UTC day it shows, or null until it's removed. */
+  ends_on: string | null
+  posted_at: string
+  edited_at: string | null
 }
 
 /**
@@ -326,45 +359,55 @@ export interface AffiliateAnnouncement {
  * `paypal you@example.com`, accepted terms the version's day. `by` is "you" or "enconvo" (an admin).
  */
 export interface AffiliateAccountChange {
-    field: 'status' | 'code' | 'commission_rate' | 'promotion_code' | 'payout_account' | 'terms_version' | (string & {})
-    old_value: string | null
-    new_value: string | null
-    by: 'you' | 'enconvo'
-    changed_at: string
+  field:
+    | 'status'
+    | 'code'
+    | 'commission_rate'
+    | 'promotion_code'
+    | 'payout_account'
+    | 'terms_version'
+    | (string & {})
+  old_value: string | null
+  new_value: string | null
+  by: 'you' | 'enconvo'
+  changed_at: string
 }
 
 export interface ApplicationInput {
-    code: string
-    name: string
-    website?: string
-    audience: string
-    promotion_plan: string
-    payout_method?: PayoutMethod
-    payout_account?: string
-    accept_terms: boolean
-    terms_version?: string
+  code: string
+  name: string
+  website?: string
+  audience: string
+  promotion_plan: string
+  payout_method?: PayoutMethod
+  payout_account?: string
+  accept_terms: boolean
+  terms_version?: string
 }
 
 /** Mirrors the Worker's `affiliateProgramCode`. */
 const CODE = /^[a-z0-9][a-z0-9_-]{2,31}$/
 
 export function normalizeAffiliateCode(value: string): string {
-    return value.trim().toLowerCase()
+  return value.trim().toLowerCase()
 }
 
 export function isAffiliateCode(value: string): boolean {
-    return CODE.test(value)
+  return CODE.test(value)
 }
 
-export const PAYOUT_METHOD_LABEL: Record<PayoutMethod, string> = { paypal: 'PayPal', wise: 'Wise' }
+export const PAYOUT_METHOD_LABEL: Record<PayoutMethod, string> = {
+  paypal: 'PayPal',
+  wise: 'Wise',
+}
 
 /** Pages worth linking to, all of which record the visit (`useAffiliateJourney` runs site-wide). */
 export const LINK_PAGES = [
-    { path: '/', label: 'Home page' },
-    { path: '/#pricing', label: 'Plans and pricing' },
-    { path: '/use-cases', label: 'Use cases' },
-    { path: '/changelog', label: 'Release notes' },
-    { path: '/cloud-pricing', label: 'Cloud model prices' },
+  { path: '/', label: 'Home page' },
+  { path: '/#pricing', label: 'Plans and pricing' },
+  { path: '/use-cases', label: 'Use cases' },
+  { path: '/changelog', label: 'Release notes' },
+  { path: '/cloud-pricing', label: 'Cloud model prices' },
 ] as const
 
 const SITE_HOSTS = new Set(['enconvo.com', 'www.enconvo.com'])
@@ -375,123 +418,195 @@ const SITE_HOSTS = new Set(['enconvo.com', 'www.enconvo.com'])
  * had. Null for another site, or for an address that is no page (`/api`, `/go` short links).
  */
 export function affiliateLinkPage(input: string): string | null {
-    const text = input.trim()
-    if (!text) return null
-    let url: URL
-    try {
-        url = new URL(/^[a-z][a-z0-9+.-]*:/i.test(text) ? text : text.startsWith('//') ? `https:${text}` : text.startsWith('/') ? `${SITE_ORIGIN}${text}` : `https://${text}`)
-    } catch {
-        return null
-    }
-    if (!/^https?:$/.test(url.protocol) || !SITE_HOSTS.has(url.hostname) || url.port || url.username || url.password) return null
-    if (/^\/(api|go|_next)(\/|$)/i.test(url.pathname)) return null
-    url.searchParams.delete('via')
-    url.searchParams.delete('sub')
-    // `//host` would read as another site once it is a page.
-    return `${url.pathname.replace(/^\/{2,}/, '/')}${url.search}${url.hash}`
+  const text = input.trim()
+  if (!text) return null
+  let url: URL
+  try {
+    url = new URL(
+      /^[a-z][a-z0-9+.-]*:/i.test(text)
+        ? text
+        : text.startsWith('//')
+        ? `https:${text}`
+        : text.startsWith('/')
+        ? `${SITE_ORIGIN}${text}`
+        : `https://${text}`
+    )
+  } catch {
+    return null
+  }
+  if (
+    !/^https?:$/.test(url.protocol) ||
+    !SITE_HOSTS.has(url.hostname) ||
+    url.port ||
+    url.username ||
+    url.password
+  )
+    return null
+  if (/^\/(api|go|_next)(\/|$)/i.test(url.pathname)) return null
+  url.searchParams.delete('via')
+  url.searchParams.delete('sub')
+  // `//host` would read as another site once it is a page.
+  return `${url.pathname.replace(/^\/{2,}/, '/')}${url.search}${url.hash}`
 }
 
 /**
  * `https://enconvo.com/use-cases?via=kenmoo`, with `&sub=youtube` for a sub ID. The page may have
  * a query or a `#section`, which stays after the code: `https://enconvo.com/?via=kenmoo#pricing`.
  */
-export function affiliateLink(code: string, page = '/', sub: string | null = null): string {
-    // Joined as text, so a page can never name another host.
-    const url = new URL(`${SITE_ORIGIN}${page.startsWith('/') ? page : `/${page}`}`)
-    url.searchParams.delete('via')
-    url.searchParams.delete('sub')
-    url.searchParams.set('via', code)
-    if (sub) url.searchParams.set('sub', sub)
-    return url.toString()
+export function affiliateLink(
+  code: string,
+  page = '/',
+  sub: string | null = null
+): string {
+  // Joined as text, so a page can never name another host.
+  const url = new URL(
+    `${SITE_ORIGIN}${page.startsWith('/') ? page : `/${page}`}`
+  )
+  url.searchParams.delete('via')
+  url.searchParams.delete('sub')
+  url.searchParams.set('via', code)
+  if (sub) url.searchParams.set('sub', sub)
+  return url.toString()
 }
 
 /** `https://enconvo.com/go/kenmoo`, short enough to say out loud or print; `/go/kenmoo/podcast` adds a sub ID. */
-export function affiliateShortLink(code: string, sub: string | null = null): string {
-    return `${SITE_ORIGIN}/go/${encodeURIComponent(code)}${sub ? `/${encodeURIComponent(sub)}` : ''}`
+export function affiliateShortLink(
+  code: string,
+  sub: string | null = null
+): string {
+  return `${SITE_ORIGIN}/go/${encodeURIComponent(code)}${
+    sub ? `/${encodeURIComponent(sub)}` : ''
+  }`
 }
 
 /** `4780` → `$47.80`; whole dollars drop the cents unless `cents` is set. */
-export function formatCents(amount: number, { cents = true }: { cents?: boolean } = {}): string {
-    const value = (Number(amount) || 0) / 100
-    const digits = !cents && Number.isInteger(value) ? 0 : 2
-    return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: digits,
-        maximumFractionDigits: digits,
-    }).format(value)
+export function formatCents(
+  amount: number,
+  { cents = true, locale = 'en' }: { cents?: boolean; locale?: string } = {}
+): string {
+  const value = (Number(amount) || 0) / 100
+  const digits = !cents && Number.isInteger(value) ? 0 : 2
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value)
 }
 
-export function formatDay(value: string | null | undefined): string {
-    if (!value) return ''
-    return new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+export function formatDay(
+  value: string | null | undefined,
+  locale = 'en'
+): string {
+  if (!value) return ''
+  return new Date(value).toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 /** A UTC day (`YYYY-MM-DD`) as `Dec 21, 2026`, the same day in every time zone. */
-export function formatUtcDay(day: string | null | undefined): string {
-    if (!day) return ''
-    return new Date(`${day}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })
+export function formatUtcDay(
+  day: string | null | undefined,
+  locale = 'en'
+): string {
+  if (!day) return ''
+  return new Date(`${day}T00:00:00Z`).toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
 }
 
 /** `cloud_monthly` → `Cloud monthly`. */
 export function planLabel(plan: string | null | undefined): string {
-    if (!plan) return '—'
-    const words = plan.replace(/[_-]+/g, ' ').trim()
-    return words.charAt(0).toUpperCase() + words.slice(1)
+  if (!plan) return '—'
+  const words = plan.replace(/[_-]+/g, ' ').trim()
+  return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
 /** Customers per visitor, as a percentage with one decimal, or null before any visit. */
-export function conversionRate(visitors: number, customers: number): string | null {
-    if (!(visitors > 0)) return null
-    return `${(Math.round((customers / visitors) * 1000) / 10).toFixed(1)}%`
+export function conversionRate(
+  visitors: number,
+  customers: number
+): string | null {
+  if (!(visitors > 0)) return null
+  return `${(Math.round((customers / visitors) * 1000) / 10).toFixed(1)}%`
 }
 
 /** Net commission per visitor (EPC), or null without visitors. Below a cent it reads "<$0.01". */
-export function earningsPerVisitor(visitors: number, commission: number | undefined): string | null {
-    if (!(visitors > 0) || commission === undefined) return null
-    const cents = Math.max(0, commission) / visitors
-    return cents > 0 && cents < 0.5 ? '<$0.01' : formatCents(cents)
+export function earningsPerVisitor(
+  visitors: number,
+  commission: number | undefined
+): string | null {
+  if (!(visitors > 0) || commission === undefined) return null
+  const cents = Math.max(0, commission) / visitors
+  return cents > 0 && cents < 0.5 ? '<$0.01' : formatCents(cents)
 }
 
 /** "Oct 2026" for a `YYYY-MM` month. */
-export function formatMonth(month: string): string {
-    return new Date(`${month}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })
+export function formatMonth(month: string, locale = 'en'): string {
+  return new Date(`${month}-01T00:00:00Z`).toLocaleDateString(locale, {
+    month: 'short',
+    year: 'numeric',
+    timeZone: 'UTC',
+  })
 }
 
 const ACCOUNT_FIELD_LABEL: Record<string, string> = {
-    status: 'Status',
-    code: 'Link code',
-    commission_rate: 'Commission rate',
-    promotion_code: 'Promotion code',
-    payout_account: 'Payout account',
-    terms_version: 'Program terms',
+  status: 'Status',
+  code: 'Link code',
+  commission_rate: 'Commission rate',
+  promotion_code: 'Promotion code',
+  payout_account: 'Payout account',
+  terms_version: 'Program terms',
 }
-const STATUS_LABEL: Record<string, string> = { pending: 'In review', approved: 'Approved', rejected: 'Not approved', suspended: 'Paused' }
+const STATUS_LABEL: Record<string, string> = {
+  pending: 'In review',
+  approved: 'Approved',
+  rejected: 'Not approved',
+  suspended: 'Paused',
+}
 
 /** A history value as the dashboard shows it: `paypal you@example.com` → `PayPal you@example.com`. */
 export function accountValue(field: string, value: string | null): string {
-    if (value === null) return 'none'
-    if (field === 'status') return STATUS_LABEL[value] ?? value
-    if (field === 'commission_rate') return `${value}%`
-    if (field === 'promotion_code') return value.toUpperCase()
-    if (field === 'terms_version') return `the ${formatUtcDay(value)} version`
-    if (field === 'payout_account') {
-        const space = value.indexOf(' ')
-        if (space < 0) return value
-        const method = value.slice(0, space)
-        return `${PAYOUT_METHOD_LABEL[method as PayoutMethod] ?? method} ${value.slice(space + 1)}`
-    }
-    return value
+  if (value === null) return 'none'
+  if (field === 'status') return STATUS_LABEL[value] ?? value
+  if (field === 'commission_rate') return `${value}%`
+  if (field === 'promotion_code') return value.toUpperCase()
+  if (field === 'terms_version') return `the ${formatUtcDay(value)} version`
+  if (field === 'payout_account') {
+    const space = value.indexOf(' ')
+    if (space < 0) return value
+    const method = value.slice(0, space)
+    return `${
+      PAYOUT_METHOD_LABEL[method as PayoutMethod] ?? method
+    } ${value.slice(space + 1)}`
+  }
+  return value
 }
 
 /** `{ label: 'Commission rate', text: '20% → 25%' }`; a first value reads `Set to …`, accepted terms `Accepted …`. */
-export function accountChangeText(change: AffiliateAccountChange): { label: string; text: string } {
-    const label = ACCOUNT_FIELD_LABEL[change.field] ?? change.field
-    const to = accountValue(change.field, change.new_value)
-    if (change.field === 'terms_version' && change.new_value) return { label, text: `Accepted ${to}` }
-    if (change.old_value === null) return { label, text: `Set to ${to}` }
-    if (change.new_value === null) return { label, text: `Removed ${accountValue(change.field, change.old_value)}` }
-    return { label, text: `${accountValue(change.field, change.old_value)} → ${to}` }
+export function accountChangeText(change: AffiliateAccountChange): {
+  label: string
+  text: string
+} {
+  const label = ACCOUNT_FIELD_LABEL[change.field] ?? change.field
+  const to = accountValue(change.field, change.new_value)
+  if (change.field === 'terms_version' && change.new_value)
+    return { label, text: `Accepted ${to}` }
+  if (change.old_value === null) return { label, text: `Set to ${to}` }
+  if (change.new_value === null)
+    return {
+      label,
+      text: `Removed ${accountValue(change.field, change.old_value)}`,
+    }
+  return {
+    label,
+    text: `${accountValue(change.field, change.old_value)} → ${to}`,
+  }
 }
 
 /** How long the dashboard points out a payout account change. */
@@ -501,71 +616,107 @@ export const PAYOUT_CHANGE_NOTICE_DAYS = 14
  * The latest payout account change, when it moved the payouts from one account to another in the last
  * {@link PAYOUT_CHANGE_NOTICE_DAYS} days, so whoever owns the Affiliate account can tell if it wasn't them.
  */
-export function recentPayoutAccountChange(changes: AffiliateAccountChange[] | undefined, now = Date.now()): AffiliateAccountChange | null {
-    const change = changes?.find((c) => c.field === 'payout_account')
-    if (!change?.old_value || !change.new_value) return null
-    return now - Date.parse(change.changed_at) <= PAYOUT_CHANGE_NOTICE_DAYS * 86_400_000 ? change : null
+export function recentPayoutAccountChange(
+  changes: AffiliateAccountChange[] | undefined,
+  now = Date.now()
+): AffiliateAccountChange | null {
+  const change = changes?.find((c) => c.field === 'payout_account')
+  if (!change?.old_value || !change.new_value) return null
+  return now - Date.parse(change.changed_at) <=
+    PAYOUT_CHANGE_NOTICE_DAYS * 86_400_000
+    ? change
+    : null
 }
 
 /** The payouts that went out, newest first: a cancelled payout never arrived and pays nothing. */
-export function sentPayouts(payouts: AffiliatePayout[] | undefined): AffiliatePayout[] {
-    return (payouts ?? []).filter((payout) => !payout.cancelled_at)
+export function sentPayouts(
+  payouts: AffiliatePayout[] | undefined
+): AffiliatePayout[] {
+  return (payouts ?? []).filter((payout) => !payout.cancelled_at)
 }
 
 /** How long the dashboard points out a cancelled payout. */
 export const CANCELLED_PAYOUT_NOTICE_DAYS = 30
 
 /** The latest payout Enconvo cancelled in the last {@link CANCELLED_PAYOUT_NOTICE_DAYS} days, so the Affiliate checks its payout account. */
-export function recentlyCancelledPayout(payouts: AffiliatePayout[] | undefined, now = Date.now()): AffiliatePayout | null {
-    const cancelled = (payouts ?? [])
-        .filter((payout) => payout.cancelled_at && now - Date.parse(payout.cancelled_at) <= CANCELLED_PAYOUT_NOTICE_DAYS * 86_400_000)
-        .sort((a, b) => Date.parse(b.cancelled_at as string) - Date.parse(a.cancelled_at as string))
-    return cancelled[0] ?? null
+export function recentlyCancelledPayout(
+  payouts: AffiliatePayout[] | undefined,
+  now = Date.now()
+): AffiliatePayout | null {
+  const cancelled = (payouts ?? [])
+    .filter(
+      (payout) =>
+        payout.cancelled_at &&
+        now - Date.parse(payout.cancelled_at) <=
+          CANCELLED_PAYOUT_NOTICE_DAYS * 86_400_000
+    )
+    .sort(
+      (a, b) =>
+        Date.parse(b.cancelled_at as string) -
+        Date.parse(a.cancelled_at as string)
+    )
+  return cancelled[0] ?? null
 }
 
 /** RFC 4180 CSV, with a byte order mark so spreadsheet apps read it as UTF-8. */
-export function toCsv(header: string[], rows: (string | number | null | undefined)[][]): string {
-    const cell = (value: string | number | null | undefined) => {
-        const text = value === null || value === undefined ? '' : String(value)
-        // A leading =, +, - or @ would run as a formula in a spreadsheet; a plain negative amount can't.
-        const formula = /^[=+\-@]/.test(text) && typeof value !== 'number' && !/^-\d+(\.\d+)?$/.test(text)
-        const safe = formula ? `'${text}` : text
-        return /[",\n\r]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe
-    }
-    return `﻿${[header, ...rows].map((row) => row.map(cell).join(',')).join('\r\n')}\r\n`
+export function toCsv(
+  header: string[],
+  rows: (string | number | null | undefined)[][]
+): string {
+  const cell = (value: string | number | null | undefined) => {
+    const text = value === null || value === undefined ? '' : String(value)
+    // A leading =, +, - or @ would run as a formula in a spreadsheet; a plain negative amount can't.
+    const formula =
+      /^[=+\-@]/.test(text) &&
+      typeof value !== 'number' &&
+      !/^-\d+(\.\d+)?$/.test(text)
+    const safe = formula ? `'${text}` : text
+    return /[",\n\r]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe
+  }
+  return `﻿${[header, ...rows]
+    .map((row) => row.map(cell).join(','))
+    .join('\r\n')}\r\n`
 }
 
 export function downloadCsv(filename: string, csv: string) {
-    downloadBlob(filename, new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+  downloadBlob(filename, new Blob([csv], { type: 'text/csv;charset=utf-8' }))
 }
 
 export function downloadBlob(filename: string, blob: Blob) {
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = filename
-    document.body.appendChild(anchor)
-    anchor.click()
-    anchor.remove()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
+  const url = URL.createObjectURL(blob)
+  const anchor = document.createElement('a')
+  anchor.href = url
+  anchor.download = filename
+  document.body.appendChild(anchor)
+  anchor.click()
+  anchor.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
 export function fetchProgramTerms() {
-    return workerRequest<ProgramTerms>('/api/affiliate/terms')
+  return workerRequest<ProgramTerms>('/api/affiliate/terms')
 }
 
 export function getAffiliateDashboard(accessToken: string) {
-    return workerPost<AffiliateDashboard>('/api/affiliate/dashboard', accessToken)
+  return workerPost<AffiliateDashboard>('/api/affiliate/dashboard', accessToken)
 }
 
 /** Refused with status 404 when the payout isn't the signed-in Affiliate's. */
 export function getPayoutStatement(accessToken: string, id: string) {
-    return workerPost<AffiliatePayoutStatement>('/api/affiliate/payout', accessToken, { id })
+  return workerPost<AffiliatePayoutStatement>(
+    '/api/affiliate/payout',
+    accessToken,
+    { id }
+  )
 }
 
 /** Refused with status 400 for a year without a statement, and 404 for an account that isn't an Affiliate. */
 export function getYearStatement(accessToken: string, year: number) {
-    return workerPost<AffiliateYearStatement>('/api/affiliate/year_statement', accessToken, { year })
+  return workerPost<AffiliateYearStatement>(
+    '/api/affiliate/year_statement',
+    accessToken,
+    { year }
+  )
 }
 
 /**
@@ -573,54 +724,99 @@ export function getYearStatement(accessToken: string, year: number) {
  * settled: the dashboard and a payout statement list just the newest, so a CSV fetches the rest
  * a page at a time.
  */
-export async function getAllCommissions(accessToken: string, payout?: string): Promise<WorkerResult<AffiliateCommission[]>> {
-    const entries: AffiliateCommission[] = []
-    for (let after: string | null = null; ; ) {
-        const page = await getCommissionPage(accessToken, after, payout)
-        if (page.ok === false) return page
-        entries.push(...page.data.commissions)
-        if (!page.data.next) return { ok: true, data: entries }
-        after = page.data.next
-    }
+export async function getAllCommissions(
+  accessToken: string,
+  payout?: string
+): Promise<WorkerResult<AffiliateCommission[]>> {
+  const entries: AffiliateCommission[] = []
+  for (let after: string | null = null; ; ) {
+    const page = await getCommissionPage(accessToken, after, payout)
+    if (page.ok === false) return page
+    entries.push(...page.data.commissions)
+    if (!page.data.next) return { ok: true, data: entries }
+    after = page.data.next
+  }
 }
 
-function getCommissionPage(accessToken: string, after: string | null, payout?: string) {
-    return workerPost<{ commissions: AffiliateCommission[]; next: string | null }>('/api/affiliate/commissions', accessToken, { after, payout })
+function getCommissionPage(
+  accessToken: string,
+  after: string | null,
+  payout?: string
+) {
+  return workerPost<{
+    commissions: AffiliateCommission[]
+    next: string | null
+  }>('/api/affiliate/commissions', accessToken, { after, payout })
 }
 
-export function applyForAffiliate(accessToken: string, input: ApplicationInput) {
-    return workerPost<AffiliateApplication>('/api/affiliate/apply', accessToken, input)
+export function applyForAffiliate(
+  accessToken: string,
+  input: ApplicationInput
+) {
+  return workerPost<AffiliateApplication>(
+    '/api/affiliate/apply',
+    accessToken,
+    input
+  )
 }
 
 export function acceptAffiliateTerms(accessToken: string) {
-    return workerPost<AffiliateApplication>('/api/affiliate/accept_terms', accessToken, { accept_terms: true, terms_version: AFFILIATE_TERMS_VERSION })
+  return workerPost<AffiliateApplication>(
+    '/api/affiliate/accept_terms',
+    accessToken,
+    { accept_terms: true, terms_version: AFFILIATE_TERMS_VERSION }
+  )
 }
 
-export function savePayoutMethod(accessToken: string, payout_method: PayoutMethod, payout_account: string) {
-    return workerPost<AffiliateApplication>('/api/affiliate/payout_method', accessToken, { payout_method, payout_account })
+export function savePayoutMethod(
+  accessToken: string,
+  payout_method: PayoutMethod,
+  payout_account: string
+) {
+  return workerPost<AffiliateApplication>(
+    '/api/affiliate/payout_method',
+    accessToken,
+    { payout_method, payout_account }
+  )
 }
 
 export interface ProfileInput {
-    name: string
-    website: string
-    audience: string
-    promotion_plan: string
+  name: string
+  website: string
+  audience: string
+  promotion_plan: string
 }
 
 /** Name, audience and promotion plan are required, as in an application; an empty website removes it. */
-export function saveAffiliateProfile(accessToken: string, profile: ProfileInput) {
-    return workerPost<AffiliateApplication>('/api/affiliate/profile', accessToken, profile)
+export function saveAffiliateProfile(
+  accessToken: string,
+  profile: ProfileInput
+) {
+  return workerPost<AffiliateApplication>(
+    '/api/affiliate/profile',
+    accessToken,
+    profile
+  )
 }
 
 export const BILLING_MAX_LENGTH = 500
 export const BILLING_MAX_LINES = 8
 
 /** The billing details for statements of payouts recorded from now on; empty removes them. */
-export function saveBillingDetails(accessToken: string, billing_details: string) {
-    return workerPost<AffiliateApplication>('/api/affiliate/billing', accessToken, { billing_details })
+export function saveBillingDetails(
+  accessToken: string,
+  billing_details: string
+) {
+  return workerPost<AffiliateApplication>(
+    '/api/affiliate/billing',
+    accessToken,
+    { billing_details }
+  )
 }
 
 /** An approved Affiliate's new link code, once every 30 days; the old code keeps crediting it. */
 export function changeAffiliateCode(accessToken: string, code: string) {
-    return workerPost<AffiliateApplication>('/api/affiliate/code', accessToken, { code })
+  return workerPost<AffiliateApplication>('/api/affiliate/code', accessToken, {
+    code,
+  })
 }

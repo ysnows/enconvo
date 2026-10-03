@@ -1,79 +1,95 @@
-import { useEffect, useState } from "react"
+import { i18nStaticProps } from '@/i18n/server'
+import { useI18n } from '@/i18n/I18nProvider'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import PaySuccess from './components/PaySucess'
-import { NativeRouter } from "@/utils/app/native_router"
+import { NativeRouter } from '@/utils/app/native_router'
 
 export default function Login() {
-    // 获取url参数
+  const { t, locale } = useI18n()
 
-    const router = useRouter()
+  // 获取url参数
 
-    const [loginState, setLoginState] = useState("login")
-    const [user, setUser] = useState({})
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const router = useRouter()
 
-    const [navigation, setNavigation] = useState([
-    ])
+  const [loginState, setLoginState] = useState('login')
+  const [user, setUser] = useState({})
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-    const handleOpenApp = () => {
-        // Jump back into the app like the login flow (deep-link), landing on the Account page,
-        // which re-syncs the user's plan. `source=account` routes the app to Settings → Account.
-        void NativeRouter.openApp('account').then((result) => {
-            if (result === 'signed_out') router.push("/login?from=app&source=account")
-            else if (result !== 'opened') alert(result.error)
-        })
+  const [navigation, setNavigation] = useState([])
+
+  const handleOpenApp = () => {
+    // Jump back into the app like the login flow (deep-link), landing on the Account page,
+    // which re-syncs the user's plan. `source=account` routes the app to Settings → Account.
+    void NativeRouter.openApp('account').then((result) => {
+      if (result === 'signed_out') router.push('/login?from=app&source=account')
+      else if (result !== 'opened') alert(result.error)
+    })
+  }
+  const handleLogout = () => {
+    // Only this browser: Enconvo and other devices stay signed in.
+    supabase.auth.signOut({ scope: 'local' }).then(() => {
+      setLoginState('login')
+      setUser(null)
+      setNavigation([])
+    })
+  }
+
+  useEffect(() => {
+    // Check to see if this is a redirect back from Checkout
+    const query = new URLSearchParams(window.location.search)
+    if (query.get('success')) {
+      console.log('Order placed! You will receive an email confirmation.')
     }
-    const handleLogout = () => {
-        // Only this browser: Enconvo and other devices stay signed in.
-        supabase.auth.signOut({ scope: 'local' }).then(() => {
-            setLoginState("login")
-            setUser(null)
-            setNavigation([])
-        })
+
+    if (query.get('canceled')) {
+      console.log(
+        'Order canceled -- continue to shop around and checkout when you’re ready.'
+      )
     }
+  }, [])
 
+  return (
+    <>
+      <div>
+        <header className="absolute inset-x-0 top-0 z-50">
+          <nav
+            className="flex items-center justify-between p-6 lg:px-8"
+            aria-label={t('Global')}
+          >
+            <div className="ml-32 flex items-center lg:flex-1 "></div>
 
-    useEffect(() => {
-        // Check to see if this is a redirect back from Checkout
-        const query = new URLSearchParams(window.location.search);
-        if (query.get('success')) {
-            console.log('Order placed! You will receive an email confirmation.');
-        }
+            <div className="mr-32 hidden lg:flex lg:gap-x-12">
+              {loginState === 'success' && (
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 rounded-md bg-gray-800 px-4 py-2 text-gray-300 transition-all duration-200 hover:bg-gray-700 hover:text-white"
+                >
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                    />
+                  </svg>
+                  <span>{t('Log Out')}</span>
+                </button>
+              )}
+            </div>
+          </nav>
+        </header>
 
-        if (query.get('canceled')) {
-            console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
-        }
-    }, []);
-
-    return <>
-
-        <div >
-            <header className="absolute inset-x-0 top-0 z-50">
-                <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
-                    <div className="ml-32 flex lg:flex-1 items-center ">
-
-                    </div>
-
-                    <div className="mr-32 hidden lg:flex lg:gap-x-12">
-                        {loginState === "success" &&
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white px-4 py-2 rounded-md transition-all duration-200"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                </svg>
-                                <span>Log Out</span>
-                            </button>
-                        }
-                    </div>
-                </nav>
-
-            </header>
-
-            <PaySuccess handleOpenApp={handleOpenApp} />
-
-        </div>
+        <PaySuccess handleOpenApp={handleOpenApp} />
+      </div>
     </>
+  )
 }
+
+export const getStaticProps = i18nStaticProps('/pay_success')

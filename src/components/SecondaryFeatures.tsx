@@ -1,3 +1,4 @@
+import { useI18n } from '@/i18n/I18nProvider'
 import { useId } from 'react'
 import Image from 'next/image'
 import { Tab } from '@headlessui/react'
@@ -97,6 +98,8 @@ const features = [
 ]
 
 function Feature({ feature, isActive, className, ...props }) {
+  const { t, locale } = useI18n()
+
   return (
     <div
       className={clsx(className, !isActive && 'opacity-75 hover:opacity-100')}
@@ -118,12 +121,12 @@ function Feature({ feature, isActive, className, ...props }) {
           isActive ? 'text-blue-600' : 'text-slate-600'
         )}
       >
-        {feature.name}
+        {t(feature.name)}
       </h3>
-      <p className="mt-2 font-display text-xl text-slate-900">
-        {feature.summary}
+      <p className="font-display mt-2 text-xl text-slate-900">
+        {t(feature.summary)}
       </p>
-      <p className="mt-4 text-sm text-slate-600">{feature.description}</p>
+      <p className="mt-4 text-sm text-slate-600">{t(feature.description)}</p>
     </div>
   )
 }
@@ -152,6 +155,8 @@ function FeaturesMobile() {
 }
 
 function FeaturesDesktop() {
+  const { t, locale } = useI18n()
+
   return (
     <Tab.Group as="div" className="hidden lg:mt-20 lg:block">
       {({ selectedIndex }) => (
@@ -165,7 +170,7 @@ function FeaturesDesktop() {
                   name: (
                     <Tab className="[&:not(:focus-visible)]:focus:outline-none">
                       <span className="absolute inset-0" />
-                      {feature.name}
+                      {t(feature.name)}
                     </Tab>
                   ),
                 }}
@@ -174,7 +179,7 @@ function FeaturesDesktop() {
               />
             ))}
           </Tab.List>
-          <Tab.Panels className="relative mt-20 overflow-hidden rounded-4xl bg-slate-200 px-14 py-16 xl:px-16">
+          <Tab.Panels className="rounded-4xl relative mt-20 overflow-hidden bg-slate-200 px-14 py-16 xl:px-16">
             <div className="-mx-5 flex">
               {features.map((feature, featureIndex) => (
                 <Tab.Panel
@@ -198,7 +203,7 @@ function FeaturesDesktop() {
                 </Tab.Panel>
               ))}
             </div>
-            <div className="pointer-events-none absolute inset-0 rounded-4xl ring-1 ring-inset ring-slate-900/10" />
+            <div className="rounded-4xl pointer-events-none absolute inset-0 ring-1 ring-inset ring-slate-900/10" />
           </Tab.Panels>
         </>
       )}
@@ -207,20 +212,23 @@ function FeaturesDesktop() {
 }
 
 export function SecondaryFeatures() {
+  const { t, locale } = useI18n()
+
   return (
     <section
       id="secondary-features"
-      aria-label="Features for simplifying everyday business tasks"
+      aria-label={t('Features for simplifying everyday business tasks')}
       className="pb-14 pt-20 sm:pb-20 sm:pt-32 lg:pb-32"
     >
       <Container>
         <div className="mx-auto max-w-2xl md:text-center">
           <h2 className="font-display text-3xl tracking-tight text-slate-900 sm:text-4xl">
-            Simplify everyday business tasks.
+            {t('Simplify everyday business tasks.')}
           </h2>
           <p className="mt-4 text-lg tracking-tight text-slate-700">
-            Because you’d probably be a little confused if we suggested you
-            complicate your everyday business tasks instead.
+            {t(
+              'Because you’d probably be a little confused if we suggested you complicate your everyday business tasks instead.'
+            )}
           </p>
         </div>
         <FeaturesMobile />

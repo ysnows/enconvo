@@ -1,3 +1,6 @@
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { localizePath } from '@/i18n/locale'
+import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState } from 'react'
 import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -48,6 +51,8 @@ const defaultNav: NavigationItem[] = [
 ]
 
 export function SiteNav() {
+  const { t, locale } = useI18n()
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [navigation, setNavigation] = useState<NavigationItem[]>(defaultNav)
   const supabase = createClientComponentClient()
@@ -69,59 +74,83 @@ export function SiteNav() {
   }, [])
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-nav-surface/90 backdrop-blur-md border-b border-hairline">
-      <nav className="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
-        <div className="flex lg:flex-1 items-center">
-          <Link href="/" aria-label="Enconvo home" className="flex items-center gap-3">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-hairline bg-nav-surface/90 backdrop-blur-md">
+      <nav
+        className="flex items-center justify-between p-6 lg:px-8 xl:pr-[180px]"
+        aria-label={t('Global')}
+      >
+        <div className="flex items-center xl:flex-1">
+          <Link
+            href="/"
+            aria-label={t('Enconvo home')}
+            className="flex items-center gap-3"
+          >
             <Logo className="h-8 w-auto" />
-            <span className="text-content font-bold text-lg">Enconvo</span>
+            <span className="hidden text-lg font-bold text-content min-[360px]:inline">
+              {t('Enconvo')}
+            </span>
           </Link>
         </div>
-        <div className="flex lg:hidden">
+        <div className="flex items-center gap-3 xl:hidden">
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-lg p-2.5 text-content-muted"
             onClick={() => setMobileMenuOpen(true)}
           >
-            <span className="sr-only">Open main menu</span>
+            <span className="sr-only">{t('Open main menu')}</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
+          <LanguageSwitcher />
         </div>
 
-        <div className="hidden lg:flex lg:gap-x-8 items-center">
+        <div className="hidden items-center xl:flex xl:gap-x-5">
           {navigation.map((item) => (
             <a
               key={item.name}
-              href={item.href}
+              href={localizePath(item.href, locale)}
               target={item.href.startsWith('http') ? '_blank' : '_self'}
-              className="text-sm font-semibold leading-6 text-content-body hover:text-content transition-colors"
+              className="text-sm font-semibold leading-6 text-content-body transition-colors hover:text-content"
               rel="noreferrer"
             >
-              {item.name}
+              {item.href === '/account' ? item.name : t(item.name)}
             </a>
           ))}
-          <div className="flex space-x-3 items-center">
+          <div className="flex items-center space-x-3">
             {socialLinks.map((item) => (
               <a
                 key={item.name}
-                href={item.href}
+                href={localizePath(item.href, locale)}
                 target="_blank"
                 rel="noreferrer"
-                className="text-content-muted hover:text-content-body transition-colors"
+                className="text-content-muted transition-colors hover:text-content-body"
               >
-                <span className="sr-only">{item.name}</span>
+                <span className="sr-only">
+                  {item.href === '/account' ? item.name : t(item.name)}
+                </span>
                 <item.icon className="h-5 w-5" aria-hidden="true" />
               </a>
             ))}
           </div>
         </div>
+        <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 xl:block">
+          <LanguageSwitcher />
+        </div>
       </nav>
 
-      <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
+      <Dialog
+        as="div"
+        className="xl:hidden"
+        open={mobileMenuOpen}
+        onClose={setMobileMenuOpen}
+      >
         <div className="fixed inset-0 z-50" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-surface px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-hairline">
           <div className="flex items-center justify-between">
-            <Link href="/" className="-m-1.5 p-1.5" aria-label="Enconvo home">
+            <Link
+              href="/"
+              className="-m-1.5 p-1.5"
+              aria-label={t('Enconvo home')}
+            >
               <Logo className="h-8 w-auto" />
             </Link>
             <button
@@ -129,7 +158,7 @@ export function SiteNav() {
               className="-m-2.5 rounded-lg p-2.5 text-content-muted"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <span className="sr-only">Close menu</span>
+              <span className="sr-only">{t('Close menu')}</span>
               <XMarkIcon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
@@ -139,24 +168,24 @@ export function SiteNav() {
                 {navigation.map((item) => (
                   <a
                     key={item.name}
-                    href={item.href}
+                    href={localizePath(item.href, locale)}
                     onClick={() => setMobileMenuOpen(false)}
                     className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-content hover:bg-surface-elevated"
                   >
-                    {item.name}
+                    {item.href === '/account' ? item.name : t(item.name)}
                   </a>
                 ))}
                 {socialLinks.map((item) => (
                   <a
                     key={item.name}
-                    href={item.href}
+                    href={localizePath(item.href, locale)}
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => setMobileMenuOpen(false)}
                     className="-mx-3 flex items-center rounded-lg px-3 py-2 text-base font-semibold leading-7 text-content hover:bg-surface-elevated"
                   >
-                    <item.icon className="h-5 w-5 mr-3" aria-hidden="true" />
-                    {item.name}
+                    <item.icon className="mr-3 h-5 w-5" aria-hidden="true" />
+                    {item.href === '/account' ? item.name : t(item.name)}
                   </a>
                 ))}
               </div>

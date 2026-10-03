@@ -1,3 +1,5 @@
+import { useRouter } from 'next/router'
+import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import { InviteRedeemMessage } from '@/components/InviteRedeemMessage'
@@ -12,38 +14,41 @@ const VISIBLE_MS = 8000
  * shows its own outcome inline, and a retryable failure stays quiet.
  */
 export function InviteToast() {
-    const [result, setResult] = useState<RedeemResult | null>(null)
+  const { t, locale } = useI18n()
+  const router = useRouter()
 
-    useInviteRedeemed((outcome) => {
-        if (window.location.pathname.startsWith('/i/')) return
-        if (outcome.ok || outcome.terminal) setResult(outcome)
-    })
+  const [result, setResult] = useState<RedeemResult | null>(null)
 
-    useEffect(() => {
-        if (!result) return
-        const timer = setTimeout(() => setResult(null), VISIBLE_MS)
-        return () => clearTimeout(timer)
-    }, [result])
+  useInviteRedeemed((outcome) => {
+    if (router.pathname === '/i/[code]') return
+    if (outcome.ok || outcome.terminal) setResult(outcome)
+  })
 
-    if (!result) return null
+  useEffect(() => {
+    if (!result) return
+    const timer = setTimeout(() => setResult(null), VISIBLE_MS)
+    return () => clearTimeout(timer)
+  }, [result])
 
-    return (
-        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex justify-center px-4 sm:inset-x-auto sm:right-6 sm:bottom-6">
-            <div
-                role="status"
-                aria-live="polite"
-                className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border border-hairline-strong bg-surface-card/95 py-3 pl-4 pr-1 text-left shadow-2xl backdrop-blur-md"
-            >
-                <InviteRedeemMessage result={result} compact />
-                <button
-                    type="button"
-                    onClick={() => setResult(null)}
-                    className="-my-1.5 flex h-10 w-10 flex-none items-center justify-center rounded-[10px] text-content-muted transition-colors hover:bg-white/[0.06] hover:text-content"
-                    aria-label="Dismiss"
-                >
-                    <X className="h-4 w-4" aria-hidden="true" />
-                </button>
-            </div>
-        </div>
-    )
+  if (!result) return null
+
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex justify-center px-4 sm:inset-x-auto sm:bottom-6 sm:right-6">
+      <div
+        role="status"
+        aria-live="polite"
+        className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-lg border border-hairline-strong bg-surface-card/95 py-3 pl-4 pr-1 text-left shadow-2xl backdrop-blur-md"
+      >
+        <InviteRedeemMessage result={result} compact />
+        <button
+          type="button"
+          onClick={() => setResult(null)}
+          className="-my-1.5 flex h-10 w-10 flex-none items-center justify-center rounded-[10px] text-content-muted transition-colors hover:bg-white/[0.06] hover:text-content"
+          aria-label={t('Dismiss')}
+        >
+          <X className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </div>
+    </div>
+  )
 }

@@ -1,3 +1,6 @@
+import { I18nText } from '@/i18n/I18nText'
+import { localizePath, type Locale } from '@/i18n/locale'
+import { useI18n } from '@/i18n/I18nProvider'
 import styles from '@/styles/Home.module.css'
 import clsx from 'clsx'
 import Link from 'next/link'
@@ -42,6 +45,7 @@ function CheckIcon({ className }: CheckIconProps) {
 async function startCheckout(
   lookupKey: string,
   setIsLoading: (loading: boolean) => void,
+  locale: Locale,
   extra?: Record<string, unknown>
 ) {
   try {
@@ -53,12 +57,20 @@ async function startCheckout(
       return
     }
 
-    const { data: { session } } = await supabase.auth.getSession()
-    trackEvent('begin_checkout', { plan: lookupKey, signed_in: Boolean(session) })
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+    trackEvent('begin_checkout', {
+      plan: lookupKey,
+      signed_in: Boolean(session),
+    })
 
     if (!session) {
       const returnUrl = `/pricing?plan=${lookupKey}`
-      window.location.href = `/login?returnUrl=${encodeURIComponent(returnUrl)}`
+      window.location.href = localizePath(
+        `/login?returnUrl=${encodeURIComponent(returnUrl)}`,
+        locale
+      )
       return
     }
 
@@ -69,6 +81,7 @@ async function startCheckout(
       },
       body: JSON.stringify({
         lookupKey,
+        locale,
         email: session.user.email,
         ...extra,
       }),
@@ -106,12 +119,14 @@ interface PlanProps {
 }
 
 function PlanFeatures({ features }: { features: string[] }) {
+  const { t, locale } = useI18n()
+
   return (
     <ul className={styles.planFeatures}>
-      {features.map(feature => (
+      {features.map((feature) => (
         <li key={feature}>
           <CheckIcon className={styles.planCheck} />
-          <span>{feature}</span>
+          <span>{t(feature)}</span>
         </li>
       ))}
     </ul>
@@ -119,43 +134,96 @@ function PlanFeatures({ features }: { features: string[] }) {
 }
 
 function Plan({
-  name, price, priceNote, billingNote, allowance, lookupKey, badge, description,
-  startText = 'Get started', detailsHref, features, featured = false,
+  name,
+  price,
+  priceNote,
+  billingNote,
+  allowance,
+  lookupKey,
+  badge,
+  description,
+  startText = 'Get started',
+  detailsHref,
+  features,
+  featured = false,
 }: PlanProps) {
+  const { t, locale } = useI18n()
+
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <section aria-label={`${name} plan`} data-spotlight className={clsx(styles.planCard, featured && styles.planFeatured)}>
+    <section
+      aria-label={t('{p0} plan', { p0: name })}
+      data-spotlight
+      className={clsx(styles.planCard, featured && styles.planFeatured)}
+    >
       <div className={styles.planIdentity}>
         <div className={styles.planTitleRow}>
-          <h4>{name}</h4>
-          {badge && <span className={styles.planBadge}>{badge}</span>}
+          <h4>{t(name)}</h4>
+          {badge && <span className={styles.planBadge}>{t(badge)}</span>}
         </div>
-        <p>{description}</p>
+        <p>{t(description)}</p>
       </div>
       <div className={styles.planPriceBlock}>
         <div className={styles.planPriceRow}>
           <span className={styles.planAmount}>{price}</span>
-          {priceNote && <span className={styles.planUnit}>{priceNote}</span>}
+          {priceNote && <span className={styles.planUnit}>{t(priceNote)}</span>}
         </div>
-        <p className={styles.planBillingNote}>{billingNote || '\u00a0'}</p>
+        <p className={styles.planBillingNote}>{billingNote || t(' ')}</p>
       </div>
       <div className={styles.planAction}>
         <Button
-          onClick={() => startCheckout(lookupKey, setIsLoading)}
-          variant={featured ? 'solid' : 'outline'} color="white"
-          className={styles.planPurchase} disabled={isLoading}
-          aria-label={isLoading ? 'Going to checkout...' : `${startText} — ${name}`}
+          onClick={() => startCheckout(lookupKey, setIsLoading, locale)}
+          variant={featured ? 'solid' : 'outline'}
+          color="white"
+          className={styles.planPurchase}
+          disabled={isLoading}
+          aria-label={
+            isLoading
+              ? t('Going to checkout...')
+              : t('{p0} — {p1}', { p0: t(startText), p1: name })
+          }
         >
           {isLoading ? (
-            <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />Going to checkout...</>
+            <>
+              <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              {t('Going to checkout...')}
+            </>
           ) : (
-            <>{startText}<svg className="ml-2 h-4 w-4" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg></>
+            <>
+              {t(startText)}
+              <svg
+                className="ml-2 h-4 w-4"
+                aria-hidden="true"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </>
           )}
         </Button>
-        {detailsHref && <a href={detailsHref} className={styles.planDetailsLink}>See model &amp; service rates</a>}
+        {detailsHref && (
+          <a
+            href={localizePath(detailsHref, locale)}
+            className={styles.planDetailsLink}
+          >
+            {t('See model & service rates')}
+          </a>
+        )}
       </div>
-      {allowance && <p className={styles.planAllowance}><strong>{allowance.split(' points')[0]}</strong><span>points / month</span></p>}
+      {allowance && (
+        <p className={styles.planAllowance}>
+          <strong>{allowance.split(' points')[0]}</strong>
+          <span>{t('points / month')}</span>
+        </p>
+      )}
       <PlanFeatures features={features} />
     </section>
   )
@@ -175,48 +243,112 @@ const LICENSE_COMPARISON: ComparisonData = {
     {
       title: 'AI & Chat',
       rows: [
-        { feature: 'Unlimited AI with your own API key', values: [true, true, true, true] },
-        { feature: '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more', values: [true, true, true, true] },
-        { feature: 'Local models — Ollama, LM Studio, MLX', values: [true, true, true, true] },
-        { feature: 'Agent mode with tools, planning & skills', values: [true, true, true, true] },
-        { feature: 'Cloud points bonus', values: ['5,000 welcome', '50,000', '150,000', '50,000 / seat'] },
+        {
+          feature: 'Unlimited AI with your own API key',
+          values: [true, true, true, true],
+        },
+        {
+          feature:
+            '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Local models — Ollama, LM Studio, MLX',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Agent mode with tools, planning & skills',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Cloud points bonus',
+          values: ['5,000 welcome', '50,000', '150,000', '50,000 / seat'],
+        },
       ],
     },
     {
       title: 'Surfaces & Tools',
       rows: [
-        { feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island', values: [true, true, true, true] },
-        { feature: '100+ built-in tools and plugins', values: [true, true, true, true] },
-        { feature: 'MCP servers & custom skills', values: [true, true, true, true] },
-        { feature: 'Computer use & browser automation', values: [true, true, true, true] },
-        { feature: 'Screenshot, OCR & screen doodle', values: [true, true, true, true] },
+        {
+          feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island',
+          values: [true, true, true, true],
+        },
+        {
+          feature: '100+ built-in tools and plugins',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'MCP servers & custom skills',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Computer use & browser automation',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Screenshot, OCR & screen doodle',
+          values: [true, true, true, true],
+        },
       ],
     },
     {
       title: 'Voice & Meetings',
       rows: [
-        { feature: 'Dictation & voice commands', values: [true, true, true, true] },
-        { feature: 'Read aloud (text-to-speech)', values: [true, true, true, true] },
-        { feature: 'Meeting recording', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
-        { feature: 'Live captions', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        {
+          feature: 'Dictation & voice commands',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Read aloud (text-to-speech)',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Meeting recording',
+          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'Live captions',
+          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
       ],
     },
     {
       title: 'Knowledge & Automation',
       rows: [
-        { feature: 'Knowledge bases', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
-        { feature: 'Workflows', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
-        { feature: 'Memory & context awareness', values: [true, true, true, true] },
-        { feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark', values: [true, true, true, true] },
-        { feature: 'Import & export (Portability)', values: [false, true, true, true] },
+        {
+          feature: 'Knowledge bases',
+          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'Workflows',
+          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'Memory & context awareness',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Import & export (Portability)',
+          values: [false, true, true, true],
+        },
       ],
     },
     {
       title: 'License',
       rows: [
-        { feature: 'Free updates', values: [false, '1 year', 'Lifetime', 'Lifetime'] },
+        {
+          feature: 'Free updates',
+          values: [false, '1 year', 'Lifetime', 'Lifetime'],
+        },
         { feature: 'Mac devices', values: ['1', '1', '3', '5 – 500'] },
-        { feature: '30-day money-back guarantee', values: [false, true, true, true] },
+        {
+          feature: '30-day money-back guarantee',
+          values: [false, true, true, true],
+        },
       ],
     },
   ],
@@ -232,136 +364,269 @@ const CLOUD_COMPARISON: ComparisonData = {
     {
       title: 'Points',
       rows: [
-        { feature: 'Included points', values: ['5,000 welcome', '500K / month', '2.5M / month', '5M / month'] },
-        { feature: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash rates', values: ['Standard', 'Standard', '1/2 price', '1/4 price'] },
+        {
+          feature: 'Included points',
+          values: [
+            '5,000 welcome',
+            '500K / month',
+            '2.5M / month',
+            '5M / month',
+          ],
+        },
+        {
+          feature: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash rates',
+          values: ['Standard', 'Standard', '1/2 price', '1/4 price'],
+        },
         { feature: 'Points top-up packs', values: [true, true, true, true] },
-        { feature: 'Annual billing — save 20%', values: [false, '$96 / year', '$480 / year', '$960 / year'] },
+        {
+          feature: 'Annual billing — save 20%',
+          values: [false, '$96 / year', '$480 / year', '$960 / year'],
+        },
       ],
     },
     {
       title: 'Cloud Services',
       rows: [
-        { feature: 'Works without API keys', values: [false, true, true, true] },
-        { feature: 'Every Cloud model & service — chat, image, TTS, transcription', values: [false, true, true, true] },
-        { feature: 'Latest frontier models — GPT, Claude, Gemini & more', values: [false, true, true, true] },
+        {
+          feature: 'Works without API keys',
+          values: [false, true, true, true],
+        },
+        {
+          feature:
+            'Every Cloud model & service — chat, image, TTS, transcription',
+          values: [false, true, true, true],
+        },
+        {
+          feature: 'Latest frontier models — GPT, Claude, Gemini & more',
+          values: [false, true, true, true],
+        },
         { feature: 'Priority support', values: [false, true, true, true] },
       ],
     },
     {
       title: 'AI & Chat',
       rows: [
-        { feature: 'Unlimited AI with your own API key', values: [true, true, true, true] },
-        { feature: '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more', values: [true, true, true, true] },
-        { feature: 'Local models — Ollama, LM Studio, MLX', values: [true, true, true, true] },
-        { feature: 'Agent mode with tools, planning & skills', values: [true, true, true, true] },
+        {
+          feature: 'Unlimited AI with your own API key',
+          values: [true, true, true, true],
+        },
+        {
+          feature:
+            '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Local models — Ollama, LM Studio, MLX',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Agent mode with tools, planning & skills',
+          values: [true, true, true, true],
+        },
       ],
     },
     {
       title: 'Surfaces & Tools',
       rows: [
-        { feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island', values: [true, true, true, true] },
-        { feature: '100+ built-in tools and plugins', values: [true, true, true, true] },
-        { feature: 'MCP servers & custom skills', values: [true, true, true, true] },
-        { feature: 'Computer use & browser automation', values: [true, true, true, true] },
-        { feature: 'Screenshot, OCR & screen doodle', values: [true, true, true, true] },
+        {
+          feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island',
+          values: [true, true, true, true],
+        },
+        {
+          feature: '100+ built-in tools and plugins',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'MCP servers & custom skills',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Computer use & browser automation',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Screenshot, OCR & screen doodle',
+          values: [true, true, true, true],
+        },
       ],
     },
     {
       title: 'Voice & Meetings',
       rows: [
-        { feature: 'Dictation & voice commands', values: [true, true, true, true] },
-        { feature: 'Read aloud (text-to-speech)', values: [true, true, true, true] },
-        { feature: 'Meeting recording', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
-        { feature: 'Live captions', values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'] },
+        {
+          feature: 'Dictation & voice commands',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Read aloud (text-to-speech)',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Meeting recording',
+          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'Live captions',
+          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
       ],
     },
     {
       title: 'Knowledge & Automation',
       rows: [
-        { feature: 'Knowledge bases', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
-        { feature: 'Workflows', values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'] },
-        { feature: 'Memory & context awareness', values: [true, true, true, true] },
-        { feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark', values: [true, true, true, true] },
-        { feature: 'Import & export (Portability)', values: [false, true, true, true] },
+        {
+          feature: 'Knowledge bases',
+          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'Workflows',
+          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'Memory & context awareness',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark',
+          values: [true, true, true, true],
+        },
+        {
+          feature: 'Import & export (Portability)',
+          values: [false, true, true, true],
+        },
       ],
     },
     {
       title: 'Account',
-      rows: [
-        { feature: 'Mac devices', values: ['1', '5', '5', '5'] },
-      ],
+      rows: [{ feature: 'Mac devices', values: ['1', '5', '5', '5'] }],
     },
   ],
 }
 
-function ComparisonTable({ data, label }: { data: ComparisonData; label: string }) {
+function ComparisonTable({
+  data,
+  label,
+}: {
+  data: ComparisonData
+  label: string
+}) {
+  const { t, locale } = useI18n()
+
   return (
     <details className={styles.comparisonDisclosure}>
       <summary>
-        <span>{label}</span>
-        <span className={styles.comparisonSummaryNote}>{data.columns.join(' · ')}</span>
-        <svg className={styles.comparisonChevron} aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor"><path d="m5 7.5 5 5 5-5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        <span>{t(label)}</span>
+        <span className={styles.comparisonSummaryNote}>
+          {data.columns.join(' · ')}
+        </span>
+        <svg
+          className={styles.comparisonChevron}
+          aria-hidden="true"
+          viewBox="0 0 20 20"
+          fill="none"
+          stroke="currentColor"
+        >
+          <path
+            d="m5 7.5 5 5 5-5"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </summary>
       <div className={styles.comparison}>
-      <div className={styles.comparisonScroll} tabIndex={0} role="region" aria-label={`Compare ${data.columns.join(", ")} plans`}>
-        <table className="w-full text-left text-sm">
-          <thead>
-            <tr className="border-b border-hairline">
-              <th scope="col" className="w-[36%] py-3.5 pl-6 pr-3 text-xs font-medium text-content-muted">
-                Everything you get
-              </th>
-              {data.columns.map((c) => (
-                <th key={c} scope="col" data-recommended={c === 'Pro'} className="px-3 py-3.5 text-center text-sm font-semibold text-content">
-                  {c}
+        <div
+          className={styles.comparisonScroll}
+          tabIndex={0}
+          role="region"
+          aria-label={t('Compare {p0} plans', { p0: data.columns.join(', ') })}
+        >
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-hairline">
+                <th
+                  scope="col"
+                  className="w-[36%] py-3.5 pl-6 pr-3 text-xs font-medium text-content-muted"
+                >
+                  {t('Everything you get')}
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.groups.map((group, gi) => (
-              <Fragment key={group.title ?? gi}>
-                {group.title && (
-                  <tr>
-                    <td
-                      colSpan={data.columns.length + 1}
-                      className="pb-1.5 pl-6 pt-5 text-[11px] font-semibold uppercase tracking-[0.08em] text-content-ash"
-                    >
-                      {group.title}
-                    </td>
-                  </tr>
-                )}
-                {group.rows.map((row, ri) => (
-                  <tr
-                    key={row.feature}
-                    className={clsx(
-                      'border-b transition-colors hover:bg-surface-elevated/40',
-                      ri === group.rows.length - 1 && gi !== data.groups.length - 1
-                        ? 'border-hairline'
-                        : 'border-hairline/50',
-                      gi === data.groups.length - 1 && ri === group.rows.length - 1 && 'border-0',
-                    )}
+                {data.columns.map((c) => (
+                  <th
+                    key={c}
+                    scope="col"
+                    data-recommended={c === 'Pro'}
+                    className="px-3 py-3.5 text-center text-sm font-semibold text-content"
                   >
-                    <th scope="row" className="py-3 pl-6 pr-3 font-normal leading-snug text-content-body">{row.feature}</th>
-                    {row.values.map((v, i) => (
-                      <td key={i} data-recommended={data.columns[i] === 'Pro'} className="px-3 py-3 text-center">
-                        {v === true ? (
-                          <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
-                            <CheckIcon className="h-3 w-3 text-signal-blue" /><span className="sr-only">Included</span>
-                          </span>
-                        ) : v === false ? (
-                          <span className="text-xs text-content-ash"><span aria-hidden="true">—</span><span className="sr-only">Not included</span></span>
-                        ) : (
-                          <span className="text-xs font-medium tabular-nums text-content-body">{v}</span>
-                        )}
-                      </td>
-                    ))}
-                  </tr>
+                    {t(c)}
+                  </th>
                 ))}
-              </Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </tr>
+            </thead>
+            <tbody>
+              {data.groups.map((group, gi) => (
+                <Fragment key={group.title ?? gi}>
+                  {group.title && (
+                    <tr>
+                      <td
+                        colSpan={data.columns.length + 1}
+                        className="pb-1.5 pl-6 pt-5 text-[11px] font-semibold uppercase tracking-[0.08em] text-content-ash"
+                      >
+                        {t(group.title)}
+                      </td>
+                    </tr>
+                  )}
+                  {group.rows.map((row, ri) => (
+                    <tr
+                      key={row.feature}
+                      className={clsx(
+                        'border-b transition-colors hover:bg-surface-elevated/40',
+                        ri === group.rows.length - 1 &&
+                          gi !== data.groups.length - 1
+                          ? 'border-hairline'
+                          : 'border-hairline/50',
+                        gi === data.groups.length - 1 &&
+                          ri === group.rows.length - 1 &&
+                          'border-0'
+                      )}
+                    >
+                      <th
+                        scope="row"
+                        className="py-3 pl-6 pr-3 font-normal leading-snug text-content-body"
+                      >
+                        {t(row.feature)}
+                      </th>
+                      {row.values.map((v, i) => (
+                        <td
+                          key={i}
+                          data-recommended={data.columns[i] === 'Pro'}
+                          className="px-3 py-3 text-center"
+                        >
+                          {v === true ? (
+                            <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
+                              <CheckIcon className="h-3 w-3 text-signal-blue" />
+                              <span className="sr-only">{t('Included')}</span>
+                            </span>
+                          ) : v === false ? (
+                            <span className="text-xs text-content-ash">
+                              <span aria-hidden="true">—</span>
+                              <span className="sr-only">
+                                {t('Not included')}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-xs font-medium tabular-nums text-content-body">
+                              {t(v)}
+                            </span>
+                          )}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </details>
   )
@@ -374,45 +639,105 @@ const TEAMS_MAX_SEATS = 500
 const teamsPrice = (seats: number) => 99 + (seats - 3) * 20
 
 function TeamsPlan() {
+  const { t, locale } = useI18n()
+
   const [seats, setSeats] = useState(TEAMS_MIN_SEATS)
   const [isLoading, setIsLoading] = useState(false)
 
   const clamp = (n: number) =>
-    Math.min(TEAMS_MAX_SEATS, Math.max(TEAMS_MIN_SEATS, Math.floor(n) || TEAMS_MIN_SEATS))
+    Math.min(
+      TEAMS_MAX_SEATS,
+      Math.max(TEAMS_MIN_SEATS, Math.floor(n) || TEAMS_MIN_SEATS)
+    )
 
   return (
-    <section aria-label="Teams plan" data-spotlight className={`${styles.planCard} ${styles.teamsPlan}`}>
+    <section
+      aria-label={t('Teams plan')}
+      data-spotlight
+      className={`${styles.planCard} ${styles.teamsPlan}`}
+    >
       <div className={styles.teamsTop}>
         <div className={styles.planIdentity}>
-          <h4>Teams</h4>
-          <p>One account for your whole team. 30-day money back guarantee.</p>
+          <h4>{t('Teams')}</h4>
+          <p>
+            {t('One account for your whole team. 30-day money back guarantee.')}
+          </p>
         </div>
         <div className={styles.teamsControls}>
           <div className={styles.teamsSeats}>
-            <label htmlFor="pricing-team-seats">Seats</label>
+            <label htmlFor="pricing-team-seats">{t('Seats')}</label>
             <div className={styles.seatStepper}>
-              <button type="button" aria-label="Fewer seats" onClick={() => setSeats(s => clamp(s - 1))} disabled={seats <= TEAMS_MIN_SEATS}>−</button>
-              <input id="pricing-team-seats" type="number" min={TEAMS_MIN_SEATS} max={TEAMS_MAX_SEATS}
-                value={seats} onChange={e => setSeats(clamp(Number(e.target.value)))} />
-              <button type="button" aria-label="More seats" onClick={() => setSeats(s => clamp(s + 1))} disabled={seats >= TEAMS_MAX_SEATS}>+</button>
+              <button
+                type="button"
+                aria-label={t('Fewer seats')}
+                onClick={() => setSeats((s) => clamp(s - 1))}
+                disabled={seats <= TEAMS_MIN_SEATS}
+              >
+                −
+              </button>
+              <input
+                id="pricing-team-seats"
+                type="number"
+                min={TEAMS_MIN_SEATS}
+                max={TEAMS_MAX_SEATS}
+                value={seats}
+                onChange={(e) => setSeats(clamp(Number(e.target.value)))}
+              />
+              <button
+                type="button"
+                aria-label={t('More seats')}
+                onClick={() => setSeats((s) => clamp(s + 1))}
+                disabled={seats >= TEAMS_MAX_SEATS}
+              >
+                +
+              </button>
             </div>
           </div>
-          <div className={styles.teamsQuote} aria-live="polite" aria-atomic="true">
-            <span className={styles.planAmount}>${teamsPrice(seats).toLocaleString()}</span>
-            <p className={styles.planBillingNote}>one-time · ${(teamsPrice(seats) / seats).toFixed(2)}/seat</p>
+          <div
+            className={styles.teamsQuote}
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span className={styles.planAmount}>
+              ${teamsPrice(seats).toLocaleString()}
+            </span>
+            <p className={styles.planBillingNote}>
+              <I18nText
+                source={'one-time · ${p0}/seat'}
+                values={{ p0: (teamsPrice(seats) / seats).toFixed(2) }}
+              />
+            </p>
           </div>
-          <Button onClick={() => startCheckout('teams', setIsLoading, { seats })}
-            variant="outline" color="white" className={styles.planPurchase} disabled={isLoading}>
-            {isLoading ? <><span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />Going to checkout...</> : 'Buy Teams License'}
+          <Button
+            onClick={() =>
+              startCheckout('teams', setIsLoading, locale, { seats })
+            }
+            variant="outline"
+            color="white"
+            className={styles.planPurchase}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                {t('Going to checkout...')}
+              </>
+            ) : (
+              t('Buy Teams License')
+            )}
           </Button>
         </div>
       </div>
-      <PlanFeatures features={[
-        `${seats} Mac devices on one account`,
-        `${(seats * 50000).toLocaleString()} Cloud points bonus — 50,000 per seat`,
-        'Add more seats any time at $20 each',
-        'Lifetime free updates',
-      ]} />
+      <PlanFeatures
+        features={[
+          `${seats} Mac devices on one account`,
+          `${(
+            seats * 50000
+          ).toLocaleString()} Cloud points bonus — 50,000 per seat`,
+          'Add more seats any time at $20 each',
+          'Lifetime free updates',
+        ]}
+      />
     </section>
   )
 }
@@ -478,22 +803,24 @@ const CLOUD_TIERS: CloudTier[] = [
 ]
 
 export function Pricing() {
+  const { t, locale } = useI18n()
+
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly')
 
   return (
     <section
       id="pricing"
-      aria-label="Pricing"
+      aria-label={t('Pricing')}
       className={`${styles.section} ${styles.pricingSection}`}
     >
       <div className={`${styles.sectionContainer} mx-auto`}>
         <div className={styles.pricingHeading} data-reveal>
-          <p className={styles.pricingEyebrow}>Pricing</p>
+          <p className={styles.pricingEyebrow}>{t('Pricing')}</p>
           <h2 className="font-display text-3xl tracking-tight text-content sm:text-4xl">
-            Simple pricing, for everyone.
+            {t('Simple pricing, for everyone.')}
           </h2>
           <p className="mt-4 text-lg text-content-muted">
-            Two ways to pay for AI — and they stack.
+            {t('Two ways to pay for AI — and they stack.')}
           </p>
         </div>
 
@@ -501,13 +828,14 @@ export function Pricing() {
 
         <div className={styles.pricingGroup}>
           <div className={styles.pricingGroupHeading} data-reveal>
-            <span className={styles.pricingKind}>One-time purchase</span>
+            <span className={styles.pricingKind}>{t('One-time purchase')}</span>
             <h3 className="font-display text-xl font-semibold text-content">
-              You bring the AI
+              {t('You bring the AI')}
             </h3>
             <p className="mt-2 text-sm text-content-muted">
-              Use your own API keys or local models — AI usage is free and
-              unlimited on every tier.
+              {t(
+                'Use your own API keys or local models — AI usage is free and unlimited on every tier.'
+              )}
             </p>
           </div>
 
@@ -517,7 +845,7 @@ export function Pricing() {
               price="$49"
               priceNote="one-time"
               lookupKey={'standard'}
-              description="30-day money back guarantee."
+              description={t('30-day money back guarantee.')}
               startText="Buy License"
               features={[
                 'Unlimited AI with your own API key',
@@ -534,7 +862,7 @@ export function Pricing() {
               price="$99"
               priceNote="one-time"
               lookupKey={'premium'}
-              description="30-day money back guarantee."
+              description={t('30-day money back guarantee.')}
               startText="Buy License"
               features={[
                 'Everything in Standard',
@@ -543,30 +871,52 @@ export function Pricing() {
                 '3 Mac devices',
               ]}
             />
-
           </div>
           <TeamsPlan />
-          <ComparisonTable data={LICENSE_COMPARISON} label="Compare all license features" />
+          <ComparisonTable
+            data={LICENSE_COMPARISON}
+            label={t('Compare all license features')}
+          />
         </div>
 
         <div className={`${styles.pricingGroup} ${styles.cloudGroup}`}>
           <div className={styles.pricingGroupHeading} data-reveal>
-            <span className={styles.pricingKind}>Monthly or annual</span>
+            <span className={styles.pricingKind}>{t('Monthly or annual')}</span>
             <h3 className="font-display text-xl font-semibold text-content">
-              Enconvo Cloud Plan
+              {t('Enconvo Cloud Plan')}
             </h3>
             <p className="mt-2 text-sm text-content-muted">
-              No API keys. A monthly point allowance powers every model and
-              service.
+              {t(
+                'No API keys. A monthly point allowance powers every model and service.'
+              )}
             </p>
-
           </div>
           <div className={styles.cloudToolbar}>
-            <div className={styles.billingToggle} role="group" aria-label="Cloud billing period">
-              <button type="button" onClick={() => setBilling('monthly')} aria-pressed={billing === 'monthly'}>Monthly</button>
-              <button type="button" onClick={() => setBilling('annual')} aria-pressed={billing === 'annual'}>Annual<span className={styles.billingSaving}>−20%</span></button>
+            <div
+              className={styles.billingToggle}
+              role="group"
+              aria-label={t('Cloud billing period')}
+            >
+              <button
+                type="button"
+                onClick={() => setBilling('monthly')}
+                aria-pressed={billing === 'monthly'}
+              >
+                {t('Monthly')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setBilling('annual')}
+                aria-pressed={billing === 'annual'}
+              >
+                {t('Annual')}
+                <span className={styles.billingSaving}>−20%</span>
+              </button>
             </div>
-            <Link href="/cloud-pricing" className={styles.pricingRates}>See model &amp; service rates <span aria-hidden="true">↗</span></Link>
+            <Link href="/cloud-pricing" className={styles.pricingRates}>
+              {t('See model & service rates ')}
+              <span aria-hidden="true">↗</span>
+            </Link>
           </div>
 
           <div className={styles.cloudGrid} data-reveal>
@@ -578,36 +928,48 @@ export function Pricing() {
                   name={tier.name}
                   price={isAnnual ? tier.annual.perMonth : tier.monthly.price}
                   priceNote={isAnnual ? '/mo' : '/month'}
-                  billingNote={isAnnual ? `billed ${tier.annual.price}/year` : undefined}
+                  billingNote={
+                    isAnnual ? `billed ${tier.annual.price}/year` : undefined
+                  }
                   allowance={tier.features[0]}
-                  lookupKey={isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey}
+                  lookupKey={
+                    isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey
+                  }
                   badge={tier.badge}
                   featured={tier.featured}
-                  description={tier.description}
+                  description={t(tier.description)}
                   features={tier.features.slice(1)}
                 />
               )
             })}
           </div>
 
-          <ComparisonTable data={CLOUD_COMPARISON} label="Compare all Cloud features" />
+          <ComparisonTable
+            data={CLOUD_COMPARISON}
+            label={t('Compare all Cloud features')}
+          />
         </div>
 
         <div className={styles.pricingFooter}>
           <p className="text-sm text-content-muted">
-            Licenses and Cloud plans stack — a Lifetime owner can add any Cloud
-            plan for included points, and every plan keeps own-key usage
-            unlimited.
+            {t(
+              'Licenses and Cloud plans stack — a Lifetime owner can add any Cloud plan for included points, and every plan keeps own-key usage unlimited.'
+            )}
           </p>
           <p className="mt-2 text-sm text-content-muted">
-            Need more than 500 seats or private deployment?{' '}
-            <a
-              href="mailto:support@enconvo.com"
-              className="text-content-muted underline underline-offset-2 transition hover:text-content"
-            >
-              Contact us
-            </a>
-            .
+            <I18nText
+              source={'Need more than 500 seats or private deployment? {p0} .'}
+              values={{
+                p0: (
+                  <a
+                    href="mailto:support@enconvo.com"
+                    className="text-content-muted underline underline-offset-2 transition hover:text-content"
+                  >
+                    {t('Contact us')}
+                  </a>
+                ),
+              }}
+            />
           </p>
         </div>
       </div>

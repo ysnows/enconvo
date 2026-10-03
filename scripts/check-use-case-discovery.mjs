@@ -70,7 +70,12 @@ const pages = await Promise.all(
   })
 )
 const [home, catalogue] = pages
-const homeCases = [...home.matchAll(/href="\/use-cases#([^"]+)"/g)].map(
+// The iPhone companion card has its own walkthrough link outside this gallery.
+const gallery = home.match(
+  /<section[^>]*id="features"[^>]*>([\s\S]*?)<\/section>/
+)?.[1]
+assert.ok(gallery, 'homepage walkthrough gallery is present')
+const homeCases = [...gallery.matchAll(/href="\/use-cases#([^"]+)"/g)].map(
   (match) => match[1]
 )
 assert.equal(homeCases.length, 6)
