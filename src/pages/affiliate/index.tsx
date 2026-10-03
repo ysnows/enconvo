@@ -6,6 +6,7 @@ import { AffiliateDashboard } from '@/components/affiliate/AffiliateDashboard'
 import { AffiliateFaq, AffiliateHero, HowItWorks, TermsCards } from '@/components/affiliate/AffiliateLanding'
 import { ApplicationForm } from '@/components/affiliate/ApplicationForm'
 import { PendingApplication, RejectedNotice } from '@/components/affiliate/ApplicationStatus'
+import { TeamMessage } from '@/components/affiliate/Announcement'
 import { card, Notice } from '@/components/affiliate/ui'
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
@@ -120,7 +121,7 @@ export default function AffiliatePage() {
         // Rejected, or a pending application being edited.
         content = (
             <div className="space-y-8">
-                {affiliate.status === 'rejected' && <RejectedNotice />}
+                {affiliate.status === 'rejected' ? <RejectedNotice message={affiliate.message} /> : <TeamMessage message={affiliate.message} />}
                 <ApplicationForm
                     terms={terms}
                     accessToken={token}

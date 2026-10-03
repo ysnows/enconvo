@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useState } from 'react'
-import { Megaphone, X } from 'lucide-react'
+import { Megaphone, MessageSquare, X } from 'lucide-react'
 import { formatDay, type AffiliateDashboard } from '@/lib/affiliate-program'
 import { card } from './ui'
 
@@ -7,6 +7,9 @@ import { card } from './ui'
 // program sends Affiliates no email. Admins post it from the console; it's plain text with line
 // breaks. Hiding it is remembered in this browser by its id, so an edit stays hidden and a newly
 // posted announcement shows again.
+//
+// Enconvo's message to one Affiliate shows the same way, with its application or on its dashboard,
+// and stays until an admin clears it, so it can't be hidden.
 
 const HIDDEN = 'enconvo-affiliate-announcement-hidden'
 
@@ -39,6 +42,46 @@ export function linkedParts(body: string): ({ text: string } | { href: string })
     return parts
 }
 
+/** Plain text with its https links as links. */
+export function LinkedText({ body }: { body: string }) {
+    return (
+        <>
+            {linkedParts(body).map((part, index) =>
+                'href' in part ? (
+                    <a
+                        key={index}
+                        href={part.href}
+                        {...(OWN_SITE.test(part.href) ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+                        className="text-signal-blue hover:underline"
+                    >
+                        {part.href}
+                    </a>
+                ) : (
+                    <Fragment key={index}>{part.text}</Fragment>
+                )
+            )}
+        </>
+    )
+}
+
+/** Enconvo's message to this Affiliate, if there is one. */
+export function TeamMessage({ message }: { message: string | null | undefined }) {
+    if (!message) return null
+    return (
+        <section className={`flex items-start gap-3 ${card} p-4`} aria-labelledby="affiliate-team-message">
+            <MessageSquare className="mt-0.5 h-5 w-5 flex-none text-signal-blue" aria-hidden="true" />
+            <div className="min-w-0 flex-1">
+                <h2 id="affiliate-team-message" className="text-sm font-medium text-content">
+                    A note from the Enconvo team
+                </h2>
+                <p className="mt-1 whitespace-pre-line break-words text-sm leading-6 text-content-body">
+                    <LinkedText body={message} />
+                </p>
+            </div>
+        </section>
+    )
+}
+
 export function Announcement({ announcement }: { announcement: AffiliateDashboard['announcement'] }) {
     // Read after mounting, so nothing renders until we know whether it was hidden.
     const [hidden, setHidden] = useState<string | null | undefined>(undefined)
@@ -68,20 +111,7 @@ export function Announcement({ announcement }: { announcement: AffiliateDashboar
                     {announcement.title} <span className="whitespace-nowrap font-normal text-content-ash">· {date}</span>
                 </h2>
                 <p className="mt-1 whitespace-pre-line break-words text-sm leading-6 text-content-muted">
-                    {linkedParts(announcement.body).map((part, index) =>
-                        'href' in part ? (
-                            <a
-                                key={index}
-                                href={part.href}
-                                {...(OWN_SITE.test(part.href) ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
-                                className="text-signal-blue hover:underline"
-                            >
-                                {part.href}
-                            </a>
-                        ) : (
-                            <Fragment key={index}>{part.text}</Fragment>
-                        )
-                    )}
+                    <LinkedText body={announcement.body} />
                 </p>
             </div>
             <button

@@ -25,7 +25,7 @@ import {
     type PayoutMethod,
 } from '@/lib/affiliate-program'
 import { AccountChanges, PayoutAccountNotice } from './AccountChanges'
-import { Announcement } from './Announcement'
+import { Announcement, TeamMessage } from './Announcement'
 import { ChangeCode } from './ChangeCode'
 import { AffiliateKit } from './AffiliateKit'
 import { AffiliateMonths, AffiliateSources, AffiliateTables } from './AffiliateTables'
@@ -698,6 +698,7 @@ export function AffiliateDashboard({
                     this account if you have questions.
                 </Notice>
             )}
+            <TeamMessage message={affiliate.message} />
             {!termsAccepted && <TermsNotice affiliate={affiliate} accessToken={accessToken} onAccepted={onAffiliateChanged} />}
             {!suspended && !starting && !payoutMethodSet && (
                 <Notice

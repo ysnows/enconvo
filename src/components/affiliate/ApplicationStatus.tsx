@@ -1,9 +1,11 @@
 import { Check } from 'lucide-react'
 import { secondaryButton } from '@/components/landing-styles'
 import { affiliateLink, formatDay, SUPPORT_EMAIL, type AffiliateApplication } from '@/lib/affiliate-program'
+import { LinkedText, TeamMessage } from './Announcement'
 import { card, Notice, Pill } from './ui'
 
-// /affiliate while an application waits for review, or after it was turned down.
+// /affiliate while an application waits for review, or after it was turned down. Enconvo's message,
+// such as what to add or why it wasn't approved, shows with it.
 
 function Details({ application }: { application: AffiliateApplication }) {
     const rows = [
@@ -39,6 +41,12 @@ export function PendingApplication({ application, onEdit }: { application: Affil
                 We&apos;ll look at your audience and plan and decide soon. Come back to this page to see the result; once you&apos;re
                 approved, your link and dashboard appear right here.
             </p>
+
+            {application.message && (
+                <div className="mt-8">
+                    <TeamMessage message={application.message} />
+                </div>
+            )}
 
             <ol className={`mt-8 grid gap-4 ${card} p-6 sm:grid-cols-3`}>
                 {steps.map((step) => (
@@ -83,15 +91,29 @@ export function PendingApplication({ application, onEdit }: { application: Affil
     )
 }
 
-export function RejectedNotice() {
+export function RejectedNotice({ message }: { message?: string | null }) {
+    const email = (
+        <a href={`mailto:${SUPPORT_EMAIL}`} className="text-signal-blue hover:underline">
+            {SUPPORT_EMAIL}
+        </a>
+    )
     return (
         <Notice tone="warn" title="We couldn't approve your last application">
-            This usually means we couldn&apos;t tell who you reach or how you&apos;d share Enconvo. You&apos;re welcome to apply again with
-            more detail below, or email{' '}
-            <a href={`mailto:${SUPPORT_EMAIL}`} className="text-signal-blue hover:underline">
-                {SUPPORT_EMAIL}
-            </a>{' '}
-            to ask why.
+            {message ? (
+                <>
+                    <span className="block whitespace-pre-line break-words text-content-body">
+                        <LinkedText body={message} />
+                    </span>
+                    <span className="mt-2 block">
+                        You&apos;re welcome to apply again below, or email {email} with questions.
+                    </span>
+                </>
+            ) : (
+                <>
+                    This usually means we couldn&apos;t tell who you reach or how you&apos;d share Enconvo. You&apos;re welcome to apply again with
+                    more detail below, or email {email} to ask why.
+                </>
+            )}
         </Notice>
     )
 }

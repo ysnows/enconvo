@@ -66,6 +66,11 @@ export interface AffiliateApplication {
     terms_version?: string | null
     /** When the account last accepted the terms; null for an Affiliate an admin added. */
     terms_accepted_at?: string | null
+    /**
+     * A note from Enconvo, such as why an application wasn't approved or what to send; null for none.
+     * It stays until an admin clears it or the account applies again. A Worker from before it leaves it out.
+     */
+    message?: string | null
 }
 
 export interface AffiliateBalances {
