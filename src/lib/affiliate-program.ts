@@ -357,15 +357,48 @@ export const PAYOUT_METHOD_LABEL: Record<PayoutMethod, string> = { paypal: 'PayP
 /** Pages worth linking to, all of which record the visit (`useAffiliateJourney` runs site-wide). */
 export const LINK_PAGES = [
     { path: '/', label: 'Home page' },
-    { path: '/cloud-pricing', label: 'Cloud plans' },
+    { path: '/#pricing', label: 'Plans and pricing' },
     { path: '/use-cases', label: 'Use cases' },
     { path: '/changelog', label: 'Release notes' },
+    { path: '/cloud-pricing', label: 'Cloud model prices' },
 ] as const
 
-/** `https://enconvo.com/cloud-pricing?via=kenmoo`, with `&sub=youtube` for a sub ID. */
-export function affiliateLink(code: string, path = '/', sub: string | null = null): string {
-    const link = `${SITE_ORIGIN}${path}?via=${encodeURIComponent(code)}`
-    return sub ? `${link}&sub=${encodeURIComponent(sub)}` : link
+const SITE_HOSTS = new Set(['enconvo.com', 'www.enconvo.com'])
+
+/**
+ * The page of an enconvo.com address an Affiliate pasted, for its link to open:
+ * `www.enconvo.com/use-cases#voice` → `/use-cases#voice`, without the `via` or `sub` it already
+ * had. Null for another site, or for an address that is no page (`/api`, `/go` short links).
+ */
+export function affiliateLinkPage(input: string): string | null {
+    const text = input.trim()
+    if (!text) return null
+    let url: URL
+    try {
+        url = new URL(/^[a-z][a-z0-9+.-]*:/i.test(text) ? text : text.startsWith('//') ? `https:${text}` : text.startsWith('/') ? `${SITE_ORIGIN}${text}` : `https://${text}`)
+    } catch {
+        return null
+    }
+    if (!/^https?:$/.test(url.protocol) || !SITE_HOSTS.has(url.hostname) || url.port || url.username || url.password) return null
+    if (/^\/(api|go|_next)(\/|$)/i.test(url.pathname)) return null
+    url.searchParams.delete('via')
+    url.searchParams.delete('sub')
+    // `//host` would read as another site once it is a page.
+    return `${url.pathname.replace(/^\/{2,}/, '/')}${url.search}${url.hash}`
+}
+
+/**
+ * `https://enconvo.com/use-cases?via=kenmoo`, with `&sub=youtube` for a sub ID. The page may have
+ * a query or a `#section`, which stays after the code: `https://enconvo.com/?via=kenmoo#pricing`.
+ */
+export function affiliateLink(code: string, page = '/', sub: string | null = null): string {
+    // Joined as text, so a page can never name another host.
+    const url = new URL(`${SITE_ORIGIN}${page.startsWith('/') ? page : `/${page}`}`)
+    url.searchParams.delete('via')
+    url.searchParams.delete('sub')
+    url.searchParams.set('via', code)
+    if (sub) url.searchParams.set('sub', sub)
+    return url.toString()
 }
 
 /** `https://enconvo.com/go/kenmoo`, short enough to say out loud or print; `/go/kenmoo/podcast` adds a sub ID. */

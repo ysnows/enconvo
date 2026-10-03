@@ -13,6 +13,7 @@ import {
     formatDay,
     formatUtcDay,
     LINK_PAGES,
+    affiliateLinkPage,
     PAYOUT_METHOD_LABEL,
     recentlyCancelledPayout,
     savePayoutMethod,
@@ -46,6 +47,8 @@ import { card, CopyButton, fieldLabel, input, Notice, Pill, toolButton } from '.
 // current program terms is asked to first.
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+/** The link builder's choice for a page it doesn't list, pasted as an address */
+const OTHER_PAGE = 'other'
 
 function LinkCard({
     code,
@@ -65,12 +68,16 @@ function LinkCard({
     onChanged: (affiliate: AffiliateApplication) => void
 }) {
     const [path, setPath] = useState<string>('/')
+    const [pageInput, setPageInput] = useState('')
     const [subInput, setSubInput] = useState('')
     const [qrOpen, setQrOpen] = useState(false)
     const sub = affiliateSub(subInput)
     const subInvalid = subInput.trim() !== '' && !sub
+    const otherPage = path === OTHER_PAGE ? affiliateLinkPage(pageInput) : null
+    const pageInvalid = path === OTHER_PAGE && pageInput.trim() !== '' && !otherPage
+    const page = path === OTHER_PAGE ? (otherPage ?? '/') : path
     const link = affiliateLink(code)
-    const built = affiliateLink(code, path, sub)
+    const built = affiliateLink(code, page, sub)
     const shortLink = affiliateShortLink(code)
     return (
         <section className={`${card} p-6`}>
@@ -139,11 +146,12 @@ function LinkCard({
                                 onChange={(e) => setPath(e.target.value)}
                                 className="mt-1.5 h-10 w-full rounded-lg border border-[#2C3033] bg-[#0B0C0D] px-3 text-sm text-content focus:border-signal-green focus:outline-none"
                             >
-                                {LINK_PAGES.map((page) => (
-                                    <option key={page.path} value={page.path}>
-                                        {page.label}
+                                {LINK_PAGES.map((option) => (
+                                    <option key={option.path} value={option.path}>
+                                        {option.label}
                                     </option>
                                 ))}
+                                <option value={OTHER_PAGE}>Another page…</option>
                             </select>
                         </label>
                         <label className="block">
@@ -162,6 +170,30 @@ function LinkCard({
                             />
                         </label>
                     </div>
+                    {path === OTHER_PAGE && (
+                        <label className="mt-3 block">
+                            <span className="text-xs text-content-muted">Page address</span>
+                            <input
+                                value={pageInput}
+                                onChange={(e) => setPageInput(e.target.value)}
+                                maxLength={500}
+                                type="url"
+                                inputMode="url"
+                                autoCapitalize="none"
+                                autoCorrect="off"
+                                spellCheck={false}
+                                placeholder="https://enconvo.com/use-cases"
+                                aria-invalid={pageInvalid}
+                                aria-describedby={pageInvalid ? 'affiliate-page-error' : undefined}
+                                className={`mt-1.5 h-10 w-full rounded-lg border bg-[#0B0C0D] px-3 font-mono text-sm text-content placeholder:text-content-ash focus:outline-none ${pageInvalid ? 'border-signal-red' : 'border-[#2C3033] focus:border-signal-green'}`}
+                            />
+                        </label>
+                    )}
+                    {pageInvalid && (
+                        <p id="affiliate-page-error" className="mt-2 text-xs text-signal-red">
+                            Paste the address of a page on enconvo.com. The link opens the home page until then.
+                        </p>
+                    )}
                     {subInvalid && (
                         <p id="affiliate-sub-error" className="mt-2 text-xs text-signal-red">
                             Use letters, digits, dots, dashes or underscores, starting with a letter or digit. It&apos;s left out of the link until then.
@@ -188,7 +220,7 @@ function LinkCard({
                             id="affiliate-qr"
                             link={built}
                             sub={sub}
-                            fileName={['enconvo', code, path.replace(/^\/+|\/+$/g, '').replace(/\//g, '-'), sub, 'qr'].filter(Boolean).join('-')}
+                            fileName={['enconvo', code, page.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').slice(0, 40), sub, 'qr'].filter(Boolean).join('-')}
                         />
                     )}
                 </div>
