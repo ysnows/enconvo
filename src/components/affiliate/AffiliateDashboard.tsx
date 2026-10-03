@@ -364,6 +364,12 @@ function Activity({ data }: { data: Dashboard }) {
     const max = Math.max(1, ...days.map((d) => d.visitors))
     const stats = [
         { label: 'Visitors', value: results.visitors.toLocaleString('en-US') },
+        // A Worker that doesn't count downloads yet sends none, and the dashboard leaves the step out.
+        results.downloads !== undefined && {
+            label: 'Downloaded the app',
+            value: results.downloads.toLocaleString('en-US'),
+            hint: `People from your link who clicked to download the Mac app${period ? ` in the last ${period.days} days` : ''}, each counted once.`,
+        },
         { label: 'Signed up', value: results.signups.toLocaleString('en-US') },
         {
             label: 'Customers',
@@ -389,7 +395,7 @@ function Activity({ data }: { data: Dashboard }) {
                       ? `About what the Cloud plans that renew earn you each month: each customer's latest payment at your current rate, a yearly plan spread over 12 months. Discounts, upgrades and cancellations change it.`
                       : 'Customers whose Cloud plan renews earn you commission on every renewal; about how much a month shows here.',
               },
-    ]
+    ].filter(Boolean) as { label: string; value: string; hint?: string }[]
     return (
         <section className={`${card} p-6`}>
             <div className="flex flex-wrap items-center justify-between gap-3">
@@ -414,7 +420,7 @@ function Activity({ data }: { data: Dashboard }) {
                     <span className="text-xs text-content-muted">All time</span>
                 )}
             </div>
-            <dl className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
+            <dl className={`mt-4 grid grid-cols-2 gap-4 ${stats.length > 6 ? 'sm:grid-cols-4' : 'sm:grid-cols-3 xl:grid-cols-6'}`}>
                 {stats.map((stat) => (
                     <div key={stat.label} title={stat.hint}>
                         <dd className="text-2xl font-semibold tabular-nums text-content">{stat.value}</dd>

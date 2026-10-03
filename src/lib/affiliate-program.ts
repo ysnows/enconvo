@@ -199,6 +199,8 @@ export interface AffiliateDay {
 export interface AffiliatePeriod {
     days: number
     visitors: number
+    /** Visitors who clicked to download the app; missing from a Worker that doesn't count them. */
+    downloads?: number
     signups: number
     customers: number
     /** Of `visitors`, the ones who have bought through the link, then or later. */
@@ -270,7 +272,7 @@ export interface AffiliateDashboard {
      * `recurring` is about what those renewals earn a month, in cents: each one's latest payment at today's rate, a
      * yearly plan's spread over twelve months.
      */
-    totals?: { visitors: number; signups: number; customers: number; commission?: number; renewing?: number; recurring?: number; open_windows?: number }
+    totals?: { visitors: number; downloads?: number; signups: number; customers: number; commission?: number; renewing?: number; recurring?: number; open_windows?: number }
     balances?: AffiliateBalances
     /**
      * The unpaid commissions in review: the referrals (customers) they belong to and their total in cents. `holds_payout` once one is
@@ -356,7 +358,6 @@ export const PAYOUT_METHOD_LABEL: Record<PayoutMethod, string> = { paypal: 'PayP
 export const LINK_PAGES = [
     { path: '/', label: 'Home page' },
     { path: '/cloud-pricing', label: 'Cloud plans' },
-    { path: '/downloads', label: 'Downloads' },
     { path: '/use-cases', label: 'Use cases' },
     { path: '/changelog', label: 'Release notes' },
 ] as const

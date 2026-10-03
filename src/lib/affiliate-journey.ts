@@ -1,10 +1,10 @@
-import { workerPost, workerRequest } from './worker-api'
+import { WORKER_API_ORIGIN, workerPost, workerRequest } from './worker-api'
 
 // Affiliate journeys (CONTEXT.md "Affiliate journey"): our own record of a visitor who
 // arrived through an Affiliate link (`?via=<code>`), kept apart from Endorsely's
 // attribution. The `enconvo_via` cookie names the browser with a random visitor id and
-// holds the latest Affiliate code; the Worker stores each step (visit, signup or
-// sign-in, Checkout, purchase) and decides which journey a step joins. A link's sub ID
+// holds the latest Affiliate code; the Worker stores each step (visit, app download,
+// signup or sign-in, Checkout, purchase) and decides which journey a step joins. A link's sub ID
 // (`?sub=youtube`) goes only to the visit; later steps take it from there.
 //
 // Every later step joins the journey through its stored visit, so a visit that never
@@ -157,6 +157,39 @@ export async function reportAffiliateSignIn(accessToken: string | undefined, use
   } catch {
     // See above.
   }
+}
+
+/** Whether `href` downloads the Mac app (the Worker's `/app/download`, any build). */
+export function isAppDownloadLink(href: string | null | undefined): boolean {
+  if (!href) return false
+  try {
+    const url = new URL(href, location.href)
+    return url.origin === WORKER_API_ORIGIN && url.pathname === '/app/download'
+  } catch {
+    return false
+  }
+}
+
+/**
+ * This browser's journey clicked to download the app: the Worker records the step once per visitor
+ * and code. Once per tab session and visitor; it rides out the navigation the download starts.
+ */
+export function reportAffiliateDownload() {
+  const journey = readAffiliateJourney()
+  if (!journey) return
+  const key = `${AFFILIATE_COOKIE}:downloaded:${journey.visitor}:${journey.via}`
+  try {
+    if (sessionStorage.getItem(key)) return
+    sessionStorage.setItem(key, '1')
+  } catch {
+    // Storage blocked: report every click; the Worker records the step once.
+  }
+  void workerRequest('/api/affiliate/download', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ visitor: journey.visitor }),
+    keepalive: true,
+  })
 }
 
 /** The journey a checkout request's cookies carry. */

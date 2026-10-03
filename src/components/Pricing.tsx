@@ -6,6 +6,7 @@ import { Button } from '@/components/Button'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { supabase } from '@/lib/supabase'
 import { trackEvent } from '@/lib/analytics'
+import { reportAffiliateDownload } from '@/lib/affiliate-journey'
 
 interface CheckIconProps {
   className: string
@@ -47,6 +48,7 @@ async function startCheckout(
     setIsLoading(true)
     if (lookupKey === 'free') {
       trackEvent('download_click', { arch: 'auto', placement: 'pricing_free' })
+      reportAffiliateDownload()
       window.location.href = 'https://api.enconvo.com/app/download'
       return
     }
