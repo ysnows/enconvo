@@ -12,7 +12,10 @@ function TrafficList({ title, column, unknown, rest, rows }: { title: string; co
             <div className="mt-3 flex items-center gap-3 border-b border-hairline pb-2 text-xs font-medium uppercase tracking-[0.08em] text-content-muted">
                 <span className="min-w-0 flex-1">{column}</span>
                 <span className="w-16 flex-none text-right">Visitors</span>
-                <span className="w-20 flex-none text-right">Customers</span>
+                <span className="hidden w-20 flex-none text-right sm:block" title="Visitors who clicked to download the app">
+                    Downloads
+                </span>
+                <span className="w-24 flex-none text-right">Customers</span>
             </div>
             <ol className="divide-y divide-hairline">
                 {rows.map((row) => (
@@ -28,7 +31,8 @@ function TrafficList({ title, column, unknown, rest, rows }: { title: string; co
                             </span>
                         </span>
                         <span className="w-16 flex-none text-right tabular-nums text-content-body">{row.visitors.toLocaleString('en-US')}</span>
-                        <span className={`w-20 flex-none text-right tabular-nums ${row.customers > 0 ? 'font-medium text-signal-green' : 'text-content-ash'}`}>
+                        <span className="hidden w-20 flex-none text-right tabular-nums text-content-body sm:block">{(row.downloads ?? 0).toLocaleString('en-US')}</span>
+                        <span className={`w-24 flex-none text-right tabular-nums ${row.customers > 0 ? 'font-medium text-signal-green' : 'text-content-ash'}`}>
                             {row.customers.toLocaleString('en-US')}
                         </span>
                     </li>
@@ -60,7 +64,8 @@ export function AffiliateTraffic({ data }: { data: AffiliateDashboard }) {
             </div>
             <p className="mt-5 text-xs leading-5 text-content-ash">
                 Each visitor counts once, by the first time they opened your link. Apps, email clients and typed links often don&apos;t say where a
-                visitor came from, so they show as direct or unknown. Customers are the visitors who later bought through your link.
+                visitor came from, so they show as direct or unknown. Downloads are the visitors who clicked to download the app, and
+                customers the visitors who later bought through your link.
             </p>
         </section>
     )

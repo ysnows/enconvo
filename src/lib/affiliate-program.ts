@@ -217,6 +217,8 @@ export interface AffiliateSource {
     sub: string | null
     promotion_code: string | null
     visitors: number
+    /** Visitors who clicked to download the app, each once. */
+    downloads?: number
     signups: number
     customers: number
     paid: number
@@ -227,6 +229,8 @@ export interface AffiliateSource {
 export interface AffiliateTrafficRow {
     value: string | null
     visitors: number
+    /** Of those visitors, the ones who clicked to download the app. */
+    downloads?: number
     /** Of those visitors, the accounts that bought. */
     customers: number
 }

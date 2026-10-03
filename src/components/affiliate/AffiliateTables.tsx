@@ -149,11 +149,12 @@ function exportSources(code: string, rows: AffiliateSource[]) {
     downloadCsv(
         `enconvo-affiliate-${code}-sub-ids.csv`,
         toCsv(
-            ['Sub ID', 'Promotion code', 'Visitors', 'Signed up', 'Customers', 'Visitor to customer', 'Per visitor (USD)', 'Paid (USD)', 'Commission (USD)'],
+            ['Sub ID', 'Promotion code', 'Visitors', 'Downloaded the app', 'Signed up', 'Customers', 'Visitor to customer', 'Per visitor (USD)', 'Paid (USD)', 'Commission (USD)'],
             rows.map((row) => [
                 row.sub ?? '',
                 row.promotion_code?.toUpperCase() ?? '',
                 row.visitors,
+                row.promotion_code ? '' : (row.downloads ?? 0),
                 row.signups,
                 row.customers,
                 row.promotion_code ? '' : (conversionRate(row.visitors, row.customers) ?? ''),
@@ -195,6 +196,10 @@ function sourceLabel(row: AffiliateSource): string {
     return 'No sub ID'
 }
 
+// The sub ID table has the most columns; narrower padding keeps the commission in view on a laptop.
+const sth = th.replace('px-4', 'px-3')
+const std = td.replace('px-4', 'px-3')
+
 const downloadButton =
     'inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-content-muted transition-colors hover:text-content disabled:opacity-40 disabled:hover:text-content-muted'
 
@@ -224,32 +229,36 @@ export function AffiliateSources({ data }: { data: AffiliateDashboard }) {
                 </button>
             </div>
             <div className="mt-3 overflow-x-auto">
-                <table className="w-full min-w-[720px]">
+                <table className="w-full min-w-[800px]">
                     <thead className="border-y border-hairline">
                         <tr>
-                            <th className={`${th} pl-6`}>{byCode ? 'Source' : 'Sub ID'}</th>
-                            <th className={`${th} ${num}`}>Visitors</th>
-                            <th className={`${th} ${num}`}>Signed up</th>
-                            <th className={`${th} ${num}`}>Customers</th>
-                            <th className={`${th} ${num}`}>Visitor → customer</th>
-                            <th className={`${th} ${num}`} title="Commission per visitor (EPC)">
+                            <th className={`${sth} pl-6`}>{byCode ? 'Source' : 'Sub ID'}</th>
+                            <th className={`${sth} ${num}`}>Visitors</th>
+                            <th className={`${sth} ${num}`} title="Visitors who clicked to download the app">
+                                Downloaded
+                            </th>
+                            <th className={`${sth} ${num}`}>Signed up</th>
+                            <th className={`${sth} ${num}`}>Customers</th>
+                            <th className={`${sth} ${num}`}>Visitor → customer</th>
+                            <th className={`${sth} ${num}`} title="Commission per visitor (EPC)">
                                 Per visitor
                             </th>
-                            <th className={`${th} ${num}`}>Paid</th>
-                            <th className={`${th} ${num} pr-6`}>Your commission</th>
+                            <th className={`${sth} ${num}`}>Paid</th>
+                            <th className={`${sth} ${num} pr-6`}>Your commission</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-hairline">
                         {sources.map((row) => (
                             <tr key={`${row.sub ?? ''}|${row.promotion_code ?? ''}`}>
-                                <td className={`${td} pl-6 ${row.sub || row.promotion_code ? 'font-mono text-content' : 'text-content-muted'}`}>{sourceLabel(row)}</td>
-                                <td className={`${td} ${num}`}>{row.visitors.toLocaleString('en-US')}</td>
-                                <td className={`${td} ${num}`}>{row.signups.toLocaleString('en-US')}</td>
-                                <td className={`${td} ${num}`}>{row.customers.toLocaleString('en-US')}</td>
-                                <td className={`${td} ${num}`}>{(!row.promotion_code && conversionRate(row.visitors, row.customers)) || '—'}</td>
-                                <td className={`${td} ${num}`}>{(!row.promotion_code && earningsPerVisitor(row.visitors, row.commission)) || '—'}</td>
-                                <td className={`${td} ${num}`}>{formatCents(row.paid)}</td>
-                                <td className={`${td} ${num} pr-6 font-medium text-content`}>{formatCents(row.commission)}</td>
+                                <td className={`${std} pl-6 ${row.sub || row.promotion_code ? 'font-mono text-content' : 'text-content-muted'}`}>{sourceLabel(row)}</td>
+                                <td className={`${std} ${num}`}>{row.visitors.toLocaleString('en-US')}</td>
+                                <td className={`${std} ${num}`}>{row.promotion_code ? '—' : (row.downloads ?? 0).toLocaleString('en-US')}</td>
+                                <td className={`${std} ${num}`}>{row.signups.toLocaleString('en-US')}</td>
+                                <td className={`${std} ${num}`}>{row.customers.toLocaleString('en-US')}</td>
+                                <td className={`${std} ${num}`}>{(!row.promotion_code && conversionRate(row.visitors, row.customers)) || '—'}</td>
+                                <td className={`${std} ${num}`}>{(!row.promotion_code && earningsPerVisitor(row.visitors, row.commission)) || '—'}</td>
+                                <td className={`${std} ${num}`}>{formatCents(row.paid)}</td>
+                                <td className={`${std} ${num} pr-6 font-medium text-content`}>{formatCents(row.commission)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -258,8 +267,8 @@ export function AffiliateSources({ data }: { data: AffiliateDashboard }) {
             <p className="px-6 pb-5 pt-3 text-xs leading-5 text-content-ash">
                 {data.sources_truncated ? `Showing the top ${sources.length} sub IDs. ` : ''}
                 Each customer counts under the sub ID of the link they bought through
-                {byCode ? ', or under your code when they entered it at checkout without the link' : ''}. Paid and commission are after refunds;
-                per visitor is the commission divided by visitors.
+                {byCode ? ', or under your code when they entered it at checkout without the link' : ''}. Downloaded counts the visitors who
+                clicked to download the app. Paid and commission are after refunds; per visitor is the commission divided by visitors.
             </p>
         </section>
     )
