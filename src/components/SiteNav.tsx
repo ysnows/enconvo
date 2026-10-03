@@ -62,7 +62,6 @@ export function SiteNav() {
           { name: 'Docs', href: 'https://docs.enconvo.ai/' },
           { name: 'Releases', href: '/changelog' },
           { name: 'Affiliate', href: '/affiliate' },
-          { name: 'Privacy', href: '/privacy' },
           { name: data.session.user.user_metadata.name, href: '/account' },
         ])
       }

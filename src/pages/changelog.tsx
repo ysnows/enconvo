@@ -1,6 +1,7 @@
 import fs from 'fs/promises'
 import path from 'path'
 import {
+  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
@@ -8,15 +9,18 @@ import {
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
 } from 'react'
 import { flushSync } from 'react-dom'
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import clsx from 'clsx'
-import { ChevronDown, Search, X } from 'lucide-react'
+import { Popover, Transition } from '@headlessui/react'
+import { ArrowRight, ChevronDown, Download, Search, X } from 'lucide-react'
 
 import { Footer } from '@/components/Footer'
 import { SiteNav } from '@/components/SiteNav'
+import { trackEvent } from '@/lib/analytics'
 
 interface ReleaseSection {
   title: string
@@ -919,6 +923,132 @@ function ReleaseEntry({
   )
 }
 
+function GuideStep({ step, children }: { step: number; children: ReactNode }) {
+  return (
+    <li className="flex gap-3">
+      <span
+        aria-hidden="true"
+        className="mt-px grid h-5 w-5 flex-none place-items-center rounded-full bg-white/[0.07] text-[11.5px] font-semibold tabular-nums text-content-body"
+      >
+        {step}
+      </span>
+      <div className="min-w-0 flex-1 text-[14px] leading-[1.5] text-content-body">
+        {children}
+      </div>
+    </li>
+  )
+}
+
+// Betas ship through the app's own updater, so the page explains where to
+// switch the channel instead of linking a separate download.
+function BetaGuide({ entry }: { entry: Entry }) {
+  const build = `${entry.version} Beta ${entry.build}`
+  const strong = 'font-medium text-content'
+  return (
+    <Popover className="sm:relative">
+      {({ open }) => (
+        <>
+          <Popover.Button
+            onClick={() => {
+              if (!open) {
+                trackEvent('beta_guide_open', {
+                  build: `${entry.version}-beta.${entry.build}`,
+                  placement: 'changelog',
+                })
+              }
+            }}
+            className={clsx(
+              'group inline-flex h-11 items-center gap-2 whitespace-nowrap rounded-full border px-5 text-[15px] font-medium transition-colors duration-300',
+              open
+                ? 'border-white/20 bg-white/[0.08] text-content'
+                : 'border-hairline bg-white/[0.04] text-content-body hover:border-white/20 hover:bg-white/[0.07] hover:text-content'
+            )}
+          >
+            Try the {entry.version} beta
+            <ArrowRight
+              aria-hidden="true"
+              className={clsx(
+                'h-4 w-4 transition-transform duration-[450ms]',
+                EASE,
+                open ? 'rotate-90' : 'group-hover:translate-x-[3px]'
+              )}
+            />
+          </Popover.Button>
+          <Transition
+            as={Fragment}
+            enter={clsx('transition duration-300', EASE)}
+            enterFrom="opacity-0 -translate-y-1 scale-[0.98]"
+            enterTo="opacity-100 translate-y-0 scale-100"
+            leave="transition duration-150 ease-in"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0 -translate-y-0.5"
+          >
+            <Popover.Panel className="absolute left-0 top-full z-30 mt-3 w-[min(372px,calc(100vw-32px))] origin-top-left rounded-[18px] border border-white/10 bg-[#0d0f12] p-5 shadow-[0_24px_64px_rgba(0,0,0,0.55)]">
+              <p className="flex items-center gap-2 text-[12.5px] font-medium text-signal-yellow">
+                <span
+                  aria-hidden="true"
+                  className="h-1.5 w-1.5 rounded-full bg-signal-yellow"
+                />
+                Beta channel
+              </p>
+              <h2 className="mt-2 text-[17px] font-semibold leading-snug text-content">
+                Get Enconvo {build}
+              </h2>
+              <p className="mt-1.5 text-[14px] leading-[1.55] text-content-muted">
+                Betas arrive through Enconvo’s own updates. Switch the update
+                channel in the app once:
+              </p>
+              <ol className="mt-4 space-y-3.5">
+                <GuideStep step={1}>
+                  Click the Enconvo icon in the menu bar and choose{' '}
+                  <strong className={strong}>Settings</strong>.
+                </GuideStep>
+                <GuideStep step={2}>
+                  Open <strong className={strong}>General</strong>. Under{' '}
+                  <strong className={strong}>Updates</strong>, set{' '}
+                  <strong className={strong}>Update Channel</strong> to{' '}
+                  <strong className={strong}>Beta</strong>.
+                  <span
+                    aria-hidden="true"
+                    className="mt-2.5 flex items-center justify-between rounded-[10px] border border-white/[0.08] bg-white/[0.03] py-[7px] pl-3 pr-2 text-[13px]"
+                  >
+                    <span className="text-content-body">Update Channel</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-white/10 bg-white/[0.06] py-0.5 pl-2.5 pr-1.5 text-content">
+                      Beta
+                      <ChevronDown className="h-3.5 w-3.5 text-content-muted" />
+                    </span>
+                  </span>
+                </GuideStep>
+                <GuideStep step={3}>
+                  From the menu bar icon again, choose{' '}
+                  <strong className={strong}>Check for Updates</strong> to
+                  install {build}.
+                </GuideStep>
+              </ol>
+              <p className="mt-5 border-t border-white/[0.07] pt-4 text-[13px] leading-[1.55] text-content-ash">
+                New to Enconvo?{' '}
+                <a
+                  href={DOWNLOAD_URL}
+                  onClick={() =>
+                    trackEvent('download_click', {
+                      arch: 'auto',
+                      placement: 'changelog_beta_guide',
+                    })
+                  }
+                  className="text-content-body underline decoration-white/25 underline-offset-[3px] transition-[text-decoration-color] duration-[250ms] hover:decoration-content-body"
+                >
+                  Download it first
+                </a>
+                . To leave the beta, set the channel back to Production.
+              </p>
+            </Popover.Panel>
+          </Transition>
+        </>
+      )}
+    </Popover>
+  )
+}
+
 // Kept in its own component so styled-jsx does not tag the page's elements.
 function ChangelogStyles() {
   return (
@@ -942,6 +1072,18 @@ function ChangelogStyles() {
           opacity: 0;
           transform: translateY(14px);
         }
+      }
+      .cl-glow {
+        background: radial-gradient(
+            42% 58% at 24% 26%,
+            rgba(87, 193, 255, 0.12),
+            transparent 72%
+          ),
+          radial-gradient(
+            30% 40% at 62% 6%,
+            rgba(89, 212, 153, 0.055),
+            transparent 70%
+          );
       }
       .cl-pill[data-ready] {
         transition: transform 0.5s var(--cl-ease), width 0.5s var(--cl-ease);
@@ -1008,6 +1150,14 @@ export default function ChangelogPage({
 }: ChangelogPageProps) {
   const data = useMemo(() => buildEntries(releases, betas), [releases, betas])
   const latest = data.stable[0]
+  const oldest = data.stable[data.stable.length - 1]
+  // Only a version newer than the latest stable release is still in beta.
+  const betaHead =
+    latest &&
+    data.heads[0] &&
+    compareVersions(data.heads[0].version, latest.version) > 0
+      ? data.heads[0]
+      : null
 
   const [channel, setChannel] = useState<Channel>('all')
   const [input, setInput] = useState('')
@@ -1379,34 +1529,87 @@ export default function ChangelogPage({
           content="Read the latest Enconvo release notes, beta build updates, product improvements, and fixes."
         />
       </Head>
-      <div className="cl-page min-h-screen bg-canvas text-content">
+      <div className="cl-page min-h-screen overflow-x-clip bg-canvas text-content">
         <SiteNav />
 
         <main className="mx-auto max-w-[1120px] px-4 sm:px-8">
-          <header className="pt-32 [view-transition-name:cl-head] sm:pt-[168px]">
+          <header className="relative isolate z-10 pt-32 [view-transition-name:cl-head] sm:pt-40">
+            <div
+              aria-hidden="true"
+              className="cl-glow pointer-events-none absolute left-1/2 top-[-120px] -z-10 h-[640px] w-screen -translate-x-1/2"
+            />
             <div className="cl-rise">
-              <h1 className="text-[44px] font-semibold leading-[1.04] text-content sm:text-[64px]">
-                Changelog
+              {betaHead?.groupId && (
+                <a
+                  href={`#${betaHead.groupId}`}
+                  className="group inline-flex h-[34px] max-w-full items-center gap-2.5 rounded-full border border-hairline bg-white/[0.03] pl-1 pr-3 text-[13.5px] text-content-body transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.05]"
+                >
+                  <span className="inline-flex h-[26px] flex-none items-center gap-[7px] whitespace-nowrap rounded-full bg-signal-yellow/10 px-2.5 text-[12.5px] font-semibold text-signal-yellow">
+                    <span
+                      aria-hidden="true"
+                      className="h-1.5 w-1.5 rounded-full bg-signal-yellow"
+                    />
+                    {betaHead.version} Beta {betaHead.build}
+                  </span>
+                  <span className="min-w-0 truncate">{betaHead.headline}</span>
+                  <ArrowRight
+                    aria-hidden="true"
+                    className={clsx(
+                      'h-3.5 w-3.5 flex-none text-content-muted transition-transform duration-[450ms] group-hover:translate-x-[3px]',
+                      EASE
+                    )}
+                  />
+                </a>
+              )}
+              <h1
+                className={clsx(
+                  'text-[44px] font-semibold leading-[1.04] tracking-[-0.028em] text-content [text-wrap:balance] sm:text-[64px]',
+                  betaHead && 'mt-[26px]'
+                )}
+              >
+                What’s new in Enconvo
               </h1>
               <p className="mt-4 max-w-[60ch] text-[15.5px] leading-[1.6] text-content-muted sm:text-[16.5px]">
-                New features, improvements, and fixes in every Enconvo release.
-                {latest && (
-                  <>
-                    {' '}
-                    <a
-                      href={DOWNLOAD_URL}
-                      className="text-content underline decoration-white/25 underline-offset-4 transition-[text-decoration-color] duration-[250ms] hover:decoration-content"
-                    >
-                      Download Enconvo {latest.version} for macOS
-                    </a>
-                  </>
-                )}
+                New features, improvements, and fixes in every release
+                {oldest
+                  ? ` since Enconvo ${oldest.version.split('.').slice(0, 2).join('.')}`
+                  : ''}
+                .
               </p>
             </div>
 
+            {latest && (
+              // z-20 keeps the beta guide above the controls, which are a later stacking context.
+              <div className="cl-rise relative z-20 mt-8 [animation-delay:60ms]">
+                <div className="flex flex-wrap items-center gap-3">
+                  <a
+                    href={DOWNLOAD_URL}
+                    onClick={() =>
+                      trackEvent('download_click', {
+                        arch: 'auto',
+                        placement: 'changelog',
+                      })
+                    }
+                    className="inline-flex h-11 items-center gap-2.5 whitespace-nowrap rounded-full bg-content pl-[18px] pr-5 text-[15px] font-semibold text-canvas transition-[background-color,transform] duration-300 hover:bg-white active:scale-[0.97]"
+                  >
+                    <Download
+                      aria-hidden="true"
+                      strokeWidth={2.2}
+                      className="h-4 w-4"
+                    />
+                    Download for macOS
+                  </a>
+                  {betaHead && <BetaGuide entry={betaHead} />}
+                </div>
+                <p className="mt-3.5 text-[13.5px] tabular-nums text-content-ash">
+                  Version {latest.version} · macOS 12 or later
+                </p>
+              </div>
+            )}
+
             <div
               ref={controlsRef}
-              className="cl-rise mt-7 flex flex-wrap items-center gap-4 [animation-delay:100ms] sm:mt-10 sm:flex-nowrap"
+              className="cl-rise mt-11 flex flex-wrap items-center gap-4 [animation-delay:100ms] sm:mt-16 sm:flex-nowrap"
             >
               <div
                 role="radiogroup"
