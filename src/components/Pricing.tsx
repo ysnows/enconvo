@@ -351,10 +351,6 @@ const LICENSE_COMPARISON: ComparisonData = {
           feature: 'Live Talk',
           values: ['5 min / month', true, true, true],
         },
-        {
-          feature: 'Import & export (Portability)',
-          values: [false, true, true, true],
-        },
       ],
     },
     {
@@ -529,10 +525,6 @@ const CLOUD_COMPARISON: ComparisonData = {
         {
           feature: 'Live Talk',
           values: ['5 min / month', true, true, true],
-        },
-        {
-          feature: 'Import & export (Portability)',
-          values: [false, true, true, true],
         },
       ],
     },
@@ -890,7 +882,7 @@ export function Pricing() {
               features={[
                 'Unlimited AI with your own API key',
                 'Unlimited knowledge bases & workflows',
-                'Import & export (Portability)',
+                'Use your Mac from your phone (Remote)',
                 '50,000 Cloud points bonus',
                 '1 year of free updates',
                 '1 Mac device',
