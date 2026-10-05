@@ -1,4 +1,4 @@
-// Where to get the Enconvo Android app. It is a preview installed from an APK
+// Where to get the Enconvo Android app. It is a beta installed from an APK
 // rather than Google Play. The Mac app's Connections card links to the same
 // page (modules/companion/src/mac/android_app.ts). Change both together.
 

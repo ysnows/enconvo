@@ -49,7 +49,7 @@ export const socialPages: Record<string, SocialPage> = {
   '/android': {
     title: 'Enconvo for Android — Download the APK',
     description:
-      'Download the Enconvo Android preview and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
+      'Download the Enconvo Android beta and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
     ...brandImage,
   },
   '/privacy': {

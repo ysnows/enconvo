@@ -181,9 +181,7 @@ export function AlwaysWithYou() {
                   <div className={styles.mobilePlatformName}>
                     <AndroidGlyph />
                     <span>Android</span>
-                    <span className={styles.mobileTagPreview}>
-                      {t('Preview')}
-                    </span>
+                    <span className={styles.mobileTagBeta}>{t('Beta')}</span>
                   </div>
                   <p className={styles.mobilePlatformMeta}>
                     {t('Version {version} · Android {android} or later', {
