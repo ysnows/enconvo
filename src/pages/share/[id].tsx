@@ -1,10 +1,10 @@
 import { withI18nProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import type { GetServerSideProps } from 'next'
-import { ArrowRight, Lock } from 'lucide-react'
+import { ArrowRight, Lock, MessageSquarePlus, X } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
 import { WORKER_API_ORIGIN } from '@/lib/worker-api'
 
@@ -18,6 +18,8 @@ interface ShareMeta {
   visibility: 'public' | 'password'
   locked: boolean
   messageCount: number
+  /** The sharer uploaded the chat's turns, so a reader with Enconvo can keep chatting */
+  continuable?: boolean
   createdAt: number
   updatedAt: number
 }
@@ -33,6 +35,8 @@ type Theme = 'light' | 'dark'
 const SHARE_ID = /^[A-Za-z0-9]{16}$/
 const LOOKUP_TIMEOUT_MS = 3500
 const IFRAME_SANDBOX = 'allow-popups allow-popups-to-escape-sandbox'
+/** How long to wait for Enconvo to take focus before offering the download */
+const APP_OPEN_TIMEOUT_MS = 1600
 
 const shareApi = (id: string, path = '') =>
   `${WORKER_API_ORIGIN}/share/v1/chats/${encodeURIComponent(id)}${path}`
@@ -103,7 +107,45 @@ function useSystemTheme(): Theme | null {
   return theme
 }
 
-function ShareTopBar({ share }: { share: ShareMeta | null }) {
+/** Opens enconvo://share/<id>; when the app does not take focus soon after, the reader
+ *  most likely does not have it, so the page offers the download instead. */
+function useContinueInApp(id: string, token: string | null, visibility?: string) {
+  const [appMissing, setAppMissing] = useState(false)
+  const timer = useRef<number | null>(null)
+
+  useEffect(() => () => {
+    if (timer.current) window.clearTimeout(timer.current)
+  }, [])
+
+  const open = useCallback(() => {
+    trackEvent('shared_chat_continue_click', { visibility: visibility || 'public' }, { includePagePath: false })
+    setAppMissing(false)
+    let left = false
+    const onLeave = () => {
+      left = true
+    }
+    window.addEventListener('blur', onLeave, { once: true })
+    document.addEventListener('visibilitychange', onLeave, { once: true })
+    window.location.href = `enconvo://share/${encodeURIComponent(id)}${token ? `?t=${encodeURIComponent(token)}` : ''}`
+    if (timer.current) window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => {
+      window.removeEventListener('blur', onLeave)
+      document.removeEventListener('visibilitychange', onLeave)
+      if (!left && document.visibilityState === 'visible') setAppMissing(true)
+    }, APP_OPEN_TIMEOUT_MS)
+  }, [id, token, visibility])
+
+  return { open, appMissing, dismiss: () => setAppMissing(false) }
+}
+
+function ShareTopBar({
+  share,
+  onContinue,
+}: {
+  share: ShareMeta | null
+  /** Set when the chat can be continued in the app */
+  onContinue?: () => void
+}) {
   const { t, locale } = useI18n()
   const [date, setDate] = useState('')
 
@@ -142,11 +184,26 @@ function ShareTopBar({ share }: { share: ShareMeta | null }) {
         onClick={() =>
           trackEvent('shared_chat_cta_click', {}, { includePagePath: false })
         }
-        className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[color:var(--share-primary)] px-3 text-xs font-semibold text-[color:var(--share-primary-text)] transition-opacity hover:opacity-85"
+        className={
+          onContinue
+            ? 'hidden h-8 shrink-0 items-center rounded-lg px-2.5 text-xs font-medium text-[color:var(--share-muted)] transition-colors hover:bg-[color:var(--share-input)] hover:text-[color:var(--share-text)] sm:inline-flex'
+            : 'inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[color:var(--share-primary)] px-3 text-xs font-semibold text-[color:var(--share-primary-text)] transition-opacity hover:opacity-85'
+        }
       >
         {t('Try Enconvo')}
-        <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+        {!onContinue && <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />}
       </Link>
+      {onContinue && (
+        <button
+          type="button"
+          onClick={onContinue}
+          title={t('Open this chat in Enconvo on your Mac and keep chatting')}
+          className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[color:var(--share-primary)] px-3 text-xs font-semibold text-[color:var(--share-primary-text)] transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#57C1FF]/60"
+        >
+          <MessageSquarePlus className="h-3.5 w-3.5" aria-hidden="true" />
+          {t('Continue in Enconvo')}
+        </button>
+      )}
     </header>
   )
 }
@@ -169,7 +226,7 @@ function PasswordGate({
 }: {
   id: string
   theme: Theme
-  onUnlock: (html: string) => void
+  onUnlock: (html: string, token: string | null) => void
 }) {
   const { t } = useI18n()
   const [password, setPassword] = useState('')
@@ -190,7 +247,7 @@ function PasswordGate({
       const body = await response.json().catch(() => null)
       if (response.ok && typeof body?.html === 'string') {
         trackEvent('shared_chat_unlock', {}, { includePagePath: false })
-        onUnlock(body.html)
+        onUnlock(body.html, typeof body.token === 'string' ? body.token : null)
         return
       }
       if (body?.error === 'wrong_password') setError(t('That password is not right.'))
@@ -258,7 +315,11 @@ export default function SharedChatPage({ share, id }: SharePageProps) {
   const { t } = useI18n()
   const theme = useSystemTheme()
   const [unlockedHtml, setUnlockedHtml] = useState<string | null>(null)
+  const [unlockToken, setUnlockToken] = useState<string | null>(null)
   const [frameLoaded, setFrameLoaded] = useState(false)
+  const continueInApp = useContinueInApp(id, unlockToken, share?.visibility)
+  // A password share continues only once unlocked: the import needs the unlock token.
+  const canContinue = Boolean(share?.continuable) && (!share?.locked || unlockToken !== null)
 
   useEffect(() => {
     if (share)
@@ -284,7 +345,16 @@ export default function SharedChatPage({ share, id }: SharePageProps) {
     // Waits one frame for the reader's theme so the chat loads once, in the right colors.
     body = null
   } else if (share.locked && unlockedHtml === null) {
-    body = <PasswordGate id={id} theme={theme} onUnlock={setUnlockedHtml} />
+    body = (
+      <PasswordGate
+        id={id}
+        theme={theme}
+        onUnlock={(html, token) => {
+          setUnlockToken(token)
+          setUnlockedHtml(html)
+        }}
+      />
+    )
   } else {
     body = (
       <div className="relative flex flex-1 flex-col">
@@ -332,7 +402,34 @@ export default function SharedChatPage({ share, id }: SharePageProps) {
       </Head>
       <style dangerouslySetInnerHTML={{ __html: shellStyles }} />
       <div className="share-shell flex h-screen flex-col bg-[color:var(--share-bg)] text-[color:var(--share-text)] [height:100dvh]">
-        <ShareTopBar share={share} />
+        <ShareTopBar share={share} onContinue={canContinue ? continueInApp.open : undefined} />
+        {continueInApp.appMissing && (
+          <div
+            role="status"
+            className="flex shrink-0 items-center gap-3 border-b border-[color:var(--share-line)] bg-[color:var(--share-card)] px-4 py-2.5 text-sm"
+          >
+            <p className="min-w-0 flex-1 text-[color:var(--share-muted)]">
+              {t("Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.")}
+            </p>
+            <Link
+              href="/downloads"
+              onClick={() =>
+                trackEvent('shared_chat_cta_click', { source: 'continue_fallback' }, { includePagePath: false })
+              }
+              className="inline-flex h-7 shrink-0 items-center gap-1 rounded-md bg-[color:var(--share-primary)] px-2.5 text-xs font-semibold text-[color:var(--share-primary-text)] transition-opacity hover:opacity-85"
+            >
+              {t('Download Enconvo')}
+            </Link>
+            <button
+              type="button"
+              onClick={continueInApp.dismiss}
+              aria-label={t('Dismiss')}
+              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[color:var(--share-muted)] transition-colors hover:bg-[color:var(--share-input)] hover:text-[color:var(--share-text)]"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        )}
         {body}
       </div>
     </>
