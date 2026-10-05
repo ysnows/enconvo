@@ -33,6 +33,7 @@ const noindexRoutes = new Set([
   '/i/[code]',
   '/redeem',
   '/redeem/[code]',
+  '/share/[id]',
 ])
 
 const navigationRoutes = new Set([
@@ -47,6 +48,7 @@ const navigationRoutes = new Set([
   '/i/[code]',
   '/redeem',
   '/redeem/[code]',
+  '/share/[id]',
 ])
 
 const AppContent = ({ Component, pageProps, router }: AppProps) => {
