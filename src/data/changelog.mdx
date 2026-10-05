@@ -9,6 +9,169 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.6 Changelog (2026-10-05)
+
+Thanks for your patience and all the feedback during the beta. I've spent this
+release making Enconvo feel more connected: to your apps, your other Macs, and
+the things you want your assistant to remember.
+
+## Highlights
+
+- **Talk to an Avatar or use Voice Command hands-free**, with spoken replies,
+  live captions, screen awareness, and voice calls from Dynamic Island.
+- **Pick up where you left off on another Mac** with Sync for chats, files,
+  knowledge bases, Agents, workflows, skills, and preferences.
+- **Connect your everyday apps** so your Agent can work with email, calendars,
+  documents, and other services without switching between windows.
+- **Ask AI about your documents, recordings, and saved posts**, with answers
+  that cite the passage or moment they came from.
+- **Let Agents work together** on independent tasks, with clearer progress,
+  permissions, and control over changes to your files.
+- **Build and schedule workflows by describing them**, then follow each step
+  in a visual editor with an Assistant to help fix failed runs.
+- **See where your AI usage goes**, including estimated cost, tokens, cache
+  savings, subscription limits, and response speed.
+- **Run local MLX models on your Mac**, or use your API keys, supported AI
+  subscriptions, and Enconvo Cloud from one model picker.
+
+## Voice and Avatars
+
+- Added desktop Avatars with their own appearance, voice, expressions, and
+  gestures, including Puppy, Bear, and Cat.
+- Added voice calls from Chat Window, SmartBar, and Dynamic Island, with live
+  transcripts, screen and camera sharing, and optional automatic hang-up.
+- Added spoken Voice Command replies with captions that follow the speech.
+- Changed Dynamic Island to keep your words, the Agent's progress, and its
+  answer visible while a voice task runs.
+- Added Avatar appearance and motion controls, saved looks, and a lighter
+  rendering mode that reduces resource use.
+- Fixed voice calls losing their chat context, ending while waiting for your
+  answer, or failing to pass along photos and files.
+- Fixed Dictation startup, post-actions, recording recovery, and local speech
+  model loading.
+- Added richer Screen Doodle controls with more reliable screenshot and
+  annotation handoff.
+
+## Sync and Memory
+
+- Added Sync across Macs for chats and their attachments, Projects, knowledge
+  bases, settings, AI commands, Agents, workflows, skills, and snippets.
+- Added optional API key sync, encrypted with a passphrase and off by default.
+- Changed Sync to recover more quickly after a Mac reconnects and to explain
+  files or settings that stay on one Mac.
+- Changed Sync to keep new chats flowing when storage fills by removing the
+  oldest cloud copies while preserving copies already on your Macs.
+- Changed Memory to recall relevant preferences and older facts more reliably,
+  update information that has changed, and handle dates more accurately.
+- Changed Memory settings to use the same card and list views as Knowledge Base.
+- Fixed Quick Memory and voice-note saving, transcription, and cancellation.
+
+## Knowledge Base and Saved Posts
+
+- Added Ask AI alongside documents, books, recordings, and saved posts, with
+  citations that open the relevant passage or playback position.
+- Changed knowledge base search to find exact names and codes as well as
+  related ideas, with clearer source references.
+- Added saving X posts and threads, including images, into your knowledge base.
+- Added readable saved-post views, video transcripts, and questions about
+  individual posts or collections.
+- Added a Knowledge Base MCP server for searching your saved material from
+  Claude Code, Codex, Cursor, and other compatible apps.
+- Fixed importing, previewing, and searching documents and recordings.
+
+## Agents and Everyday Automation
+
+- Added parallel subagents for independent tasks, with support for project
+  helpers and visible progress.
+- Added per-Agent skill selection, shared and workspace skills, and safer
+  folder imports and deletion.
+- Added permission choices, task checklists, file-change undo, message editing,
+  and conversation forks.
+- Added faster Browser Operator and Computer Operator modes that pause before
+  sensitive actions.
+- Fixed a conversation with a custom Agent unexpectedly switching to the
+  default Agent while a task was running.
+- Fixed typing, scrolling, file picking, browser tab control, and interrupted
+  tool requests across Computer Use and Browser Use.
+- Changed tools on Mac to use Enconvo's bundled Node.js for a more dependable
+  environment, even when another Node.js is installed.
+
+## Connectors and MCP
+
+- Added Connectors for Gmail, Google services, Outlook, Notion, Slack, and more
+  everyday work tools, with guided account setup.
+- Changed Agents to recognize your connected accounts so requests such as
+  "email me" or "add it to my calendar" use the right account.
+- Added local-file attachments to emails sent or drafted with Gmail and
+  Outlook, with download links for files too large for an email.
+- Added interactive MCP Apps inside chat and clearer server and tool controls.
+- Fixed Gmail migration, account sign-in, credential refresh, and reconnection.
+
+## Workflows and Scheduled Tasks
+
+- Added an Assistant that creates and edits workflows from a description,
+  with templates and workflow YAML import.
+- Added a searchable step palette, recently used tools, clearer step cards,
+  run summaries, and individual step results.
+- Added input forms, value pickers, and warnings for missing or unavailable
+  inputs, with an Assistant to help fix failed steps.
+- Changed the Workflows page to a list and details view with recent runs,
+  scheduling, and quick actions.
+- Added setting up scheduled tasks by chatting, with plain-language schedules,
+  run history, notifications, and delivery to connected chats.
+- Added scheduling saved workflows with their own inputs and links back to
+  each run.
+
+## Chat and Sharing
+
+- Added public or password-protected chat links and Continue in Enconvo to
+  copy a shared conversation into the app.
+- Added Share and Copy menus to Chat Window, SmartBar, and Dynamic Island,
+  including Copy as Markdown and chat links.
+- Changed new shared chat links to open at app.enconvo.com in the reader's
+  language while keeping earlier links working.
+- Fixed chat scrolling over code blocks, tables, and wide content, including
+  on shared chat pages.
+- Changed long conversations to stream more smoothly, with clearer code
+  highlighting, message queues, and history navigation.
+- Fixed pinning chats, restoring empty chats, and sidebar chat names.
+
+## Models and Usage
+
+- Added support during this release for GPT-6.1 Sol, Claude Opus 5.5 and
+  Sonnet 5.5, GLM-5.3 models, and other supported provider updates.
+- Added an MLX Models page for downloading, loading, and choosing local models,
+  with OpenAI- and Anthropic-compatible endpoints for other apps.
+- Added prompt caching for local MLX models and more reliable cancellation.
+- Added Response Timeout settings to LM Studio and Ollama, with no time limit
+  by default for local models.
+- Added Usage Statistics across AI providers with estimated costs, token and
+  cache breakdowns, model details, and a request log.
+- Added clearer credential labels and subscription usage in the model picker.
+- Added Cloud points visibility per conversation and spending checkpoints
+  during long Agent runs.
+- Added more image, video, and speech providers, including ElevenLabs voices
+  through Enconvo Cloud.
+
+## Setup and Companion
+
+- Added a shorter narrated first-launch guide, settings search, and expanded
+  interface languages.
+- Added pairing with the iPhone Companion to continue Mac chats, answer Agent
+  questions, and receive task notifications.
+- Changed the iPhone Companion experience with native chats, voice calls,
+  Avatars, and settings shared with your Mac.
+- Changed iPhone Companion notifications about activity on your Mac to play
+  the alert sound.
+- Changed the free plan to monthly allowances for Recording, Live Captioning,
+  and Live Talk, with clearer limits for scheduled tasks and connected devices.
+- Changed Sync to require an Enconvo Cloud plan or lifetime license.
+- Changed the Mac app to use Enconvo's company signing identity; when updating
+  from 2.5.5, macOS will ask you to grant permissions such as Accessibility,
+  Screen Recording, and Microphone again.
+
+---
+
 # Enconvo 2.5.5 Changelog (2026-09-10)
 
 Friends, thanks for waiting and for all your feedback along the way. I've spent
