@@ -2042,5 +2042,15 @@
   "Requested": "Solicitado",
   "The device reports its own name, platform and version. The location is approximate, from the network it used.": "El dispositivo indica su propio nombre, plataforma y versión. La ubicación es aproximada y procede de la red que usó.",
   "Sign in a device - Enconvo": "Iniciar sesión en un dispositivo - Enconvo",
-  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "Aprueba un inicio de sesión de Enconvo iniciado en otro dispositivo, como un servidor Linux."
+  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "Aprueba un inicio de sesión de Enconvo iniciado en otro dispositivo, como un servidor Linux.",
+  "60 min / month": "60 min / mes",
+  "Scheduled tasks": "Tareas programadas",
+  "1 active": "1 activa",
+  "IM bots — Telegram, Discord, Slack, Lark": "Bots de mensajería — Telegram, Discord, Slack, Lark",
+  "1 running": "1 en ejecución",
+  "iPhone & Android app": "App para iPhone y Android",
+  "Use your Mac from your phone (Remote)": "Usa tu Mac desde el móvil (Remote)",
+  "Avatar on iPhone & Android": "Avatar en iPhone y Android",
+  "Live Talk": "Live Talk (conversación de voz en tiempo real)",
+  "5 min / month": "5 min / mes"
 }

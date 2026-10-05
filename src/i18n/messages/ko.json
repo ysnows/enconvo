@@ -2042,5 +2042,15 @@
   "Requested": "요청 시각",
   "The device reports its own name, platform and version. The location is approximate, from the network it used.": "이름, 플랫폼, 버전은 기기가 직접 보고한 정보입니다. 위치는 사용한 네트워크 기준의 대략적인 위치입니다.",
   "Sign in a device - Enconvo": "기기 로그인 - Enconvo",
-  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "Linux 서버 등 다른 기기에서 시작한 Enconvo 로그인을 승인합니다."
+  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "Linux 서버 등 다른 기기에서 시작한 Enconvo 로그인을 승인합니다.",
+  "60 min / month": "월 60분",
+  "Scheduled tasks": "예약 작업",
+  "1 active": "활성 1개",
+  "IM bots — Telegram, Discord, Slack, Lark": "IM 봇 — Telegram, Discord, Slack, Lark",
+  "1 running": "실행 중 1개",
+  "iPhone & Android app": "iPhone 및 Android 앱",
+  "Use your Mac from your phone (Remote)": "휴대폰에서 Mac 사용(Remote)",
+  "Avatar on iPhone & Android": "iPhone 및 Android의 Avatar",
+  "Live Talk": "Live Talk 실시간 음성 대화",
+  "5 min / month": "월 5분"
 }

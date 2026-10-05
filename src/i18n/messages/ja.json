@@ -2042,5 +2042,15 @@
   "Requested": "リクエスト時刻",
   "The device reports its own name, platform and version. The location is approximate, from the network it used.": "名前・プラットフォーム・バージョンはデバイス自身の申告です。場所は使用したネットワークから推定したおおよその位置です。",
   "Sign in a device - Enconvo": "デバイスにサインイン - Enconvo",
-  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "Linux サーバーなど、別のデバイスで開始した Enconvo のサインインを承認します。"
+  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "Linux サーバーなど、別のデバイスで開始した Enconvo のサインインを承認します。",
+  "60 min / month": "月 60 分",
+  "Scheduled tasks": "スケジュールタスク",
+  "1 active": "有効 1 件",
+  "IM bots — Telegram, Discord, Slack, Lark": "IM ボット — Telegram、Discord、Slack、Lark",
+  "1 running": "稼働 1 件",
+  "iPhone & Android app": "iPhone・Android アプリ",
+  "Use your Mac from your phone (Remote)": "スマホから Mac を操作（Remote）",
+  "Avatar on iPhone & Android": "iPhone・Android の Avatar",
+  "Live Talk": "Live Talk（リアルタイム音声会話）",
+  "5 min / month": "月 5 分"
 }

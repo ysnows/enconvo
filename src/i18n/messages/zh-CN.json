@@ -2042,5 +2042,15 @@
   "Requested": "请求时间",
   "The device reports its own name, platform and version. The location is approximate, from the network it used.": "名称、平台和版本由设备自行上报。位置根据其所用网络估算，仅供参考。",
   "Sign in a device - Enconvo": "登录设备 - Enconvo",
-  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "批准在其他设备（例如 Linux 服务器）上发起的 Enconvo 登录。"
+  "Approve an Enconvo sign-in that started on another device, such as a Linux server.": "批准在其他设备（例如 Linux 服务器）上发起的 Enconvo 登录。",
+  "60 min / month": "每月 60 分钟",
+  "Scheduled tasks": "定时任务",
+  "1 active": "1 个启用中",
+  "IM bots — Telegram, Discord, Slack, Lark": "IM 机器人 — Telegram、Discord、Slack、飞书",
+  "1 running": "1 个运行中",
+  "iPhone & Android app": "iPhone 和 Android App",
+  "Use your Mac from your phone (Remote)": "用手机操控 Mac（Remote）",
+  "Avatar on iPhone & Android": "iPhone 和 Android 上的 Avatar",
+  "Live Talk": "Live Talk 实时对话",
+  "5 min / month": "每月 5 分钟"
 }

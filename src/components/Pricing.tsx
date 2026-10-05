@@ -304,11 +304,11 @@ const LICENSE_COMPARISON: ComparisonData = {
         },
         {
           feature: 'Meeting recording',
-          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
         },
         {
           feature: 'Live captions',
-          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
         },
       ],
     },
@@ -328,8 +328,28 @@ const LICENSE_COMPARISON: ComparisonData = {
           values: [true, true, true, true],
         },
         {
-          feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark',
+          feature: 'Scheduled tasks',
+          values: ['1 active', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'IM bots — Telegram, Discord, Slack, Lark',
+          values: ['1 running', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'iPhone & Android app',
           values: [true, true, true, true],
+        },
+        {
+          feature: 'Use your Mac from your phone (Remote)',
+          values: [false, true, true, true],
+        },
+        {
+          feature: 'Avatar on iPhone & Android',
+          values: [false, true, true, true],
+        },
+        {
+          feature: 'Live Talk',
+          values: ['5 min / month', true, true, true],
         },
         {
           feature: 'Import & export (Portability)',
@@ -463,11 +483,11 @@ const CLOUD_COMPARISON: ComparisonData = {
         },
         {
           feature: 'Meeting recording',
-          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
         },
         {
           feature: 'Live captions',
-          values: ['1 free session', 'Unlimited', 'Unlimited', 'Unlimited'],
+          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
         },
       ],
     },
@@ -487,8 +507,28 @@ const CLOUD_COMPARISON: ComparisonData = {
           values: [true, true, true, true],
         },
         {
-          feature: 'Scheduled jobs & IM bots — Telegram, Discord, Slack, Lark',
+          feature: 'Scheduled tasks',
+          values: ['1 active', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'IM bots — Telegram, Discord, Slack, Lark',
+          values: ['1 running', 'Unlimited', 'Unlimited', 'Unlimited'],
+        },
+        {
+          feature: 'iPhone & Android app',
           values: [true, true, true, true],
+        },
+        {
+          feature: 'Use your Mac from your phone (Remote)',
+          values: [false, true, true, true],
+        },
+        {
+          feature: 'Avatar on iPhone & Android',
+          values: [false, true, true, true],
+        },
+        {
+          feature: 'Live Talk',
+          values: ['5 min / month', true, true, true],
         },
         {
           feature: 'Import & export (Portability)',
