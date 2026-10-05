@@ -31,11 +31,15 @@ Success is measured by conversions, not traffic.
 
 | Event (GA4) | Fires when | Key params |
 | --- | --- | --- |
-| `download_click` | Hero "Download for macOS" menu item (arm64 or x64) | `arch` (`arm64`, `x64`), `placement` (`hero`), `page_path` |
+| `download_click` | Hero "Download for macOS" menu item (arm64 or x64), or the Download APK button on `/android` | Mac: `arch` (`arm64`, `x64`, `auto`), `placement` (`hero`, `changelog`, `android_page`). Android: `platform` (`android`), `placement` (`android_page`). Mac clicks send no `platform`. Both send `page_path` |
 | `begin_checkout` | Any license or Cloud plan CTA in the homepage pricing section | `plan` (lookup key, e.g. `standard`, `premium`, `teams`, `monthly`, `pro_yearly`), `signed_in`, `page_path` |
 
 The pricing code also sends `download_click` with `placement: pricing_free`
 from its Free branch, but no homepage button uses that branch today.
+
+The homepage Android card sends `android_app_click` with
+`placement: always_with_you` when it opens `/android`; the APK download itself is
+the `download_click` above. The iPhone card sends `iphone_app_click`.
 
 Both events must be marked as **key events** before they show up in conversion
 reports. Use GA4 property "enconvo.com" (477108245, web stream `G-JBLMBKBEN2`,

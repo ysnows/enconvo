@@ -11,6 +11,7 @@ const brandImage = '/og/enconvo-mac-agent-v1.jpg'
 const publicPages = {
   '/': { image: brandImage, title: /Enconvo/, alt: /Finder/ },
   '/use-cases': { image: '/og/enconvo-use-cases-v1.jpg', title: /Use Cases/, alt: /workflow/ },
+  '/android': { image: brandImage, title: /Android/, alt: /Finder/ },
   '/cloud-pricing': { image: '/og/enconvo-cloud-pricing-v1.jpg', title: /Cloud Pricing/, alt: /Speech/ },
   '/changelog': { image: '/og/enconvo-changelog-v1.jpg', title: /Releases/, alt: /release timeline/ },
   '/privacy': { image: brandImage, title: /Privacy Policy/, alt: /Finder/ },

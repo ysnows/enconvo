@@ -117,6 +117,7 @@ Live site, deployed 2026-09-24 (enconvo.com 7c6fd8d, enconvo_docs dff52c6).
 | --- | --- | --- | --- |
 | `/` | yes | yes | Money page. Section headings rewritten (live 2026-09-24). Recrawl requested in Search Console on 2026-09-24. |
 | `/use-cases` | yes | yes | |
+| `/android` | yes | yes | Android app download page (APK, install steps, QR). Added 2026-10-05; not deployed yet. |
 | `/cloud-pricing` | yes | yes | Plan links now point to `/#pricing` (were a 404). |
 | `/changelog` | yes | yes | 374 kB page data. 709 impressions, 0 clicks. |
 | `/privacy` | yes | yes | |

@@ -38,6 +38,7 @@ const noindexRoutes = new Set([
 const navigationRoutes = new Set([
   '/',
   '/use-cases',
+  '/android',
   '/changelog',
   '/affiliate',
   '/affiliate/terms',

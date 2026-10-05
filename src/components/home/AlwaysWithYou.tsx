@@ -1,10 +1,11 @@
 import { localizePath } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
 import Link from 'next/link'
-import { Smartphone } from 'lucide-react'
+import { Download, Smartphone } from 'lucide-react'
 import { CompanionVisual } from './SectionVisuals'
 import styles from '@/styles/Home.module.css'
 import { Container } from '@/components/Container'
+import { ANDROID_APP_QR, ANDROID_APP_SECTION_ID } from '@/data/androidApp'
 import {
   IPHONE_APP_QR,
   IPHONE_APP_SECTION_ID,
@@ -138,6 +139,65 @@ export function AlwaysWithYou() {
                 <path d={IPHONE_APP_QR.path} fill="#07080a" />
               </svg>
               <figcaption>{t('Scan with your iPhone camera')}</figcaption>
+            </figure>
+          </div>
+
+          <div
+            id={ANDROID_APP_SECTION_ID}
+            className={`${styles.card} ${styles.iphoneCard} md:col-span-2`}
+            data-spotlight
+            data-reveal
+          >
+            <div className={styles.iphoneCopy}>
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-signal-green">
+                {t('Android app · Preview')}
+              </span>
+              <h3 className="font-display mt-2 text-xl font-semibold text-content">
+                {t('Now on Android, too')}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-content-muted">
+                {t(
+                  'The Enconvo Android preview pairs with your Mac the same way, so its agents and chats go with you. Install it from the APK on our download page.'
+                )}
+              </p>
+              <div className={styles.iphoneActions}>
+                <Link
+                  href="/android"
+                  onClick={() =>
+                    trackEvent('android_app_click', {
+                      placement: 'always_with_you',
+                    })
+                  }
+                  className={styles.iphoneButton}
+                >
+                  <Download aria-hidden="true" />
+                  {t('Get the Android app')}
+                </Link>
+                <Link
+                  href="/android#install"
+                  className={styles.iphoneSecondaryLink}
+                >
+                  {t('How to install')}
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
+
+            <figure className={styles.iphoneQr}>
+              <svg
+                viewBox={`0 0 ${ANDROID_APP_QR.size} ${ANDROID_APP_QR.size}`}
+                shapeRendering="crispEdges"
+                role="img"
+                aria-label={t('QR code for the Enconvo Android download page')}
+              >
+                <rect
+                  width={ANDROID_APP_QR.size}
+                  height={ANDROID_APP_QR.size}
+                  fill="#fff"
+                />
+                <path d={ANDROID_APP_QR.path} fill="#07080a" />
+              </svg>
+              <figcaption>{t('Scan with your Android phone')}</figcaption>
             </figure>
           </div>
         </div>

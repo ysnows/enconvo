@@ -19,7 +19,7 @@ const locations = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
 const { locales } = JSON.parse(
   await readFile(new URL('../src/i18n/config.json', import.meta.url), 'utf8')
 )
-assert.equal(new Set(locations).size, 6 * locales.length)
+assert.equal(new Set(locations).size, 7 * locales.length)
 assert.ok(locations.includes(`${origin}/use-cases`))
 assert.ok(locations.includes(`${origin}/cloud-pricing`))
 for (const location of locations) {

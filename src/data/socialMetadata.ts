@@ -46,6 +46,12 @@ export const socialPages: Record<string, SocialPage> = {
     imageAlt:
       'Enconvo — A better Mac assistant. A release timeline highlights New features, Improvements, and Fixes.',
   },
+  '/android': {
+    title: 'Enconvo for Android — Download the APK',
+    description:
+      'Download the Enconvo Android preview and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
+    ...brandImage,
+  },
   '/privacy': {
     title: 'Enconvo Privacy Policy',
     description: 'How Enconvo handles app permissions, data, and privacy.',

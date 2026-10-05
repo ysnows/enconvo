@@ -7,6 +7,7 @@
 - [Overview](https://www.enconvo.com/): Product capabilities and live demonstrations.
 - [Use cases](https://www.enconvo.com/use-cases): Video walkthroughs for app automation, writing, research, providers, and workflows.
 - [Download](https://www.enconvo.com/): Choose Apple Silicon or Intel from the homepage download menu.
+- [Android app](https://www.enconvo.com/android): The Enconvo Android preview, installed from an APK, that pairs with Enconvo on a Mac.
 
 App Sidebar works beside Mac apps. Dynamic Island provides quick access to AI. PopBar acts on selected text. Voice & Dictation provides system-wide speech input. Meetings & Live Captions supports captions, translation, and meeting notes. Knowledge Base makes documents and captured ideas searchable and available in chat.
 

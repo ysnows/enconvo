@@ -385,6 +385,198 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/use-cases" />
   </url>
   <url>
+    <loc>https://www.enconvo.com/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/zh-CN/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/zh-TW/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/ja/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/ko/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/es/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/de/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/fr/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/it/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/pt/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/nl/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
+    <loc>https://www.enconvo.com/pl/android</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/android" />
+    <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/android" />
+    <xhtml:link rel="alternate" hreflang="zh-TW" href="https://www.enconvo.com/zh-TW/android" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://www.enconvo.com/ja/android" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://www.enconvo.com/ko/android" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.enconvo.com/es/android" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://www.enconvo.com/de/android" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://www.enconvo.com/fr/android" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://www.enconvo.com/it/android" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.enconvo.com/pt/android" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.enconvo.com/nl/android" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://www.enconvo.com/pl/android" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.enconvo.com/android" />
+  </url>
+  <url>
     <loc>https://www.enconvo.com/cloud-pricing</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.enconvo.com/cloud-pricing" />
     <xhtml:link rel="alternate" hreflang="zh-CN" href="https://www.enconvo.com/zh-CN/cloud-pricing" />
