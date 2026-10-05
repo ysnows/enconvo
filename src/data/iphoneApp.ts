@@ -4,8 +4,11 @@
 
 export const IPHONE_APP_TESTFLIGHT_URL = 'https://testflight.apple.com/join/MJQuEN28'
 
-/** Homepage anchor of the iPhone app card; the hero's iPhone button scrolls to it. */
+/** Homepage anchor of the iPhone panel in the mobile app card. */
 export const IPHONE_APP_SECTION_ID = 'iphone-app'
+
+/** Homepage anchor of the combined iPhone and Android card; the hero's mobile button scrolls to it. */
+export const MOBILE_APP_SECTION_ID = 'mobile-app'
 
 /**
  * QR code for IPHONE_APP_TESTFLIGHT_URL, so a visitor on a Mac can scan it with

@@ -10,7 +10,7 @@ import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroBackdrop } from '@/components/HeroBackdrop'
 import { HeroLayout } from '@/components/home/HeroLayout'
 import { trackEvent } from '@/lib/analytics'
-import { IPHONE_APP_SECTION_ID } from '@/data/iphoneApp'
+import { MOBILE_APP_SECTION_ID } from '@/data/iphoneApp'
 
 declare global {
   interface Window {
@@ -188,9 +188,9 @@ export function Hero() {
                 </Menu>
 
                 <a
-                  href={localizePath(`#${IPHONE_APP_SECTION_ID}`, locale)}
+                  href={localizePath(`#${MOBILE_APP_SECTION_ID}`, locale)}
                   onClick={() =>
-                    trackEvent('iphone_app_click', { placement: 'hero' })
+                    trackEvent('mobile_app_click', { placement: 'hero' })
                   }
                   className={styles.browseButton}
                 >
@@ -215,8 +215,7 @@ export function Hero() {
                       d="M11 18h2"
                     />
                   </svg>
-                  <span>{t('Get the iPhone app')}</span>
-                  <span className={styles.betaTag}>{t('Beta')}</span>
+                  <span>{t('iPhone & Android app')}</span>
                 </a>
               </div>
               <p className={styles.requirements}>

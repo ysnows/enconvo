@@ -2181,5 +2181,7 @@
   "Free has a limit": "免費版有限制",
   "Continue in Enconvo": "在 Enconvo 中繼續",
   "Open this chat in Enconvo on your Mac and keep chatting": "在 Mac 上的 Enconvo 中開啟此聊天，繼續對話。",
-  "Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.": "Enconvo 未能開啟。請先安裝 Mac 版 Enconvo，再次點擊「在 Enconvo 中繼續」。"
+  "Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.": "Enconvo 未能開啟。請先安裝 Mac 版 Enconvo，再次點擊「在 Enconvo 中繼續」。",
+  "Pair your iPhone or Android phone with Enconvo on your Mac to reach its projects and chats from anywhere. Every chat keeps running on your Mac, and messages are end-to-end encrypted.": "將 iPhone 或 Android 手機與 Mac 上的 Enconvo 配對，隨時隨地存取它的專案與聊天。每個聊天都會繼續在 Mac 上執行，訊息採用端對端加密。",
+  "Free beta on TestFlight": "TestFlight 免費測試版"
 }
