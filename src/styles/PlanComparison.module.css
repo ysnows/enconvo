@@ -1,0 +1,98 @@
+/* Plan comparison under the pricing cards: Free vs paid, how paid plans
+   differ, and every feature with its Free limit. Colors follow DESIGN.md. */
+.root { display: flex; flex-direction: column; gap: 88px; margin-top: 88px; padding-top: 64px; border-top: 1px solid rgba(255,255,255,.1); }
+.block { display: flex; flex-direction: column; gap: 28px; }
+.blockHeading { display: flex; flex-direction: column; gap: 10px; }
+.blockHeading h3 { color: #f4f4f6; font-size: 28px; font-weight: 600; line-height: 1.25; }
+.blockHeading p { max-width: 620px; color: #9c9c9d; font-size: 15px; line-height: 1.6; }
+.blockHeading > div { display: flex; flex-direction: column; gap: 10px; }
+.blockHeadingSplit { flex-direction: row; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.blockHeading > .legend { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+
+.tag { display: inline-flex; align-items: center; padding: 3px 8px; border: 1px solid rgba(255,255,255,.1); border-radius: 5px; background: #121212; color: #cdcdcd; font-size: 12px; font-weight: 500; line-height: 1.5; white-space: nowrap; }
+.tagAll { border-color: rgba(89,212,153,.18); background: rgba(89,212,153,.08); color: #59d499; }
+.tagLimit { border-color: rgba(255,197,51,.2); background: rgba(255,197,51,.08); color: #ffc533; }
+.tagPaid { border-color: rgba(87,193,255,.22); background: rgba(87,193,255,.08); color: #57c1ff; }
+
+/* 01 · What upgrading unlocks */
+.unlockGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+.unlockCard { padding: 8px 0; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #0d0d0d; }
+.unlockPaid { border-color: rgba(87,193,255,.35); background: #0f1215; box-shadow: 0 0 0 4px rgba(87,193,255,.05); }
+.unlockHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; padding: 18px 24px 14px; }
+.unlockHead span:first-child { color: #f4f4f6; font-size: 20px; font-weight: 600; }
+.unlockHead span:last-child { color: #9c9c9d; font-size: 13px; }
+.unlockCard li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding: 10px 24px; border-top: 1px solid #1a1c1d; color: #cdcdcd; font-size: 14px; }
+.unlockPaid li { color: #f4f4f6; }
+.notIncluded { color: #6a6b6c; font-size: 13px; white-space: nowrap; }
+.paidValue { display: inline-flex; align-items: center; gap: 8px; color: #f4f4f6; font-size: 13px; font-weight: 500; white-space: nowrap; }
+.tick { width: 16px; height: 16px; color: #57c1ff; }
+
+/* 02 · How paid plans differ */
+.tableScroll { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #0d0d0d; scrollbar-color: #323b40 #0d0d0d; }
+.tableScroll:focus-visible { outline: 2px solid #57c1ff; outline-offset: 2px; }
+.table { width: 100%; min-width: 1000px; border-collapse: collapse; table-layout: fixed; text-align: left; }
+.table th, .table td { font-weight: 400; }
+.corner { width: 19%; }
+.table [data-featured] { background: rgba(87,193,255,.045); }
+.table [data-group-start] { border-left: 1px solid rgba(255,255,255,.1); }
+.planHead { padding: 22px 12px 8px; vertical-align: top; }
+.planCtaCell { padding: 6px 12px 20px !important; vertical-align: bottom !important; border-bottom: 1px solid rgba(255,255,255,.1) !important; }
+.ctaCorner { border-bottom: 1px solid rgba(255,255,255,.1) !important; }
+.planBadgeSlot { display: flex; align-items: center; height: 24px; }
+.planBadgeSlot .tag { padding-top: 1px; padding-bottom: 1px; }
+.planKind { margin-top: 8px; color: #9c9c9d; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.planKind[data-cloud] { color: #57c1ff; }
+.planName { margin-top: 4px; color: #f4f4f6; font-size: 17px; font-weight: 600; }
+.planPrice { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px; margin-top: 8px; }
+.planPrice strong { color: #f4f4f6; font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.planPrice span { color: #9c9c9d; font-size: 12px; }
+.planBest { margin-top: 8px; color: #9c9c9d; font-size: 13px; line-height: 1.5; }
+.planCta { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 40px; padding: 8px 10px; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; background: rgba(255,255,255,.035); color: #f4f4f6; font-size: 13px; font-weight: 500; white-space: nowrap; transition: background-color 160ms, border-color 160ms; }
+.planCta:hover { border-color: rgba(255,255,255,.3); background: rgba(255,255,255,.09); }
+.planCta:focus-visible { outline: 2px solid #57c1ff; outline-offset: 2px; }
+.planCta:disabled { opacity: .6; cursor: wait; }
+.planCtaFeatured { border-color: transparent; background: #fff; color: #000; }
+.planCtaFeatured:hover { border-color: transparent; background: #e9eef1; }
+.rowHead { display: table-cell; padding: 16px 16px 16px 24px; vertical-align: middle; border-bottom: 1px solid #1a1c1d; }
+.rowHead span { display: block; }
+.rowHead span:first-child { color: #f4f4f6; font-size: 14px; font-weight: 500; }
+.rowHead span:last-child { margin-top: 4px; color: #6a6b6c; font-size: 12px; line-height: 1.45; }
+.table td { padding: 16px 12px; vertical-align: middle; border-bottom: 1px solid #1a1c1d; }
+.table tbody tr:last-child > * { border-bottom: 0; }
+.cellText { display: block; color: #cdcdcd; font-size: 14px; font-variant-numeric: tabular-nums; }
+.cellText[data-strong] { color: #f4f4f6; font-weight: 600; }
+.cellText[data-tone='muted'] { color: #6a6b6c; }
+.cellText[data-tone='good'] { color: #59d499; }
+.meter { display: block; height: 6px; margin-top: 8px; overflow: hidden; border-radius: 3px; background: #1a1c1d; }
+.meter span { display: block; height: 100%; border-radius: 3px; background: #9c9c9d; }
+[data-cloud] .meter span { background: #57c1ff; }
+.dots { display: flex; gap: 4px; margin-top: 8px; }
+.dots span { width: 8px; height: 8px; border-radius: 2px; background: #1f2223; }
+.dots span[data-on] { background: #cdcdcd; }
+[data-cloud] .dots span[data-on] { background: #57c1ff; }
+
+/* 03 · Every feature */
+.featureGrid { display: grid; grid-template-columns: repeat(auto-fill,minmax(340px,1fr)); gap: 16px; }
+.featureCard { display: flex; flex-direction: column; gap: 16px; padding: 24px; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #0d0d0d; }
+.featureHead { display: flex; align-items: center; gap: 12px; }
+.featureHead h4 { color: #f4f4f6; font-size: 16px; font-weight: 600; }
+.featureHead p { margin-top: 2px; color: #9c9c9d; font-size: 13px; }
+.featureIcon { display: flex; flex: none; align-items: center; justify-content: center; width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.1); border-radius: 8px; background: #121212; color: #f4f4f6; }
+.featureIcon svg { width: 18px; height: 18px; }
+.featureCard li { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 11px 0; border-top: 1px solid #1a1c1d; }
+.featureCard li > div { min-width: 0; }
+.featureCard li > div span { display: block; }
+.featureCard li > div span:first-child { color: #f4f4f6; font-size: 14px; font-weight: 500; }
+.featureCard li > div span:last-child { margin-top: 3px; color: #9c9c9d; font-size: 13px; line-height: 1.5; }
+
+@media (max-width: 767px) {
+  .root { gap: 64px; margin-top: 64px; padding-top: 48px; }
+  .blockHeading h3 { font-size: 24px; }
+  .unlockGrid { grid-template-columns: 1fr; }
+  .unlockHead, .unlockCard li { padding-left: 16px; padding-right: 16px; }
+  .featureGrid { grid-template-columns: 1fr; }
+  .featureCard { padding: 18px; }
+  .rowHead { position: sticky; left: 0; z-index: 1; background: #0d0d0d; }
+  .corner, .ctaCorner { position: sticky; left: 0; z-index: 1; background: #0d0d0d; }
+  .table { min-width: 900px; }
+}

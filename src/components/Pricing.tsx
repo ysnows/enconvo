@@ -2,6 +2,7 @@ import { I18nText } from '@/i18n/I18nText'
 import { localizePath, type Locale } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
 import styles from '@/styles/Home.module.css'
+import compare from '@/styles/PlanComparison.module.css'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
@@ -46,7 +47,8 @@ async function startCheckout(
   lookupKey: string,
   setIsLoading: (loading: boolean) => void,
   locale: Locale,
-  extra?: Record<string, unknown>
+  extra?: Record<string, unknown>,
+  placement: 'plan_card' | 'comparison' = 'plan_card'
 ) {
   try {
     setIsLoading(true)
@@ -62,6 +64,7 @@ async function startCheckout(
     } = await supabase.auth.getSession()
     trackEvent('begin_checkout', {
       plan: lookupKey,
+      placement,
       signed_in: Boolean(session),
     })
 
@@ -229,438 +232,660 @@ function Plan({
   )
 }
 
-// ---- Full benefits comparison (shown under each plan group) ----
-// `true` renders a check, `false` a muted dash, a string renders as text.
-// Mirrors the in-app plan picker (PlansDialog).
-type ComparisonCell = boolean | string
-type ComparisonRow = { feature: string; values: ComparisonCell[] }
-type ComparisonGroup = { title?: string; rows: ComparisonRow[] }
-type ComparisonData = { columns: string[]; groups: ComparisonGroup[] }
+// ---- Plan comparison: what upgrading unlocks, how paid plans differ, and
+// every feature with its Free limit. Values mirror the in-app plan picker
+// (PlansDialog), the worker's cloudTiers.ts and the sync quotas.
 
-const LICENSE_COMPARISON: ComparisonData = {
-  columns: ['Free', 'Standard', 'Premium', 'Teams'],
-  groups: [
-    {
-      title: 'AI & Chat',
-      rows: [
-        {
-          feature: 'Unlimited AI with your own API key',
-          values: [true, true, true, true],
-        },
-        {
-          feature:
-            '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Local models — Ollama, LM Studio, MLX',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Agent mode with tools, planning & skills',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Cloud points bonus',
-          values: ['5,000 welcome', '50,000', '150,000', '50,000 / seat'],
-        },
-      ],
-    },
-    {
-      title: 'Surfaces & Tools',
-      rows: [
-        {
-          feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island',
-          values: [true, true, true, true],
-        },
-        {
-          feature: '100+ built-in tools and plugins',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'MCP servers & custom skills',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Computer use & browser automation',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Screenshot, OCR & screen doodle',
-          values: [true, true, true, true],
-        },
-      ],
-    },
-    {
-      title: 'Voice & Meetings',
-      rows: [
-        {
-          feature: 'Dictation & voice commands',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Read aloud (text-to-speech)',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Meeting recording',
-          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'Live captions',
-          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-      ],
-    },
-    {
-      title: 'Knowledge & Automation',
-      rows: [
-        {
-          feature: 'Knowledge bases',
-          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'Workflows',
-          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'Memory & context awareness',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Scheduled tasks',
-          values: ['1 active', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'IM bots — Telegram, Discord, Slack, Lark',
-          values: ['1 running', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'iPhone & Android app',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Use your Mac from your phone (Remote)',
-          values: [false, true, true, true],
-        },
-        {
-          feature: 'Avatar on iPhone & Android',
-          values: [false, true, true, true],
-        },
-        {
-          feature: 'Live Talk',
-          values: ['5 min / month', true, true, true],
-        },
-      ],
-    },
-    {
-      title: 'License',
-      rows: [
-        {
-          feature: 'Free updates',
-          values: [false, '1 year', 'Lifetime', 'Lifetime'],
-        },
-        { feature: 'Mac devices', values: ['1', '1', '3', '5 – 500'] },
-        {
-          feature: '30-day money-back guarantee',
-          values: [false, true, true, true],
-        },
-      ],
-    },
-  ],
+// Free limits; every paid plan (license or Cloud) lifts all of them.
+const UNLOCKS: { feature: string; free: string | null; paid: string }[] = [
+  { feature: 'Meeting recording', free: '60 min / month', paid: 'Unlimited' },
+  { feature: 'Live captions', free: '60 min / month', paid: 'Unlimited' },
+  { feature: 'Live Talk', free: '5 min / month', paid: 'Unlimited' },
+  { feature: 'Knowledge bases', free: '1', paid: 'Unlimited' },
+  { feature: 'Workflows', free: '1', paid: 'Unlimited' },
+  { feature: 'Scheduled tasks', free: '1 active', paid: 'Unlimited' },
+  { feature: 'IM bots', free: '1 running', paid: 'Unlimited' },
+  {
+    feature: 'Use your Mac from your phone (Remote)',
+    free: null,
+    paid: 'Included',
+  },
+  { feature: 'Avatar on iPhone & Android', free: null, paid: 'Included' },
+  { feature: 'Sync across Macs', free: null, paid: 'Included' },
+]
+
+type PaidPlan = {
+  name: string
+  kind: 'License' | 'Cloud'
+  best: string
+  featured?: boolean
 }
 
-// Columns: Free · Plus · Pro · Max. Tier data mirrors the worker's cloudTiers.ts.
-// A Cloud subscription is a paid tier everywhere the app gates on membership, so it
-// unlocks the SAME unlimited features as a lifetime license (KBs, workflows,
-// recording, captions) on top of the monthly points.
-const CLOUD_COMPARISON: ComparisonData = {
-  columns: ['Free', 'Plus', 'Pro', 'Max'],
-  groups: [
-    {
-      title: 'Points',
-      rows: [
-        {
-          feature: 'Included points',
-          values: [
-            '5,000 welcome',
-            '500K / month',
-            '2.5M / month',
-            '5M / month',
-          ],
-        },
-        {
-          feature: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash rates',
-          values: ['Standard', 'Standard', '1/2 price', '1/4 price'],
-        },
-        { feature: 'Points top-up packs', values: [true, true, true, true] },
-        {
-          feature: 'Annual billing — save 20%',
-          values: [false, '$96 / year', '$480 / year', '$960 / year'],
-        },
-      ],
-    },
-    {
-      title: 'Cloud Services',
-      rows: [
-        {
-          feature: 'Works without API keys',
-          values: [false, true, true, true],
-        },
-        {
-          feature:
-            'Every Cloud model & service — chat, image, TTS, transcription',
-          values: [false, true, true, true],
-        },
-        {
-          feature: 'Latest frontier models — GPT, Claude, Gemini & more',
-          values: [false, true, true, true],
-        },
-        { feature: 'Priority support', values: [false, true, true, true] },
-      ],
-    },
-    {
-      title: 'AI & Chat',
-      rows: [
-        {
-          feature: 'Unlimited AI with your own API key',
-          values: [true, true, true, true],
-        },
-        {
-          feature:
-            '20+ model providers — OpenAI, Claude, Gemini, DeepSeek & more',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Local models — Ollama, LM Studio, MLX',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Agent mode with tools, planning & skills',
-          values: [true, true, true, true],
-        },
-      ],
-    },
-    {
-      title: 'Surfaces & Tools',
-      rows: [
-        {
-          feature: 'SmartBar, App Sidebar, PopBar & Dynamic Island',
-          values: [true, true, true, true],
-        },
-        {
-          feature: '100+ built-in tools and plugins',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'MCP servers & custom skills',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Computer use & browser automation',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Screenshot, OCR & screen doodle',
-          values: [true, true, true, true],
-        },
-      ],
-    },
-    {
-      title: 'Voice & Meetings',
-      rows: [
-        {
-          feature: 'Dictation & voice commands',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Read aloud (text-to-speech)',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Meeting recording',
-          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'Live captions',
-          values: ['60 min / month', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-      ],
-    },
-    {
-      title: 'Knowledge & Automation',
-      rows: [
-        {
-          feature: 'Knowledge bases',
-          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'Workflows',
-          values: ['1', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'Memory & context awareness',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Scheduled tasks',
-          values: ['1 active', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'IM bots — Telegram, Discord, Slack, Lark',
-          values: ['1 running', 'Unlimited', 'Unlimited', 'Unlimited'],
-        },
-        {
-          feature: 'iPhone & Android app',
-          values: [true, true, true, true],
-        },
-        {
-          feature: 'Use your Mac from your phone (Remote)',
-          values: [false, true, true, true],
-        },
-        {
-          feature: 'Avatar on iPhone & Android',
-          values: [false, true, true, true],
-        },
-        {
-          feature: 'Live Talk',
-          values: ['5 min / month', true, true, true],
-        },
-      ],
-    },
-    {
-      title: 'Account',
-      rows: [{ feature: 'Mac devices', values: ['1', '5', '5', '5'] }],
-    },
-  ],
+// Column order for the paid-plan table; Cloud prices come from CLOUD_TIERS.
+const PAID_PLANS: PaidPlan[] = [
+  { name: 'Standard', kind: 'License', best: 'One Mac, your own API keys.' },
+  {
+    name: 'Premium',
+    kind: 'License',
+    best: 'Lifetime updates on up to 3 Macs.',
+  },
+  {
+    name: 'Teams',
+    kind: 'License',
+    best: 'One account for a team, +$20 a seat.',
+  },
+  { name: 'Plus', kind: 'Cloud', best: 'Light daily use, no API keys.' },
+  {
+    name: 'Pro',
+    kind: 'Cloud',
+    best: 'Heavy daily use and agents.',
+    featured: true,
+  },
+  { name: 'Max', kind: 'Cloud', best: 'All-day agents and long tasks.' },
+]
+
+// A cell is text plus an optional meter: `bar` is a 0–100 fill, `dots` a
+// 1–5 count. `strong` marks a step up worth noticing.
+type DiffCell = {
+  text: string
+  bar?: number
+  dots?: number
+  strong?: boolean
+  tone?: 'muted' | 'good'
+}
+const PLAN_DIFFS: { feature: string; hint: string; cells: DiffCell[] }[] = [
+  {
+    feature: 'Cloud points',
+    hint: 'For Cloud models and services',
+    cells: [
+      { text: '50,000 bonus', bar: 12 },
+      { text: '150,000 bonus', bar: 30, strong: true },
+      { text: '50,000 / seat', bar: 12 },
+      { text: '500K / month', bar: 50, strong: true },
+      { text: '2.5M / month', bar: 85, strong: true },
+      { text: '5M / month', bar: 100, strong: true },
+    ],
+  },
+  {
+    feature: 'Model discounts',
+    hint: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash',
+    cells: [
+      { text: 'Standard rate', tone: 'muted' },
+      { text: 'Standard rate', tone: 'muted' },
+      { text: 'Standard rate', tone: 'muted' },
+      { text: 'Standard rate', tone: 'muted' },
+      { text: '1/2 price', strong: true, tone: 'good' },
+      { text: '1/4 price', strong: true, tone: 'good' },
+    ],
+  },
+  {
+    feature: 'Mac devices',
+    hint: 'Signed in at the same time',
+    cells: [
+      { text: '1', dots: 1 },
+      { text: '3', dots: 3, strong: true },
+      { text: '5 – 500', dots: 5, strong: true },
+      { text: '5', dots: 5 },
+      { text: '5', dots: 5 },
+      { text: '5', dots: 5 },
+    ],
+  },
+  {
+    feature: 'Sync storage',
+    hint: 'Chats, settings & knowledge across Macs',
+    cells: [
+      { text: '50 MB', bar: 50 },
+      { text: '100 MB', bar: 100, strong: true },
+      { text: '100 MB', bar: 100 },
+      { text: '100 MB', bar: 100 },
+      { text: '100 MB', bar: 100 },
+      { text: '100 MB', bar: 100 },
+    ],
+  },
+  {
+    feature: 'Updates & support',
+    hint: 'New versions of Enconvo',
+    cells: [
+      { text: '1 year of updates' },
+      { text: 'Lifetime updates', strong: true },
+      { text: 'Lifetime updates' },
+      { text: 'Updates + priority support', strong: true },
+      { text: 'Updates + priority support' },
+      { text: 'Updates + priority support' },
+    ],
+  },
+]
+
+// `free` is how Free gets the feature: every plan, a limit, or paid only.
+type Access =
+  | { kind: 'all' }
+  | { kind: 'limit'; limit: string }
+  | { kind: 'paid' }
+const ALL: Access = { kind: 'all' }
+const PAID: Access = { kind: 'paid' }
+const limit = (value: string): Access => ({ kind: 'limit', limit: value })
+
+const FEATURE_GROUPS: {
+  title: string
+  subtitle: string
+  icon: string
+  items: { name: string; description: string; access: Access }[]
+}[] = [
+  {
+    title: 'AI & Agents',
+    subtitle: 'Any model, one assistant',
+    icon: 'M4 5h16v11H9l-5 4zM9 10h.01M12 10h.01M15 10h.01',
+    items: [
+      {
+        name: 'Chat with any model',
+        description:
+          '20+ providers — OpenAI, Claude, Gemini, DeepSeek — unlimited with your own key.',
+        access: ALL,
+      },
+      {
+        name: 'Local models',
+        description: 'Ollama, LM Studio and MLX, fully offline.',
+        access: ALL,
+      },
+      {
+        name: 'Agent mode',
+        description:
+          'Plans, uses tools and skills, and finishes multi-step tasks.',
+        access: ALL,
+      },
+      {
+        name: 'MCP, plugins & skills',
+        description: '100+ built-in tools, MCP servers and your own skills.',
+        access: ALL,
+      },
+    ],
+  },
+  {
+    title: 'Computer & Browser Use',
+    subtitle: 'Agents that do the clicking',
+    icon: 'M5 3l13 7-5.5 1.8L10.5 18zM13 13l5 5',
+    items: [
+      {
+        name: 'Computer Use',
+        description:
+          'Agents operate your Mac apps — click, type, read the screen.',
+        access: ALL,
+      },
+      {
+        name: 'Browser Use',
+        description:
+          'Agents navigate, fill in forms and download in your browser.',
+        access: ALL,
+      },
+    ],
+  },
+  {
+    title: 'Everywhere on your Mac',
+    subtitle: 'One shortcut away',
+    icon: 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5',
+    items: [
+      {
+        name: 'SmartBar, PopBar & App Sidebar',
+        description:
+          'Ask about any selection or app without switching windows.',
+        access: ALL,
+      },
+      {
+        name: 'Dynamic Island',
+        description: 'Live status and quick replies at the top of your screen.',
+        access: ALL,
+      },
+      {
+        name: 'Screenshot, OCR & Screen Doodle',
+        description: 'Capture, read text from and mark up anything on screen.',
+        access: ALL,
+      },
+    ],
+  },
+  {
+    title: 'Voice & Meetings',
+    subtitle: 'Talk instead of type',
+    icon: 'M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zM5 11a7 7 0 0 0 14 0M12 18v3',
+    items: [
+      {
+        name: 'Dictation & voice commands',
+        description: 'Speak into any app, or tell Enconvo what to do.',
+        access: ALL,
+      },
+      {
+        name: 'Read aloud',
+        description: 'Natural voices for any text.',
+        access: ALL,
+      },
+      {
+        name: 'Meeting recording',
+        description: 'Record, transcribe and summarize meetings.',
+        access: limit('60 min / month'),
+      },
+      {
+        name: 'Live captions',
+        description: 'Real-time captions and translation for any audio.',
+        access: limit('60 min / month'),
+      },
+      {
+        name: 'Live Talk',
+        description: 'Real-time voice conversations with AI.',
+        access: limit('5 min / month'),
+      },
+    ],
+  },
+  {
+    title: 'Knowledge & Memory',
+    subtitle: 'Answers from your own files',
+    icon: 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11',
+    items: [
+      {
+        name: 'Knowledge bases',
+        description: 'Chat with your documents, notes and folders.',
+        access: limit('1'),
+      },
+      {
+        name: 'Memory',
+        description: 'Enconvo remembers your preferences and context.',
+        access: ALL,
+      },
+    ],
+  },
+  {
+    title: 'Automation',
+    subtitle: 'Work that runs on its own',
+    icon: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+    items: [
+      {
+        name: 'Workflows',
+        description: 'Chain steps and tools on a visual canvas.',
+        access: limit('1'),
+      },
+      {
+        name: 'Scheduled tasks',
+        description: 'Run agents and workflows on a schedule.',
+        access: limit('1 active'),
+      },
+      {
+        name: 'IM bots',
+        description: 'Your assistant in Telegram, Discord, Slack and Lark.',
+        access: limit('1 running'),
+      },
+    ],
+  },
+  {
+    title: 'Phone & Sync',
+    subtitle: 'Your Mac, wherever you are',
+    icon: 'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2',
+    items: [
+      {
+        name: 'iPhone & Android app',
+        description: 'Chat with your Mac’s assistant on the go.',
+        access: ALL,
+      },
+      {
+        name: 'Remote',
+        description: 'Use your Mac from your phone.',
+        access: PAID,
+      },
+      {
+        name: 'Avatar',
+        description: 'A live character for voice chats on your phone.',
+        access: PAID,
+      },
+      {
+        name: 'Sync across Macs',
+        description:
+          'Chats, settings and knowledge bases stay the same on every Mac.',
+        access: PAID,
+      },
+    ],
+  },
+]
+
+function AccessTag({ access }: { access: Access }) {
+  const { t } = useI18n()
+  if (access.kind === 'all')
+    return (
+      <span className={clsx(compare.tag, compare.tagAll)}>
+        {t('Every plan')}
+      </span>
+    )
+  if (access.kind === 'paid')
+    return (
+      <span className={clsx(compare.tag, compare.tagPaid)}>
+        {t('Paid plans')}
+      </span>
+    )
+  return (
+    <span className={clsx(compare.tag, compare.tagLimit)}>
+      {t('Free: {p0}', { p0: t(access.limit) })}
+    </span>
+  )
 }
 
-function ComparisonTable({
-  data,
+function TickIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2.2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M5 12.5l4.5 4.5L19 7.5" />
+    </svg>
+  )
+}
+
+function PlanCheckoutButton({
+  lookupKey,
   label,
+  planName,
+  featured,
 }: {
-  data: ComparisonData
+  lookupKey: string
   label: string
+  planName: string
+  featured?: boolean
 }) {
   const { t, locale } = useI18n()
+  const [isLoading, setIsLoading] = useState(false)
+  return (
+    <button
+      type="button"
+      className={clsx(compare.planCta, featured && compare.planCtaFeatured)}
+      disabled={isLoading}
+      aria-label={t('{p0} — {p1}', { p0: t(label), p1: planName })}
+      onClick={() =>
+        startCheckout(lookupKey, setIsLoading, locale, undefined, 'comparison')
+      }
+    >
+      {isLoading ? t('Going to checkout...') : t(label)}
+    </button>
+  )
+}
+
+function PlanComparison({ billing }: { billing: 'monthly' | 'annual' }) {
+  const { t } = useI18n()
+  const isAnnual = billing === 'annual'
 
   return (
-    <details className={styles.comparisonDisclosure}>
-      <summary>
-        <span>{t(label)}</span>
-        <span className={styles.comparisonSummaryNote}>
-          {data.columns.join(' · ')}
-        </span>
-        <svg
-          className={styles.comparisonChevron}
-          aria-hidden="true"
-          viewBox="0 0 20 20"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path
-            d="m5 7.5 5 5 5-5"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </summary>
-      <div className={styles.comparison}>
+    <div className={compare.root}>
+      <section className={compare.block} aria-labelledby="compare-unlocks">
+        <div className={compare.blockHeading}>
+          <h3 id="compare-unlocks">{t('What upgrading unlocks')}</h3>
+          <p>
+            {t(
+              'Free has every feature below, with these limits. Any paid plan removes all of them.'
+            )}
+          </p>
+        </div>
+        <div className={compare.unlockGrid}>
+          <div className={compare.unlockCard}>
+            <div className={compare.unlockHead}>
+              <span>{t('Free')}</span>
+              <span>{t('$0, forever')}</span>
+            </div>
+            <ul>
+              {UNLOCKS.map((row) => (
+                <li key={row.feature}>
+                  <span>{t(row.feature)}</span>
+                  {row.free ? (
+                    <span className={clsx(compare.tag, compare.tagLimit)}>
+                      {t(row.free)}
+                    </span>
+                  ) : (
+                    <span className={compare.notIncluded}>
+                      {t('Not included')}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className={clsx(compare.unlockCard, compare.unlockPaid)}>
+            <div className={compare.unlockHead}>
+              <span>{t('Any paid plan')}</span>
+              <span>{t('from $49 once or $10 / month')}</span>
+            </div>
+            <ul>
+              {UNLOCKS.map((row) => (
+                <li key={row.feature}>
+                  <span>{t(row.feature)}</span>
+                  <span className={compare.paidValue}>
+                    <TickIcon className={compare.tick} />
+                    {t(row.paid)}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className={compare.block} aria-labelledby="compare-paid">
+        <div className={clsx(compare.blockHeading, compare.blockHeadingSplit)}>
+          <div>
+            <h3 id="compare-paid">{t('How paid plans differ')}</h3>
+            <p>
+              {t(
+                'Same features on all six plans. Only these five things change.'
+              )}
+            </p>
+          </div>
+          <div className={compare.legend}>
+            <span className={compare.tag}>
+              {t('One-time license: you bring the AI')}
+            </span>
+            <span className={clsx(compare.tag, compare.tagPaid)}>
+              {t('Cloud plan: AI included')}
+            </span>
+          </div>
+        </div>
         <div
-          className={styles.comparisonScroll}
+          className={compare.tableScroll}
           tabIndex={0}
           role="region"
-          aria-label={t('Compare {p0} plans', { p0: data.columns.join(', ') })}
+          aria-label={t('How paid plans differ')}
         >
-          <table className="w-full text-left text-sm">
+          <table className={compare.table}>
             <thead>
-              <tr className="border-b border-hairline">
-                <th
-                  scope="col"
-                  className="w-[36%] py-3.5 pl-6 pr-3 text-xs font-medium text-content-muted"
-                >
-                  {t('Everything you get')}
+              <tr>
+                <th scope="col" className={compare.corner}>
+                  <span className="sr-only">{t('Plan')}</span>
                 </th>
-                {data.columns.map((c) => (
-                  <th
-                    key={c}
-                    scope="col"
-                    data-recommended={c === 'Pro'}
-                    className="px-3 py-3.5 text-center text-sm font-semibold text-content"
-                  >
-                    {t(c)}
-                  </th>
-                ))}
+                {PAID_PLANS.map((plan, i) => {
+                  const tier = CLOUD_TIERS.find((c) => c.name === plan.name)
+                  const price = tier
+                    ? isAnnual
+                      ? tier.annual.perMonth
+                      : tier.monthly.price
+                    : plan.name === 'Teams'
+                    ? `$${teamsPrice(TEAMS_MIN_SEATS)}`
+                    : plan.name === 'Premium'
+                    ? '$99'
+                    : '$49'
+                  const note = tier
+                    ? isAnnual
+                      ? '/mo · billed yearly'
+                      : '/month'
+                    : plan.name === 'Teams'
+                    ? 'once · 5 seats'
+                    : 'once'
+                  return (
+                    <th
+                      key={plan.name}
+                      scope="col"
+                      data-featured={plan.featured || undefined}
+                      data-group-start={i === 3 || undefined}
+                      className={compare.planHead}
+                    >
+                      <div className={compare.planBadgeSlot}>
+                        {plan.featured && (
+                          <span className={clsx(compare.tag, compare.tagPaid)}>
+                            {t('Most popular')}
+                          </span>
+                        )}
+                      </div>
+                      <p
+                        className={compare.planKind}
+                        data-cloud={plan.kind === 'Cloud' || undefined}
+                      >
+                        {t(plan.kind)}
+                      </p>
+                      <p className={compare.planName}>{t(plan.name)}</p>
+                      <p className={compare.planPrice}>
+                        <strong>{price}</strong>
+                        <span>{t(note)}</span>
+                      </p>
+                      <p className={compare.planBest}>{t(plan.best)}</p>
+                    </th>
+                  )
+                })}
+              </tr>
+              <tr>
+                <td className={compare.ctaCorner} />
+                {PAID_PLANS.map((plan, i) => {
+                  const tier = CLOUD_TIERS.find((c) => c.name === plan.name)
+                  return (
+                    <td
+                      key={plan.name}
+                      data-featured={plan.featured || undefined}
+                      data-group-start={i === 3 || undefined}
+                      className={compare.planCtaCell}
+                    >
+                      {plan.name === 'Teams' ? (
+                        <a href="#pricing-teams" className={compare.planCta}>
+                          {t('Choose seats')}
+                        </a>
+                      ) : (
+                        <PlanCheckoutButton
+                          lookupKey={
+                            tier
+                              ? isAnnual
+                                ? tier.annual.lookupKey
+                                : tier.monthly.lookupKey
+                              : plan.name.toLowerCase()
+                          }
+                          label={tier ? 'Subscribe' : 'Buy License'}
+                          planName={plan.name}
+                          featured={plan.featured}
+                        />
+                      )}
+                    </td>
+                  )
+                })}
               </tr>
             </thead>
             <tbody>
-              {data.groups.map((group, gi) => (
-                <Fragment key={group.title ?? gi}>
-                  {group.title && (
-                    <tr>
-                      <td
-                        colSpan={data.columns.length + 1}
-                        className="pb-1.5 pl-6 pt-5 text-[11px] font-semibold uppercase tracking-[0.08em] text-content-ash"
-                      >
-                        {t(group.title)}
-                      </td>
-                    </tr>
-                  )}
-                  {group.rows.map((row, ri) => (
-                    <tr
-                      key={row.feature}
-                      className={clsx(
-                        'border-b transition-colors hover:bg-surface-elevated/40',
-                        ri === group.rows.length - 1 &&
-                          gi !== data.groups.length - 1
-                          ? 'border-hairline'
-                          : 'border-hairline/50',
-                        gi === data.groups.length - 1 &&
-                          ri === group.rows.length - 1 &&
-                          'border-0'
-                      )}
+              {PLAN_DIFFS.map((row) => (
+                <tr key={row.feature}>
+                  <th scope="row" className={compare.rowHead}>
+                    <span>{t(row.feature)}</span>
+                    <span>{t(row.hint)}</span>
+                  </th>
+                  {row.cells.map((cell, i) => (
+                    <td
+                      key={i}
+                      data-featured={PAID_PLANS[i].featured || undefined}
+                      data-group-start={i === 3 || undefined}
+                      data-cloud={PAID_PLANS[i].kind === 'Cloud' || undefined}
                     >
-                      <th
-                        scope="row"
-                        className="py-3 pl-6 pr-3 font-normal leading-snug text-content-body"
+                      <span
+                        className={compare.cellText}
+                        data-strong={cell.strong || undefined}
+                        data-tone={cell.tone}
                       >
-                        {t(row.feature)}
-                      </th>
-                      {row.values.map((v, i) => (
-                        <td
-                          key={i}
-                          data-recommended={data.columns[i] === 'Pro'}
-                          className="px-3 py-3 text-center"
-                        >
-                          {v === true ? (
-                            <span className="mx-auto flex h-5 w-5 items-center justify-center rounded-full bg-surface-elevated">
-                              <CheckIcon className="h-3 w-3 text-signal-blue" />
-                              <span className="sr-only">{t('Included')}</span>
-                            </span>
-                          ) : v === false ? (
-                            <span className="text-xs text-content-ash">
-                              <span aria-hidden="true">—</span>
-                              <span className="sr-only">
-                                {t('Not included')}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-xs font-medium tabular-nums text-content-body">
-                              {t(v)}
-                            </span>
-                          )}
-                        </td>
-                      ))}
-                    </tr>
+                        {t(cell.text)}
+                      </span>
+                      {cell.bar !== undefined && (
+                        <span className={compare.meter} aria-hidden="true">
+                          <span style={{ width: `${cell.bar}%` }} />
+                        </span>
+                      )}
+                      {cell.dots !== undefined && (
+                        <span className={compare.dots} aria-hidden="true">
+                          {[1, 2, 3, 4, 5].map((d) => (
+                            <span
+                              key={d}
+                              data-on={d <= cell.dots! || undefined}
+                            />
+                          ))}
+                        </span>
+                      )}
+                    </td>
                   ))}
-                </Fragment>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
-    </details>
+      </section>
+
+      <section className={compare.block} aria-labelledby="compare-features">
+        <div className={clsx(compare.blockHeading, compare.blockHeadingSplit)}>
+          <div>
+            <h3 id="compare-features">{t('What you get with Enconvo')}</h3>
+            <p>
+              {t(
+                'Most of Enconvo is on every plan, Free included. Tags show where Free has a limit.'
+              )}
+            </p>
+          </div>
+          <div className={compare.legend}>
+            <span className={clsx(compare.tag, compare.tagAll)}>
+              {t('Every plan')}
+            </span>
+            <span className={clsx(compare.tag, compare.tagLimit)}>
+              {t('Free has a limit')}
+            </span>
+            <span className={clsx(compare.tag, compare.tagPaid)}>
+              {t('Paid plans')}
+            </span>
+          </div>
+        </div>
+        <div className={compare.featureGrid}>
+          {FEATURE_GROUPS.map((group) => (
+            <div key={group.title} className={compare.featureCard}>
+              <div className={compare.featureHead}>
+                <span className={compare.featureIcon}>
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={1.7}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d={group.icon} />
+                  </svg>
+                </span>
+                <div>
+                  <h4>{t(group.title)}</h4>
+                  <p>{t(group.subtitle)}</p>
+                </div>
+              </div>
+              <ul>
+                {group.items.map((item) => (
+                  <li key={item.name}>
+                    <div>
+                      <span>{t(item.name)}</span>
+                      <span>{t(item.description)}</span>
+                    </div>
+                    <AccessTag access={item.access} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
   )
 }
 
@@ -684,6 +909,8 @@ function TeamsPlan() {
 
   return (
     <section
+      id="pricing-teams"
+      style={{ scrollMarginTop: 96 }}
       aria-label={t('Teams plan')}
       data-spotlight
       className={`${styles.planCard} ${styles.teamsPlan}`}
@@ -905,10 +1132,6 @@ export function Pricing() {
             />
           </div>
           <TeamsPlan />
-          <ComparisonTable
-            data={LICENSE_COMPARISON}
-            label={t('Compare all license features')}
-          />
         </div>
 
         <div className={`${styles.pricingGroup} ${styles.cloudGroup}`}>
@@ -975,12 +1198,9 @@ export function Pricing() {
               )
             })}
           </div>
-
-          <ComparisonTable
-            data={CLOUD_COMPARISON}
-            label={t('Compare all Cloud features')}
-          />
         </div>
+
+        <PlanComparison billing={billing} />
 
         <div className={styles.pricingFooter}>
           <p className="text-sm text-content-muted">
