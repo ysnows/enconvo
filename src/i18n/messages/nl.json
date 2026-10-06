@@ -2183,5 +2183,11 @@
   "Open this chat in Enconvo on your Mac and keep chatting": "Open deze chat in Enconvo op je Mac en praat verder.",
   "Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.": "Enconvo is niet geopend. Installeer Enconvo voor Mac en klik daarna opnieuw op Verder in Enconvo.",
   "Pair your iPhone or Android phone with Enconvo on your Mac to reach its projects and chats from anywhere. Every chat keeps running on your Mac, and messages are end-to-end encrypted.": "Koppel je iPhone of Android-telefoon aan Enconvo op je Mac om overal bij de projecten en chats te kunnen. Elke chat blijft op je Mac draaien en berichten zijn end-to-end versleuteld.",
-  "Free beta on TestFlight": "Gratis bèta via TestFlight"
+  "Free beta on TestFlight": "Gratis bèta via TestFlight",
+  "Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: {p0}, {p1}, and {p2}.": "Haal Enconvo voor Mac met een eenmalige Standard-, Premium- of Teams-licentie: {p0}, {p1} en {p2}.",
+  "Your {p0}% discount is applied automatically at checkout.": "Je korting van {p0}% wordt bij het afrekenen automatisch toegepast.",
+  "from {p0} once or $10 / month": "vanaf {p0} eenmalig of $10 / maand",
+  "One account for a team, +{p0} a seat.": "Eén account voor het hele team, +{p0} per plek.",
+  "Add more seats any time at {p0} each": "Voeg op elk moment extra seats toe voor {p0} per stuk",
+  "Black Friday −{p0}%": "Black Friday −{p0}%"
 }

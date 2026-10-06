@@ -5,12 +5,20 @@ import styles from '@/styles/Home.module.css'
 import compare from '@/styles/PlanComparison.module.css'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { supabase } from '@/lib/supabase'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
+import {
+  lifetimePrices,
+  lifetimeSale,
+  saleCents,
+  TEAMS_BASE_SEATS,
+  teamsCents,
+  usd,
+} from '@/lib/lifetime-pricing'
 
 interface CheckIconProps {
   className: string
@@ -109,6 +117,7 @@ async function startCheckout(
 interface PlanProps {
   name: string
   price: string
+  wasPrice?: string
   priceNote?: string
   billingNote?: string
   allowance?: string
@@ -139,6 +148,7 @@ function PlanFeatures({ features }: { features: string[] }) {
 function Plan({
   name,
   price,
+  wasPrice,
   priceNote,
   billingNote,
   allowance,
@@ -169,6 +179,12 @@ function Plan({
       </div>
       <div className={styles.planPriceBlock}>
         <div className={styles.planPriceRow}>
+          {wasPrice && (
+            <s className={styles.planWas}>
+              <span className="sr-only">{t('Original price ')}</span>
+              {wasPrice}
+            </s>
+          )}
           <span className={styles.planAmount}>{price}</span>
           {priceNote && <span className={styles.planUnit}>{t(priceNote)}</span>}
         </div>
@@ -272,7 +288,8 @@ const PAID_PLANS: PaidPlan[] = [
   {
     name: 'Teams',
     kind: 'License',
-    best: 'One account for a team, +$20 a seat.',
+    // {p0} is the seat price on the lifetime schedule.
+    best: 'One account for a team, +{p0} a seat.',
   },
   { name: 'Plus', kind: 'Cloud', best: 'Light daily use, no API keys.' },
   {
@@ -609,9 +626,16 @@ function PlanCheckoutButton({
   )
 }
 
-function PlanComparison({ billing }: { billing: 'monthly' | 'annual' }) {
+function PlanComparison({
+  billing,
+  now,
+}: {
+  billing: 'monthly' | 'annual'
+  now: number
+}) {
   const { t } = useI18n()
   const isAnnual = billing === 'annual'
+  const prices = lifetimePrices(now)
 
   return (
     <div className={compare.root}>
@@ -650,7 +674,13 @@ function PlanComparison({ billing }: { billing: 'monthly' | 'annual' }) {
           <div className={clsx(compare.unlockCard, compare.unlockPaid)}>
             <div className={compare.unlockHead}>
               <span>{t('Any paid plan')}</span>
-              <span>{t('from $49 once or $10 / month')}</span>
+              <span>
+                {t(
+                  `from ${usd(
+                    saleCents(prices.standard.cents, now)
+                  )} once or $10 / month`
+                )}
+              </span>
             </div>
             <ul>
               {UNLOCKS.map((row) => (
@@ -704,11 +734,16 @@ function PlanComparison({ billing }: { billing: 'monthly' | 'annual' }) {
                     ? isAnnual
                       ? tier.annual.perMonth
                       : tier.monthly.price
-                    : plan.name === 'Teams'
-                    ? `$${teamsPrice(TEAMS_MIN_SEATS)}`
-                    : plan.name === 'Premium'
-                    ? '$99'
-                    : '$49'
+                    : usd(
+                        saleCents(
+                          plan.name === 'Teams'
+                            ? teamsCents(TEAMS_BASE_SEATS, now)
+                            : plan.name === 'Premium'
+                            ? prices.premium.cents
+                            : prices.standard.cents,
+                          now
+                        )
+                      )
                   const note = tier
                     ? isAnnual
                       ? '/mo · billed yearly'
@@ -742,7 +777,9 @@ function PlanComparison({ billing }: { billing: 'monthly' | 'annual' }) {
                         <strong>{price}</strong>
                         <span>{t(note)}</span>
                       </p>
-                      <p className={compare.planBest}>{t(plan.best)}</p>
+                      <p className={compare.planBest}>
+                        {t(plan.best, { p0: usd(prices.teams_seat.cents) })}
+                      </p>
                     </th>
                   )
                 })}
@@ -890,12 +927,12 @@ function PlanComparison({ billing }: { billing: 'monthly' | 'annual' }) {
 }
 
 // Teams lifetime license (ADR 0036): one account, seat-counted devices.
-// Price anchors to the single-user Premium: $99 + (seats − 3) × $20.
-const TEAMS_MIN_SEATS = 5
+// The base price covers five seats; each one after that is the seat price
+// (lifetime-pricing.ts).
+const TEAMS_MIN_SEATS = TEAMS_BASE_SEATS
 const TEAMS_MAX_SEATS = 500
-const teamsPrice = (seats: number) => 99 + (seats - 3) * 20
 
-function TeamsPlan() {
+function TeamsPlan({ now, saleBadge }: { now: number; saleBadge?: string }) {
   const { t, locale } = useI18n()
 
   const [seats, setSeats] = useState(TEAMS_MIN_SEATS)
@@ -917,7 +954,12 @@ function TeamsPlan() {
     >
       <div className={styles.teamsTop}>
         <div className={styles.planIdentity}>
-          <h4>{t('Teams')}</h4>
+          <div className={styles.planTitleRow}>
+            <h4>{t('Teams')}</h4>
+            {saleBadge && (
+              <span className={styles.planBadge}>{saleBadge}</span>
+            )}
+          </div>
           <p>
             {t('One account for your whole team. 30-day money back guarantee.')}
           </p>
@@ -957,13 +999,25 @@ function TeamsPlan() {
             aria-live="polite"
             aria-atomic="true"
           >
+            {saleBadge && (
+              <s className={styles.planWas}>
+                <span className="sr-only">{t('Original price ')}</span>
+                {usd(teamsCents(seats, now))}
+              </s>
+            )}
             <span className={styles.planAmount}>
-              ${teamsPrice(seats).toLocaleString()}
+              {usd(saleCents(teamsCents(seats, now), now))}
             </span>
             <p className={styles.planBillingNote}>
               <I18nText
                 source={'one-time · ${p0}/seat'}
-                values={{ p0: (teamsPrice(seats) / seats).toFixed(2) }}
+                values={{
+                  p0: (
+                    saleCents(teamsCents(seats, now), now) /
+                    seats /
+                    100
+                  ).toFixed(2),
+                }}
               />
             </p>
           </div>
@@ -993,7 +1047,9 @@ function TeamsPlan() {
           `${(
             seats * 50000
           ).toLocaleString()} Cloud points bonus — 50,000 per seat`,
-          'Add more seats any time at $20 each',
+          `Add more seats any time at ${usd(
+            lifetimePrices(now).teams_seat.cents
+          )} each`,
           'Lifetime free updates',
         ]}
       />
@@ -1061,10 +1117,19 @@ const CLOUD_TIERS: CloudTier[] = [
   },
 ]
 
-export function Pricing() {
+/**
+ * `renderedAt` is when the static page was generated. License prices follow their schedule
+ * (lifetime-pricing.ts) from that instant, then from the visitor's clock once the page loads.
+ */
+export function Pricing({ renderedAt }: { renderedAt: number }) {
   const { t, locale } = useI18n()
 
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly')
+  const [now, setNow] = useState(renderedAt)
+  useEffect(() => setNow(Date.now()), [])
+  const prices = lifetimePrices(now)
+  const sale = lifetimeSale(now)
+  const saleBadge = sale ? t(sale.badge, { p0: sale.percentOff }) : undefined
 
   return (
     <section
@@ -1101,7 +1166,9 @@ export function Pricing() {
           <div className={styles.licenseGrid} data-reveal>
             <Plan
               name="Standard"
-              price="$49"
+              price={usd(saleCents(prices.standard.cents, now))}
+              wasPrice={sale ? usd(prices.standard.cents) : undefined}
+              badge={saleBadge}
               priceNote="one-time"
               lookupKey={'standard'}
               description={t('30-day money back guarantee.')}
@@ -1118,7 +1185,9 @@ export function Pricing() {
 
             <Plan
               name="Premium"
-              price="$99"
+              price={usd(saleCents(prices.premium.cents, now))}
+              wasPrice={sale ? usd(prices.premium.cents) : undefined}
+              badge={saleBadge}
               priceNote="one-time"
               lookupKey={'premium'}
               description={t('30-day money back guarantee.')}
@@ -1131,7 +1200,7 @@ export function Pricing() {
               ]}
             />
           </div>
-          <TeamsPlan />
+          <TeamsPlan now={now} saleBadge={saleBadge} />
         </div>
 
         <div className={`${styles.pricingGroup} ${styles.cloudGroup}`}>
@@ -1200,7 +1269,7 @@ export function Pricing() {
           </div>
         </div>
 
-        <PlanComparison billing={billing} />
+        <PlanComparison billing={billing} now={now} />
 
         <div className={styles.pricingFooter}>
           <p className="text-sm text-content-muted">

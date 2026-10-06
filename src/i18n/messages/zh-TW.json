@@ -2183,5 +2183,11 @@
   "Open this chat in Enconvo on your Mac and keep chatting": "在 Mac 上的 Enconvo 中開啟此聊天，繼續對話。",
   "Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.": "Enconvo 未能開啟。請先安裝 Mac 版 Enconvo，再次點擊「在 Enconvo 中繼續」。",
   "Pair your iPhone or Android phone with Enconvo on your Mac to reach its projects and chats from anywhere. Every chat keeps running on your Mac, and messages are end-to-end encrypted.": "將 iPhone 或 Android 手機與 Mac 上的 Enconvo 配對，隨時隨地存取它的專案與聊天。每個聊天都會繼續在 Mac 上執行，訊息採用端對端加密。",
-  "Free beta on TestFlight": "TestFlight 免費測試版"
+  "Free beta on TestFlight": "TestFlight 免費測試版",
+  "Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: {p0}, {p1}, and {p2}.": "以一次性購買的 Standard、Premium 或 Teams 授權取得適用於 Mac 的 Enconvo：{p0}、{p1} 和 {p2}。",
+  "Your {p0}% discount is applied automatically at checkout.": "你的 {p0}% 折扣將在結帳時自動套用。",
+  "from {p0} once or $10 / month": "一次性 {p0} 起，或每月 $10 起",
+  "One account for a team, +{p0} a seat.": "整個團隊共用一個帳號，每席位 +{p0}。",
+  "Add more seats any time at {p0} each": "可隨時以每個席位 {p0} 增加席位",
+  "Black Friday −{p0}%": "黑五特惠 −{p0}%"
 }

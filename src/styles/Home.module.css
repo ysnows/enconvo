@@ -494,6 +494,8 @@
 .planPriceBlock { margin: 22px 0 16px; }
 .planPriceRow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; }
 .planAmount { color: #f4f4f6; font-size: 48px; font-weight: 500; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.planWas { margin-right: 8px; color: #7d8387; font-size: 16px; font-variant-numeric: tabular-nums; }
+.planPriceRow .planWas { margin-right: 0; }
 .planUnit { color: #9c9c9d; font-size: 13px; white-space: nowrap; }
 .planBillingNote { min-height: 20px; margin-top: 7px; color: #9c9c9d; font-size: 12px; line-height: 1.6; font-variant-numeric: tabular-nums; }
 .page .planPurchase { width: 100%; min-height: 44px; padding: 10px 16px; border: 1px solid var(--home-stroke-strong); border-radius: 8px; background: rgba(255,255,255,.035); color: #f4f4f6; box-shadow: none; font-size: 13px; font-weight: 500; white-space: nowrap; transition: background-color 160ms, border-color 160ms; }

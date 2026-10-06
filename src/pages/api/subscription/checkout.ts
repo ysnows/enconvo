@@ -29,6 +29,11 @@ export default async function handler(req, res) {
     if (!lookupKey) {
       return res.status(400).json({ code: 400, message: 'Missing lookup key' })
     }
+    // Only Cloud points are sold here; licenses and plans go through checkout_sessions,
+    // which charges the scheduled lifetime prices.
+    if (typeof lookupKey !== 'string' || !/^\d+_points$/.test(lookupKey)) {
+      return res.status(400).json({ code: 400, message: 'Unknown points package' })
+    }
     
     // Get the user details from Supabase
     const { data: userData, error: userError } = await supabase

@@ -2183,5 +2183,11 @@
   "Open this chat in Enconvo on your Mac and keep chatting": "Ouvrez cette conversation dans Enconvo sur votre Mac et poursuivez-la.",
   "Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.": "Enconvo ne s’est pas ouvert. Installez Enconvo pour Mac, puis cliquez à nouveau sur Continuer dans Enconvo.",
   "Pair your iPhone or Android phone with Enconvo on your Mac to reach its projects and chats from anywhere. Every chat keeps running on your Mac, and messages are end-to-end encrypted.": "Associez votre iPhone ou votre téléphone Android à Enconvo sur votre Mac pour accéder à ses projets et discussions où que vous soyez. Chaque discussion continue de tourner sur votre Mac, et les messages sont chiffrés de bout en bout.",
-  "Free beta on TestFlight": "Bêta gratuite sur TestFlight"
+  "Free beta on TestFlight": "Bêta gratuite sur TestFlight",
+  "Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: {p0}, {p1}, and {p2}.": "Obtenez Enconvo pour Mac avec une licence unique Standard, Premium ou Teams : {p0}, {p1} et {p2}.",
+  "Your {p0}% discount is applied automatically at checkout.": "Votre remise de {p0}% est appliquée automatiquement au paiement.",
+  "from {p0} once or $10 / month": "à partir de {p0} une fois ou $10 / mois",
+  "One account for a team, +{p0} a seat.": "Un compte pour toute l’équipe, +{p0} par poste.",
+  "Add more seats any time at {p0} each": "Ajoutez des postes supplémentaires à tout moment à {p0} chacun",
+  "Black Friday −{p0}%": "Black Friday −{p0} %"
 }

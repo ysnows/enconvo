@@ -2183,5 +2183,11 @@
   "Open this chat in Enconvo on your Mac and keep chatting": "Mac の Enconvo でこのチャットを開き、会話を続けます。",
   "Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.": "Enconvo が開きませんでした。Mac 用 Enconvo をインストールしてから、もう一度「Enconvo で続ける」をクリックしてください。",
   "Pair your iPhone or Android phone with Enconvo on your Mac to reach its projects and chats from anywhere. Every chat keeps running on your Mac, and messages are end-to-end encrypted.": "iPhone または Android スマートフォンを Mac の Enconvo とペアリングすれば、どこからでもプロジェクトやチャットにアクセスできます。チャットはすべて Mac 上で動き続け、メッセージはエンドツーエンドで暗号化されます。",
-  "Free beta on TestFlight": "TestFlight で無料ベータ"
+  "Free beta on TestFlight": "TestFlight で無料ベータ",
+  "Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: {p0}, {p1}, and {p2}.": "買い切りの Standard、Premium、または Teams ライセンスで Mac 版 Enconvo を入手できます：{p0}、{p1}、{p2}。",
+  "Your {p0}% discount is applied automatically at checkout.": "{p0}% 割引は、チェックアウト時に自動的に適用されます。",
+  "from {p0} once or $10 / month": "買い切り {p0} から、または月額 $10 から",
+  "One account for a team, +{p0} a seat.": "チーム全体で 1 アカウント、1 席 +{p0}。",
+  "Add more seats any time at {p0} each": "席はいつでも1席あたり {p0} で追加できます",
+  "Black Friday −{p0}%": "ブラックフライデー −{p0}%"
 }

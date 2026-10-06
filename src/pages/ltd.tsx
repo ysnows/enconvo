@@ -32,12 +32,14 @@ import {
   getLtdPlan,
   isLtdOfferEligible,
   LTD_OFFER,
+  ltdDiscountPercent,
   ltdLoginUrl,
-  ltdPlans,
+  ltdPlansAt,
   ltdPriceCents,
   type LtdPlan,
   type LtdPlanKey,
 } from '@/data/ltdOffer'
+import { usd } from '@/lib/lifetime-pricing'
 import styles from '@/styles/Ltd.module.css'
 import homeStyles from '@/styles/Home.module.css'
 
@@ -128,25 +130,31 @@ const sprinkles = [
 // KenMoo green and gold, matching the offer page palette.
 const confettiColors = ['#f5c518', '#ffd648', '#f0a000', '#1f8a5b', '#f4f4f6']
 
-type LtdPageProps = { initialAffiliateCode: string | null }
+type LtdPageProps = { initialAffiliateCode: string | null; now: number }
 
 // Render the correct community branding, prices, and sharing metadata on the
-// first response, before the browser's router is ready.
+// first response, before the browser's router is ready. Prices are the lifetime
+// schedule's at the time of the response.
 export const getServerSideProps: GetServerSideProps<LtdPageProps> =
   withI18nProps(
     async ({ query }) => ({
       props: {
         initialAffiliateCode:
           typeof query.via === 'string' ? query.via.slice(0, 200) : null,
+        now: Date.now(),
       },
     }),
     '/ltd'
   )
 
-function planPriceNote(plan: LtdPlan, affiliateCode: string | undefined) {
+function planPriceNote(
+  plan: LtdPlan,
+  affiliateCode: string | undefined,
+  now: number
+) {
   return plan.deviceCount > 1
     ? `one-time · ${formatUsd(
-        Math.round(ltdPriceCents(plan, affiliateCode) / plan.deviceCount)
+        Math.round(ltdPriceCents(plan, affiliateCode, now) / plan.deviceCount)
       )} per Mac`
     : 'one-time payment'
 }
@@ -154,7 +162,7 @@ function planPriceNote(plan: LtdPlan, affiliateCode: string | undefined) {
 // Crystal community campaign. Design variance 6, motion 5, density 4: the
 // visitor claims a community ticket, finds the plan that fits their Macs, and
 // follows a visible path to checkout. No timers or scarcity, only real terms.
-export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
+export default function LtdPage({ initialAffiliateCode, now }: LtdPageProps) {
   const { t, locale } = useI18n()
 
   const router = useRouter()
@@ -167,24 +175,30 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
   } | null>(null)
   const [claimed, setClaimed] = useState(false)
   const [fit, setFit] = useState<LtdPlanKey | null>(null)
-  const selected = router.isReady ? getLtdPlan(router.query.plan) : undefined
+  const selected = router.isReady ? getLtdPlan(router.query.plan, now) : undefined
   const canceled = router.isReady && router.query.canceled === 'true'
   const affiliateCode = router.isReady
     ? typeof router.query.via === 'string'
       ? router.query.via.slice(0, 200)
       : undefined
     : initialAffiliateCode || undefined
-  const discounted = isLtdOfferEligible(affiliateCode)
+  const discounted = isLtdOfferEligible(affiliateCode, now)
   const percent = LTD_OFFER.discountPercent
-  const offerPrices = ltdPlans.map((plan) =>
-    formatUsd(ltdPriceCents(plan, 'kenmoo'))
+  // The KenMoo discount, or for everyone else a running sale's.
+  const percentOff = ltdDiscountPercent(affiliateCode, now)
+  const onSale = percentOff > 0
+  const plans = ltdPlansAt(now)
+  const offerPrices = plans.map((plan) =>
+    formatUsd(ltdPriceCents(plan, 'kenmoo', now))
   )
   const title = discounted
     ? `Enconvo × KenMoo | ${percent}% Off Lifetime Licenses`
     : 'Enconvo Lifetime Licenses | Pay Once'
   const description = discounted
     ? `An exclusive offer for the KenMoo community. Get ${percent}% off Enconvo Standard, Premium, and Teams: ${offerPrices[0]}, ${offerPrices[1]}, and ${offerPrices[2]}. Pay once, with a 30-day money-back guarantee.`
-    : 'Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: $49, $99, and $139.'
+    : `Get Enconvo for Mac with a one-time Standard, Premium, or Teams license: ${usd(
+        plans[0].originalCents
+      )}, ${usd(plans[1].originalCents)}, and ${usd(plans[2].originalCents)}.`
   const pageUrl = `${canonicalUrl(LTD_OFFER.path, locale)}${
     discounted ? '?via=kenmoo' : ''
   }`
@@ -199,7 +213,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
       ]
   // Returning buyers already took the ticket and picked a plan.
   const ticketClaimed = claimed || Boolean(selected)
-  const fitPlan = fit ? getLtdPlan(fit) : undefined
+  const fitPlan = fit ? getLtdPlan(fit, now) : undefined
   const fitOption = finderOptions.find((option) => option.plan === fit)
   const progress = selected || fitPlan ? 2 : 1
   const steps = [
@@ -406,10 +420,10 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                     {t('From ')}
                     <s>
                       <span className="sr-only">{t('Original price ')}</span>
-                      {formatUsd(ltdPlans[0].originalCents)}
+                      {formatUsd(plans[0].originalCents)}
                     </s>{' '}
                     <strong>
-                      {formatUsd(ltdPriceCents(ltdPlans[0], affiliateCode))}
+                      {formatUsd(ltdPriceCents(plans[0], affiliateCode, now))}
                     </strong>
                     <span>
                       <CounterClockwiseClockIcon aria-hidden="true" />
@@ -546,17 +560,17 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
             <div ref={noticeRef} className={styles.notice}>
               <p role="status">
                 {canceled && t('Checkout canceled. ')}
-                {discounted ? (
+                {onSale ? (
                   <I18nText
                     source="Your {plan} plan is selected at {price} with your {percent}% discount."
                     values={{
                       plan: t(selected.name),
                       price: (
                         <strong>
-                          {formatUsd(ltdPriceCents(selected, affiliateCode))}
+                          {formatUsd(ltdPriceCents(selected, affiliateCode, now))}
                         </strong>
                       ),
-                      percent,
+                      percent: percentOff,
                     }}
                   />
                 ) : (
@@ -625,13 +639,13 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                     source="{plan} fits you: {price} once{perMac}."
                     values={{
                       plan: <strong>{t(fitPlan.name)}</strong>,
-                      price: formatUsd(ltdPriceCents(fitPlan, affiliateCode)),
+                      price: formatUsd(ltdPriceCents(fitPlan, affiliateCode, now)),
                       perMac:
                         fitPlan.deviceCount > 1
                           ? t(' ({price} per Mac)', {
                               price: formatUsd(
                                 Math.round(
-                                  ltdPriceCents(fitPlan, affiliateCode) /
+                                  ltdPriceCents(fitPlan, affiliateCode, now) /
                                     fitPlan.deviceCount
                                 )
                               ),
@@ -639,12 +653,12 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                           : '',
                     }}
                   />
-                  {discounted ? (
+                  {onSale ? (
                     <strong className={styles.finderSave}>
                       {t(' You save {p0}.', {
                         p0: formatUsd(
                           fitPlan.originalCents -
-                            ltdPriceCents(fitPlan, affiliateCode)
+                            ltdPriceCents(fitPlan, affiliateCode, now)
                         ),
                       })}
                     </strong>
@@ -660,7 +674,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
           </div>
 
           <div className={styles.plans}>
-            {ltdPlans.map((plan) => (
+            {plans.map((plan) => (
               <article
                 key={plan.key}
                 id={`deal-${plan.key}`}
@@ -685,7 +699,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                 </div>
                 <p className={styles.planDescription}>{t(plan.description)}</p>
                 <div className={styles.prices}>
-                  {discounted && (
+                  {onSale && (
                     <div className={styles.priceWas}>
                       <span className={styles.oldPrice}>
                         <span className="sr-only">{t('Original price ')}</span>
@@ -695,7 +709,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                         {t('Save {p0}', {
                           p0: formatUsd(
                             plan.originalCents -
-                              ltdPriceCents(plan, affiliateCode)
+                              ltdPriceCents(plan, affiliateCode, now)
                           ),
                         })}
                       </span>
@@ -703,12 +717,12 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                   )}
                   <span className={styles.price}>
                     <span className="sr-only">
-                      {discounted ? t('Offer price ') : t('Price ')}
+                      {onSale ? t('Offer price ') : t('Price ')}
                     </span>
-                    {formatUsd(ltdPriceCents(plan, affiliateCode))}
+                    {formatUsd(ltdPriceCents(plan, affiliateCode, now))}
                   </span>
                   <span className={styles.priceNote}>
-                    {t(planPriceNote(plan, affiliateCode))}
+                    {t(planPriceNote(plan, affiliateCode, now))}
                   </span>
                 </div>
                 <button
@@ -773,7 +787,12 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                       'Your KenMoo {p0}% discount is applied automatically at checkout.',
                       { p0: percent }
                     )
-                  : t('One-time payment.'),
+                  : onSale
+                    ? t(
+                        'Your {p0}% discount is applied automatically at checkout.',
+                        { p0: percentOff }
+                      )
+                    : t('One-time payment.'),
               }}
             />
           </p>
@@ -911,7 +930,7 @@ export default function LtdPage({ initialAffiliateCode }: LtdPageProps) {
                     'From {p0}. One payment, with a 30-day money-back guarantee.'
                   }
                   values={{
-                    p0: formatUsd(ltdPriceCents(ltdPlans[0], affiliateCode)),
+                    p0: formatUsd(ltdPriceCents(plans[0], affiliateCode, now)),
                   }}
                 />
               </p>

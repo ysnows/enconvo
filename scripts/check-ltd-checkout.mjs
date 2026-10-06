@@ -11,6 +11,26 @@ const root = path.resolve(
   import.meta.dirname || path.dirname(new URL(import.meta.url).pathname),
   '..'
 )
+// Loaded modules read the time from this clock, a day before the November price
+// step unless a test moves it along the lifetime price schedule.
+const clock = { now: Date.parse('2026-10-15T12:00:00-07:00') }
+class ClockDate extends Date {
+  constructor(...args) {
+    super(...(args.length ? args : [clock.now]))
+  }
+  static now() {
+    return clock.now
+  }
+}
+async function at(time, run) {
+  const previous = clock.now
+  clock.now = Date.parse(time)
+  try {
+    return await run()
+  } finally {
+    clock.now = previous
+  }
+}
 function load(relative, dependencies = {}, env = {}) {
   const source = fs.readFileSync(path.join(root, relative), 'utf8')
   const output = ts.transpileModule(source, {
@@ -25,6 +45,7 @@ function load(relative, dependencies = {}, env = {}) {
   const context = {
     exports,
     Error,
+    Date: ClockDate,
     ...env.globals,
     require(name) {
       if (!(name in dependencies))
@@ -56,11 +77,18 @@ const i18nServer = {
   getStaticProps: async () => ({ props: {} }),
   i18nStaticProps: () => async () => ({ props: {} }),
 }
-const data = load('src/data/ltdOffer.ts')
-const checkout = load('src/lib/ltd-checkout.ts', { '../data/ltdOffer': data })
+const pricing = load('src/lib/lifetime-pricing.ts')
+const data = load('src/data/ltdOffer.ts', {
+  '../lib/lifetime-pricing': pricing,
+})
+const checkout = load('src/lib/ltd-checkout.ts', {
+  '../data/ltdOffer': data,
+  './lifetime-pricing': pricing,
+})
+const ltdPlans = data.ltdPlansAt()
 const clone = (value) => JSON.parse(JSON.stringify(value))
 
-function fakeStripe(plan = data.ltdPlans[0], overrides = {}) {
+function fakeStripe(plan = ltdPlans[0], overrides = {}) {
   const calls = { price: [], coupon: [], promo: [], created: [], sessions: [] }
   const price = {
     active: true,
@@ -137,19 +165,19 @@ function fakeStripe(plan = data.ltdPlans[0], overrides = {}) {
 test('All offer amounts are 40% off the existing USD license prices', () => {
   assert.equal(data.LTD_OFFER.discountPercent, 40)
   assert.deepEqual(
-    clone(data.ltdPlans.map((p) => data.ltdPriceCents(p, 'kenmoo'))),
+    clone(ltdPlans.map((p) => data.ltdPriceCents(p, 'kenmoo'))),
     [2940, 5940, 8340]
   )
   assert.deepEqual(
     clone(
-      data.ltdPlans.map((p) => data.formatUsd(data.ltdPriceCents(p, 'kenmoo')))
+      ltdPlans.map((p) => data.formatUsd(data.ltdPriceCents(p, 'kenmoo')))
     ),
     ['$29.40', '$59.40', '$83.40']
   )
 })
 
 test('Sign-in return links retain the plan, offer route, and escaped affiliate reference', () => {
-  for (const plan of data.ltdPlans) {
+  for (const plan of ltdPlans) {
     const url = new URL(
       data.ltdLoginUrl(plan, 'partner&campaign=launch'),
       'https://www.enconvo.com'
@@ -162,7 +190,7 @@ test('Sign-in return links retain the plan, offer route, and escaped affiliate r
 })
 
 test('Every offer uses one existing license price and applies the server-controlled KENMOO2026 promotion code', async () => {
-  for (const plan of data.ltdPlans) {
+  for (const plan of ltdPlans) {
     const { stripe, calls } = fakeStripe(plan)
     const params = await checkout.ltdCheckoutParams(stripe, {
       lookupKey: plan.key,
@@ -263,7 +291,7 @@ test('Checkout never creates the coupon or code; a missing coupon is unavailable
   assert.equal(missingCalls.promo.length + missingCalls.created.length, 0)
   for (const overrides of [
     { noPromotionCode: true },
-    { promotionCode: { expires_at: Math.floor(Date.now() / 1000) - 60 } },
+    { promotionCode: { expires_at: Math.floor(clock.now / 1000) - 60 } },
     { promotionCode: { max_redemptions: 10, times_redeemed: 10 } },
   ]) {
     const { stripe, calls } = fakeStripe(undefined, overrides)
@@ -278,7 +306,7 @@ test('Checkout never creates the coupon or code; a missing coupon is unavailable
   }
   const { stripe } = fakeStripe(undefined, {
     promotionCode: {
-      expires_at: Math.floor(Date.now() / 1000) + 3600,
+      expires_at: Math.floor(clock.now / 1000) + 3600,
       max_redemptions: 10,
       times_redeemed: 9,
     },
@@ -353,11 +381,13 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
   function Stripe() {
     return stripe
   }
-  const prices = load('src/lib/stripe-prices.ts')
+  const prices = load('src/lib/stripe-prices.ts', {
+    './lifetime-pricing': pricing,
+  })
   const discount = load(
     'src/lib/affiliate-discount.ts',
-    { './stripe-prices': prices },
-    { globals: { Date, Promise } }
+    { './stripe-prices': prices, './lifetime-pricing': pricing },
+    { globals: { Promise } }
   )
   return load(
     `src/pages/api/subscription/${route}.ts`,
@@ -370,6 +400,7 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
       '@/lib/affiliate-journey': affiliateJourneyLib(fetch),
       '@/lib/affiliate-discount': discount,
       '@/lib/stripe-prices': prices,
+      '@/lib/lifetime-pricing': pricing,
     },
     { NODE_ENV: 'production', STRIPE_SECRET_KEY: 'test_key', ...env }
   ).default
@@ -425,7 +456,7 @@ test('The API rejects missing or forged authentication without touching Stripe',
 })
 
 test('The API preserves fulfillment identity, Stripe tax, and invoices; ignores client redirects and identity', async () => {
-  for (const plan of data.ltdPlans) {
+  for (const plan of ltdPlans) {
     const { stripe, calls } = fakeStripe(plan)
     const res = response()
     await handlerFor(stripe)(
@@ -661,7 +692,7 @@ test('A ?via visit starts a journey cookie, keeps its visitor across codes, and 
 })
 
 test('Regular checkout remains full price and uses the same license IDs required by fulfillment', async () => {
-  for (const plan of data.ltdPlans) {
+  for (const plan of ltdPlans) {
     const { stripe, calls } = fakeStripe(plan)
     const res = response()
     await handlerFor(stripe, 'checkout_sessions')(
@@ -715,6 +746,7 @@ function pageFor({
       '@/i18n/I18nProvider': i18n,
       '@/i18n/server': i18nServer,
       '@/i18n/I18nText': i18nText,
+      '@/lib/lifetime-pricing': pricing,
       react: {
         useEffect() {},
         useRef: (value) => ({ current: value }),
@@ -797,7 +829,7 @@ function pageFor({
       tickets.push(node)
     visit(node.props?.children)
   }
-  const tree = pageModule.default({ initialAffiliateCode })
+  const tree = pageModule.default({ initialAffiliateCode, now: clock.now })
   visit(tree)
   return {
     calls,
@@ -809,12 +841,12 @@ function pageFor({
 }
 
 test('Purchase buttons send signed-out buyers back to the selected discounted offer after sign-in', async () => {
-  for (let index = 0; index < data.ltdPlans.length; index++) {
+  for (let index = 0; index < ltdPlans.length; index++) {
     const { calls, buttons } = pageFor()
     await buttons[index].props.onClick()
     assert.equal(
       calls.pushes[0],
-      data.ltdLoginUrl(data.ltdPlans[index], 'kenmoo')
+      data.ltdLoginUrl(ltdPlans[index], 'kenmoo')
     )
     assert.equal(calls.fetches.length, 0)
     assert.equal(calls.redirects.length, 0)
@@ -844,7 +876,7 @@ test('Expired sign-in returns to the same offer; unavailable checkout and unsafe
   await expired.buttons[2].props.onClick()
   assert.equal(
     expired.calls.pushes[0],
-    data.ltdLoginUrl(data.ltdPlans[2], 'kenmoo')
+    data.ltdLoginUrl(ltdPlans[2], 'kenmoo')
   )
   for (const scenario of [
     { sessionError: new Error('Sign-in service unavailable') },
@@ -880,7 +912,7 @@ test('A KenMoo buyer goes straight to checkout without waiting for a tracking sc
     via: 'kenmoo',
     locale: 'en',
   })
-  for (const plan of data.ltdPlans) {
+  for (const plan of ltdPlans) {
     const { stripe, calls } = fakeStripe(plan)
     const res = response()
     await handlerFor(stripe)(
@@ -911,7 +943,7 @@ test('Plain visitors buy without a code and keep the normal five-device fulfillm
   await plain.buttons[2].props.onClick()
   const body = JSON.parse(plain.calls.fetches[0].body)
   assert.deepEqual(body, { lookupKey: 'teams', locale: 'en' })
-  const { stripe, calls: stripeCalls } = fakeStripe(data.ltdPlans[2])
+  const { stripe, calls: stripeCalls } = fakeStripe(ltdPlans[2])
   const res = response()
   await handlerFor(stripe)(request(body), res)
   assert.equal(res.statusCode, 200)
@@ -945,7 +977,7 @@ const nonKenmooCodes = [
 test('Only the exact KenMoo code grants the discount; attribution and client coupon fields cannot grant it', async () => {
   for (const via of nonKenmooCodes) {
     assert.equal(data.isLtdOfferEligible(via), false)
-    for (const plan of data.ltdPlans) {
+    for (const plan of ltdPlans) {
       assert.equal(data.ltdPriceCents(plan, via), plan.originalCents)
       const { stripe, calls } = fakeStripe(plan, {
         missing: true,
@@ -1032,7 +1064,7 @@ test('Displayed prices, community icon, copy, and sharing links match eligibilit
           .filter((n) => typeof n === 'string')
           .join(' ')
       )
-    for (const [index, plan] of data.ltdPlans.entries()) {
+    for (const [index, plan] of ltdPlans.entries()) {
       const price = eligible ? plan.originalCents * 0.6 : plan.originalCents
       assert(priceNodes[index].includes(data.formatUsd(price)))
       if (!eligible)
@@ -1090,7 +1122,7 @@ test('Full-price returns retain the affiliate attribution and never silently reg
   const back = new URL(login.searchParams.get('returnUrl'), login.origin)
   assert.equal(back.searchParams.get('via'), 'another-partner')
   assert.equal(
-    data.ltdPriceCents(data.ltdPlans[1], back.searchParams.get('via')),
+    data.ltdPriceCents(ltdPlans[1], back.searchParams.get('via')),
     9900
   )
 })
@@ -1098,7 +1130,7 @@ test('Full-price returns retain the affiliate attribution and never silently reg
 test('Sign-in and registration return to the offer with its plan and public code', () => {
   for (const code of ['kenmoo', undefined]) {
     const login = new URL(
-      data.ltdLoginUrl(data.ltdPlans[1], code),
+      data.ltdLoginUrl(ltdPlans[1], code),
       'https://www.enconvo.com'
     )
     const offer = new URL(login.searchParams.get('returnUrl'), login.origin)
@@ -1207,7 +1239,7 @@ test('Buyers returning with a selected plan can continue straight to checkout fo
         ...(canceled ? { canceled: 'true' } : {}),
       },
     })
-    assert.equal(buttons.length, data.ltdPlans.length + 1)
+    assert.equal(buttons.length, ltdPlans.length + 1)
     const label = nodesIn(buttons[0])
       .filter((n) => typeof n === 'string')
       .join(' ')
@@ -1215,11 +1247,11 @@ test('Buyers returning with a selected plan can continue straight to checkout fo
       label.includes(canceled ? 'Return to checkout' : 'Continue to checkout')
     )
     await buttons[0].props.onClick()
-    assert.equal(calls.pushes[0], data.ltdLoginUrl(data.ltdPlans[2], 'kenmoo'))
+    assert.equal(calls.pushes[0], data.ltdLoginUrl(ltdPlans[2], 'kenmoo'))
   }
   assert.equal(
     pageFor({ query: { via: 'kenmoo', plan: 'lifetime' } }).buttons.length,
-    data.ltdPlans.length
+    ltdPlans.length
   )
 })
 
@@ -1232,7 +1264,7 @@ test('Multi-Mac plans show the per-Mac price of the amount the buyer will actual
     const articles = nodesIn(pageFor({ query: { via } }).tree).filter(
       (n) => n.type === 'article'
     )
-    for (const [index, plan] of data.ltdPlans.entries()) {
+    for (const [index, plan] of ltdPlans.entries()) {
       const text = nodesIn(articles[index])
         .filter((n) => typeof n === 'string')
         .join(' ')
@@ -1260,7 +1292,7 @@ test('Only the KenMoo offer shows the claimable ticket, and claiming it never ga
   const prices = nodesIn(tree)
     .filter((n) => n.type === 'article')
     .map(textOf)
-  data.ltdPlans.forEach((plan, index) =>
+  ltdPlans.forEach((plan, index) =>
     assert(
       prices[index].includes(data.formatUsd(data.ltdPriceCents(plan, 'kenmoo')))
     )
@@ -1303,7 +1335,7 @@ test('The Mac-count finder matches each answer to the right plan at the price th
     )
     assert.deepEqual(
       clone(radios.map((radio) => radio.props.checked)),
-      clone(data.ltdPlans.map((p) => p.key === plan))
+      clone(ltdPlans.map((p) => p.key === plan))
     )
     assert.deepEqual(
       nodes
@@ -1370,7 +1402,7 @@ test('Both checkout routes preserve every supported language in return URLs with
           locale
         )
       )
-      assert.equal(params.line_items[0].price, data.ltdPlans[0].priceId)
+      assert.equal(params.line_items[0].price, ltdPlans[0].priceId)
       assert.equal(params.customer_email, 'verified@example.com')
       assert.equal(params.mode, 'payment')
     }
@@ -1415,4 +1447,153 @@ test('Billing portal returns to the selected language and invalid language input
       localeTools.localizePath('/account', localeTools.getLocale(locale))
     )
   }
+})
+
+// ---- Lifetime price schedule (lifetime-pricing.ts): price steps, the Black Friday sale,
+// and the KenMoo offer's end, each at midnight in Los Angeles.
+const BLACK_FRIDAY_COUPON = {
+  id: 'BLACKFRIDAY2026',
+  valid: true,
+  percent_off: 30,
+  duration: 'once',
+  applies_to: { products: ['product_license'] },
+}
+function scheduledCents(time, code) {
+  const now = Date.parse(time)
+  return clone(
+    data.ltdPlansAt(now).map((plan) => data.ltdPriceCents(plan, code, now))
+  )
+}
+
+test('License prices step up on schedule and KENMOO2026 stays 40% off until it ends', () => {
+  assert.deepEqual(scheduledCents('2026-10-31T23:59:59-07:00'), [4900, 9900, 13900])
+  assert.deepEqual(scheduledCents('2026-10-31T23:59:59-07:00', 'kenmoo'), [2940, 5940, 8340])
+  assert.deepEqual(scheduledCents('2026-11-01T00:00:00-07:00'), [5900, 11900, 15900])
+  assert.deepEqual(scheduledCents('2026-11-01T00:00:00-07:00', 'kenmoo'), [3540, 7140, 9540])
+  assert.deepEqual(scheduledCents('2026-12-07T23:59:59-08:00', 'kenmoo'), [3540, 7140, 9540])
+  assert.deepEqual(scheduledCents('2026-12-08T00:00:00-08:00', 'kenmoo'), [6900, 14900, 17900])
+  assert.equal(data.isLtdOfferEligible('kenmoo', Date.parse('2026-12-08T00:00:00-08:00')), false)
+  for (const [time, seat] of [
+    ['2026-10-31T23:59:59-07:00', 2000],
+    ['2026-11-01T00:00:00-07:00', 2500],
+    ['2026-12-08T00:00:00-08:00', 3500],
+  ])
+    assert.equal(pricing.lifetimePrices(Date.parse(time)).teams_seat.cents, seat)
+  assert.equal(pricing.teamsCents(7, Date.parse('2026-11-01T00:00:00-07:00')), 15900 + 2 * 2500)
+  // Each step's prices are distinct Stripe prices with the step's amount.
+  const ids = pricing.LIFETIME_PRICE_STEPS.flatMap((step) => Object.values(step.prices).map((p) => p.id))
+  assert.equal(new Set(ids).size, ids.length)
+})
+
+test('Black Friday takes 30% off for everyone but KenMoo buyers, who keep the lower price', () => {
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-22T23:59:59-08:00')), null)
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-23T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026')
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-12-01T00:00:00-08:00')), null)
+  assert.deepEqual(scheduledCents('2026-11-23T00:00:00-08:00'), [4130, 8330, 11130])
+  assert.deepEqual(scheduledCents('2026-11-23T00:00:00-08:00', 'kenmoo'), [3540, 7140, 9540])
+  assert.deepEqual(scheduledCents('2026-12-01T00:00:00-08:00'), [5900, 11900, 15900])
+  for (const sale of pricing.LIFETIME_SALES) assert(sale.percentOff < data.LTD_OFFER.discountPercent)
+})
+
+test('Offer checkout charges the scheduled price and applies a running sale only as its coupon', async () => {
+  await at('2026-11-23T00:00:00-08:00', async () => {
+    for (const plan of data.ltdPlansAt()) {
+      const { stripe, calls } = fakeStripe(plan, { coupon: BLACK_FRIDAY_COUPON })
+      const res = response()
+      await handlerFor(stripe)(request({ lookupKey: plan.key, via: 'partner' }), res)
+      assert.equal(res.statusCode, 200)
+      assert.deepEqual(calls.price, [plan.priceId])
+      assert.deepEqual(calls.sessions[0].line_items, [{ price: plan.priceId, quantity: 1 }])
+      assert.deepEqual(calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026' }])
+      assert.equal(calls.sessions[0].metadata.campaign, 'black-friday-2026')
+
+      // KenMoo buyers keep their own code during the sale.
+      const kenmoo = fakeStripe(plan)
+      await handlerFor(kenmoo.stripe)(request({ lookupKey: plan.key, via: 'kenmoo' }), response())
+      assert.deepEqual(kenmoo.calls.sessions[0].discounts, [{ promotion_code: 'promo_kenmoo' }])
+    }
+    // A sale coupon set up differently from the page's price stops the checkout.
+    for (const coupon of [
+      { percent_off: 40 },
+      { valid: false },
+      { applies_to: { products: ['product_other'] } },
+    ]) {
+      const { stripe, calls } = fakeStripe(ltdPlans[0], {
+        coupon: { ...BLACK_FRIDAY_COUPON, ...coupon },
+      })
+      const res = response()
+      await handlerFor(stripe)(request({ lookupKey: 'standard' }), res)
+      assert.equal(res.statusCode, 503)
+      assert.equal(calls.sessions.length, 0)
+    }
+  })
+  await at('2026-12-01T00:00:00-08:00', async () => {
+    const plan = data.getLtdPlan('standard')
+    const { stripe, calls } = fakeStripe(plan)
+    await handlerFor(stripe)(request({ lookupKey: 'standard' }), response())
+    assert.deepEqual(calls.sessions[0].line_items, [{ price: plan.priceId, quantity: 1 }])
+    assert.equal(calls.sessions[0].discounts, undefined)
+    assert.equal(calls.coupon.length, 0)
+  })
+})
+
+test('Regular checkout follows the schedule, seats included, and the larger of sale and Affiliate discount', async () => {
+  await at('2026-11-23T00:00:00-08:00', async () => {
+    const { stripe, calls } = fakeStripe()
+    await handlerFor(stripe, 'checkout_sessions')(request({ lookupKey: 'teams', seats: 7 }), response())
+    const prices = pricing.lifetimePrices()
+    assert.equal(prices.teams.cents, 15900)
+    assert.deepEqual(calls.sessions[0].line_items, [
+      { price: prices.teams.id, quantity: 1 },
+      { price: prices.teams_seat.id, quantity: 2 },
+    ])
+    assert.deepEqual(calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026' }])
+    assert.equal(calls.sessions[0].allow_promotion_codes, undefined)
+
+    const monthly = fakeStripe()
+    await handlerFor(monthly.stripe, 'checkout_sessions')(request({ lookupKey: 'monthly' }), response())
+    assert.equal(monthly.calls.sessions[0].discounts, undefined)
+    assert.equal(monthly.calls.sessions[0].allow_promotion_codes, true)
+  })
+
+  const stripePrices = load('src/lib/stripe-prices.ts', { './lifetime-pricing': pricing })
+  const { checkoutDiscount } = load(
+    'src/lib/affiliate-discount.ts',
+    { './stripe-prices': stripePrices, './lifetime-pricing': pricing },
+    { globals: { Promise } }
+  )
+  const now = Date.parse('2026-11-23T00:00:00-08:00')
+  const lines = [{ price: pricing.lifetimePrices(now).standard.id, quantity: 1 }] // $59, the sale takes $17.70
+  const affiliate = (off) => ({ discounts: [{ promotion_code: 'promo_affiliate' }], off })
+  const sale = [{ coupon: 'BLACKFRIDAY2026' }]
+  assert.deepEqual(clone(checkoutDiscount('standard', lines, affiliate(2360), now)), [{ promotion_code: 'promo_affiliate' }])
+  assert.deepEqual(clone(checkoutDiscount('standard', lines, affiliate(1770), now)), [{ promotion_code: 'promo_affiliate' }])
+  assert.deepEqual(clone(checkoutDiscount('standard', lines, affiliate(590), now)), sale)
+  assert.deepEqual(clone(checkoutDiscount('standard', lines, null, now)), sale)
+  assert.deepEqual(clone(checkoutDiscount('monthly', lines, affiliate(100), now)), [{ promotion_code: 'promo_affiliate' }])
+  assert.equal(checkoutDiscount('monthly', lines, null, now), null)
+  assert.equal(checkoutDiscount('standard', lines, null, Date.parse('2026-12-01T00:00:00-08:00')), null)
+})
+
+test('The offer page shows the scheduled prices, and a sale to visitors without the KenMoo code', async () => {
+  await at('2026-11-01T00:00:00-07:00', async () => {
+    const { tree } = pageFor({ query: {} })
+    const nodes = nodesIn(tree)
+    const description = nodes.find((n) => n.props?.name === 'description').props.content
+    assert.match(description, /\$59, \$119, and \$159\./)
+    assert.equal(nodes.filter((n) => n.type === 's').length, 0)
+  })
+  await at('2026-11-23T00:00:00-08:00', async () => {
+    const { tree } = pageFor({ query: {} })
+    const nodes = nodesIn(tree)
+    const articles = nodes.filter((n) => n.type === 'article')
+    assert.equal(articles.flatMap(nodesIn).filter((n) => n.type === 's').length, 3)
+    const text = articles.map((a) => nodesIn(a).filter((n) => typeof n === 'string').join(' '))
+    assert(text[0].includes('$41.30'))
+    assert(text[2].includes('$111.30'))
+    const all = nodes.filter((n) => typeof n === 'string').join('')
+    assert(all.includes('Your 30% discount is applied automatically at checkout.'))
+    // No KenMoo branding without the code.
+    assert.equal(nodes.some((n) => n.props?.src === data.LTD_OFFER.communityIcon), false)
+  })
 })
