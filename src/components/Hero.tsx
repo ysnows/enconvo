@@ -111,7 +111,7 @@ export function Hero() {
                   </Menu.Button>
 
                   <Menu.Items
-                    className={`${styles.downloadMenu} absolute top-full z-50 mt-2 bg-surface-elevated shadow-2xl ring-1 ring-hairline backdrop-blur-md focus:outline-none`}
+                    className={`${styles.downloadMenu} absolute top-full z-50 mt-2 bg-surface-elevated shadow-2xl ring-1 ring-hairline focus:outline-none`}
                   >
                     <div className="p-3">
                       <div className="space-y-1">

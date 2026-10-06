@@ -66,6 +66,13 @@ const backdropStyles = `
   [data-aurora-shade] { background: radial-gradient(ellipse 64% 36% at 50% 24%, rgba(7,8,10,.75), transparent); }
   [data-aurora-guides] { display: none; }
 }
+/* Touch screens keep the aurora still. Compositing these layers every frame at phone
+   pixel density kept the GPU busy, heating phones and delaying taps. The layers stay
+   promoted: flattened, Safari repainted the blurred SVG under the download menu. */
+@media (hover: none) {
+  [data-aurora-layer] { animation: none; }
+  [data-aurora-sweep] { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
   [data-aurora-layer] { animation: none; }
   [data-aurora-sweep] { display: none; }
