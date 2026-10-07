@@ -18,7 +18,13 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     const customer = await stripe.customers.list({
       email: email,
     })
-    console.log(customer)
+    // Nothing to manage for an account that never paid through Stripe
+    // (a free account, or a license from a code).
+    if (!customer.data.length) {
+      return res
+        .status(404)
+        .json({ reason: 'no_customer', message: 'No billing records.' })
+    }
 
     // Create Checkout Sessions from body params.
     const session = await stripe.billingPortal.sessions.create({

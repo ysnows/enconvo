@@ -11,6 +11,7 @@ import {
   updateCurrentEmailPreference,
 } from '@/lib/email-preferences-client'
 import InviteFriends from '@/components/InviteFriends'
+import AccountPlan from '@/components/AccountPlan'
 
 type EmailPreference = {
   product_updates_subscribed: boolean
@@ -18,14 +19,12 @@ type EmailPreference = {
 }
 
 export default function Account() {
-  const { t, locale } = useI18n()
+  const { t } = useI18n()
 
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
-  const [userInfo, setUserInfo] = useState(null)
-  const [managingSubscription, setManagingSubscription] = useState(false)
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
   const [emailPreference, setEmailPreference] =
     useState<EmailPreference | null>(null)
@@ -46,24 +45,6 @@ export default function Account() {
       return () => clearTimeout(timer)
     }
   }, [router.query])
-
-  const fetchUserInfo = async (token) => {
-    try {
-      const response = await fetch('/api/user-info', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      const data = await response.json()
-      if (data.code === 200) {
-        setUserInfo(data.data)
-      }
-    } catch (error) {
-      console.error('Error fetching user info:', error)
-    }
-  }
 
   const fetchEmailPreference = async (token: string) => {
     setEmailPreferenceLoading(true)
@@ -112,48 +93,6 @@ export default function Account() {
     }
   }
 
-  const handleManageSubscription = async (action) => {
-    if (!user) return
-
-    setManagingSubscription(true)
-    try {
-      const response = await fetch('/api/subscription/manage', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.access_token}`,
-        },
-        body: JSON.stringify({ action }),
-      })
-
-      const data = await response.json()
-      if (data.code === 200) {
-        // Refresh user info after successful action
-        await fetchUserInfo(user.access_token)
-      }
-    } catch (error) {
-      console.error('Error managing subscription:', error)
-    } finally {
-      setManagingSubscription(false)
-    }
-  }
-
-  const getSubscriptionInfo = (type, subscriptionType) => {
-    if (type === 'lifetime') {
-      return {
-        label: type === 'standard' ? 'Lifetime Standard' : 'Lifetime Premium',
-        canRefund: true, // You'll need to check the actual purchase date
-        action: 'Request Refund',
-      }
-    } else {
-      return {
-        label: `${subscriptionType} Subscription`,
-        canCancel: true,
-        action: 'Cancel Subscription',
-      }
-    }
-  }
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -163,10 +102,7 @@ export default function Account() {
       }
       console.log(session.user)
       setUser(session.user)
-      void Promise.all([
-        fetchUserInfo(session.access_token),
-        fetchEmailPreference(session.access_token),
-      ])
+      void fetchEmailPreference(session.access_token)
       setLoading(false)
     })
   }, [router])
@@ -355,161 +291,7 @@ export default function Account() {
                 </div>
               </div>
 
-              {!userInfo && (
-                // Display loading state while fetching user information
-                <div className="animate-pulse space-y-4">
-                  <div className="h-6 w-32 rounded bg-gray-800"></div>
-                  <div className="space-y-2">
-                    <div className="h-4 w-24 rounded bg-gray-800"></div>
-                    <div className="h-10 rounded bg-gray-800"></div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-4 w-24 rounded bg-gray-800"></div>
-                    <div className="h-10 rounded bg-gray-800"></div>
-                  </div>
-                </div>
-              )}
-
-              {userInfo && (
-                <div className="space-y-4">
-                  <div>
-                    {/* Subscription title with manage button aligned to the right */}
-                    <div className="mb-4 flex items-center justify-between">
-                      <h3 className="text-xl font-semibold">
-                        {t('Subscription')}
-                      </h3>
-                      {(userInfo.subscription.type === 'monthly' ||
-                        userInfo.subscription.type === 'yearly') && (
-                        <button
-                          onClick={async (event) => {
-                            // Add loading state
-                            const btn = event.target as HTMLButtonElement
-                            const originalText = btn.innerText
-                            btn.innerHTML = `${originalText} <svg class="inline-block ml-1 h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                                        </svg>`
-
-                            // Call billing portal API endpoint
-                            const response = await fetch(
-                              '/api/subscription/billing_portal',
-                              {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ locale }),
-                              }
-                            )
-                            const data = await response.json()
-
-                            // Redirect to Stripe billing portal
-                            if (data.url) {
-                              window.location.href = data.url
-                            }
-
-                            // Reset button text if redirect fails
-                            btn.innerText = originalText
-                          }}
-                          className="rounded-md bg-blue-500 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-600"
-                        >
-                          {t('Manage Subscription')}
-                        </button>
-                      )}
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm text-gray-400">
-                          {t('Plan Type')}
-                        </label>
-                        <div className="mt-1 rounded-md bg-gray-800 p-3 capitalize">
-                          {userInfo.subscription.type === 'lifetime' ? (
-                            <>
-                              {t('Lifetime ')}
-                              {userInfo.subscription.subscription}
-                            </>
-                          ) : (
-                            <>
-                              {userInfo.subscription.type} {t(' Subscription')}
-                            </>
-                          )}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex items-center">
-                          <label className="block text-sm text-gray-400">
-                            {t('Points Usage')}
-                          </label>
-                          <button
-                            onClick={() => router.push('/cloud-points')}
-                            className="ml-4 rounded-md bg-blue-500 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-600"
-                          >
-                            {t('Top Up')}
-                          </button>
-                        </div>
-                        <div className="mt-1">
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-sm text-gray-400">
-                              {userInfo.subscription.points} /{' '}
-                              {userInfo.subscription.maxPoints}
-                            </span>
-                            {/* Only show percentage if not standard/premium and points don't exceed max */}
-                            {userInfo.subscription.type !== 'standard' &&
-                              userInfo.subscription.type !== 'premium' &&
-                              userInfo.subscription.points <=
-                                userInfo.subscription.maxPoints && (
-                                <span className="text-sm text-gray-400">
-                                  {Math.round(
-                                    (userInfo.subscription.points /
-                                      userInfo.subscription.maxPoints) *
-                                      100
-                                  )}
-                                  %
-                                </span>
-                              )}
-                          </div>
-                          <div className="h-2 w-full rounded-full bg-gray-700">
-                            <div
-                              className="h-2 rounded-full bg-blue-500 transition-all duration-300"
-                              style={{
-                                width: `${
-                                  userInfo.subscription.points >
-                                  userInfo.subscription.maxPoints
-                                    ? '100'
-                                    : (userInfo.subscription.points /
-                                        userInfo.subscription.maxPoints) *
-                                      100
-                                }%`,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Previous subscription management code commented out */}
-                      {/* {userInfo.subscription.type === 'lifetime' ? (
-                                                <div className="mt-4">
-                                                    <button
-                                                        onClick={() => handleManageSubscription('refund')}
-                                                        disabled={managingSubscription}
-                                                        className="text-red-400 hover:text-red-300 text-sm underline disabled:opacity-50"
-                                                    >
-                                                        Request Refund (Available within 14 days of purchase)
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <div className="mt-4">
-                                                    <button
-                                                        onClick={() => handleManageSubscription('cancel')}
-                                                        disabled={managingSubscription}
-                                                        className="text-red-400 hover:text-red-300 text-sm underline disabled:opacity-50"
-                                                    >
-                                                        Cancel Subscription
-                                                    </button>
-                                                </div>
-                                            )} */}
-                    </div>
-                  </div>
-                </div>
-              )}
+              {session && <AccountPlan accessToken={session.access_token} />}
 
               {session && <InviteFriends accessToken={session.access_token} />}
             </div>
