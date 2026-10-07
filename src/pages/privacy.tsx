@@ -6,7 +6,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
-const LAST_UPDATED = 'October 4, 2026'
+const LAST_UPDATED = 'October 7, 2026'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 function Section({
@@ -106,7 +106,7 @@ export default function Privacy() {
         </p>
         <p className="mt-6 text-xl leading-8">
           {t(
-            'Enconvo is an AI assistant for your computer and iPhone. Enconvo is developed by THE GREAT LIONHEART PTE. LTD. ("Enconvo", "we", "us"). This policy explains what data the Enconvo desktop app, the Enconvo iPhone app, the website enconvo.com, and the Enconvo cloud services collect, how we use it, where it is stored, who we share it with, and how you can delete it.'
+            'Enconvo is an AI assistant for your computer, iPhone and Android. Enconvo is developed by THE GREAT LIONHEART PTE. LTD. ("Enconvo", "we", "us"). This policy explains what data the Enconvo desktop app, the Enconvo iPhone and Android apps, the website enconvo.com, and the Enconvo cloud services collect, how we use it, where it is stored, who we share it with, and how you can delete it.'
           )}
         </p>
         <p className="mt-6">
@@ -421,7 +421,7 @@ export default function Privacy() {
           </p>
           <p>
             {t(
-              'The website enconvo.com uses Google Analytics to measure visits. The iPhone app uses PostHog only when you turn on Settings > Share usage data. It is off by default for new installations. Events use a device identifier and include feature identifiers, app and system versions, status, counts and duration, never your chat content, files, API keys or email address. You can turn this off at any time.'
+              'The website enconvo.com uses Google Analytics to measure visits. The iPhone and Android apps use PostHog only when you turn on Settings > Share usage data. It is off by default for new installations. Events use a device identifier and include feature identifiers, app and system versions, status, counts and duration, never your chat content, files, API keys or email address. You can turn this off at any time.'
             )}
           </p>
         </Section>
@@ -461,7 +461,8 @@ export default function Privacy() {
           </Items>
         </Section>
 
-        <Section title={t('Retention and deletion')}>
+        <Section id="account-deletion" title={t('Retention and deletion')}>
+          <p>{t("Enconvo for Android handles Phone chats, attachments, personal instructions and AI requests as described for the iPhone app. Push notifications use Google's Firebase Cloud Messaging. In Android Settings > Delete account, you can permanently delete your Enconvo account under the retention terms below. When you use Report AI content, only the content you confirm and the reason you select are sent to Enconvo for private safety review. Reports are kept for up to 30 days and removed when you delete your account.")}</p>
           <p>{t('On iPhone, use Settings > Delete account to permanently delete your Enconvo account, synced Phone and desktop chats and files, and connected-service authorizations. Active Cloud subscriptions are cancelled, and purchased plans and unused points are lost. We retain payment and legally required financial records; publicly licensed work may remain available under its licence. Local data on your other devices is not remotely erased. AI data sharing requires your permission before sending content, and you can withdraw it in Settings > Allow AI data sharing.')}</p>
           <p>
             {t(
