@@ -1,4 +1,4 @@
-import { i18nStaticProps } from '@/i18n/server'
+import { withI18nProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
 import { canonicalUrl } from '@/i18n/locale'
 import Head from 'next/head'
@@ -22,7 +22,7 @@ import {
 const TITLE = 'Enconvo — AI Assistant & Agent for Mac'
 const DESCRIPTION = SITE_DESCRIPTION
 
-export default function Home() {
+export default function Home({ renderedAt }: { renderedAt: number }) {
   const { t, locale } = useI18n()
 
   const sectionEffectsRef = useSectionEffects()
@@ -62,7 +62,7 @@ export default function Home() {
         <OpenPlatform />
         <AlwaysWithYou />
         <Testimonials />
-        <Pricing />
+        <Pricing renderedAt={renderedAt} />
         <Faqs />
       </main>
       <Footer />
@@ -70,4 +70,8 @@ export default function Home() {
   )
 }
 
-export const getStaticProps = i18nStaticProps('/')
+// Regenerated hourly so the license prices in the HTML follow their schedule.
+export const getStaticProps = withI18nProps(
+  async () => ({ props: { renderedAt: Date.now() }, revalidate: 3600 }),
+  '/'
+)

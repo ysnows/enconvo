@@ -6,7 +6,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
-const LAST_UPDATED = 'September 27, 2026'
+const LAST_UPDATED = 'October 4, 2026'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 function Section({
@@ -164,6 +164,9 @@ export default function Privacy() {
             <Item title={t('Clipboard')}>
               {t(
                 'Reads or writes text when you run a command that uses the clipboard.'
+              )}{' '}
+              {t(
+                'Clipboard History, which is on by default, keeps the text, images, and files you copy on your device for the period you choose (three months by default). It skips password managers and content that apps mark as confidential, and you can turn it off or clear it at any time.'
               )}
             </Item>
             <Item title={t('Microphone')}>
@@ -234,6 +237,49 @@ export default function Privacy() {
           <p>
             {t(
               'We use this content only to return the result you asked for. We do not store prompts or responses in our databases. Our servers keep short-lived operational logs, which can include parts of a request, to diagnose failures and prevent abuse. These logs are deleted automatically after at most 7 days. Providers process your request under their own terms for API customers.'
+            )}
+          </p>
+        </Section>
+
+        <Section
+          id="third-party-extensions"
+          title={t('Third-party extensions')}
+        >
+          <p>
+            {t(
+              'Enconvo can run extensions written by other developers, including Raycast-compatible extensions that you import from Raycast, install from a folder, or install from GitHub. These extensions are third-party code. They run on your device in a sandbox that limits them to their own files and the internet. If you give an extension full access, it can also use your files, run programs, and connect to apps and devices on your network. Extensions can send data to services their developers chose. Their developers, not Enconvo, are responsible for how they handle your data, under their own terms and privacy policies.'
+            )}
+          </p>
+          <Items>
+            <Item title={t('Installing from GitHub')}>
+              {t(
+                "When you choose Install in Enconvo on an extension's page on raycast.com, the Enconvo browser extension passes only the extension's name to the Enconvo app on your device. Enconvo then downloads the extension's source code from the public Raycast extensions repository on GitHub and the packages it needs from the npm registry, and builds it on your device without running any of its scripts. Checking for updates downloads the same way. These requests go from your device directly to GitHub and npm and include the names of the extension and its packages, but not your Enconvo account or your files. GitHub and npm handle them under their own privacy policies."
+              )}
+            </Item>
+            <Item title={t('Removal checks')}>
+              {t(
+                "About twice a day, Enconvo checks the public Raycast extensions repository on GitHub to see whether the extensions you imported from Raycast or installed from GitHub are still listed there. These requests go from your device directly to GitHub and include the names of those extensions, but not your Enconvo account or your files. GitHub handles them under its own privacy policy. Enconvo does not contact Raycast's servers, and does not check extensions you installed from a folder."
+              )}
+            </Item>
+            <Item title={t('Safeguards')}>
+              {t(
+                'Enconvo asks you to confirm before it imports or installs an extension. An extension must ask before it uses AI, reads your clipboard history, or runs with full access, and you can change these choices under Permissions in Raycast-compatible Extensions. Enconvo turns off extensions that are removed from the public Raycast extensions repository.'
+              )}
+            </Item>
+            <Item title={t('AI requests')}>
+              {t(
+                "When you allow an extension to use AI, its prompts go to the AI model chosen in Enconvo's settings and are handled as described in Enconvo cloud models and services, or by your own provider if you use your own API key."
+              )}
+            </Item>
+            <Item title={t('Analytics')}>
+              {t(
+                'Product analytics record actions such as installing or running an extension and the permission choices you make, but never the names of your extensions or what they do.'
+              )}
+            </Item>
+          </Items>
+          <p>
+            {t(
+              'Raycast is a trademark of Raycast Technologies Ltd. Enconvo is not affiliated with, endorsed by, or sponsored by Raycast.'
             )}
           </p>
         </Section>
@@ -375,7 +421,7 @@ export default function Privacy() {
           </p>
           <p>
             {t(
-              'The website enconvo.com uses Google Analytics to measure visits. The iPhone app does not include an analytics SDK.'
+              'The website enconvo.com uses Google Analytics to measure visits. The iPhone app uses PostHog only when you turn on Settings > Share usage data. It is off by default for new installations. Events use a device identifier and include feature identifiers, app and system versions, status, counts and duration, never your chat content, files, API keys or email address. You can turn this off at any time.'
             )}
           </p>
         </Section>
@@ -416,6 +462,7 @@ export default function Privacy() {
         </Section>
 
         <Section title={t('Retention and deletion')}>
+          <p>{t('On iPhone, use Settings > Delete account to permanently delete your Enconvo account, synced Phone and desktop chats and files, and connected-service authorizations. Active Cloud subscriptions are cancelled, and purchased plans and unused points are lost. We retain payment and legally required financial records; publicly licensed work may remain available under its licence. Local data on your other devices is not remotely erased. AI data sharing requires your permission before sending content, and you can withdraw it in Settings > Allow AI data sharing.')}</p>
           <p>
             {t(
               'We keep account, plan, and usage records while your account is active. Operational logs are deleted after at most 7 days. To delete your account and the data tied to it, including synced Phone chats, email us at '

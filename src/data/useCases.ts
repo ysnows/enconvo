@@ -13,6 +13,15 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'ai-companion-mac-iphone',
+    title: 'Meet your AI companion on Mac and iPhone',
+    description:
+      'Talk naturally with an animated AI companion, ask about anything on screen, edit text with PopBar, dictate, and translate live captions — then keep the conversation going on iPhone.',
+    youtubeId: '-OJOek_lxig',
+    category: 'AI Agent',
+    date: '2026-10-07',
+  },
+  {
     slug: 'pair-your-iphone',
     title: 'Pair your iPhone and reach your Mac from anywhere',
     description:

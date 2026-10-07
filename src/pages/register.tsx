@@ -1,7 +1,7 @@
 import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { NativeRouter } from '@/utils/app/native_router'
 import RegisterForm from '@/pages/components/RegisterForm'
@@ -16,6 +16,7 @@ export default function Register() {
 
   const [registerState, setRegisterState] = useState('register')
   const [email, setEmail] = useState('')
+  const sessionChecked = useRef(false)
 
   const supabase = createClientComponentClient()
 
@@ -23,7 +24,8 @@ export default function Register() {
     const handoff = Array.isArray(router.query.handoff)
       ? router.query.handoff[0]
       : router.query.handoff
-    const result = await NativeRouter.openApp(undefined, handoff)
+    const source = Array.isArray(router.query.source) ? router.query.source[0] : router.query.source
+    const result = await NativeRouter.openApp(source, handoff)
     // The browser's session ended elsewhere: show the form again.
     if (result === 'signed_out') setRegisterState('register')
     else if (result !== 'opened') alert(result.error)
@@ -36,6 +38,11 @@ export default function Register() {
           event === ('SIGNED_UP' as AuthChangeEvent) ||
           event === ('SIGNED_IN' as AuthChangeEvent)
         ) {
+          if (router.query.from === 'app' && router.query.source === 'companion') {
+            setRegisterState('success')
+            await handleOpenApp()
+            return
+          }
           const returnUrl = Array.isArray(router.query.returnUrl)
             ? router.query.returnUrl[0]
             : router.query.returnUrl || '/'
@@ -78,6 +85,9 @@ export default function Register() {
   }, [router])
 
   useEffect(() => {
+    // Static page: `from` and `handoff` are only in the query once the router is ready.
+    if (!router.isReady || sessionChecked.current) return
+    sessionChecked.current = true
     supabase.auth.getSession().then(async ({ data, error }) => {
       if (data.session) {
         console.log('session', data)
@@ -92,7 +102,7 @@ export default function Register() {
         }
       }
     })
-  }, [])
+  }, [router.isReady])
 
   return (
     <>

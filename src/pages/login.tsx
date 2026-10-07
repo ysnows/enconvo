@@ -1,6 +1,6 @@
 import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
@@ -19,6 +19,8 @@ export default function Login() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const [navigation, setNavigation] = useState([])
+  const sessionChecked = useRef(false)
+  const fromApp = router.query['from'] === 'app'
 
   const showLoginForm = () => {
     setLoginState('login')
@@ -48,6 +50,11 @@ export default function Login() {
   }
 
   useEffect(() => {
+    // This page is static, so from/source/handoff are only in the query once
+    // the router is ready; checked before that, a browser that's already
+    // signed in would wait for a click on "Open Enconvo".
+    if (!router.isReady || sessionChecked.current) return
+    sessionChecked.current = true
     supabase.auth.getSession().then(async ({ data, error }) => {
       console.log('data--', data)
       if (data.session) {
@@ -77,7 +84,7 @@ export default function Login() {
         }
       }
     })
-  }, [])
+  }, [router.isReady])
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
@@ -200,6 +207,7 @@ export default function Login() {
           <LoginSuccess
             handleOpenApp={handleOpenApp}
             user={user}
+            fromApp={fromApp}
           />
         ) : (
           <LoginForm

@@ -7,8 +7,12 @@ import {
   affiliatePromotionCode,
   reportAffiliateCheckout,
 } from '@/lib/affiliate-journey'
-import { affiliateDiscounts, isInvalidRequest } from '@/lib/affiliate-discount'
-import { PRICE_IDS } from '@/lib/stripe-prices'
+import {
+  affiliateDiscountQuote,
+  checkoutDiscount,
+  isInvalidRequest,
+} from '@/lib/affiliate-discount'
+import { checkoutPriceId } from '@/lib/stripe-prices'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const TEAMS_MIN_SEATS = 5
@@ -46,8 +50,9 @@ async function handler(req, res) {
   const from = isTopUpPoints ? 'points_top_up' : 'subscription'
 
   try {
-    // Create Checkout Sessions from body params.
-    const priceId = PRICE_IDS[lookupKey]
+    // Create Checkout Sessions from body params. Lifetime prices follow their schedule.
+    const now = Date.now()
+    const priceId = checkoutPriceId(lookupKey, now)
     if (!priceId) {
       res
         .status(400)
@@ -73,7 +78,7 @@ async function handler(req, res) {
       const extraSeats = totalSeats - TEAMS_MIN_SEATS
       if (extraSeats > 0) {
         line_items.push({
-          price: PRICE_IDS['teams_seat'],
+          price: checkoutPriceId('teams_seat', now),
           quantity: extraSeats,
         })
       }
@@ -112,13 +117,16 @@ async function handler(req, res) {
       metadata: affiliateMetadata(journey),
     }
 
-    // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied;
-    // everyone else can type one. Stripe takes one or the other, never both.
-    const discounts = await affiliateDiscounts(
+    // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied, and
+    // a lifetime license gets a running sale's coupon when that takes more off; everyone else
+    // can type a code. Stripe takes one or the other, never both.
+    const affiliate = await affiliateDiscountQuote(
       stripe,
       await affiliatePromotionCode(req.accessToken, journey),
-      line_items
+      line_items,
+      now
     )
+    const discounts = checkoutDiscount(lookupKey, line_items, affiliate, now)
     let session: Stripe.Checkout.Session
     try {
       session = await stripe.checkout.sessions.create(
@@ -128,7 +136,7 @@ async function handler(req, res) {
       )
     } catch (err) {
       if (!discounts || !isInvalidRequest(err)) throw err
-      console.warn('Affiliate promotion code refused at Checkout:', err.message)
+      console.warn('Checkout discount refused:', err.message)
       session = await stripe.checkout.sessions.create({
         ...session_data,
         allow_promotion_codes: true,

@@ -11,7 +11,7 @@ import { Logo } from '@/components/Logo'
 import * as React from 'react'
 import { User } from '@supabase/supabase-js'
 
-export default function LoginSuccess({ handleOpenApp, user }) {
+export default function LoginSuccess({ handleOpenApp, user, fromApp = false }) {
   const { t, locale } = useI18n()
 
   const supabase = createClientComponentClient()
@@ -40,12 +40,22 @@ export default function LoginSuccess({ handleOpenApp, user }) {
             <Logo className="h-16 w-auto" />
             <div className="space-y-4 text-center">
               <h3 className="text-3xl font-medium tracking-tight text-white">
-                {t('Hi, you have successfully connected to Enconvo')}
+                {fromApp
+                  ? t("You're signed in")
+                  : t('Hi, you have successfully connected to Enconvo')}
               </h3>
               <p className="text-base text-[#888888]">
-                {t(
+                {fromApp ? (
+                  t(
+                    "Taking you back to Enconvo. If it doesn't open, click Open Enconvo."
+                  )
+                ) : (
+                  <>
+                    {t(
                       "You have successfully connected to Enconvo Account. Now it's time to open Enconvo to use the new commands of the extension."
                     )}
+                  </>
+                )}
               </p>
             </div>
 

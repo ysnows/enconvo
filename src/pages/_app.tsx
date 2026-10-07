@@ -33,6 +33,7 @@ const noindexRoutes = new Set([
   '/i/[code]',
   '/redeem',
   '/redeem/[code]',
+  '/device',
   '/share/[id]',
 ])
 
@@ -48,6 +49,7 @@ const navigationRoutes = new Set([
   '/i/[code]',
   '/redeem',
   '/redeem/[code]',
+  '/device',
   '/share/[id]',
 ])
 

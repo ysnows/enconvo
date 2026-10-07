@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node scripts/next-cli.cjs dev",
+    "build": "node scripts/next-cli.cjs build",
+    "start": "node scripts/next-cli.cjs start",
     "lint": "next lint",
     "prebuild": "node scripts/generate-i18n-message-map.mjs",
     "check:i18n": "node scripts/generate-i18n-message-map.mjs && node scripts/check-i18n.mjs"
@@ -47,7 +47,8 @@
   },
   "devDependencies": {
     "@types/react": "18.3.12",
-    "eslint": "8.26.0",
+    "@typescript-eslint/parser": "8.46.4",
+    "eslint": "8.57.1",
     "eslint-config-next": "13.0.2",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.6",

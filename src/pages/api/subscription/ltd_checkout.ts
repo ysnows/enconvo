@@ -4,6 +4,7 @@ import type { NextApiResponse } from 'next'
 import { withAuth, type AuthenticatedRequest } from '@/utils/auth'
 import { isLtdOfferEligible, LTD_OFFER } from '@/data/ltdOffer'
 import { ltdCheckoutParams, LtdCheckoutError } from '@/lib/ltd-checkout'
+import { lifetimeSale } from '@/lib/lifetime-pricing'
 import {
   affiliateJourneyFrom,
   affiliateMetadata,
@@ -19,7 +20,8 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
   }
 
   try {
-    const discount = await ltdCheckoutParams(stripe, req.body)
+    const now = Date.now()
+    const discount = await ltdCheckoutParams(stripe, req.body, now)
     const origin = new URL(
       process.env.NEXT_PUBLIC_SITE_URL || 'https://www.enconvo.com'
     )
@@ -53,9 +55,10 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
       customer_email: req.user.email,
       invoice_creation: { enabled: true },
       metadata: {
-        campaign: isLtdOfferEligible(req.body.via)
+        campaign: isLtdOfferEligible(req.body.via, now)
           ? LTD_OFFER.couponId
-          : 'enconvo-ltd',
+          : (discount.discounts && lifetimeSale(now)?.campaign) ||
+            'enconvo-ltd',
         ...affiliateMetadata(journey),
       },
     })

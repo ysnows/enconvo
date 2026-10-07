@@ -15,7 +15,8 @@ import {
 import { Button } from '@/components/ui/button'
 
 import { Logo } from '@/components/Logo'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
+import { authFlowHref } from '@/lib/auth-flow'
 import { Input } from '@/components/ui/input'
 import * as React from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -23,6 +24,7 @@ import { getEmailLink } from '@/utils/app/email_link'
 
 export default function ResetPasswordStepOne() {
   const { t, locale } = useI18n()
+  const router = useRouter()
 
   // 获取url参数
 
@@ -49,7 +51,7 @@ export default function ResetPasswordStepOne() {
     setEmailIsLoading(true)
 
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset_password?language=${locale}`,
+      redirectTo: `${window.location.origin}${authFlowHref('/reset_password', { ...router.query, language: locale })}`,
     })
 
     if (error) {

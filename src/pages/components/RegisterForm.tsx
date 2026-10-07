@@ -11,6 +11,7 @@ import {
 
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/router'
+import { authFlowHref, isCompanionFlow } from '@/lib/auth-flow'
 
 import { Logo } from '@/components/Logo'
 import { useState } from 'react'
@@ -33,6 +34,7 @@ export default function RegisterForm({
 
   const supabase = createClientComponentClient()
   const router = useRouter()
+  const companion = router.isReady && isCompanionFlow(router.query)
 
   // const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -67,12 +69,7 @@ export default function RegisterForm({
             returnUrl,
             language: locale,
           })}`
-        : `${
-            window.location.origin
-          }/login?from=app&language=${locale}${returnUrlParams.replace(
-            '?',
-            '&'
-          )}`
+        : `${window.location.origin}${authFlowHref('/login', { ...router.query, from: 'app', language: locale })}`
 
     const { data, error } = await supabase.auth.signUp({
       email: email,
@@ -110,6 +107,7 @@ export default function RegisterForm({
   }
 
   async function signInWithGoogle() {
+    if (!router.isReady || companion) return
     try {
       setGoogleIsLoading(true)
       saveRegistrationEmailPreference(productUpdatesSubscribed)
@@ -163,6 +161,7 @@ export default function RegisterForm({
           </div>
 
           {/* Google Sign Up Button */}
+          {router.isReady && !companion && (
           <div className="mt-8">
             <Button
               variant="outline"
@@ -193,7 +192,8 @@ export default function RegisterForm({
             </Button>
           </div>
 
-          <div className="relative">
+          )}
+          {!companion && <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-[#333333]" />
             </div>
@@ -204,6 +204,7 @@ export default function RegisterForm({
             </div>
           </div>
 
+          }
           {/* Email Registration Form */}
           <div className="mt-6 space-y-6">
             <div className="space-y-4">
@@ -287,15 +288,7 @@ export default function RegisterForm({
               <p className="text-center text-[#666666]">
                 {t('Already have an account?')}{' '}
                 <Link
-                  href={`/login${
-                    router?.query?.returnUrl
-                      ? `?returnUrl=${encodeURIComponent(
-                          Array.isArray(router.query.returnUrl)
-                            ? router.query.returnUrl[0]
-                            : router.query.returnUrl
-                        )}`
-                      : ''
-                  }`}
+                  href={authFlowHref('/login', router.query)}
                   className="font-medium text-[#888888] hover:text-[#999999]"
                 >
                   {t('Log in')}

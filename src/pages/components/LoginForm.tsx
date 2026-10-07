@@ -2,6 +2,7 @@ import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
 import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 import { ReloadIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
@@ -15,6 +16,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { NativeRouter } from '@/utils/app/native_router'
 import { syncCurrentEmailPreference } from '@/lib/email-preferences-client'
+import { authFlowHref, isCompanionFlow } from '@/lib/auth-flow'
 
 export default function LoginForm({
   loginState,
@@ -22,7 +24,10 @@ export default function LoginForm({
   setUser,
   router,
 }) {
+  const pageRouter = useRouter()
+  router = router ?? pageRouter
   const { t, locale } = useI18n()
+  const companion = router.isReady && isCompanionFlow(router.query)
 
   const supabase = createClientComponentClient()
 
@@ -119,6 +124,7 @@ export default function LoginForm({
   }
 
   async function signInWithGoogle() {
+    if (!router.isReady || companion) return
     try {
       setGoogleIsLoading(true)
       let redirectUrl = `${window.location.origin}/auth/callback?language=${locale}`
@@ -185,7 +191,8 @@ export default function LoginForm({
             </h2>
           </div>
 
-          {/* Google Login Button */}
+          {/* iPhone signs in exclusively with an Enconvo email/password account. */}
+          {router.isReady && !companion && (
           <div className="mt-8">
             <Button
               variant="outline"
@@ -216,6 +223,7 @@ export default function LoginForm({
             </Button>
           </div>
 
+          )}
           {/* Email Login Form */}
           <div className="mt-6 space-y-6">
             <div className="space-y-4">
@@ -272,19 +280,13 @@ export default function LoginForm({
             {!continueLogin && (
               <div className="flex items-center justify-between text-sm">
                 <Link
-                  href={`/register${
-                    router?.query?.returnUrl
-                      ? `?returnUrl=${encodeURIComponent(
-                          router.query.returnUrl
-                        )}`
-                      : ''
-                  }`}
+                  href={authFlowHref('/register', router.query)}
                   className="font-medium text-[#888888] hover:text-[#999999]"
                 >
                   {t('Create an account')}
                 </Link>
                 <Link
-                  href="/reset_password_send"
+                  href={authFlowHref('/reset_password_send', router.query)}
                   className="font-medium text-[#666666] hover:text-[#888888]"
                 >
                   {t('Forgot password?')}

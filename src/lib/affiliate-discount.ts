@@ -1,6 +1,7 @@
 import type Stripe from 'stripe'
 import type { AffiliateOffer } from './affiliate-offer'
-import { PRICE_IDS } from './stripe-prices'
+import { isLifetimeKey, lifetimeSale, lifetimeSubtotal } from './lifetime-pricing'
+import { checkoutPriceId } from './stripe-prices'
 
 // An Affiliate's promotion code, applied for the visitor its link brought (ADR 0090): the
 // Worker names the code of the Affiliate behind the visitor's latest recorded visit, and the
@@ -23,13 +24,21 @@ export async function usablePromotion(stripe: PaymentClient, code: string, now =
     return promotion
 }
 
+type Discounts = Stripe.Checkout.SessionCreateParams.Discount[]
+
+/** An Affiliate's Checkout discount, with how much it takes off the order, in cents. */
+export interface AffiliateDiscountQuote {
+    discounts: Discounts
+    off: number
+}
+
 /** The Checkout discount for the Affiliate's `code`, or null to keep the promotion code box. */
-export async function affiliateDiscounts(
+export async function affiliateDiscountQuote(
     stripe: PaymentClient,
     code: string | null,
     lineItems: Stripe.Checkout.SessionCreateParams.LineItem[],
     now = Date.now()
-): Promise<Stripe.Checkout.SessionCreateParams.Discount[] | null> {
+): Promise<AffiliateDiscountQuote | null> {
     if (!code) return null
     try {
         const promotion = await usablePromotion(stripe, code, now)
@@ -39,19 +48,44 @@ export async function affiliateDiscounts(
         // The plan is the first line item; Teams seats ride along on the second.
         const prices = await Promise.all(lineItems.map((item) => stripe.prices.retrieve(item.price as string)))
         const plan = prices[0]
-        const product = typeof plan?.product === 'string' ? plan.product : plan?.product?.id
+        const productOf = (price?: Stripe.Price) => (typeof price?.product === 'string' ? price.product : price?.product?.id)
+        const product = productOf(plan)
         if (!plan || (coupon.applies_to && !coupon.applies_to.products.includes(product))) return null
         if (coupon.amount_off && coupon.currency !== plan.currency) return null
+        const lineTotal = (price: Stripe.Price, i: number) => (price.unit_amount ?? 0) * (lineItems[i].quantity ?? 1)
         const { minimum_amount, minimum_amount_currency } = promotion.restrictions
         if (minimum_amount) {
-            const subtotal = prices.reduce((sum, price, i) => sum + (price.unit_amount ?? 0) * (lineItems[i].quantity ?? 1), 0)
+            const subtotal = prices.reduce((sum, price, i) => sum + lineTotal(price, i), 0)
             if (minimum_amount_currency !== plan.currency || subtotal < minimum_amount) return null
         }
-        return [{ promotion_code: promotion.id }]
+        const eligible = prices.reduce(
+            (sum, price, i) =>
+                !coupon.applies_to || coupon.applies_to.products.includes(productOf(price) ?? '') ? sum + lineTotal(price, i) : sum,
+            0
+        )
+        const off = coupon.percent_off ? Math.round((eligible * coupon.percent_off) / 100) : Math.min(coupon.amount_off ?? 0, eligible)
+        return { discounts: [{ promotion_code: promotion.id }], off }
     } catch (error) {
         console.warn('Affiliate promotion code left out:', (error as Error).message)
         return null
     }
+}
+
+/**
+ * The discount a Checkout opens with, or null to keep the code box. During a lifetime sale
+ * (lifetime-pricing.ts) a lifetime license gets the sale's coupon, unless the Affiliate's code
+ * takes at least as much off: KENMOO2026's 40% stays the lowest price.
+ */
+export function checkoutDiscount(
+    lookupKey: string,
+    lineItems: Stripe.Checkout.SessionCreateParams.LineItem[],
+    affiliate: AffiliateDiscountQuote | null,
+    now = Date.now()
+): Discounts | null {
+    const sale = isLifetimeKey(lookupKey) ? lifetimeSale(now) : null
+    if (!sale) return affiliate?.discounts ?? null
+    const saleOff = Math.round((lifetimeSubtotal(lineItems) * sale.percentOff) / 100)
+    return affiliate && affiliate.off >= saleOff ? affiliate.discounts : [{ coupon: sale.coupon }]
 }
 
 /** True for Stripe refusing a Checkout's parameters, which a Checkout without the discount may not hit. */
@@ -98,7 +132,9 @@ export async function affiliateOffer(stripe: PaymentClient, code: string, now = 
     if (covered) {
         const coverage = await Promise.all(
             OFFER_PLANS.map(async (plan) =>
-                (await Promise.all(plan.keys.map((key) => productOf(stripe, PRICE_IDS[key])))).every((product) => covered.has(product))
+                (await Promise.all(plan.keys.map((key) => productOf(stripe, checkoutPriceId(key, now)!)))).every((product) =>
+                    covered.has(product)
+                )
             )
         )
         plans = OFFER_PLANS.filter((_, i) => coverage[i])
