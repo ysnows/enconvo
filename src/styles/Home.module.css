@@ -166,7 +166,6 @@
 .requirements { margin-top: 12px; font-size: 12px; line-height: 18px; color: #9c9c9d; }
 .browseButton { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 18px; border: 1px solid var(--home-stroke-strong); border-radius: 10px; color: #f4f4f6; font-size: 14px; font-weight: 500; background: rgba(255,255,255,.035); transition: background-color 160ms; }
 .browseButton:hover { background: rgba(255,255,255,.08); }
-.betaTag { padding: 2px 7px; border-radius: 999px; color: #ffc533; background: rgba(255,197,51,.12); font-size: 10px; font-weight: 600; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; }
 .skipLink { position: fixed; top: 12px; left: 12px; z-index: 60; padding: 12px 16px; border-radius: 10px; background: #f8fafc; color: #0b0f14; transform: translateY(-160%); }
 .skipLink:focus { transform: translateY(0); }
 
@@ -406,9 +405,6 @@
 .page .companionCard h3 { max-width: 380px; font-size: 24px; }
 .companionVisual { height: 220px; position: relative; overflow: hidden; display: flex; justify-content: center; align-items: flex-end; background: linear-gradient(180deg,rgba(255,255,255,.025),transparent); }
 .companionVisual::after { content: ''; position: absolute; inset: auto 0 0; height: 25px; background: linear-gradient(transparent,#0d0d0d); pointer-events: none; }
-.iphoneCard { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 32px; scroll-margin-top: 96px; }
-.iphoneCopy { max-width: 560px; }
-.page .iphoneCard h3 { font-size: 24px; }
 .iphoneActions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; margin-top: 24px; }
 .iphoneButton { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px; border-radius: 10px; color: #07080a; font-size: 14px; font-weight: 600; background-image: linear-gradient(#fff,#edf2f5); box-shadow: 0 1px 0 #fff inset, 0 0 0 1px rgba(255,255,255,.12); transition: box-shadow 160ms; }
 .iphoneButton:hover { box-shadow: 0 1px 0 #fff inset, 0 0 0 1px rgba(255,255,255,.24), 0 4px 24px rgba(180,217,239,.18); }
@@ -418,6 +414,21 @@
 .iphoneQr { flex: none; display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 0; }
 .iphoneQr svg { width: 132px; height: 132px; border-radius: 10px; }
 .iphoneQr figcaption { color: #9c9c9d; font-size: 12px; }
+.mobileCard { padding: 32px; scroll-margin-top: 96px; }
+.mobileIntro { max-width: 640px; }
+.page .mobileCard h3 { font-size: 24px; }
+.mobilePlatforms { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; margin-top: 28px; }
+.mobilePlatform { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; padding: 24px; border: 1px solid var(--home-stroke); border-radius: 14px; background: linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01)); scroll-margin-top: 96px; transition: border-color 160ms; }
+.mobilePlatform:hover { border-color: var(--home-stroke-strong); }
+.mobilePlatform:target { border-color: rgba(180,217,239,.45); }
+.mobilePlatformCopy { min-width: 0; }
+.mobilePlatformName { display: flex; align-items: center; gap: 10px; color: #f4f4f6; font-size: 18px; font-weight: 600; }
+.mobilePlatformName svg { width: 20px; height: 20px; flex: none; color: #cdcdcd; }
+.mobileTagBeta { padding: 2px 7px; border-radius: 999px; color: #ffc533; background: rgba(255,197,51,.12); font-size: 10px; font-weight: 600; line-height: 16px; letter-spacing: .08em; text-transform: uppercase; }
+.mobilePlatformMeta { margin-top: 6px; color: #9c9c9d; font-size: 13px; }
+.mobilePlatform .iphoneActions { margin-top: 20px; gap: 8px 20px; }
+.mobilePlatform .iphoneQr svg { width: 104px; height: 104px; }
+.mobilePlatform .iphoneQr figcaption { max-width: 120px; text-align: center; line-height: 1.4; }
 .desktopDiagram { width: 290px; height: 180px; position: relative; border: 1px solid var(--home-stroke-strong); border-radius: 9px 9px 0 0; background: radial-gradient(ellipse at 80% 90%,rgba(95,134,149,.12),transparent 70%),#101111; box-shadow: 0 1px 0 rgba(255,255,255,.05) inset; }
 .desktopBar { height: 23px; border-bottom: 1px solid var(--home-stroke); display: flex; align-items: center; gap: 4px; padding: 0 9px; }
 .desktopBar i { width: 4px; height: 4px; border-radius: 50%; background: #6a6b6c; }
@@ -685,6 +696,7 @@
 }
 
 @media (max-width: 1023px) {
+  .mobilePlatforms { grid-template-columns: minmax(0,1fr); }
   .tab { min-height: 44px; }
   .heroTitle { font-size: 48px; }
   .scenes { justify-content: flex-start; }
@@ -722,8 +734,9 @@
   .sectionHeading { text-align: left; }
   .page .faqHeading h2 { font-size: 28px; }
   .testimonials figure { padding: 24px; }
-  .page .companionCard h3, .page .iphoneCard h3 { font-size: 22px; }
-  .iphoneCard { padding: 24px; }
+  .page .companionCard h3, .page .mobileCard h3 { font-size: 22px; }
+  .mobileCard { padding: 24px; }
+  .mobilePlatform { padding: 20px; }
   .page > footer > div { padding-inline: 24px; }
 }
 

@@ -1,8 +1,11 @@
-import { useEffect, useId, useRef, useState, type SVGProps } from 'react'
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import Head from 'next/head'
 
 // Ship the decoration with the SSR markup, so refreshing never swaps a loading
 // background for a different renderer. Keep these styles out of deferred CSS.
+// Motion is transform-only, on static SVG layers the compositor moves. Redrawing
+// this full-viewport SVG every frame (path morphs, dash offsets) saturated
+// Safari's GPU process, which delayed clicks across the page.
 const backdropStyles = `
 [data-hero-backdrop] {
   position: absolute; inset: 0; overflow: hidden;
@@ -14,18 +17,26 @@ const backdropStyles = `
   -webkit-mask-image: linear-gradient(#000 74%, rgba(0,0,0,.75) 88%, transparent);
   mask-image: linear-gradient(#000 74%, rgba(0,0,0,.75) 88%, transparent);
 }
-[data-hero-backdrop] svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-[data-aurora-ribbon] {
-  transform-origin: center;
+[data-aurora-defs] { position: absolute; width: 0; height: 0; }
+[data-aurora-layer] {
+  position: absolute; inset: 0; will-change: transform;
   animation: enconvo-aurora-drift 12s ease-in-out infinite alternate;
 }
-[data-aurora-trace] {
-  stroke-dasharray: .2 .8;
-  animation: enconvo-aurora-trace 5s linear infinite;
+[data-aurora-layer] svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+[data-aurora-layer='main'] { animation-name: enconvo-aurora-main; animation-duration: 10s; }
+[data-aurora-layer='return'] { animation-name: enconvo-aurora-return; }
+[data-aurora-layer='lower'] { animation-name: enconvo-aurora-lower; animation-duration: 14s; }
+[data-aurora-sweep] {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 24%; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 45%, #000 55%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 45%, #000 55%, transparent);
 }
-[data-aurora-trace='return'] { animation-duration: 7s; animation-delay: -2s; }
-[data-aurora-trace='lower'] { animation-duration: 6s; animation-delay: -3s; }
-[data-hero-backdrop][data-motion='paused'] :is([data-aurora-ribbon], [data-aurora-trace]) { animation-play-state: paused; }
+[data-aurora-sweep] > div { position: absolute; top: 0; bottom: 0; left: 0; width: 416.667%; }
+[data-aurora-sweep], [data-aurora-sweep] > div { will-change: transform; animation: enconvo-aurora-sweep 5s linear infinite; }
+[data-aurora-sweep] > div { animation-name: enconvo-aurora-sweep-track; }
+[data-aurora-sweep='return'], [data-aurora-sweep='return'] > div { animation-duration: 7s; animation-delay: -2s; }
+[data-aurora-sweep='lower'], [data-aurora-sweep='lower'] > div { animation-duration: 6s; animation-delay: -3s; }
+[data-hero-backdrop][data-motion='paused'] :is([data-aurora-layer], [data-aurora-sweep], [data-aurora-sweep] > div) { animation-play-state: paused; }
 [data-aurora-shade] {
   position: absolute; inset: 0;
   background: radial-gradient(ellipse 38% 30% at 50% 21%, rgba(7,8,10,.8) 15%, rgba(7,8,10,.45) 60%, transparent),
@@ -43,22 +54,28 @@ const backdropStyles = `
   -webkit-mask-image: linear-gradient(transparent, #000 15%, transparent 90%);
   mask-image: linear-gradient(transparent, #000 15%, transparent 90%);
 }
-@keyframes enconvo-aurora-drift {
-  from { transform: translate(0, 0) scale(1); }
-  to { transform: translate(2%, -2%) scale(1.05); }
-}
-@keyframes enconvo-aurora-trace {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
-}
+@keyframes enconvo-aurora-drift { to { transform: translate(2%, -2%) scale(1.05); } }
+@keyframes enconvo-aurora-main { to { transform: translate(2.5%, -3%) scale(1.04, 1.08); } }
+@keyframes enconvo-aurora-return { to { transform: translate(-2%, 3%) scale(1.03, 1.1); } }
+@keyframes enconvo-aurora-lower { to { transform: translate(2%, -3%) scale(1.06, 1.04); } }
+/* The window crosses the backdrop while its track moves back as far, so the line stays put. */
+@keyframes enconvo-aurora-sweep { from { transform: translateX(-100%); } to { transform: translateX(416.667%); } }
+@keyframes enconvo-aurora-sweep-track { from { transform: translateX(24%); } to { transform: translateX(-100%); } }
 @media (max-width: 639px) {
-  [data-hero-backdrop] svg { width: 960px; max-width: none; left: 50%; transform: translateX(-50%); opacity: .8; }
+  [data-aurora-layer] svg { width: 960px; max-width: none; left: 50%; transform: translateX(-50%); opacity: .8; }
   [data-aurora-shade] { background: radial-gradient(ellipse 64% 36% at 50% 24%, rgba(7,8,10,.75), transparent); }
   [data-aurora-guides] { display: none; }
 }
+/* Touch screens keep the aurora still. Compositing these layers every frame at phone
+   pixel density kept the GPU busy, heating phones and delaying taps. The layers stay
+   promoted: flattened, Safari repainted the blurred SVG under the download menu. */
+@media (hover: none) {
+  [data-aurora-layer] { animation: none; }
+  [data-aurora-sweep] { display: none; }
+}
 @media (prefers-reduced-motion: reduce) {
-  [data-aurora-ribbon], [data-aurora-trace] { animation: none; }
-  [data-aurora-trace] { opacity: 0; }
+  [data-aurora-layer] { animation: none; }
+  [data-aurora-sweep] { display: none; }
 }
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
   [data-hero-backdrop] { display: none; }
@@ -69,23 +86,22 @@ const ribbon = 'M -180 680 C 170 470 360 680 650 400 S 1020 100 1550 -140'
 const returnRibbon = 'M -180 40 C 140 -60 360 0 410 210 S 430 480 690 530 S 1220 420 1690 590'
 const lowerRibbon = 'M -180 490 C 20 570 100 750 500 762 S 1170 650 1760 850'
 
-const ribbonWave = 'M -180 680 C 120 560 450 400 790 410 S 1150 120 1550 -140'
-const returnWave = 'M -180 40 C 190 -20 510 60 500 280 S 350 570 760 590 S 1330 350 1690 590'
-const lowerWave = 'M -180 490 C 20 730 210 610 600 700 S 1260 780 1760 850'
-
-// Animate the geometry, bloom and highlight together, without React updates
-// every frame. Matching SVG command sequences interpolate into flowing curves.
-function RibbonPath({ d, wave, seconds = 10, ...props }: SVGProps<SVGPathElement> & {
-  d: string
-  wave: string
-  seconds?: number
-}) {
+function AuroraSvg({ children }: { children: ReactNode }) {
   return (
-    <path d={d} {...props}>
-      <animate attributeName="d" values={`${d};${wave};${d}`} dur={`${seconds}s`}
-        begin="indefinite" repeatCount="indefinite" calcMode="spline"
-        keyTimes="0;0.5;1" keySplines=".42 0 .58 1;.42 0 .58 1" />
-    </path>
+    <svg viewBox="0 0 1600 800" fill="none" preserveAspectRatio="none" focusable="false">
+      {children}
+    </svg>
+  )
+}
+
+// A highlight travelling along a ribbon: a soft window slides over a static copy of the line.
+function Sweep({ name, children }: { name: string; children: ReactNode }) {
+  return (
+    <div data-aurora-sweep={name}>
+      <div>
+        <AuroraSvg>{children}</AuroraSvg>
+      </div>
+    </div>
   )
 }
 
@@ -93,28 +109,6 @@ export function HeroBackdrop({ paused = false }: { paused?: boolean }) {
   const id = `hero-light-${useId().replace(/:/g, '')}`
   const backdropRef = useRef<HTMLDivElement>(null)
   const [active, setActive] = useState(false)
-  const svgRef = useRef<SVGSVGElement>(null)
-
-  useEffect(() => {
-    const svg = svgRef.current
-    if (!svg) return
-    // An indefinite start keeps SSR and reduced-motion first paints static.
-    svg.pauseAnimations()
-    svg.querySelectorAll<SVGAnimateElement>('animate').forEach(animation => animation.beginElement())
-  }, [])
-
-  useEffect(() => {
-    const svg = svgRef.current
-    if (!svg) return
-    const preference = window.matchMedia('(prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active)')
-    const sync = () => {
-      if (paused || !active || preference.matches) svg.pauseAnimations()
-      else svg.unpauseAnimations()
-    }
-    sync()
-    preference.addEventListener('change', sync)
-    return () => preference.removeEventListener('change', sync)
-  }, [active, paused])
 
   useEffect(() => {
     const backdrop = backdropRef.current
@@ -138,9 +132,9 @@ export function HeroBackdrop({ paused = false }: { paused?: boolean }) {
   return (
     <div ref={backdropRef} data-hero-backdrop data-motion={paused || !active ? 'paused' : 'running'} aria-hidden="true">
       <Head>
-        <style id="enconvo-hero-backdrop" key="enconvo-hero-backdrop">{backdropStyles}</style>
+        <style id="enconvo-hero-backdrop" key="enconvo-hero-backdrop" dangerouslySetInnerHTML={{ __html: backdropStyles }} />
       </Head>
-      <svg ref={svgRef} viewBox="0 0 1600 800" fill="none" preserveAspectRatio="none" focusable="false">
+      <svg data-aurora-defs focusable="false">
         <defs>
           <linearGradient id={`${id}-spectrum`} x1="180" y1="600" x2="1350" y2="0" gradientUnits="userSpaceOnUse">
             <stop stopColor="#59d499" stopOpacity="0" />
@@ -171,54 +165,72 @@ export function HeroBackdrop({ paused = false }: { paused?: boolean }) {
             <feGaussianBlur stdDeviation="5" />
           </filter>
         </defs>
+      </svg>
 
-        <g data-aurora-ribbon>
+      <div data-aurora-layer="bloom">
+        <AuroraSvg>
           <g filter={`url(#${id}-bloom)`} opacity="0.6">
-            <RibbonPath d={ribbon} wave={ribbonWave} stroke={`url(#${id}-spectrum)`} strokeWidth="64" />
-            <RibbonPath d={returnRibbon} wave={returnWave} seconds={12} stroke={`url(#${id}-return)`} strokeWidth="36" opacity="0.65" />
-            <RibbonPath d={lowerRibbon} wave={lowerWave} seconds={14} stroke={`url(#${id}-spectrum)`} strokeWidth="48" opacity="0.65" />
+            <path d={ribbon} stroke={`url(#${id}-spectrum)`} strokeWidth="64" />
+            <path d={returnRibbon} stroke={`url(#${id}-return)`} strokeWidth="36" opacity="0.65" />
+            <path d={lowerRibbon} stroke={`url(#${id}-spectrum)`} strokeWidth="48" opacity="0.65" />
           </g>
-          <RibbonPath d={ribbon} wave={ribbonWave} stroke={`url(#${id}-spectrum)`} strokeWidth="12" opacity="0.45" filter={`url(#${id}-soft)`} />
-          <RibbonPath d={returnRibbon} wave={returnWave} seconds={12} stroke={`url(#${id}-return)`} strokeWidth="5" opacity="0.45" filter={`url(#${id}-soft)`} />
+          <path d={ribbon} stroke={`url(#${id}-spectrum)`} strokeWidth="12" opacity="0.45" filter={`url(#${id}-soft)`} />
+          <path d={returnRibbon} stroke={`url(#${id}-return)`} strokeWidth="5" opacity="0.45" filter={`url(#${id}-soft)`} />
+        </AuroraSvg>
+      </div>
 
+      <div data-aurora-layer="main">
+        <AuroraSvg>
           {Array.from({ length: 18 }, (_, index) => (
-            <RibbonPath
+            <path
               key={`ribbon-${index}`}
               d={`M -180 ${680 + index * 5} C 170 ${470 + index * 2} ${360 + index * 3} ${680 + index * 2} ${650 + index * 3} ${400 + index * 3} S ${1020 + index * 5} ${100 + index * 3} ${1550 + index * 2} -140`}
-              wave={`M -180 ${680 + index * 5} C 120 ${560 + index * 2} ${450 + index * 3} ${400 + index * 2} ${790 + index * 3} ${410 + index * 3} S ${1150 + index * 5} ${120 + index * 3} ${1550 + index * 2} -140`}
               stroke={`url(#${id}-spectrum)`}
               strokeWidth={index === 0 ? 1.5 : 0.7}
               opacity={index === 0 ? 0.75 : 0.3 - index * 0.011}
             />
           ))}
+          <path d={ribbon} stroke={`url(#${id}-edge)`} strokeWidth="1.5" opacity="0.55" />
+        </AuroraSvg>
+        <Sweep name="main">
+          <path d={ribbon} stroke={`url(#${id}-edge)`} strokeWidth="3" />
+        </Sweep>
+      </div>
+
+      <div data-aurora-layer="return">
+        <AuroraSvg>
           {Array.from({ length: 10 }, (_, index) => (
-            <RibbonPath
+            <path
               key={`return-${index}`}
               d={`M -180 ${40 + index * 6} C 140 ${-60 + index * 3} ${360 - index * 4} 0 ${410 - index * 3} ${210 + index * 2} S ${430 - index * 3} ${480 + index * 4} 690 ${530 + index * 3} S 1220 ${420 + index * 3} 1690 ${590 + index * 2}`}
-              wave={`M -180 ${40 + index * 6} C 190 ${-20 + index * 3} ${510 - index * 4} 60 ${500 - index * 3} ${280 + index * 2} S ${350 - index * 3} ${570 + index * 4} 760 ${590 + index * 3} S 1330 ${350 + index * 3} 1690 ${590 + index * 2}`}
-              seconds={12}
               stroke={`url(#${id}-return)`}
               strokeWidth="0.75"
               opacity={0.25 - index * 0.017}
             />
           ))}
+        </AuroraSvg>
+        <Sweep name="return">
+          <path d={returnRibbon} stroke="#83e8dc" strokeWidth="2" opacity="0.65" />
+        </Sweep>
+      </div>
+
+      <div data-aurora-layer="lower">
+        <AuroraSvg>
           {Array.from({ length: 12 }, (_, index) => (
-            <RibbonPath
+            <path
               key={`lower-${index}`}
               d={`M -180 ${490 + index * 5} C 20 ${570 + index * 4} 100 ${750 + index * 2} 500 ${762 + index * 2} S 1170 ${650 + index * 4} 1760 ${850 + index * 3}`}
-              wave={`M -180 ${490 + index * 5} C 20 ${730 + index * 4} 210 ${610 + index * 2} 600 ${700 + index * 2} S 1260 ${780 + index * 4} 1760 ${850 + index * 3}`}
-              seconds={14}
               stroke={`url(#${id}-spectrum)`}
               strokeWidth={index === 0 ? 1.5 : 0.75}
               opacity={index === 0 ? 0.6 : 0.25 - index * 0.012}
             />
           ))}
-          <RibbonPath d={ribbon} wave={ribbonWave} stroke={`url(#${id}-edge)`} strokeWidth="1.5" opacity="0.55" />
-          <RibbonPath data-aurora-trace="main" d={ribbon} wave={ribbonWave} pathLength="1" stroke={`url(#${id}-edge)`} strokeWidth="3" />
-          <RibbonPath data-aurora-trace="return" d={returnRibbon} wave={returnWave} seconds={12} pathLength="1" stroke="#83e8dc" strokeWidth="2" opacity="0.65" />
-          <RibbonPath data-aurora-trace="lower" d={lowerRibbon} wave={lowerWave} seconds={14} pathLength="1" stroke={`url(#${id}-spectrum)`} strokeWidth="2.5" />
-        </g>
-      </svg>
+        </AuroraSvg>
+        <Sweep name="lower">
+          <path d={lowerRibbon} stroke={`url(#${id}-spectrum)`} strokeWidth="2.5" />
+        </Sweep>
+      </div>
+
       <div data-aurora-shade />
       <div data-aurora-grain />
       <div data-aurora-guides />

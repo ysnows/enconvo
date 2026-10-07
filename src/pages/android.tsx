@@ -60,7 +60,7 @@ export default function AndroidPage() {
         <meta
           name="description"
           content={t(
-            'Download the Enconvo Android preview and pair it with Enconvo on your Mac to use its agents and chats from your phone.'
+            'Download the Enconvo Android beta and pair it with Enconvo on your Mac to use its agents and chats from your phone.'
           )}
         />
         <link
@@ -77,7 +77,7 @@ export default function AndroidPage() {
               <div className="flex items-center gap-3">
                 <p className={metaLabel}>{t('Android app')}</p>
                 <span className="rounded-full bg-signal-yellow/[0.12] px-2 py-0.5 text-[10px] font-semibold uppercase leading-4 tracking-[0.08em] text-signal-yellow">
-                  {t('Preview')}
+                  {t('Beta')}
                 </span>
               </div>
               <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl sm:leading-[1.1]">
@@ -137,7 +137,7 @@ export default function AndroidPage() {
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-content-muted">
               {t(
-                "The preview isn't on Google Play yet, so you install the APK from this page. Android asks once before it lets your browser install apps."
+                "The beta isn't on Google Play yet, so you install the APK from this page. Android asks once before it lets your browser install apps."
               )}
             </p>
             <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

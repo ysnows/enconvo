@@ -1,4 +1,4 @@
-// Where to get the Enconvo Android app. It is a preview installed from an APK
+// Where to get the Enconvo Android app. It is a beta installed from an APK
 // rather than Google Play. The Mac app's Connections card links to the same
 // page (modules/companion/src/mac/android_app.ts). Change both together.
 
@@ -9,12 +9,12 @@ export const ANDROID_APP_PAGE_URL = 'https://enconvo.com/android'
 export const ANDROID_APP_APK_URL =
   'https://file.enconvo.com/android/Enconvo-Companion.apk'
 
-export const ANDROID_APP_VERSION = '1.1.0'
+export const ANDROID_APP_VERSION = '1.3.0'
 
 /** The app's minSdk is 28. */
 export const ANDROID_APP_MIN_ANDROID_VERSION = '9'
 
-/** Homepage anchor of the Android app card. */
+/** Homepage anchor of the Android panel in the mobile app card. */
 export const ANDROID_APP_SECTION_ID = 'android-app'
 
 /**

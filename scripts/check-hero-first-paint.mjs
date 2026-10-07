@@ -35,7 +35,7 @@ const probe = `<script>
       reserved: p.height > 100 && Math.abs(p.width / p.height - 16 / 9) < 0.01,
       boundedWidth: p.width <= 1120 && p.right <= innerWidth && p.left >= 0,
       oneBackground: document.querySelectorAll('[data-hero-backdrop]').length === 1 && !document.querySelector('canvas'),
-      backgroundPresent: getComputedStyle(backdrop).visibility === 'visible' && getComputedStyle(backdrop).position === 'absolute' && backdrop.querySelector('svg').getBoundingClientRect().height === b.height,
+      backgroundPresent: getComputedStyle(backdrop).visibility === 'visible' && getComputedStyle(backdrop).position === 'absolute' && backdrop.querySelector('[data-aurora-layer] svg').getBoundingClientRect().height === b.height,
       backgroundCoverage: Math.abs(b.height - hero.height) < 0.5 && b.bottom >= p.bottom + 80,
     };
     const result = document.createElement('output');
