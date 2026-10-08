@@ -2238,5 +2238,11 @@
   "View pricing": "Ver precios",
   "Plan details are temporarily unavailable.": "Los detalles del plan no están disponibles temporalmente.",
   "There are no billing records for this account.": "No hay registros de facturación para esta cuenta.",
-  "Could not open billing. Please try again.": "No se pudo abrir la facturación. Inténtalo de nuevo."
+  "Could not open billing. Please try again.": "No se pudo abrir la facturación. Inténtalo de nuevo.",
+  "Ends automatically. No charge.": "Termina automáticamente. Sin cargos.",
+  "No card required. Includes {points} AI points for {days} days from redemption. Unused trial points expire at the end; top-ups and lifetime licenses stay. One trial code per account; accounts with an active Cloud plan cannot redeem one.": "Sin tarjeta. Incluye {points} puntos de IA durante {days} días desde el canje. Los puntos de prueba sin usar caducan al final; las recargas y la licencia perpetua se conservan. Un código de prueba por cuenta; no disponible para cuentas con un plan Cloud activo.",
+  "Trial activated": "Prueba activada",
+  "Try Plus Cloud features with {points} AI points for {days} days. No credit card required. The trial ends automatically, with no renewal or charge.": "Prueba Plus Cloud con {points} puntos de IA durante {days} días. Sin tarjeta. La prueba termina automáticamente, sin renovación ni cargos.",
+  "Your free month of Plus Cloud is ready": "Tu mes gratis de Plus Cloud está listo",
+  "{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.": "Tienes {points} puntos de IA y las funciones de Plus Cloud hasta el {date}. Sin tarjeta, renovación ni cargos. Los puntos de prueba sin usar caducan entonces; las recargas y la licencia perpetua se conservan."
 }

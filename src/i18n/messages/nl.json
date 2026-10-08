@@ -2238,5 +2238,11 @@
   "View pricing": "Prijzen bekijken",
   "Plan details are temporarily unavailable.": "Abonnementsgegevens zijn tijdelijk niet beschikbaar.",
   "There are no billing records for this account.": "Er zijn geen factuurgegevens voor dit account.",
-  "Could not open billing. Please try again.": "Facturering kon niet worden geopend. Probeer het opnieuw."
+  "Could not open billing. Please try again.": "Facturering kon niet worden geopend. Probeer het opnieuw.",
+  "Ends automatically. No charge.": "Eindigt automatisch. Geen kosten.",
+  "No card required. Includes {points} AI points for {days} days from redemption. Unused trial points expire at the end; top-ups and lifetime licenses stay. One trial code per account; accounts with an active Cloud plan cannot redeem one.": "Geen kaart nodig. Inclusief {points} AI-punten voor {days} dagen vanaf het inwisselen. Ongebruikte proefpunten vervallen daarna; opgewaardeerde punten en je permanente licentie blijven behouden. Eén proefcode per account; niet beschikbaar voor accounts met een actief Cloud-abonnement.",
+  "Trial activated": "Proefperiode geactiveerd",
+  "Try Plus Cloud features with {points} AI points for {days} days. No credit card required. The trial ends automatically, with no renewal or charge.": "Probeer Plus Cloud met {points} AI-punten gedurende {days} dagen. Geen creditcard nodig. De proefperiode eindigt automatisch, zonder verlenging of kosten.",
+  "Your free month of Plus Cloud is ready": "Je gratis maand Plus Cloud staat klaar",
+  "{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.": "Je hebt {points} AI-punten en Plus Cloud tot {date}. Geen kaart, verlenging of kosten. Ongebruikte proefpunten vervallen dan; opgewaardeerde punten en je permanente licentie blijven behouden."
 }

@@ -2238,5 +2238,11 @@
   "View pricing": "查看价格",
   "Plan details are temporarily unavailable.": "套餐信息暂时无法显示。",
   "There are no billing records for this account.": "此账户没有账单记录。",
-  "Could not open billing. Please try again.": "无法打开账单页面，请重试。"
+  "Could not open billing. Please try again.": "无法打开账单页面，请重试。",
+  "Ends automatically. No charge.": "到期自动结束，不扣款。",
+  "No card required. Includes {points} AI points for {days} days from redemption. Unused trial points expire at the end; top-ups and lifetime licenses stay. One trial code per account; accounts with an active Cloud plan cannot redeem one.": "无需绑卡，兑换后可使用 {days} 天，含 {points} AI 点数。未用完的试用点数到期失效；充值点数和永久许可证保留。每个账号限用一张试用券；已有有效 Cloud 套餐的账号无法兑换。",
+  "Trial activated": "试用已开通",
+  "Try Plus Cloud features with {points} AI points for {days} days. No credit card required. The trial ends automatically, with no renewal or charge.": "体验 Plus Cloud 功能，含 {points} AI 点数，有效期 {days} 天。无需信用卡，到期自动结束，不续费、不扣款。",
+  "Your free month of Plus Cloud is ready": "你的 Plus Cloud 免费月度体验已就绪",
+  "{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.": "你的账号已获得 {points} AI 点数和 Plus Cloud 功能，有效期至 {date}。无需绑卡，不续费、不扣款。未用完的试用点数届时失效；充值点数和永久许可证保留。"
 }

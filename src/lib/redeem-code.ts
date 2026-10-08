@@ -1,6 +1,6 @@
 // /redeem takes every code Enconvo hands out (CONTEXT.md "Trial code", "License code"). The
 // Worker says which kind a code is: a License code puts a lifetime license on the signed-in
-// account on the spot, and a Trial code opens a Stripe Checkout for a free Cloud month.
+// account on the spot; Trial codes activate directly or through Stripe, according to mode.
 
 import { workerPost, workerRequest } from '@/lib/worker-api'
 import type { TrialCheckout, TrialCodeInfo, TrialCodeStatus } from '@/lib/trial-code'
@@ -24,7 +24,16 @@ export interface LicenseGrant {
     balance: number
 }
 
-export type RedeemResult = ({ kind: 'license' } & LicenseGrant) | ({ kind: 'checkout' } & TrialCheckout)
+export interface TrialGrant {
+    kind: 'trial'
+    points: number
+    balance: number
+    trial_days: number
+    ends_at: string
+    requires_card: false
+}
+
+export type RedeemResult = ({ kind: 'license' } & LicenseGrant) | ({ kind: 'checkout' } & TrialCheckout) | TrialGrant
 
 export const LICENSES: Record<LicenseCodeTier, { name: string; devices: string; updates: string }> = {
     standard: { name: 'Standard', devices: '1 Mac', updates: '1 year of free updates' },
@@ -35,7 +44,7 @@ export function fetchRedeemCode(code: string, signal?: AbortSignal) {
     return workerRequest<RedeemCodeInfo>(`/api/redeem_code/code/${encodeURIComponent(code)}`, { signal })
 }
 
-/** Redeems a License code, or opens a Trial code's Checkout, for the signed-in account. */
+/** Redeems a license or no-card trial, or opens a card-required trial's Checkout. */
 export function redeemCode(accessToken: string, code: string) {
     return workerPost<RedeemResult>('/api/redeem_code', accessToken, { code })
 }

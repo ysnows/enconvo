@@ -15,6 +15,7 @@ import {
 } from '@/components/landing-styles'
 import { SiteNav } from '@/components/SiteNav'
 import { supabase } from '@/lib/supabase'
+import { trackEvent } from '@/lib/analytics'
 import {
   fetchRedeemCode,
   LICENSES,
@@ -42,6 +43,7 @@ interface RedeemPageProps {
   priceUsd: number
   tier: LicenseCodeTier
   points: number
+  requiresCard: boolean
 }
 
 const LOOKUP_TIMEOUT_MS = 3500
@@ -70,6 +72,7 @@ export const getServerSideProps: GetServerSideProps<RedeemPageProps> =
       priceUsd: DEFAULT_PRICE_USD,
       tier: 'standard',
       points: DEFAULT_LICENSE_POINTS,
+      requiresCard: true,
     }
 
     if (code) {
@@ -98,6 +101,8 @@ function describe(info: RedeemCodeInfo): Partial<RedeemPageProps> {
         status: info.status,
         trialDays: info.trial_days,
         priceUsd: info.price_usd,
+        points: info.points ?? 500_000,
+        requiresCard: info.requires_card ?? true,
       }
 }
 
@@ -244,15 +249,22 @@ export default function RedeemCodePage(props: RedeemPageProps) {
   const router = useRouter()
   // A lookup the server couldn't make is made again here, and may change the kind.
   const [info, setInfo] = useState(props)
-  const { kind, trialDays, priceUsd, tier, points } = info
+  const { kind, trialDays, priceUsd, tier, points, requiresCard } = info
   const [status, setStatus] = useState<PageStatus>(initialStatus)
   const [granted, setGranted] = useState(false)
+  const [endsAt, setEndsAt] = useState<string | null>(null)
   const [email, setEmail] = useState<string | null>(null)
   const [sessionChecked, setSessionChecked] = useState(false)
   const [opening, setOpening] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const canceled = router.query.canceled === 'true'
   const returnUrl = encodeURIComponent(`/redeem/${code}`)
+
+  useEffect(() => {
+    if (status === 'available' && kind === 'trial') {
+      trackEvent('trial_code_viewed', { requires_card: requiresCard, days: trialDays }, { includePagePath: false })
+    }
+  }, [status, kind, requiresCard, trialDays])
 
   useEffect(() => {
     if (initialStatus !== 'unknown') return
@@ -311,6 +323,14 @@ export default function RedeemCodePage(props: RedeemPageProps) {
         setGranted(true)
         return
       }
+      if (answer.kind === 'trial') {
+        setInfo((current) => ({ ...current, kind: 'trial', requiresCard: false, points: answer.points, trialDays: answer.trial_days }))
+        setEndsAt(answer.ends_at)
+        setOpening(false)
+        setGranted(true)
+        trackEvent('trial_code_redeemed', { requires_card: false, days: answer.trial_days, points: answer.points }, { includePagePath: false })
+        return
+      }
       // Keep the button busy while the browser leaves for Stripe.
       window.location.assign(answer.url)
       return
@@ -347,7 +367,19 @@ export default function RedeemCodePage(props: RedeemPageProps) {
         <SiteNav />
         <main className="mx-auto max-w-[1240px] px-6 pb-24 pt-36 lg:px-12">
           {granted ? (
-            <LicenseRedeemed tier={tier} points={points} email={email} />
+            isLicense ? <LicenseRedeemed tier={tier} points={points} email={email} /> : (
+              <div>
+                <span className={metaLabel}>{t('Trial activated')}</span>
+                <h1 className="mt-6 text-4xl font-semibold">{t('Your free month of Plus Cloud is ready')}</h1>
+                <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
+                  {t('{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.', { points: points.toLocaleString(locale), date: endsAt ? new Date(endsAt).toLocaleString(locale) : '' })}
+                </p>
+                <div className="mt-8 flex gap-3">
+                  <Link href="/downloads" className={primaryButton}>{t('Download Enconvo')}</Link>
+                  <Link href="/account" className={secondaryButton}>{t('Go to your account')}</Link>
+                </div>
+              </div>
+            )
           ) : status !== 'available' && status !== 'unknown' ? (
             <UnavailableCode code={code} kind={kind} status={status} />
           ) : (
@@ -381,6 +413,10 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                         p1: points.toLocaleString(locale),
                       }}
                     />
+                  </p>
+                ) : !requiresCard ? (
+                  <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
+                    {t('Try Plus Cloud features with {points} AI points for {days} days. No credit card required. The trial ends automatically, with no renewal or charge.', { points: points.toLocaleString(locale), days: trialDays })}
                   </p>
                 ) : (
                   <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
@@ -434,7 +470,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                             className="h-4 w-4 animate-spin"
                             aria-hidden="true"
                           />
-                          {isLicense ? t('Redeeming…') : t('Opening checkout…')}
+                          {isLicense || !requiresCard ? t('Redeeming…') : t('Opening checkout…')}
                         </>
                       ) : (
                         <>
@@ -548,15 +584,15 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                     <div className="flex items-baseline justify-between gap-4 pt-4">
                       <dt className="text-content-muted">{t('After that')}</dt>
                       <dd className="text-content">
-                        <I18nText
+                        {!requiresCard ? t('Ends automatically. No charge.') : <I18nText
                           source={'{p0}, cancel any time'}
                           values={{ p0: price }}
-                        />
+                        />}
                       </dd>
                     </div>
                   </dl>
                   <p className="mt-6 text-xs leading-5 text-content-ash">
-                    <I18nText
+                    {!requiresCard ? t('No card required. Includes {points} AI points for {days} days from redemption. Unused trial points expire at the end; top-ups and lifetime licenses stay. One trial code per account; accounts with an active Cloud plan cannot redeem one.', { points: points.toLocaleString(locale), days: trialDays }) : <I18nText
                       source="Stripe asks for a payment method but charges nothing today. The plan renews at {price} when the free {period} end, unless you cancel before then from your {account}. One trial code per account; accounts that already have a Cloud plan can't redeem one."
                       values={{
                         price,
@@ -570,7 +606,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                           </Link>
                         ),
                       }}
-                    />
+                    />}
                   </p>
                 </div>
               )}

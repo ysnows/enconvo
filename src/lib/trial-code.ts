@@ -1,6 +1,6 @@
 // Trial codes (CONTEXT.md "Trial code"): one-use codes Enconvo hands out for a free first
 // month of the monthly Plus Cloud plan. /redeem/<CODE> looks the code up; redeeming opens
-// a Stripe Checkout the Worker creates for the signed-in account (card required, $0 today).
+// a direct Plus Cloud grant or Stripe Checkout, according to the code's requires_card flag.
 
 import { normalizeCode } from '@/lib/codes'
 import { workerPost, workerRequest } from '@/lib/worker-api'
@@ -14,6 +14,8 @@ export interface TrialCodeInfo {
     plan: 'plus'
     trial_days: number
     price_usd: number
+    requires_card: boolean
+    points: number
 }
 
 export interface TrialCheckout {
