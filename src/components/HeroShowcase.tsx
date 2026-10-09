@@ -9,6 +9,56 @@ import styles from '@/styles/Home.module.css'
 const SUB_SCENE_MS = 7000
 const INTERACTION_PAUSE_MS = 20000
 
+function YouTubePreview({
+  src,
+  poster,
+  title,
+}: {
+  src: string
+  poster?: string
+  title: string
+}) {
+  const { t } = useI18n()
+  const [started, setStarted] = useState(false)
+
+  if (started)
+    return (
+      <iframe
+        src={`${src}?autoplay=1&rel=0&playsinline=1`}
+        title={t(title)}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowFullScreen
+        className={styles.playerMedia}
+      />
+    )
+
+  return (
+    <button
+      type="button"
+      onClick={() => setStarted(true)}
+      aria-label={`${t('Play')}: ${t(title)}`}
+      className={`${styles.playerMedia} group`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={poster}
+        alt=""
+        width={1920}
+        height={1080}
+        decoding="async"
+        className={`${styles.playerMedia} object-cover`}
+      />
+      <span className="absolute inset-0 flex items-center justify-center bg-black/10 group-hover:bg-black/20">
+        <span className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/20 bg-black/55 text-content backdrop-blur">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+        </span>
+      </span>
+    </button>
+  )
+}
+
 // Styled stand-in shown until a sub-scene's demo clip is recorded — a mock
 // window frame in the Product Screenshot Panel style so the future video
 // drops into the same visual slot.
@@ -169,7 +219,10 @@ export function HeroShowcase() {
   // finish playing (onEnded), so a film is always watched to the end.
   useEffect(() => {
     if (!autoPlay || !isActive) return
-    if (activeScene.media?.type === 'video') return
+    if (
+      activeScene.media?.type === 'video' ||
+      activeScene.media?.type === 'youtube'
+    ) return
     const timer = setTimeout(advance, SUB_SCENE_MS)
     return () => clearTimeout(timer)
   }, [autoPlay, isActive, tabIndex, sceneIndex, activeScene, advance])
@@ -253,7 +306,14 @@ export function HeroShowcase() {
         aria-labelledby={`hero-tab-${activeTab.id}`}
         className={clsx(styles.player, playing && styles.playing)}
       >
-        {activeScene.media?.type === 'video' ? (
+        {activeScene.media?.type === 'youtube' ? (
+          <YouTubePreview
+            key={activeScene.media.src}
+            src={activeScene.media.src}
+            poster={activeScene.media.poster}
+            title={activeScene.caption}
+          />
+        ) : activeScene.media?.type === 'video' ? (
           // Reuse this element across clips to preserve media playback permission.
           <video
             ref={videoRef}
@@ -421,7 +481,7 @@ export function HeroShowcase() {
               )}
             </button>
           </div>
-        ) : activeScene.media ? (
+        ) : activeScene.media?.type === 'image' ? (
           <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/70 to-transparent px-4 pb-3 pt-8">
             <span className="rounded bg-white/10 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-content backdrop-blur">
               {activeTab.productName}

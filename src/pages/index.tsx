@@ -14,6 +14,7 @@ import { FeatureGrid } from '@/components/home/FeatureGrid'
 import { ModelFreedom } from '@/components/home/ModelFreedom'
 import { OpenPlatform } from '@/components/home/OpenPlatform'
 import { useSectionEffects } from '@/components/home/useSectionEffects'
+import { heroTabs } from '@/data/heroShowcase'
 import {
   getHomepageStructuredData,
   SITE_DESCRIPTION,
@@ -36,7 +37,11 @@ export default function Home({ renderedAt }: { renderedAt: number }) {
           href={canonicalUrl('/', locale)}
           key="canonical"
         />
-        <link rel="preload" as="image" href="/posters/app-sidebar.jpg" />
+        <link
+          rel="preload"
+          as="image"
+          href={heroTabs[0].subScenes[0].media?.poster}
+        />
         <link rel="preconnect" href="https://file.enconvo.com" />
         <meta
           name="robots"

@@ -97,13 +97,14 @@ for (const [index, html] of pages.entries()) {
   assert.ok(html.includes('aria-pressed="true"'))
   assert.ok(html.includes('role="status"'))
   assert.ok(!html.includes('<iframe'), 'no YouTube embed before opening a demo')
+  const discovery = index === 0 ? gallery : html
   const count = index === 0 ? 6 : useCases.length
   assert.equal(
-    (html.match(/src="https:\/\/i\.ytimg\.com\//g) || []).length,
+    (discovery.match(/src="https:\/\/i\.ytimg\.com\//g) || []).length,
     count
   )
   assert.equal(
-    (html.match(/loading="lazy" decoding="async"/g) || []).length,
+    (discovery.match(/loading="lazy" decoding="async"/g) || []).length,
     count
   )
 }

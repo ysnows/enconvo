@@ -5,7 +5,7 @@
 // clip is recorded; dropping a video into `media` later needs no code change.
 
 export interface SubSceneMedia {
-    type: 'video' | 'image'
+    type: 'video' | 'image' | 'youtube'
     src: string
     poster?: string
 }
@@ -26,6 +26,24 @@ export interface HeroTab {
 }
 
 export const heroTabs: HeroTab[] = [
+    {
+        id: 'ai-companion',
+        benefitLabel: 'Meet your AI companion on Mac and iPhone',
+        productName: 'Enconvo',
+        tagline: 'Meet your AI companion on Mac and iPhone',
+        subScenes: [
+            {
+                id: 'walkthrough',
+                label: 'Walkthrough',
+                caption: 'Meet your AI companion on Mac and iPhone',
+                media: {
+                    type: 'youtube',
+                    src: 'https://www.youtube-nocookie.com/embed/-OJOek_lxig',
+                    poster: 'https://i.ytimg.com/vi/-OJOek_lxig/maxresdefault.jpg',
+                },
+            },
+        ],
+    },
     {
         id: 'app-sidebar',
         benefitLabel: 'Works beside your apps',

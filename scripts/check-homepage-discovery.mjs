@@ -48,7 +48,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   assert.equal(graph?.length, 4)
   const app = graph.find((item) => item['@type'] === 'SoftwareApplication')
   assert.equal(app.operatingSystem, 'macOS 14 or later')
-  assert.equal(app.featureList.length, 6)
+  assert.equal(app.featureList.length, 7)
   assert.ok(!app.aggregateRating && !app.review, 'no invented review signals')
   assert.equal(app.offers.price, '0')
   assert.ok(
@@ -60,9 +60,10 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-mac-agent-v1.jpg')
   )
   assert.ok(
-    html.includes('poster="/posters/app-sidebar.jpg"') &&
-      html.includes('preload="none"')
+    html.includes('https://i.ytimg.com/vi/-OJOek_lxig/maxresdefault.jpg') &&
+      html.includes('id="hero-tab-ai-companion" role="tab" aria-selected="true"')
   )
+  assert.ok(!html.includes('<iframe'), 'YouTube loads only after clicking Play')
   assert.ok(!html.includes('autoPlay=""') && !html.includes('autoplay=""'))
   assert.ok(
     !html.includes('fonts.googleapis.com') && !html.includes('js.stripe.com')

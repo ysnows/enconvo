@@ -21,7 +21,7 @@ const probe = `<script>
   requestAnimationFrame(() => requestAnimationFrame(() => {
     const heading = document.querySelector('h1');
     const panel = document.querySelector('#hero-demo-panel');
-    const video = panel.querySelector('video');
+    const video = panel.querySelector('video, img, iframe');
     const backdrop = document.querySelector('[data-hero-backdrop]');
     const b = backdrop.getBoundingClientRect();
     const hero = backdrop.parentElement.getBoundingClientRect();
