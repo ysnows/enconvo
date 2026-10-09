@@ -60,10 +60,15 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-mac-agent-v1.jpg')
   )
   assert.ok(
-    html.includes('https://i.ytimg.com/vi/-OJOek_lxig/maxresdefault.jpg') &&
+    html.includes('poster="/posters/ai-companion-mac-iphone.jpg"') &&
       html.includes('id="hero-tab-ai-companion" role="tab" aria-selected="true"')
   )
-  assert.ok(!html.includes('<iframe'), 'YouTube loads only after clicking Play')
+  assert.ok(
+    html.includes('<video src="https://file.enconvo.com/videos/ai-companion-mac-iphone.mp4"') &&
+      html.includes('preload="none"'),
+    'the opening showcase uses the shared MP4 player'
+  )
+  assert.ok(!html.includes('<iframe'), 'the homepage has no embedded player')
   assert.ok(!html.includes('autoPlay=""') && !html.includes('autoplay=""'))
   assert.ok(
     !html.includes('fonts.googleapis.com') && !html.includes('js.stripe.com')
