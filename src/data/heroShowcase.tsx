@@ -28,18 +28,18 @@ export interface HeroTab {
 export const heroTabs: HeroTab[] = [
     {
         id: 'ai-companion',
-        benefitLabel: 'Meet your AI companion on Mac and iPhone',
+        benefitLabel: 'Your AI companion, in action',
         productName: 'Enconvo',
-        tagline: 'Meet your AI companion on Mac and iPhone',
+        tagline: 'Meet Enconvo Live Avatar',
         subScenes: [
             {
                 id: 'walkthrough',
                 label: 'Walkthrough',
-                caption: 'Meet your AI companion on Mac and iPhone',
+                caption: 'Meet Enconvo Live Avatar',
                 media: {
                     type: 'video',
-                    src: 'https://file.enconvo.com/videos/ai-companion-mac-iphone.mp4',
-                    poster: '/posters/ai-companion-mac-iphone.jpg',
+                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-20261009.mp4',
+                    poster: '/posters/enconvo-live-avatar-20261009.jpg',
                 },
             },
         ],

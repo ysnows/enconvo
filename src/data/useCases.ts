@@ -14,12 +14,12 @@ export interface UseCase {
 export const useCases: UseCase[] = [
   {
     slug: 'ai-companion-mac-iphone',
-    title: 'Meet your AI companion on Mac and iPhone',
+    title: 'Meet Enconvo Live Avatar',
     description:
-      'Talk naturally with an animated AI companion, ask about anything on screen, edit text with PopBar, dictate, and translate live captions — then keep the conversation going on iPhone.',
-    youtubeId: '-OJOek_lxig',
+      'Talk to an expressive AI avatar, ask it to move or dance, then watch it check the weather and book a restaurant through your browser.',
+    youtubeId: 'seBcT7dRtu4',
     category: 'AI Agent',
-    date: '2026-10-07',
+    date: '2026-10-09',
   },
   {
     slug: 'pair-your-iphone',

@@ -2244,5 +2244,8 @@
   "Trial activated": "Essai activé",
   "Try Plus Cloud features with {points} AI points for {days} days. No credit card required. The trial ends automatically, with no renewal or charge.": "Essayez Plus Cloud avec {points} points IA pendant {days} jours. Aucune carte requise. L’essai se termine automatiquement, sans renouvellement ni prélèvement.",
   "Your free month of Plus Cloud is ready": "Votre mois gratuit de Plus Cloud est prêt",
-  "{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.": "Vous disposez de {points} points IA et de Plus Cloud jusqu’au {date}. Sans carte, renouvellement ni prélèvement. Les points d’essai inutilisés expirent à cette date ; vos recharges et votre licence perpétuelle sont conservées."
+  "{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.": "Vous disposez de {points} points IA et de Plus Cloud jusqu’au {date}. Sans carte, renouvellement ni prélèvement. Les points d’essai inutilisés expirent à cette date ; vos recharges et votre licence perpétuelle sont conservées.",
+  "Your AI companion, in action": "Votre compagnon IA en action",
+  "Meet Enconvo Live Avatar": "Découvrez Enconvo Live Avatar",
+  "Talk to an expressive AI avatar, ask it to move or dance, then watch it check the weather and book a restaurant through your browser.": "Discutez avec un avatar IA expressif, demandez-lui de bouger ou de danser, puis regardez-le consulter la météo et réserver un restaurant dans votre navigateur."
 }
