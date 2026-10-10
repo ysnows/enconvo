@@ -38,8 +38,8 @@ export const heroTabs: HeroTab[] = [
                 caption: 'Meet Enconvo Live Avatar',
                 media: {
                     type: 'video',
-                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-20261009.mp4',
-                    poster: '/posters/enconvo-live-avatar-20261009.jpg',
+                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-iphone-duo-v9-20261010.mp4',
+                    poster: '/posters/enconvo-live-avatar-iphone-duo-v9-20261010.jpg',
                 },
             },
         ],

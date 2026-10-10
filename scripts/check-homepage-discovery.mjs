@@ -60,11 +60,11 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-mac-agent-v1.jpg')
   )
   assert.ok(
-    html.includes('poster="/posters/enconvo-live-avatar-20261009.jpg"') &&
+    html.includes('poster="/posters/enconvo-live-avatar-iphone-duo-v9-20261010.jpg"') &&
       html.includes('id="hero-tab-ai-companion" role="tab" aria-selected="true"')
   )
   assert.ok(
-    html.includes('<video src="https://file.enconvo.com/videos/enconvo-live-avatar-20261009.mp4"') &&
+    html.includes('<video src="https://file.enconvo.com/videos/enconvo-live-avatar-iphone-duo-v9-20261010.mp4"') &&
       html.includes('preload="none"'),
     'the opening showcase uses the shared MP4 player'
   )

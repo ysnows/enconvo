@@ -17,9 +17,9 @@ export const useCases: UseCase[] = [
     title: 'Meet Enconvo Live Avatar',
     description:
       'Talk to an expressive AI avatar, ask it to move or dance, then watch it check the weather and book a restaurant through your browser.',
-    youtubeId: 'seBcT7dRtu4',
+    youtubeId: 'heiBOqK6KGU',
     category: 'AI Agent',
-    date: '2026-10-09',
+    date: '2026-10-10',
   },
   {
     slug: 'pair-your-iphone',
