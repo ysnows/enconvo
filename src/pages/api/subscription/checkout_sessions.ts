@@ -48,6 +48,9 @@ async function handler(req, res) {
     lookupKey === '3000000_points'
 
   const from = isTopUpPoints ? 'points_top_up' : 'subscription'
+  // The success page shows Team admins where to assign their Seats (ADR 0112).
+  const planParam =
+    lookupKey === 'teams' || lookupKey === 'teams_seat' ? '&plan=teams' : ''
 
   try {
     // Create Checkout Sessions from body params. Lifetime prices follow their schedule.
@@ -104,7 +107,7 @@ async function handler(req, res) {
       success_url: `${req.headers.origin}${localizePath(
         '/pay_success',
         getLocale(req.body.locale)
-      )}?success=true&session_id={CHECKOUT_SESSION_ID}&from=${from}`,
+      )}?success=true&session_id={CHECKOUT_SESSION_ID}&from=${from}${planParam}`,
       cancel_url: `${req.headers.origin}${localizePath(
         '/pay_success',
         getLocale(req.body.locale)

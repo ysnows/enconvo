@@ -22,6 +22,8 @@ export default function PaySuccess({ handleOpenApp }) {
   const from = router.query.from
   const isTopUpPoints = from === 'points_top_up'
   const isTrialCode = from === 'trial_code'
+  // A Teams license or seat add-on (ADR 0112): the buyer is the Team admin.
+  const isTeams = router.query.plan === 'teams'
   const successTitle = isTrialCode
     ? 'Your free month has started!'
     : 'Thank you for your purchase!'
@@ -29,6 +31,8 @@ export default function PaySuccess({ handleOpenApp }) {
     ? 'Your Plus Cloud plan is active and costs nothing for the first 30 days. It renews at $10/month after that unless you cancel before the trial ends from your account.'
     : isTopUpPoints
     ? 'Thank you for your purchase! You will receive your points in your account shortly.'
+    : isTeams
+    ? 'Thank you for your purchase! Open Enconvo → Settings → Account → Teams to assign Seats to your team by email.'
     : 'Thank you for your purchase! You can now start using Enconvo premium features.'
 
   useEffect(() => {
@@ -109,20 +113,32 @@ export default function PaySuccess({ handleOpenApp }) {
                 </a>
               </div>
               <h1 className="mt-10 text-4xl font-bold tracking-tight text-white sm:text-6xl">
-                {isSuccess ? successTitle : t('Payment Cancelled')}
+                {isSuccess ? t(successTitle) : t('Payment Cancelled')}
               </h1>
               <p className="mt-6 text-lg leading-8 text-gray-300">
                 {isSuccess
-                  ? successTipText
+                  ? t(successTipText)
                   : t(
                       'Your payment was cancelled. If you experienced any issues, please try again or contact our support team.'
                     )}
               </p>
               <div className="mt-10 flex gap-4">
                 {isSuccess ? (
-                  <Button onClick={handleOpenApp} className="border-2">
-                    {t('Go To Connect Enconvo')}
-                  </Button>
+                  <>
+                    <Button onClick={handleOpenApp} className="border-2">
+                      {t('Go To Connect Enconvo')}
+                    </Button>
+                    {isTeams && (
+                      <Button
+                        asChild
+                        className="bg-indigo-600 hover:bg-indigo-500"
+                      >
+                        <a href="enconvo://preference?pane=teams">
+                          {t('Assign Seats')}
+                        </a>
+                      </Button>
+                    )}
+                  </>
                 ) : (
                   <>
                     <Button

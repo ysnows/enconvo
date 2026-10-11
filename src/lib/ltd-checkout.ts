@@ -24,7 +24,7 @@ export async function ltdCheckoutParams(
   if (!plan || input.quantity !== undefined ||
       (input.seats !== undefined && input.seats !== 5) ||
       (plan.key !== 'teams' && input.seats !== undefined)) {
-    throw new LtdCheckoutError('Choose a Standard, Premium, or five-device Teams license.', 400)
+    throw new LtdCheckoutError('Choose a Standard, Premium, or five-seat Teams license.', 400)
   }
 
   const price = await stripe.prices.retrieve(plan.priceId)

@@ -291,7 +291,12 @@ export default function Account() {
                 </div>
               </div>
 
-              {session && <AccountPlan accessToken={session.access_token} />}
+              {session && (
+                <AccountPlan
+                  accessToken={session.access_token}
+                  email={session.user?.email}
+                />
+              )}
 
               {session && <InviteFriends accessToken={session.access_token} />}
             </div>

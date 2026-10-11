@@ -39,13 +39,15 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     if (typeof req.body.via === 'string' && req.body.via)
       cancelParams.set('via', req.body.via.slice(0, 200))
     const journey = affiliateJourneyFrom(req.cookies)
+    // The success page shows Team admins where to assign their Seats (ADR 0112).
+    const planParam = req.body.lookupKey === 'teams' ? '&plan=teams' : ''
     const session = await stripe.checkout.sessions.create({
       ...discount,
       mode: 'payment',
       success_url: `${origin.origin}${localizePath(
         '/pay_success',
         getLocale(req.body.locale)
-      )}?success=true&session_id={CHECKOUT_SESSION_ID}&from=subscription`,
+      )}?success=true&session_id={CHECKOUT_SESSION_ID}&from=subscription${planParam}`,
       cancel_url: `${origin.origin}${localizePath(
         LTD_OFFER.path,
         getLocale(req.body.locale)

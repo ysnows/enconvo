@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { useCallback, useEffect, useState, type ReactNode } from 'react'
-import { ArrowRight, Cloud, Crown, Gem, Loader2 } from 'lucide-react'
+import { ArrowRight, Cloud, Crown, Gem, Loader2, Users } from 'lucide-react'
 import { useI18n } from '@/i18n/I18nProvider'
 import {
   FREE_ENTITLEMENTS,
+  seatManagedBy,
+  teamAdminSeats,
   type AccountPlan as Plan,
   type Entitlements,
 } from '@/lib/account-plan'
@@ -12,9 +14,15 @@ import {
 // Account settings (modules/enconvo_webapp NativeSettingsPanes.tsx): a
 // Lifetime License section and an Enconvo Cloud section, each showing its rows
 // when the account holds it or a button to get it, then Usage and billing.
+// Teams (ADR 0112): a Seat is assigned to each person's own account and lasts
+// while it stays assigned; a Team admin assigns Seats in the app, so the
+// website only points there.
+
+// The app's Teams settings pane, where a Team admin assigns Seats.
+export const TEAMS_SETTINGS_URL = 'enconvo://preference?pane=teams'
 
 type Translate = ReturnType<typeof useI18n>['t']
-type Row = { label: string; value: string; muted?: boolean }
+export type Row = { label: string; value: string; muted?: boolean }
 
 function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate()
@@ -45,12 +53,15 @@ function validDate(value: string | null) {
 }
 
 // The device count sits in the Cloud section when a Cloud plan is active (it
-// gives the most devices), otherwise in the Lifetime License section.
-function licenseRows(
+// gives the most devices), otherwise in the Lifetime License section. A Teams
+// Seat shows who manages it (when that's someone else) and lasts while it is
+// assigned; the Seats a Team admin owns show apart from these rows.
+export function licenseRows(
   ent: Entitlements,
   devices: Row,
   t: Translate,
-  formatDate: (date: Date) => string
+  formatDate: (date: Date) => string,
+  email?: string | null
 ): Row[] | null {
   if (ent.license.tier === 'none') return null
   const since = validDate(ent.license.since)
@@ -61,14 +72,20 @@ function licenseRows(
       value: teams ? 'Teams' : ent.license.tier === 'premium' ? 'Pro' : 'Plus',
     },
   ]
-  if (since) rows.push({ label: t('Purchased'), value: formatDate(since) })
-  rows.push({ label: t('Access'), value: t('Lifetime · never expires') })
-  if (teams) {
+  const managedBy = teams ? seatManagedBy(ent, email) : null
+  if (managedBy) rows.push({ label: t('Managed by'), value: managedBy })
+  if (since) {
     rows.push({
-      label: t('Seats'),
-      value: String(ent.license.seats || ent.deviceLimit),
+      label: teams ? t('Seat assigned') : t('Purchased'),
+      value: formatDate(since),
     })
   }
+  rows.push({
+    label: t('Access'),
+    value: teams
+      ? t('While your Seat is assigned')
+      : t('Lifetime · never expires'),
+  })
   if (ent.license.tier === 'premium' || teams) {
     rows.push({ label: t('Updates & support'), value: t('For life') })
   } else if (since) {
@@ -196,7 +213,14 @@ function Skeleton() {
   )
 }
 
-export default function AccountPlan({ accessToken }: { accessToken: string }) {
+export default function AccountPlan({
+  accessToken,
+  email,
+}: {
+  accessToken: string
+  /** The signed-in account's email, to tell a Team admin's own Seat apart. */
+  email?: string | null
+}) {
   const { t, locale } = useI18n()
   const [plan, setPlan] = useState<Plan | null>(null)
   const [failed, setFailed] = useState(false)
@@ -291,7 +315,8 @@ export default function AccountPlan({ accessToken }: { accessToken: string }) {
           value: `${plan.devicesUsed} / ${ent.deviceLimit}`,
           muted: plan.devicesUsed > ent.deviceLimit,
         }
-  const license = licenseRows(ent, devices, t, formatDate)
+  const license = licenseRows(ent, devices, t, formatDate, email)
+  const teamSeats = teamAdminSeats(ent)
   const cloud = cloudRows(ent, devices, t, formatDate)
   const balance = new Intl.NumberFormat(locale, {
     notation: 'compact',
@@ -312,6 +337,19 @@ export default function AccountPlan({ accessToken }: { accessToken: string }) {
               <Crown className="h-4 w-4" aria-hidden="true" />
               {t('Get Lifetime')}
             </Link>
+          </SectionRow>
+        )}
+        {teamSeats > 0 && (
+          <SectionRow
+            label={t(
+              'You manage {p0} Teams seats. Assign them in the Enconvo app: Settings → Account → Teams.',
+              { p0: teamSeats }
+            )}
+          >
+            <a href={TEAMS_SETTINGS_URL} className={OUTLINE_BUTTON}>
+              <Users className="h-4 w-4" aria-hidden="true" />
+              {t('Open Enconvo')}
+            </a>
           </SectionRow>
         )}
       </Section>

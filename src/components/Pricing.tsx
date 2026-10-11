@@ -289,7 +289,7 @@ const PAID_PLANS: PaidPlan[] = [
     name: 'Teams',
     kind: 'License',
     // {p0} is the seat price on the lifetime schedule.
-    best: 'One account for a team, +{p0} a seat.',
+    best: 'One account per person, +{p0} a seat.',
   },
   { name: 'Plus', kind: 'Cloud', best: 'Light daily use, no API keys.' },
   {
@@ -341,7 +341,7 @@ const PLAN_DIFFS: { feature: string; hint: string; cells: DiffCell[] }[] = [
     cells: [
       { text: '1', dots: 1 },
       { text: '3', dots: 3, strong: true },
-      { text: '5 – 500', dots: 5, strong: true },
+      { text: '1 per seat', dots: 1 },
       { text: '5', dots: 5 },
       { text: '5', dots: 5 },
       { text: '5', dots: 5 },
@@ -926,7 +926,8 @@ function PlanComparison({
   )
 }
 
-// Teams lifetime license (ADR 0036): one account, seat-counted devices.
+// Teams lifetime license (ADR 0112): the buyer becomes the Team admin and
+// assigns each Seat to one person's own account, with one Mac per Seat.
 // The base price covers five seats; each one after that is the seat price
 // (lifetime-pricing.ts).
 const TEAMS_MIN_SEATS = TEAMS_BASE_SEATS
@@ -961,7 +962,9 @@ function TeamsPlan({ now, saleBadge }: { now: number; saleBadge?: string }) {
             )}
           </div>
           <p>
-            {t('One account for your whole team. 30-day money back guarantee.')}
+            {t(
+              'A seat for each person, on their own account. 30-day money back guarantee.'
+            )}
           </p>
         </div>
         <div className={styles.teamsControls}>
@@ -1043,10 +1046,10 @@ function TeamsPlan({ now, saleBadge }: { now: number; saleBadge?: string }) {
       </div>
       <PlanFeatures
         features={[
-          `${seats} Mac devices on one account`,
+          `${seats} seats — each person signs in with their own account`,
           `${(
             seats * 50000
-          ).toLocaleString()} Cloud points bonus — 50,000 per seat`,
+          ).toLocaleString()} Cloud points bonus to share with your team — 50,000 per seat`,
           `Add more seats any time at ${usd(
             lifetimePrices(now).teams_seat.cents
           )} each`,

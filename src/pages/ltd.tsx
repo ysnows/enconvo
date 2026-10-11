@@ -54,7 +54,7 @@ const faqs = [
   ],
   [
     'How does Teams work?',
-    'This offer covers the five-device Teams license. The five Mac devices share one Enconvo account.',
+    'This offer covers a five-seat Teams license. You become the Team admin and hold the first seat, then assign the other four by email in Enconvo under Settings → Account → Teams. Each person signs in with their own Enconvo account on one Mac and keeps their own chats, memory and knowledge bases.',
   ],
   [
     'What happens after payment?',
@@ -99,8 +99,8 @@ const finderOptions: { plan: LtdPlanKey; label: string; hint?: string }[] = [
   { plan: 'premium', label: '2–3 Macs' },
   {
     plan: 'teams',
-    label: '4–5 Macs',
-    hint: 'All five Macs share one Enconvo account.',
+    label: '5 people, 1 Mac each',
+    hint: 'Each person signs in with their own Enconvo account.',
   },
 ]
 

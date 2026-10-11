@@ -39,8 +39,9 @@ const LTD_PLAN_DETAILS = [
   {
     key: 'teams',
     name: 'Teams',
-    description: 'Five Macs sharing one account.',
-    devices: '5 Mac devices on one account',
+    description: 'Five seats, each on its own account.',
+    // One Mac per Seat, so the per-Mac price is the per-seat price.
+    devices: '5 seats, one Mac each',
     deviceCount: 5,
     updates: 'Lifetime free updates',
     bonusPoints: '250,000 Cloud points',
