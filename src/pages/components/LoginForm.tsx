@@ -16,7 +16,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { NativeRouter } from '@/utils/app/native_router'
 import { syncCurrentEmailPreference } from '@/lib/email-preferences-client'
-import { authFlowHref, isCompanionFlow } from '@/lib/auth-flow'
+import { authFlowHref, oauthCallbackUrl } from '@/lib/auth-flow'
 
 export default function LoginForm({
   loginState,
@@ -27,7 +27,6 @@ export default function LoginForm({
   const pageRouter = useRouter()
   router = router ?? pageRouter
   const { t, locale } = useI18n()
-  const companion = router.isReady && isCompanionFlow(router.query)
 
   const supabase = createClientComponentClient()
 
@@ -124,35 +123,17 @@ export default function LoginForm({
   }
 
   async function signInWithGoogle() {
-    if (!router.isReady || companion) return
+    // Until then the query (and the app to return to) isn't known.
+    if (!router.isReady) return
     try {
       setGoogleIsLoading(true)
-      let redirectUrl = `${window.location.origin}/auth/callback?language=${locale}`
-      // The callback carries a local returnUrl on (a bare path isn't a valid OAuth redirect).
-      const returnUrl = Array.isArray(router.query.returnUrl)
-        ? router.query.returnUrl[0]
-        : router.query.returnUrl
-      if (returnUrl?.startsWith('/')) {
-        redirectUrl += `&returnUrl=${encodeURIComponent(returnUrl)}`
-      }
       // Preserve from/source/handoff across the OAuth round-trip so the app can
       // return the user to where login started (e.g. the onboarding guide).
-      const from = Array.isArray(router.query.from)
-        ? router.query.from[0]
-        : router.query.from
-      const source = Array.isArray(router.query.source)
-        ? router.query.source[0]
-        : router.query.source
-      const handoff = Array.isArray(router.query.handoff)
-        ? router.query.handoff[0]
-        : router.query.handoff
-      const extra = new URLSearchParams()
-      if (from) extra.set('from', from)
-      if (source) extra.set('source', source)
-      if (handoff) extra.set('handoff', handoff)
-      const extraQs = extra.toString()
-      if (extraQs)
-        redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + extraQs
+      const redirectUrl = oauthCallbackUrl(
+        window.location.origin,
+        router.query,
+        locale
+      )
 
       // Someone who chose "Use a different account" picks their Google account too.
       const prompt = Array.isArray(router.query.prompt)
@@ -198,8 +179,7 @@ export default function LoginForm({
             </h2>
           </div>
 
-          {/* iPhone signs in exclusively with an Enconvo email/password account. */}
-          {router.isReady && !companion && (
+          {/* Google Login Button */}
           <div className="mt-8">
             <Button
               variant="outline"
@@ -230,7 +210,6 @@ export default function LoginForm({
             </Button>
           </div>
 
-          )}
           {/* Email Login Form */}
           <div className="mt-6 space-y-6">
             <div className="space-y-4">
