@@ -105,19 +105,27 @@ export default function RegisterForm({
     // setContinueLogin(true)
   }
 
+  // Back from Google's page, the browser can show this page as it was left.
+  React.useEffect(() => {
+    const reset = (event: PageTransitionEvent) => {
+      if (event.persisted) setGoogleIsLoading(false)
+    }
+    window.addEventListener('pageshow', reset)
+    return () => window.removeEventListener('pageshow', reset)
+  }, [])
+
   async function signInWithGoogle() {
-    // Until then the query (and the app to return to) isn't known.
-    if (!router.isReady) return
+    setGoogleIsLoading(true)
     try {
-      setGoogleIsLoading(true)
       saveRegistrationEmailPreference(productUpdatesSubscribed)
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           // Keeps from/source/handoff, so an app sign-up opens the app afterwards.
+          // The address bar, not router.query: that stays empty until the router is ready.
           redirectTo: oauthCallbackUrl(
             window.location.origin,
-            router.query,
+            Object.fromEntries(new URLSearchParams(window.location.search)),
             locale
           ),
           queryParams: {
@@ -127,9 +135,9 @@ export default function RegisterForm({
         },
       })
       if (error) throw error
+      // The browser is on its way to Google, so the spinner stays until the page goes.
     } catch (error) {
       setError(error.message)
-    } finally {
       setGoogleIsLoading(false)
     }
   }
@@ -166,7 +174,7 @@ export default function RegisterForm({
               className="relative h-10 w-full rounded-xl border-[#333333] bg-[#242424] font-medium text-[#888888] shadow-sm transition-all duration-200 hover:bg-[#2C2C2C] hover:text-[#999999] hover:shadow"
             >
               {googleIsLoading ? (
-                <ReloadIcon className="mr-2 h-5 w-5 animate-spin" />
+                <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
               ) : (
                 <svg
                   className="absolute left-3 h-5 w-5"

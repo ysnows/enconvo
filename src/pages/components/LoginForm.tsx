@@ -122,36 +122,44 @@ export default function LoginForm({
     // setContinueLogin(true)
   }
 
+  // Back from Google's page, the browser can show this page as it was left.
+  React.useEffect(() => {
+    const reset = (event: PageTransitionEvent) => {
+      if (event.persisted) setGoogleIsLoading(false)
+    }
+    window.addEventListener('pageshow', reset)
+    return () => window.removeEventListener('pageshow', reset)
+  }, [])
+
   async function signInWithGoogle() {
-    // Until then the query (and the app to return to) isn't known.
-    if (!router.isReady) return
+    setGoogleIsLoading(true)
     try {
-      setGoogleIsLoading(true)
+      // The address bar, not router.query: that stays empty until the router is ready.
+      const query = Object.fromEntries(
+        new URLSearchParams(window.location.search)
+      )
       // Preserve from/source/handoff across the OAuth round-trip so the app can
       // return the user to where login started (e.g. the onboarding guide).
       const redirectUrl = oauthCallbackUrl(
         window.location.origin,
-        router.query,
+        query,
         locale
       )
 
       // Someone who chose "Use a different account" picks their Google account too.
-      const prompt = Array.isArray(router.query.prompt)
-        ? router.query.prompt[0]
-        : router.query.prompt
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
-          ...(prompt === 'select_account'
+          ...(query.prompt === 'select_account'
             ? { queryParams: { prompt: 'select_account' } }
             : {}),
         },
       })
       if (error) throw error
+      // The browser is on its way to Google, so the spinner stays until the page goes.
     } catch (error) {
       console.error('Error:', error)
-    } finally {
       setGoogleIsLoading(false)
     }
   }
@@ -188,7 +196,7 @@ export default function LoginForm({
               className="relative h-10 w-full rounded-xl border-[#333333] bg-[#242424] font-medium text-[#888888] shadow-sm transition-all duration-200 hover:bg-[#2C2C2C] hover:text-[#999999] hover:shadow"
             >
               {googleIsLoading ? (
-                <ReloadIcon className="mr-2 h-5 w-5 animate-spin" />
+                <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
               ) : (
                 <svg
                   className="absolute left-3 h-5 w-5"
