@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 import LoginSuccess from '@/pages/components/LoginSuccess'
+import { LoginAccountChooser } from '@/components/LoginAccountChooser'
 import { NativeRouter } from '@/utils/app/native_router'
 
 export default function Login() {
@@ -21,6 +22,13 @@ export default function Login() {
   const [navigation, setNavigation] = useState([])
   const sessionChecked = useRef(false)
   const fromApp = router.query['from'] === 'app'
+  // The app's own Log In sends prompt=select_account: a browser that's already
+  // signed in asks which account to use instead of handing its account over.
+  const selectAccount = router.query['prompt'] === 'select_account'
+  // Until the user picks, SIGNED_IN (which supabase-js also sends on load and
+  // when the tab comes back) must not move the page past the choice.
+  const accountChosen = useRef(false)
+  const [switching, setSwitching] = useState(false)
 
   const showLoginForm = () => {
     setLoginState('login')
@@ -48,6 +56,26 @@ export default function Login() {
     // Only this browser: Enconvo and other devices stay signed in.
     supabase.auth.signOut({ scope: 'local' }).then(showLoginForm)
   }
+  const showSignedIn = () => {
+    setLoginState('success')
+    setNavigation([
+      { name: 'Logout', href: '/' },
+      { name: 'Account', href: '/account' },
+    ])
+  }
+  const continueWithAccount = () => {
+    accountChosen.current = true
+    showSignedIn()
+    handleOpenApp()
+  }
+  const switchAccount = async () => {
+    accountChosen.current = true
+    setSwitching(true)
+    // Only this browser; the sign-in form keeps from/source for the hand-off.
+    await supabase.auth.signOut({ scope: 'local' })
+    setSwitching(false)
+    showLoginForm()
+  }
 
   useEffect(() => {
     // This page is static, so from/source/handoff are only in the query once
@@ -69,19 +97,21 @@ export default function Login() {
         setUser(user)
         // 判断expires_at是否过期
         if (!user) {
+          accountChosen.current = true
           setNavigation([])
           setLoginState('login')
+        } else if (fromApp && selectAccount) {
+          setLoginState('choose')
         } else {
-          setLoginState('success')
-          setNavigation([
-            { name: 'Logout', href: '/' },
-            { name: 'Account', href: '/account' },
-          ])
+          accountChosen.current = true
+          showSignedIn()
           // Only a session the auth service still has goes to the app.
-          if (router.query['from'] === 'app') {
+          if (fromApp) {
             handleOpenApp()
           }
         }
+      } else {
+        accountChosen.current = true
       }
     })
   }, [router.isReady])
@@ -90,7 +120,10 @@ export default function Login() {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('event--', event, session)
-        if (event === 'SIGNED_IN') {
+        const choosing =
+          new URLSearchParams(window.location.search).get('prompt') ===
+            'select_account' && !accountChosen.current
+        if (event === 'SIGNED_IN' && !choosing) {
           const returnUrl = Array.isArray(router.query.returnUrl)
             ? router.query.returnUrl[0]
             : router.query.returnUrl || '/'
@@ -203,7 +236,14 @@ export default function Login() {
           </nav>
         </header>
 
-        {loginState === 'success' ? (
+        {loginState === 'choose' ? (
+          <LoginAccountChooser
+            email={(user as { email?: string } | null)?.email ?? ''}
+            onContinue={continueWithAccount}
+            onUseDifferentAccount={switchAccount}
+            switching={switching}
+          />
+        ) : loginState === 'success' ? (
           <LoginSuccess
             handleOpenApp={handleOpenApp}
             user={user}

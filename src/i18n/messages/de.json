@@ -2277,5 +2277,8 @@
   "Shared chat - Enconvo": "Geteilter Chat - Enconvo",
   "A chat shared from Enconvo, the AI assistant for your Mac.": "Ein aus Enconvo geteilter Chat, dem KI-Assistenten für deinen Mac.",
   "This chat could not be loaded": "Dieser Chat konnte nicht geladen werden",
-  "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo konnte nicht erreicht werden. Prüfe deine Verbindung und lade die Seite neu."
+  "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo konnte nicht erreicht werden. Prüfe deine Verbindung und lade die Seite neu.",
+  "Choose an account": "Konto auswählen",
+  "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "Dieser Browser ist bereits angemeldet. Fahre mit diesem Konto in Enconvo fort oder melde dich mit einem anderen an.",
+  "Use a different account": "Anderes Konto verwenden"
 }

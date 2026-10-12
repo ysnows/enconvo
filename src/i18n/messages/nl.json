@@ -2277,5 +2277,8 @@
   "Shared chat - Enconvo": "Gedeelde chat - Enconvo",
   "A chat shared from Enconvo, the AI assistant for your Mac.": "Een chat gedeeld vanuit Enconvo, de AI-assistent voor je Mac.",
   "This chat could not be loaded": "Deze chat kon niet worden geladen",
-  "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo kon niet worden bereikt. Controleer je verbinding en laad de pagina opnieuw."
+  "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo kon niet worden bereikt. Controleer je verbinding en laad de pagina opnieuw.",
+  "Choose an account": "Kies een account",
+  "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "Deze browser is al aangemeld. Ga verder naar Enconvo met dit account of meld je aan met een ander account.",
+  "Use a different account": "Een ander account gebruiken"
 }

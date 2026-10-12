@@ -2277,5 +2277,8 @@
   "Shared chat - Enconvo": "分享的聊天 - Enconvo",
   "A chat shared from Enconvo, the AI assistant for your Mac.": "一段分享自 Enconvo（你的 Mac AI 助理）的聊天。",
   "This chat could not be loaded": "無法載入此聊天",
-  "Could not reach Enconvo. Check your connection and reload the page.": "無法連線到 Enconvo。請檢查網路連線後重新載入頁面。"
+  "Could not reach Enconvo. Check your connection and reload the page.": "無法連線到 Enconvo。請檢查網路連線後重新載入頁面。",
+  "Choose an account": "選擇帳號",
+  "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "此瀏覽器已登入。你可以用這個帳號繼續前往 Enconvo，或改用其他帳號登入。",
+  "Use a different account": "使用其他帳號"
 }

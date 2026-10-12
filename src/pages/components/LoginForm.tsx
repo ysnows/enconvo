@@ -154,10 +154,17 @@ export default function LoginForm({
       if (extraQs)
         redirectUrl += (redirectUrl.includes('?') ? '&' : '?') + extraQs
 
+      // Someone who chose "Use a different account" picks their Google account too.
+      const prompt = Array.isArray(router.query.prompt)
+        ? router.query.prompt[0]
+        : router.query.prompt
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: redirectUrl,
+          ...(prompt === 'select_account'
+            ? { queryParams: { prompt: 'select_account' } }
+            : {}),
         },
       })
       if (error) throw error
