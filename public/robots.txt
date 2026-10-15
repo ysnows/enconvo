@@ -3,3 +3,4 @@ Allow: /
 Disallow: /api/
 
 Sitemap: https://www.enconvo.com/sitemap.xml
+Sitemap: https://www.enconvo.com/plugins/sitemap.xml

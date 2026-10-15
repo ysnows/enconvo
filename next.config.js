@@ -32,6 +32,23 @@ const nextConfig = {
       },
     ],
   },
+  async rewrites() {
+    // The Plugins store is the enconvo-app Worker's (envonvo.api.workers/enconvo-app/plugins.js),
+    // which answers /<locale>/plugins in that language. A locale: false source names its locale,
+    // and an address without one is the default locale's (/en/...).
+    const store = 'https://app.enconvo.com'
+    const lang = `:lang(${require('./src/i18n/config.json')
+      .locales.filter((locale) => locale !== 'en')
+      .join('|')})`
+    return [
+      { source: '/en/plugins', destination: `${store}/plugins`, locale: false },
+      { source: '/en/plugins/:path*', destination: `${store}/plugins/:path*`, locale: false },
+      { source: `/${lang}/plugins`, destination: `${store}/:lang/plugins`, locale: false },
+      { source: `/${lang}/plugins/:path*`, destination: `${store}/:lang/plugins/:path*`, locale: false },
+      // The PopBar extension icons the store shows.
+      { source: '/en/popbar-extensions/icons/:path*', destination: `${store}/popbar-extensions/icons/:path*`, locale: false },
+    ]
+  },
   async redirects() {
     return [
       {

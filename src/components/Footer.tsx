@@ -27,6 +27,12 @@ export function Footer() {
                 {t('Use Cases')}
               </NavLink>
               <NavLink
+                href="/plugins"
+                className="text-content-muted hover:text-content"
+              >
+                {t('Plugins')}
+              </NavLink>
+              <NavLink
                 href="/#pricing"
                 className="text-content-muted hover:text-content"
               >

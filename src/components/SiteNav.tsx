@@ -43,6 +43,7 @@ const socialLinks: SocialLink[] = [
 const defaultNav: NavigationItem[] = [
   { name: 'Features', href: '/#features' },
   { name: 'Use Cases', href: '/use-cases' },
+  { name: 'Plugins', href: '/plugins' },
   { name: 'Pricing', href: '/#pricing' },
   { name: 'Docs', href: 'https://docs.enconvo.ai/' },
   { name: 'Releases', href: '/changelog' },
@@ -63,6 +64,7 @@ export function SiteNav() {
         setNavigation([
           { name: 'Features', href: '/#features' },
           { name: 'Use Cases', href: '/use-cases' },
+          { name: 'Plugins', href: '/plugins' },
           { name: 'Pricing', href: '/#pricing' },
           { name: 'Docs', href: 'https://docs.enconvo.ai/' },
           { name: 'Releases', href: '/changelog' },
