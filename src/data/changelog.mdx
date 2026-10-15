@@ -9,6 +9,236 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.7 Changelog (2026-10-15)
+
+Thanks for your patience and for all the feedback that shaped this release. It
+brings Claude Code into Enconvo, makes voice calls and Dictation far more
+capable, and helps Enconvo reach you at the right moment, at your Mac, on your
+iPhone, and now on Windows and Linux too.
+
+## Highlights
+
+- **Claude Code in the Chat Window**, with its plan, tool calls, file changes
+  and subagents shown as it works, on the Mac and iPhone.
+- **Agents choose how to run each message** with the new Auto run mode, while
+  Auto Route picks the model for each kind of work.
+- **Voice calls that get things done**, from playing music and adding reminders
+  to looking things up and controlling your Mac.
+- **A smarter Dictation** that edits text by voice, learns the words it
+  mishears, and runs offline with Fluid Speech Mini.
+- **Updates waits until you're free**, holding agent questions and finished
+  tasks while you work, and agents can call your iPhone when work is done.
+- **A rebuilt PopBar with extensions**, AI Commands you create by describing
+  them, and one-click saving to your knowledge base.
+- **Ask Enconvo in your browser** about the page, post or video you're on, now
+  in Chrome, Firefox and Safari.
+- **Windows and Linux catch up** with Computer Use, Dictation, Screen Doodle,
+  Appshots, live Office editing and Wayland support.
+
+## Claude Code
+
+- Added Claude Code to the Chat Window, running the Claude Code installed on
+  your Mac in any folder, with your Claude subscription or an API key.
+- Added Plan mode, bash mode, background tasks, Fast mode, a context meter,
+  slash commands and clickable file references to Claude Code chats.
+- Added your Claude Code sessions to Enconvo, including ones started in
+  Terminal, with Fork and Continue in Terminal or iTerm.
+- Added Claude Code chats to the iPhone app, with the same steps and plan card.
+
+## Agents and Chat
+
+- Added an Auto run mode for Agents, now the default, which answers quick
+  questions directly and runs tasks with tools, replacing the Run Mode switch.
+- Changed Agents settings to a card gallery where agents can be paused and
+  resumed, and removed the Tools picker and Tutor Mode.
+- Changed Steer to answer your new message right away, and added Cmd+Enter to
+  steer every queued message into the running task.
+- Changed agents to find your files by name in about a second, open the pages
+  you name straight away, and ask before changing settings you didn't mention.
+- Added recommended answers to agent questions, chosen after three minutes.
+- Added Rename, Pin, Fork and Archive to the Chat Window's ⋯ menu, a Details
+  button under each reply, and Copy as Rich Text, Markdown or Plain Text.
+- Added Response Language to Settings › General, so agents, voice calls and the
+  Avatar always reply in the language you choose.
+- Changed My Profile to About You, now under Agents in Settings.
+- Changed shared chat links to look the same as the chat in Enconvo, with
+  charts, citations, media and tool steps that open as in the app.
+- Fixed agents switching to English after using tools, replies showing words
+  twice, and attachments with unusual file names.
+- Fixed the chat history looking empty after an update until Enconvo restarted.
+
+## Voice Calls and Voice Command
+
+- Changed voice calls to run on Enconvo Voice, which hears you with Soniox and
+  answers in an expressive ElevenLabs voice with live captions.
+- Added 42 ElevenLabs voices in 12 languages for calls, Read Aloud and Avatars,
+  and each Agent now speaks in its Avatar's voice.
+- Changed voice calls to search the web, read files, control your Mac and
+  handle music, reminders and notes on their own, several at once.
+- Changed Mac voice calls to work like the iPhone's, with words that appear as
+  you speak and Screen Doodle and Live Screen sent to the call.
+- Removed Auto Hang-Up, so a quiet call naps until you speak instead of ending.
+- Changed voice calls to remember much longer conversations and recognize the
+  words in your Dictation dictionary.
+- Added spoken answers to push-to-talk Voice Command, which knows which app
+  you're using when you speak.
+- Changed Voice Command and voice call replies to be shorter and arrive sooner.
+- Changed voice calls to try what you ask before saying it can't be done, doing
+  it in the browser or handing it to the Agent.
+- Fixed voice calls claiming a task was done without doing it, missing your
+  corrections, giving tasks the wrong date, and ending when speech recognition
+  dropped.
+
+## Dictation and Recording
+
+- Added Edit selected text by voice, so you can select text and say how to
+  change it, such as "make this more formal".
+- Added Paste Last Dictation, Heard as entries and suggestions in the
+  Dictionary, and an Overview in Dictation History.
+- Added App Rules for the post action, language and Return key in each app or
+  website, plus a Dictation Language setting.
+- Added Fluid Speech Mini as an on-device English transcription model on macOS
+  15 and later, for dictation and live captions.
+- Added On-Device Cleanup, a post action that removes filler words and fixes
+  punctuation offline on Apple silicon Macs with macOS 15 and later.
+- Changed Settings › Dictation to follow the steps of a dictation, with Clean
+  up options whose prompts and models you can edit, or add your own.
+- Changed Dictation to show your words sooner, stay ready for five minutes, and
+  keep the text on the clipboard when no field is focused.
+- Changed Silence other audio while recording to pause music and videos and
+  resume them when you finish.
+- Added recording from second-channel microphones, and meeting recordings now
+  continue when the microphone changes.
+
+## Updates and Notifications
+
+- Added Updates, which holds agent questions, approvals and finished tasks
+  while you're busy and sends them to your iPhone once you leave the Mac.
+- Added Pause Updates for 1 Hour and Quiet Hours to the menu bar and
+  Settings › Notifications.
+- Added Approve and Deny buttons to approval notifications, and changed the
+  Dynamic Island to wait for you instead of opening for a question.
+
+## SmartBar, PopBar and AI Commands
+
+- Changed the SmartBar to show results sooner, redraw far less and follow the
+  app language throughout.
+- Added PopBar extensions in PopClip's format from Enconvo's reviewed catalog,
+  a link, a file or your PopClip.
+- Changed the PopBar with a searchable More panel, an Ask panel for any AI
+  Command, info buttons, button groups and a result card.
+- Added Save to Knowledge Base as a default PopBar button, with its progress on
+  the Dynamic Island and links saved as the page itself.
+- Added New AI Command from a description, Customize for the built-in commands,
+  and Try it on your own text.
+- Changed Translator to join the Writing Toolkit and follow your Response
+  Language, with Source and Target pickers.
+- Removed the DeepL, Youdao, Caiyun and Translator (Interactive) commands, the
+  AI Command template store, and AI Edit on the PopBar.
+- Added spoken labels to Screen Doodle for the shapes you draw.
+- Changed Screenshot OCR to open its result on the Dynamic Island.
+
+## Dynamic Island, Read Aloud and Avatars
+
+- Changed Read Aloud to play on the Dynamic Island one sentence at a time, with
+  captions and speed and voice pickers.
+- Added reading aloud by the Avatar, in her own voice with lip sync.
+- Added eighteen built-in Avatar characters on the Mac and iPhone, including
+  six Enconvo plush originals led by Duet, the new default.
+- Added dances, motions, outfits and working moods to the Avatar characters,
+  plus head pats and pointer tracking on the Mac.
+- Added Island Character, which shows your Avatar in the compact Dynamic
+  Island, and an All Screens option, now the default.
+
+## Music and Mac Apps
+
+- Added Spotify and Apple Music plugins, so agents and voice calls can find,
+  play and organize your music without signing in.
+- Added a Mac Apps tab to Plugins, and Spotify and Apple Music buttons on the
+  Dynamic Island that listen for what to play.
+- Changed Dance Along with Music to be on by default.
+- Fixed Play/Pause and track controls doing nothing, and Spotify taking up to
+  25 seconds to play a song by name.
+
+## Browser Extension and Knowledge Base
+
+- Added Ask Enconvo to the browser extension on X, Reddit, YouTube, Gmail,
+  Google Docs, GitHub, Wikipedia and many more sites.
+- Added Firefox and Safari support, and video and audio downloads from YouTube,
+  X, Bilibili, TikTok, TED and Vimeo.
+- Added an Enconvo button to X's composer for polishing, shortening and
+  replying, and AI reply suggestions on Reddit and Facebook.
+- Changed saving posts on X to use X's own bookmark button, with automatic
+  categories for posts saved from any site.
+- Added Tags to the knowledge base, with Suggest categories, Manage Tags, an
+  Untagged filter and a filter bar.
+
+## Plugins, Connectors and Computer Use
+
+- Added about 300 new Connectors, including AWS, Microsoft 365, Google Maps,
+  Tableau, Zoho CRM and Sonos.
+- Added installing Codex and Claude Code plugins from GitHub, npm, a folder or
+  a marketplace, with their commands, agents and hooks.
+- Added `enconvo plugin` commands to validate, pack and publish plugins.
+- Added a Cloudflare CLI plugin and the EmbeddingGemma 2 local model.
+- Changed install links to show what they would install before you confirm.
+- Changed Computer Use to ask before pressing Delete, Send or Buy, hide
+  password fields, and report actions that didn't take effect.
+- Fixed a crash on macOS 27 when Computer Use read Enconvo's own windows.
+- Removed the Straico plugin and its providers.
+
+## Models and Usage
+
+- Added Auto Route, the new default model, which runs each message on the model
+  you set for that kind of work.
+- Added Claude Haiku 5.5, now the default for Enconvo Cloud and Anthropic.
+- Added Gemini 4 Argon, half price on Enconvo Cloud through November 30, 2026.
+- Changed the model picker to two columns, with a Fast mode chip for supported
+  models that runs them faster at a higher price.
+- Changed Manage Models to add models in a form, restore deleted models, and
+  load OpenRouter models faster.
+- Changed the quick decisions behind Auto Route, Auto run mode and Memory to
+  use no Cloud points.
+- Changed Live Talk voice calls and Soniox dictation to be free for Cloud Plan,
+  Lifetime and trial members.
+- Added HeyGen Voice on Enconvo Cloud for Chinese and English speech.
+
+## iPhone and Android
+
+- Added calls from agents, so your iPhone rings when a voice call or agent
+  finishes the work you asked about.
+- Added a Dictation page to iPhone Settings with Soniox and two offline models,
+  Fluid Speech Mini and Parakeet TDT V3.
+- Added Fast mode to the iPhone model sheet, and Read Aloud now uses the
+  ElevenLabs voice picked on the Mac.
+- Fixed notifications sent while the iPhone was disconnected being lost.
+- Added Continue with Google back to the iPhone and Android apps, and account
+  deletion to Android.
+
+## Windows and Linux
+
+- Added Computer Use, Clipboard History, Quick Capture, Window Management, Live
+  Screen and offline models to Windows and Linux.
+- Added Dictation with hold to talk, Context Awareness, Appshots, Screen Doodle
+  and Translate hotkeys to Windows and Linux.
+- Added live editing of Word, Excel and PowerPoint on Windows, a per-user
+  installer, and Raycast-compatible extensions.
+- Added GNOME and KDE Plasma on Wayland support to the Linux app, with Window
+  Management and the desktop's own file dialogs.
+- Added in-app updates, familiar Ctrl shortcuts and a fuller tray menu to
+  Windows and Linux.
+- Fixed file drag and drop, Show in Folder, window sizes and global shortcuts
+  on Windows and Linux.
+
+## Account and Teams
+
+- Added a one-time 7-day Plus trial for Free accounts with no card needed, and
+  trial codes for 30 days of Plus Cloud.
+- Changed Teams so each Seat goes to a teammate's own account, managed by the
+  admin from a new Teams page.
+
+---
+
 # Enconvo 2.5.6 Changelog (2026-10-05)
 
 Thanks for your patience and all the feedback during the beta. I've spent this
