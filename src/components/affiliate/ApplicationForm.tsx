@@ -15,6 +15,7 @@ import {
   type ProgramTerms,
 } from '@/lib/affiliate-program'
 import { card, fieldLabel, input, Notice, textarea } from './ui'
+import { AFFILIATE_LOGIN, trackAffiliateAction } from '@/lib/affiliate-access'
 
 const RETURN_URL = encodeURIComponent('/affiliate#apply')
 
@@ -168,8 +169,9 @@ export function ApplicationForm({
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             <Link
-              href={`/login?returnUrl=${RETURN_URL}`}
+              href={AFFILIATE_LOGIN}
               className={secondaryButton}
+              onClick={() => trackAffiliateAction('sign_in_clicked')}
             >
               {t('Sign in')}
             </Link>

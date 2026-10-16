@@ -2281,5 +2281,18 @@
   "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo kon niet worden bereikt. Controleer je verbinding en laad de pagina opnieuw.",
   "Choose an account": "Kies een account",
   "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "Deze browser is al aangemeld. Ga verder naar Enconvo met dit account of meld je aan met een ander account.",
-  "Use a different account": "Een ander account gebruiken"
+  "Use a different account": "Een ander account gebruiken",
+  "Already applied?": "Al aangemeld als affiliate?",
+  "Affiliate sign in": "Inloggen als affiliate",
+  "Sign in to see your application, commissions and payouts.": "Log in om je aanvraag, commissies en uitbetalingen te bekijken.",
+  "Opening your Affiliate account…": "Je affiliate-account wordt geopend…",
+  "No Affiliate application for this account": "Dit account heeft geen affiliate-aanvraag",
+  "Apply below, or switch to the account you applied with.": "Meld je hieronder aan of wissel naar het account waarmee je de aanvraag hebt ingediend.",
+  "Could not switch accounts. Please try again.": "Wisselen van account is mislukt. Probeer het opnieuw.",
+  "Affiliate dashboard - Enconvo": "Affiliate-dashboard - Enconvo",
+  "Affiliate sign in - Enconvo": "Inloggen als affiliate - Enconvo",
+  "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "Gebruik het Enconvo-account waarmee je de aanvraag hebt ingediend. Je affiliate-dashboard gebruikt hetzelfde wachtwoord.",
+  "Back to sign in": "Terug naar inloggen",
+  "Your password has been updated.": "Je wachtwoord is bijgewerkt.",
+  "Go to Affiliate dashboard": "Naar het affiliate-dashboard"
 }

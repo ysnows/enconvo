@@ -2281,5 +2281,18 @@
   "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo에 연결할 수 없습니다. 연결 상태를 확인한 후 페이지를 새로고침하세요.",
   "Choose an account": "계정 선택",
   "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "이 브라우저는 이미 로그인되어 있습니다. 이 계정으로 Enconvo를 계속 사용하거나 다른 계정으로 로그인하세요.",
-  "Use a different account": "다른 계정 사용"
+  "Use a different account": "다른 계정 사용",
+  "Already applied?": "이미 신청하셨나요?",
+  "Affiliate sign in": "제휴 파트너 로그인",
+  "Sign in to see your application, commissions and payouts.": "로그인하여 신청 현황, 수수료 및 지급 내역을 확인하세요.",
+  "Opening your Affiliate account…": "제휴 계정을 여는 중…",
+  "No Affiliate application for this account": "이 계정으로 제출한 제휴 신청이 없습니다",
+  "Apply below, or switch to the account you applied with.": "아래에서 신청하거나 신청할 때 사용한 계정으로 전환하세요.",
+  "Could not switch accounts. Please try again.": "계정을 전환하지 못했습니다. 다시 시도하세요.",
+  "Affiliate dashboard - Enconvo": "제휴 대시보드 - Enconvo",
+  "Affiliate sign in - Enconvo": "제휴 파트너 로그인 - Enconvo",
+  "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "신청할 때 사용한 Enconvo 계정으로 로그인하세요. 제휴 대시보드도 같은 비밀번호를 사용합니다.",
+  "Back to sign in": "로그인으로 돌아가기",
+  "Your password has been updated.": "비밀번호가 변경되었습니다.",
+  "Go to Affiliate dashboard": "제휴 대시보드로 이동"
 }

@@ -154,7 +154,7 @@ export function GettingStarted({
                 </span>
               </p>
               <p className="mt-0.5 text-sm leading-6 text-content-muted">
-                {t(step.detail)}
+                {typeof step.detail === 'string' ? t(step.detail) : step.detail}
               </p>
             </div>
           </li>

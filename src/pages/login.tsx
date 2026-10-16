@@ -1,12 +1,13 @@
 import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 import LoginSuccess from '@/pages/components/LoginSuccess'
 import { LoginAccountChooser } from '@/components/LoginAccountChooser'
 import { NativeRouter } from '@/utils/app/native_router'
+import { affiliateReturnPath } from '@/lib/auth-flow'
 
 export default function Login() {
   const { t, locale } = useI18n()
@@ -30,12 +31,12 @@ export default function Login() {
   const accountChosen = useRef(false)
   const [switching, setSwitching] = useState(false)
 
-  const showLoginForm = () => {
+  const showLoginForm = useCallback(() => {
     setLoginState('login')
     setUser(null)
     setNavigation([])
-  }
-  const handleOpenApp = async () => {
+  }, [])
+  const handleOpenApp = useCallback(async () => {
     const result = await NativeRouter.openApp(
       Array.isArray(router.query.source)
         ? router.query.source[0]
@@ -51,7 +52,7 @@ export default function Login() {
     } else if (result !== 'opened') {
       alert(result.error)
     }
-  }
+  }, [router.query.source, router.query.handoff, showLoginForm])
   const handleLogout = () => {
     // Only this browser: Enconvo and other devices stay signed in.
     supabase.auth.signOut({ scope: 'local' }).then(showLoginForm)
@@ -84,15 +85,11 @@ export default function Login() {
     if (!router.isReady || sessionChecked.current) return
     sessionChecked.current = true
     supabase.auth.getSession().then(async ({ data, error }) => {
-      console.log('data--', data)
       if (data.session) {
-        const expires_at = data.session.expires_at
-        console.log('session--', expires_at, new Date().getTime())
         const {
           data: { user },
           error,
         } = await supabase.auth.getUser()
-        console.log('user--', user)
 
         setUser(user)
         // 判断expires_at是否过期
@@ -102,6 +99,10 @@ export default function Login() {
           setLoginState('login')
         } else if (fromApp && selectAccount) {
           setLoginState('choose')
+        } else if (!fromApp && affiliateReturnPath(router.query)) {
+          // INITIAL_SESSION does not fire SIGNED_IN: an existing session must
+          // also honor the portal link without waiting for another login.
+          void router.replace(affiliateReturnPath(router.query))
         } else {
           accountChosen.current = true
           showSignedIn()
@@ -114,16 +115,20 @@ export default function Login() {
         accountChosen.current = true
       }
     })
-  }, [router.isReady])
+  }, [router.isReady, router, fromApp, selectAccount, handleOpenApp])
 
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('event--', event, session)
         const choosing =
           new URLSearchParams(window.location.search).get('prompt') ===
             'select_account' && !accountChosen.current
         if (event === 'SIGNED_IN' && !choosing) {
+          const affiliateDestination = affiliateReturnPath(router.query)
+          if (!fromApp && affiliateDestination) {
+            void router.replace(affiliateDestination)
+            return
+          }
           const returnUrl = Array.isArray(router.query.returnUrl)
             ? router.query.returnUrl[0]
             : router.query.returnUrl || '/'
@@ -176,7 +181,7 @@ export default function Login() {
     return () => {
       authListener.subscription.unsubscribe()
     }
-  }, [router])
+  }, [router, fromApp, locale])
 
   return (
     <>

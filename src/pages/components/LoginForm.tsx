@@ -16,7 +16,11 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { NativeRouter } from '@/utils/app/native_router'
 import { syncCurrentEmailPreference } from '@/lib/email-preferences-client'
-import { authFlowHref, oauthCallbackUrl } from '@/lib/auth-flow'
+import {
+  affiliateReturnPath,
+  authFlowHref,
+  oauthCallbackUrl,
+} from '@/lib/auth-flow'
 
 export default function LoginForm({
   loginState,
@@ -27,6 +31,8 @@ export default function LoginForm({
   const pageRouter = useRouter()
   router = router ?? pageRouter
   const { t, locale } = useI18n()
+  const affiliateLogin =
+    !!affiliateReturnPath(router.query) && router.query.from !== 'app'
 
   const supabase = createClientComponentClient()
 
@@ -55,7 +61,6 @@ export default function LoginForm({
       setEmailIsLoading(false)
       return
     }
-    console.log('session login :', data)
 
     setUser(data.user)
 
@@ -65,14 +70,16 @@ export default function LoginForm({
     })
 
     // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
-    const opened = await NativeRouter.openApp(
-      Array.isArray(router.query.source)
-        ? router.query.source[0]
-        : router.query.source,
-      Array.isArray(router.query.handoff)
-        ? router.query.handoff[0]
-        : router.query.handoff
-    )
+    const opened = affiliateLogin
+      ? 'opened'
+      : await NativeRouter.openApp(
+          Array.isArray(router.query.source)
+            ? router.query.source[0]
+            : router.query.source,
+          Array.isArray(router.query.handoff)
+            ? router.query.handoff[0]
+            : router.query.handoff
+        )
     if (typeof opened === 'object') alert(opened.error)
 
     try {
@@ -167,7 +174,11 @@ export default function LoginForm({
   return (
     <>
       <Head>
-        <title>{t('Log In - Enconvo')}</title>
+        <title>
+          {t(
+            affiliateLogin ? 'Affiliate sign in - Enconvo' : 'Log In - Enconvo'
+          )}
+        </title>
         <meta
           name="description"
           content={t(
@@ -183,8 +194,15 @@ export default function LoginForm({
               <Logo className="h-16 w-auto" />
             </Link>
             <h2 className="text-center text-3xl font-medium tracking-tight text-white">
-              {t('Log in to Enconvo')}
+              {t(affiliateLogin ? 'Affiliate sign in' : 'Log in to Enconvo')}
             </h2>
+            {affiliateLogin && (
+              <p className="text-center text-sm leading-6 text-[#A7B0BC]">
+                {t(
+                  'Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.'
+                )}
+              </p>
+            )}
           </div>
 
           {/* Google Login Button */}
@@ -219,12 +237,19 @@ export default function LoginForm({
           </div>
 
           {/* Email Login Form */}
-          <div className="mt-6 space-y-6">
+          <form
+            className="mt-6 space-y-6"
+            onSubmit={(event) => {
+              event.preventDefault()
+              if (!emailIsLoading) void signIn()
+            }}
+          >
             <div className="space-y-4">
               {!continueLogin && (
                 <div className="space-y-1">
                   <Input
                     type="email"
+                    aria-label={t('Email address')}
                     placeholder={t('Email address')}
                     required
                     autoComplete="email"
@@ -239,8 +264,10 @@ export default function LoginForm({
                 <div className="space-y-1">
                   <Input
                     type="password"
+                    aria-label={t('Password')}
                     placeholder={t('Password')}
                     required
+                    autoComplete="current-password"
                     onChange={(e) => setPassword(e.target.value)}
                     value={password}
                     className="h-10 border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
@@ -260,7 +287,7 @@ export default function LoginForm({
               )}
 
               <Button
-                onClick={signIn}
+                type="submit"
                 disabled={emailIsLoading}
                 className="h-10 w-full rounded-xl bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
               >
@@ -287,7 +314,7 @@ export default function LoginForm({
                 </Link>
               </div>
             )}
-          </div>
+          </form>
         </div>
       </main>
     </>

@@ -13,6 +13,9 @@ import { Input } from '@/components/ui/input'
 import * as React from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useRouter } from 'next/router'
+import { affiliateReturnPath } from '@/lib/auth-flow'
+import { trackAffiliateAction } from '@/lib/affiliate-access'
 
 interface ResetPwdFormProps {
   setLoginState: (state: string) => void
@@ -20,6 +23,7 @@ interface ResetPwdFormProps {
 
 export default function ResetPwdForm({ setLoginState }: ResetPwdFormProps) {
   const { t, locale } = useI18n()
+  const router = useRouter()
 
   const supabase = createClientComponentClient()
 
@@ -47,7 +51,8 @@ export default function ResetPwdForm({ setLoginState }: ResetPwdFormProps) {
       return
     }
 
-    console.log(data)
+    if (affiliateReturnPath(router.query) && router.query.from !== 'app')
+      trackAffiliateAction('password_changed')
 
     // NativeRouter.login(data.session.access_token, data.session.refresh_token)
     setLoginState('success')
@@ -85,7 +90,7 @@ export default function ResetPwdForm({ setLoginState }: ResetPwdFormProps) {
                 type="password"
                 placeholder={t('Password')}
                 required
-                autoComplete="current-password"
+                autoComplete="new-password"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
                 className="h-10 border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"

@@ -16,7 +16,8 @@ import { Button } from '@/components/ui/button'
 
 import { Logo } from '@/components/Logo'
 import { useRouter } from 'next/router'
-import { authFlowHref } from '@/lib/auth-flow'
+import { affiliateReturnPath, authFlowHref } from '@/lib/auth-flow'
+import { trackAffiliateAction } from '@/lib/affiliate-access'
 import { Input } from '@/components/ui/input'
 import * as React from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -25,6 +26,8 @@ import { getEmailLink } from '@/utils/app/email_link'
 export default function ResetPasswordStepOne() {
   const { t, locale } = useI18n()
   const router = useRouter()
+  const affiliateReset =
+    !!affiliateReturnPath(router.query) && router.query.from !== 'app'
 
   // 获取url参数
 
@@ -51,7 +54,10 @@ export default function ResetPasswordStepOne() {
     setEmailIsLoading(true)
 
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}${authFlowHref('/reset_password', { ...router.query, language: locale })}`,
+      redirectTo: `${window.location.origin}${authFlowHref('/reset_password', {
+        ...router.query,
+        language: locale,
+      })}`,
     })
 
     if (error) {
@@ -60,7 +66,7 @@ export default function ResetPasswordStepOne() {
       return
     }
 
-    console.log(data)
+    if (affiliateReset) trackAffiliateAction('password_reset_requested')
 
     // NativeRouter.login(data.session.access_token, data.session.refresh_token)
     setPageState('success')
@@ -118,6 +124,13 @@ export default function ResetPasswordStepOne() {
               <h3 className="text-center text-3xl font-medium tracking-tight text-white">
                 {t('Reset Your Password')}
               </h3>
+              {affiliateReset && (
+                <p className="text-center text-sm leading-6 text-[#A7B0BC]">
+                  {t(
+                    'Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.'
+                  )}
+                </p>
+              )}
             </div>
 
             <div className="space-y-6">
@@ -155,6 +168,12 @@ export default function ResetPasswordStepOne() {
                   {emailIsLoading ? t('Sending') : t('Send Reset Email')}
                 </Button>
               </div>
+              <Link
+                href={authFlowHref('/login', router.query)}
+                className="block text-center text-sm text-[#A7B0BC] hover:text-white"
+              >
+                {t('Back to sign in')}
+              </Link>
             </div>
           </div>
         </main>

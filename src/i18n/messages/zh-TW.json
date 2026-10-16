@@ -2281,5 +2281,18 @@
   "Could not reach Enconvo. Check your connection and reload the page.": "無法連線到 Enconvo。請檢查網路連線後重新載入頁面。",
   "Choose an account": "選擇帳號",
   "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "此瀏覽器已登入。你可以用這個帳號繼續前往 Enconvo，或改用其他帳號登入。",
-  "Use a different account": "使用其他帳號"
+  "Use a different account": "使用其他帳號",
+  "Already applied?": "已經申請過了？",
+  "Affiliate sign in": "推廣夥伴登入",
+  "Sign in to see your application, commissions and payouts.": "登入後可查看申請進度、佣金和結算紀錄。",
+  "Opening your Affiliate account…": "正在開啟你的推廣夥伴帳戶…",
+  "No Affiliate application for this account": "此帳戶尚未申請推廣夥伴計畫",
+  "Apply below, or switch to the account you applied with.": "請在下方申請，或切換至提交申請時使用的帳戶。",
+  "Could not switch accounts. Please try again.": "無法切換帳戶，請重試。",
+  "Affiliate dashboard - Enconvo": "推廣夥伴後台 - Enconvo",
+  "Affiliate sign in - Enconvo": "推廣夥伴登入 - Enconvo",
+  "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "請使用提交申請時的 Enconvo 帳戶登入。推廣夥伴後台與 Enconvo 共用相同密碼。",
+  "Back to sign in": "返回登入",
+  "Your password has been updated.": "密碼已更新。",
+  "Go to Affiliate dashboard": "進入推廣夥伴後台"
 }

@@ -18,6 +18,7 @@ const privatePages = [
   '/login',
   '/register',
   '/reset_password_send',
+  '/affiliate/dashboard',
   '/account',
   '/redeem',
   '/redeem/ABCD-EFGH-JKMN',

@@ -2281,5 +2281,18 @@
   "Could not reach Enconvo. Check your connection and reload the page.": "Enconvo に接続できませんでした。接続を確認して、ページを再読み込みしてください。",
   "Choose an account": "アカウントを選択",
   "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "このブラウザはすでにサインインしています。このアカウントで Enconvo に進むか、別のアカウントでサインインしてください。",
-  "Use a different account": "別のアカウントを使用"
+  "Use a different account": "別のアカウントを使用",
+  "Already applied?": "申請済みですか？",
+  "Affiliate sign in": "アフィリエイトにログイン",
+  "Sign in to see your application, commissions and payouts.": "ログインして申請状況、報酬、支払いを確認できます。",
+  "Opening your Affiliate account…": "アフィリエイトアカウントを開いています…",
+  "No Affiliate application for this account": "このアカウントにはアフィリエイトの申請がありません",
+  "Apply below, or switch to the account you applied with.": "以下から申請するか、申請時のアカウントに切り替えてください。",
+  "Could not switch accounts. Please try again.": "アカウントを切り替えられませんでした。再試行してください。",
+  "Affiliate dashboard - Enconvo": "アフィリエイトダッシュボード - Enconvo",
+  "Affiliate sign in - Enconvo": "アフィリエイトログイン - Enconvo",
+  "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "申請時の Enconvo アカウントを使用してください。アフィリエイトダッシュボードも同じパスワードを使用します。",
+  "Back to sign in": "ログインに戻る",
+  "Your password has been updated.": "パスワードを更新しました。",
+  "Go to Affiliate dashboard": "アフィリエイトダッシュボードへ"
 }

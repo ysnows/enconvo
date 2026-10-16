@@ -66,6 +66,7 @@ const localeTools = load('src/i18n/locale.ts', {
     fs.readFileSync(path.join(root, 'src/i18n/config.json'), 'utf8')
   ),
 })
+const authFlow = load('src/lib/auth-flow.ts')
 const i18n = {
   useI18n: () => ({
     locale: 'en',
@@ -1150,10 +1151,11 @@ test('Email registration confirmation retains the LTD plan and affiliate, and pr
     const calls = []
     const jsx = (type, props) => ({ type, props })
     const noop = () => null
-    const react = { useState: (value) => [value, noop] }
+    const react = { useState: (value) => [value, noop], useEffect: noop }
     const register = load(
       'src/pages/components/RegisterForm.tsx',
       {
+        '@/lib/auth-flow': authFlow,
         'react/jsx-runtime': { jsx, jsxs: jsx },
         '@/i18n/locale': localeTools,
         '@/i18n/I18nProvider': i18n,

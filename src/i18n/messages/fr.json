@@ -2281,5 +2281,18 @@
   "Could not reach Enconvo. Check your connection and reload the page.": "Impossible de joindre Enconvo. Vérifiez votre connexion et rechargez la page.",
   "Choose an account": "Choisissez un compte",
   "This browser is already signed in. Continue to Enconvo with this account, or sign in with a different one.": "Ce navigateur est déjà connecté. Continuez vers Enconvo avec ce compte ou connectez-vous avec un autre.",
-  "Use a different account": "Utiliser un autre compte"
+  "Use a different account": "Utiliser un autre compte",
+  "Already applied?": "Déjà candidat ?",
+  "Affiliate sign in": "Connexion affilié",
+  "Sign in to see your application, commissions and payouts.": "Connectez-vous pour consulter votre candidature, vos commissions et vos versements.",
+  "Opening your Affiliate account…": "Ouverture de votre compte affilié…",
+  "No Affiliate application for this account": "Ce compte ne contient aucune candidature d’affilié",
+  "Apply below, or switch to the account you applied with.": "Postulez ci-dessous ou utilisez le compte avec lequel vous avez postulé.",
+  "Could not switch accounts. Please try again.": "Impossible de changer de compte. Veuillez réessayer.",
+  "Affiliate dashboard - Enconvo": "Tableau de bord affilié - Enconvo",
+  "Affiliate sign in - Enconvo": "Connexion affilié - Enconvo",
+  "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "Utilisez le compte Enconvo avec lequel vous avez postulé. Votre tableau de bord affilié utilise le même mot de passe.",
+  "Back to sign in": "Retour à la connexion",
+  "Your password has been updated.": "Votre mot de passe a été mis à jour.",
+  "Go to Affiliate dashboard": "Accéder au tableau de bord affilié"
 }

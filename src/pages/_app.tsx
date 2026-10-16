@@ -25,6 +25,7 @@ const privateRoutes = new Set([
   '/cloud-points',
   '/reset_password',
   '/reset_password_send',
+  '/affiliate/dashboard',
 ])
 // Placeholder and deep-link pages that should not compete in search.
 const noindexRoutes = new Set([
@@ -43,6 +44,7 @@ const navigationRoutes = new Set([
   '/android',
   '/changelog',
   '/affiliate',
+  '/affiliate/dashboard',
   '/affiliate/terms',
   '/affiliate/payouts/[id]',
   '/affiliate/statements/[year]',
