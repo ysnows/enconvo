@@ -84,7 +84,13 @@ function OpeningAccount() {
   )
 }
 
-export function AffiliatePortal({ page }: { page: 'program' | 'dashboard' }) {
+export function AffiliatePortal({
+  page,
+  renderedAt,
+}: {
+  page: 'program' | 'dashboard'
+  renderedAt?: number
+}) {
   const { t, locale } = useI18n()
   const router = useRouter()
   const { account, refresh, updateAffiliate } = useAffiliateAccount()
@@ -262,7 +268,7 @@ export function AffiliatePortal({ page }: { page: 'program' | 'dashboard' }) {
         )}
         <AffiliateHero terms={program} />
         <TermsCards terms={program} />
-        <EarningsCalculator terms={program} />
+        <EarningsCalculator terms={program} renderedAt={renderedAt} />
         <HowItWorks />
         <ApplicationForm
           key={session?.user.id ?? 'signed-out'}

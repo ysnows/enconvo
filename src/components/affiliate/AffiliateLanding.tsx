@@ -1,7 +1,7 @@
 import { I18nText } from '@/i18n/I18nText'
 import { localizePath } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Gift } from 'lucide-react'
 import { primaryButton, secondaryButton } from '@/components/landing-styles'
@@ -11,6 +11,7 @@ import {
   type ProgramTerms,
 } from '@/lib/affiliate-program'
 import { card, fieldLabel } from './ui'
+import { lifetimePrices } from '@/lib/lifetime-pricing'
 
 // The marketing half of /affiliate: what the program pays, how it works and the FAQ.
 // Every number comes from the Worker's program terms; the example uses real list prices.
@@ -161,43 +162,36 @@ export function TermsCards({ terms }: { terms: ProgramTerms }) {
   )
 }
 
-// What one customer pays each time on the pricing section, in cents. The Cloud plans renew monthly.
+// Lifetime licenses only; prices follow the same schedule as the pricing page.
 const CALCULATOR_PLANS = [
-  {
-    key: 'plus',
-    label: 'Plus Cloud',
-    price: PLUS_CLOUD_MONTHLY,
-    unit: '/mo',
-    renews: true,
-  },
-  { key: 'pro', label: 'Pro Cloud', price: 5000, unit: '/mo', renews: true },
-  { key: 'max', label: 'Max Cloud', price: 10000, unit: '/mo', renews: true },
-  {
-    key: 'premium',
-    label: 'Premium',
-    price: PREMIUM_LICENSE,
-    unit: ' once',
-    renews: false,
-  },
+  { key: 'standard', label: 'Standard', unit: 'once' },
+  { key: 'premium', label: 'Premium', unit: 'once' },
+  { key: 'teams', label: 'Teams', unit: 'once · 5 seats' },
 ] as const
 type CalculatorPlan = (typeof CALCULATOR_PLANS)[number]['key']
 
 /**
- * The earnings calculator affiliate program pages offer: a plan and how many people buy it
- * through the link each month give what the link earns a month after a year, and in that year.
+ * Monthly and first-year commission from new lifetime license purchases each month.
  */
-export function EarningsCalculator({ terms }: { terms: ProgramTerms }) {
+export function EarningsCalculator({
+  terms,
+  renderedAt = 0,
+}: {
+  terms: ProgramTerms
+  renderedAt?: number
+}) {
   const { t, locale } = useI18n()
 
-  const [planKey, setPlanKey] = useState<CalculatorPlan>('plus')
+  const [now, setNow] = useState(renderedAt)
+  useEffect(() => setNow(Date.now()), [])
+  const prices = lifetimePrices(now)
+  const [planKey, setPlanKey] = useState<CalculatorPlan>('premium')
   const [customers, setCustomers] = useState(5)
-  const plan =
-    CALCULATOR_PLANS.find((item) => item.key === planKey) ?? CALCULATOR_PLANS[0]
-  const perPayment = Math.round((plan.price * terms.commission_rate) / 100)
-  // Each month's new subscribers keep paying, so month 12 collects from twelve months of them and
-  // the first year from 1 + 2 + … + 12 = 78 months' worth. A license pays once.
-  const monthly = perPayment * customers * (plan.renews ? 12 : 1)
-  const firstYear = perPayment * customers * (plan.renews ? 78 : 12)
+  const perPayment = Math.round(
+    (prices[planKey].cents * terms.commission_rate) / 100
+  )
+  const monthly = perPayment * customers
+  const firstYear = monthly * 12
   const money = (amount: number) =>
     formatCents(amount, { ...{ cents: false }, locale })
 
@@ -217,12 +211,12 @@ export function EarningsCalculator({ terms }: { terms: ProgramTerms }) {
         <div className="space-y-6">
           <div>
             <span className={fieldLabel} id="calculator-plan">
-              {t('Plan they choose')}
+              {t('Lifetime license')}
             </span>
             <div
               role="radiogroup"
               aria-labelledby="calculator-plan"
-              className="mt-3 grid grid-cols-2 gap-1 rounded-xl border border-hairline bg-[#0B0C0D] p-1 sm:grid-cols-4"
+              className="mt-3 grid grid-cols-3 gap-1 rounded-xl border border-hairline bg-[#0B0C0D] p-1"
             >
               {CALCULATOR_PLANS.map((item) => (
                 <button
@@ -245,8 +239,7 @@ export function EarningsCalculator({ terms }: { terms: ProgramTerms }) {
                         : 'text-content-muted'
                     }`}
                   >
-                    {money(item.price)}
-                    {item.unit}
+                    {money(prices[item.key].cents)} {t(item.unit)}
                   </span>
                 </button>
               ))}
@@ -285,7 +278,7 @@ export function EarningsCalculator({ terms }: { terms: ProgramTerms }) {
           <dl className="grid gap-6 sm:grid-cols-2">
             <div>
               <dt className="text-sm text-content-muted">
-                {plan.renews ? t('A month, after a year') : t('A month')}
+                {t('A month')}
               </dt>
               <dd className="mt-1 text-4xl font-semibold tabular-nums text-signal-green">
                 {money(monthly)}
@@ -301,21 +294,16 @@ export function EarningsCalculator({ terms }: { terms: ProgramTerms }) {
             </div>
           </dl>
           <p className="mt-5 text-sm leading-6 text-content-body">
-            {plan.renews
-              ? t('{p0} subscribers by then, each earning you {p1} a month.', {
-                  p0: (customers * 12).toLocaleString('en-US'),
-                  p1: formatCents(perPayment),
-                })
-              : t('{p0} from each license, paid once.', {
-                  p0: formatCents(perPayment),
-                })}
+            {t('{p0} from each license, paid once.', {
+              p0: formatCents(perPayment, { locale }),
+            })}
           </p>
           <p className="mt-3 text-xs leading-5 text-content-ash">
             <I18nText
               source={
-                'An estimate at list prices before tax that assumes every subscriber keeps paying; cancellations lower it. With a discount you earn {p0}% of what the customer actually paid, and a yearly plan earns {p1}% of the yearly price each time it is paid.'
+                'List prices before tax. With a discount, you earn {p0}% of what the customer actually paid.'
               }
-              values={{ p0: terms.commission_rate, p1: terms.commission_rate }}
+              values={{ p0: terms.commission_rate }}
             />
           </p>
         </div>

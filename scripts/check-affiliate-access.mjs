@@ -155,7 +155,7 @@ function nodes(node) {
 }
 const pageRouter = { pathname: '/affiliate' }
 const pageModule = await load('pages/affiliate/index.tsx', {
-  '@/i18n/server': { i18nStaticProps() {} },
+  '@/i18n/server': { withI18nProps: loader => loader },
   '@/components/affiliate/AffiliatePortal': { AffiliatePortal: component('portal') },
   'next/router': { useRouter: () => pageRouter },
 })
@@ -163,9 +163,14 @@ const dashboardModule = await load('pages/affiliate/dashboard.tsx', {
   '@/i18n/server': { i18nStaticProps() {} }, './index': pageModule,
 })
 assert.equal(dashboardModule.default, pageModule.default, 'redirect preserves the React component and its loaded account')
-assert.equal(pageModule.default().props.page, 'program')
+const staticPage = await pageModule.getStaticProps()
+assert.equal(staticPage.revalidate, 3600, 'license prices in the page refresh hourly')
+assert.ok(staticPage.props.renderedAt > 0)
+const programPage = pageModule.default(staticPage.props)
+assert.equal(programPage.props.page, 'program')
+assert.equal(programPage.props.renderedAt, staticPage.props.renderedAt, 'server prices and hydration use the same instant')
 pageRouter.pathname = '/affiliate/dashboard'
-assert.equal(dashboardModule.default().props.page, 'dashboard')
+assert.equal(dashboardModule.default({}).props.page, 'dashboard')
 console.log('PASS: automatic redirect retains the loaded portal instead of mounting a second account request')
 
 // Existing browser sessions must enter the portal; native account selection remains intact.
