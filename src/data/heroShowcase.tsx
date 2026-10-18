@@ -81,8 +81,8 @@ export const heroTabs: HeroTab[] = [
             {
                 id: 'launch-film',
                 label: 'Launch film',
-                caption: 'Translate, fix spelling, read aloud, and inline edits — one selection, every action.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/popbar-launch.mp4' },
+                caption: 'Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/popbar-launch-v7-20261018.mp4' },
             },
         ],
     },

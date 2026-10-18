@@ -1628,7 +1628,7 @@
   "Track your agents on the desktop and command your Mac from Telegram, Discord or Slack": "デスクトップでエージェントを追跡し、Telegram、Discord、Slack から Mac を操作",
   "Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.": "トラッキングにはファーストパーティCookieを使用します。検索エンジン、クローラー、その他の自動化ツールからのアクセスはカウントされないため、訪問者数はご自身のクリックカウンターより少なくなる場合があります。お客様のリンクと関連付けられない購入(たとえば、一度もサインインしていない訪問者がその後ブラウザデータを消去したりデバイスを切り替えたりした場合など)は、自動的には成果として計上されません。そのようなお客様があなたの紹介によるものであることを示せる場合は、ご連絡ください。当社の裁量で、そのサブスクリプションをあなたの成果として計上することがあり、その場合、以降の支払いに対してコミッションが発生します。それ以前の支払いおよび買い切りの購入は、この方法では計上されません。",
   "Transcription": "文字起こし",
-  "Translate, fix spelling, read aloud, and inline edits — one selection, every action.": "翻訳、スペル修正、読み上げ、インライン編集。1回の選択で、あらゆる操作を。",
+  "Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.": "翻訳、その場で修正、読み上げ、画面への落書き、拡張機能の追加。1回の選択で、あらゆる操作を。",
   "Trial code": "トライアルコード",
   "Try Again": "再試行",
   "Try a different category, provider, or search term.": "別のカテゴリ、プロバイダ、検索キーワードをお試しください。",
@@ -2294,5 +2294,8 @@
   "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "申請時の Enconvo アカウントを使用してください。アフィリエイトダッシュボードも同じパスワードを使用します。",
   "Back to sign in": "ログインに戻る",
   "Your password has been updated.": "パスワードを更新しました。",
-  "Go to Affiliate dashboard": "アフィリエイトダッシュボードへ"
+  "Go to Affiliate dashboard": "アフィリエイトダッシュボードへ",
+  "Tutorials": "チュートリアル",
+  "Set up PopBar and use it every day, step by step": "PopBar を設定して毎日使う：ステップごとに解説",
+  "Select text in any app and PopBar pops up above it with one-click actions. Turn it on, choose when it shows, fix, translate and ask AI, let fixes land inline, arrange your buttons, make your own AI command and add extensions — a narrated walkthrough in nine steps.": "どのアプリでもテキストを選択すると、その上に PopBar がワンクリック操作とともに表示されます。有効化、表示タイミングの選択、スペル修正・翻訳・AI への質問、修正をその場に反映、ボタンの整理、自分だけの AI コマンド作成、拡張機能の追加まで——9 ステップのナレーション付きガイドです。"
 }

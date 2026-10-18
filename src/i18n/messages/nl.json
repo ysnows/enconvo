@@ -1628,7 +1628,7 @@
   "Track your agents on the desktop and command your Mac from Telegram, Discord or Slack": "Volg je agents op het bureaublad en bestuur je Mac vanuit Telegram, Discord of Slack",
   "Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.": "De tracking is gebaseerd op een first-party cookie. Bezoeken van zoekmachines, crawlers en andere geautomatiseerde tools worden niet geteld, dus je aantal bezoekers kan lager zijn dan bij een eigen klikteller. Aankopen die we niet aan je link kunnen koppelen, bijvoorbeeld van een bezoeker die nooit is ingelogd en daarna zijn browsergegevens wist of van apparaat wisselt, worden niet automatisch toegekend. Kun je aantonen dat zo'n klant via jou kwam, schrijf ons dan: wij kunnen naar eigen inzicht zijn abonnement aan jou toekennen, en de betalingen daarvan vanaf dat moment leveren jou commissie op. Eerdere betalingen en eenmalige aankopen worden op deze manier niet toegekend.",
   "Transcription": "Transcriptie",
-  "Translate, fix spelling, read aloud, and inline edits — one selection, every action.": "Vertaal, corrigeer spelling, lees voor en bewerk ter plekke: één selectie, elke actie.",
+  "Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.": "Vertaal, corrigeer ter plekke, lees voor, teken op je scherm en voeg extensies toe: één selectie, elke actie.",
   "Trial code": "Proefcode",
   "Try Again": "Opnieuw proberen",
   "Try a different category, provider, or search term.": "Probeer een andere categorie, aanbieder of zoekterm.",
@@ -2294,5 +2294,8 @@
   "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "Gebruik het Enconvo-account waarmee je de aanvraag hebt ingediend. Je affiliate-dashboard gebruikt hetzelfde wachtwoord.",
   "Back to sign in": "Terug naar inloggen",
   "Your password has been updated.": "Je wachtwoord is bijgewerkt.",
-  "Go to Affiliate dashboard": "Naar het affiliate-dashboard"
+  "Go to Affiliate dashboard": "Naar het affiliate-dashboard",
+  "Tutorials": "Tutorials",
+  "Set up PopBar and use it every day, step by step": "PopBar instellen en dagelijks gebruiken, stap voor stap",
+  "Select text in any app and PopBar pops up above it with one-click actions. Turn it on, choose when it shows, fix, translate and ask AI, let fixes land inline, arrange your buttons, make your own AI command and add extensions — a narrated walkthrough in nine steps.": "Selecteer tekst in een willekeurige app en PopBar verschijnt er direct boven met acties in één klik. Zet hem aan, kies wanneer hij verschijnt, corrigeer, vertaal en vraag de AI, laat correcties direct in je tekst landen, orden je knoppen, maak je eigen AI-opdracht en voeg extensies toe — een ingesproken handleiding in negen stappen."
 }

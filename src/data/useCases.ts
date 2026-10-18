@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'popbar-step-by-step',
+    title: 'Set up PopBar and use it every day, step by step',
+    description:
+      'Select text in any app and PopBar pops up above it with one-click actions. Turn it on, choose when it shows, fix, translate and ask AI, let fixes land inline, arrange your buttons, make your own AI command and add extensions — a narrated walkthrough in nine steps.',
+    youtubeId: 'CRlQt5UFrG4',
+    category: 'Tutorials',
+    date: '2026-10-18',
+    docsUrl: 'https://docs.enconvo.ai/features/popbar',
+  },
+  {
     slug: 'ai-companion-mac-iphone',
     title: 'Meet Enconvo Live Avatar',
     description:
@@ -27,7 +37,7 @@ export const useCases: UseCase[] = [
     description:
       'Sign in on the Enconvo iPhone app, show the pairing code on your Mac, and scan it. Your Mac’s projects and chats are then on your phone, and every chat keeps running on your Mac — a narrated walkthrough in seven steps.',
     youtubeId: 'rYhgz_SjnNs',
-    category: 'Everyday Tools',
+    category: 'Tutorials',
     date: '2026-09-27',
     docsUrl: 'https://docs.enconvo.ai/integrations/iphone-app',
   },
@@ -37,7 +47,7 @@ export const useCases: UseCase[] = [
     description:
       'Create a workflow from the starter template, add a step by hand, let the workflow assistant add another, then run it and check what every step produced — a narrated walkthrough in eight steps.',
     youtubeId: 'g02LJwso1yk',
-    category: 'Workflows',
+    category: 'Tutorials',
     date: '2026-09-27',
     docsUrl: 'https://docs.enconvo.ai/workflows/build-your-first-workflow',
   },

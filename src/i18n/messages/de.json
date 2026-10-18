@@ -1628,7 +1628,7 @@
   "Track your agents on the desktop and command your Mac from Telegram, Discord or Slack": "Verfolge deine Agenten auf dem Desktop und steuere deinen Mac über Telegram, Discord oder Slack",
   "Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.": "Das Tracking beruht auf einem First-Party-Cookie. Besuche von Suchmaschinen, Crawlern und anderen automatisierten Tools werden nicht gezählt, daher kann deine Besucherzahl niedriger sein als bei einem eigenen Klickzähler. Käufe, die wir nicht deinem Link zuordnen können, etwa von einem Besucher, der sich nie angemeldet hat und dann seine Browserdaten löscht oder das Gerät wechselt, werden nicht automatisch gutgeschrieben. Wenn du uns belegen kannst, dass ein solcher Kunde von dir kam, schreib uns: Wir können nach eigenem Ermessen sein Abonnement dir zurechnen, und seine Zahlungen ab diesem Zeitpunkt bringen dir Provision. Zuvor geleistete Zahlungen und Einmalkäufe werden auf diese Weise nicht gutgeschrieben.",
   "Transcription": "Transkription",
-  "Translate, fix spelling, read aloud, and inline edits — one selection, every action.": "Übersetzen, Rechtschreibung korrigieren, vorlesen und direkt bearbeiten – eine Auswahl, jede Aktion.",
+  "Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.": "Übersetzen, direkt korrigieren, vorlesen, auf dem Bildschirm zeichnen und Erweiterungen hinzufügen – eine Auswahl, jede Aktion.",
   "Trial code": "Testcode",
   "Try Again": "Erneut versuchen",
   "Try a different category, provider, or search term.": "Probiere eine andere Kategorie, einen anderen Anbieter oder einen anderen Suchbegriff.",
@@ -2294,5 +2294,8 @@
   "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "Verwende das Enconvo-Konto deiner Bewerbung. Dein Affiliate-Dashboard nutzt dasselbe Passwort.",
   "Back to sign in": "Zurück zur Anmeldung",
   "Your password has been updated.": "Dein Passwort wurde aktualisiert.",
-  "Go to Affiliate dashboard": "Zum Affiliate-Dashboard"
+  "Go to Affiliate dashboard": "Zum Affiliate-Dashboard",
+  "Tutorials": "Tutorials",
+  "Set up PopBar and use it every day, step by step": "PopBar einrichten und täglich nutzen – Schritt für Schritt",
+  "Select text in any app and PopBar pops up above it with one-click actions. Turn it on, choose when it shows, fix, translate and ask AI, let fixes land inline, arrange your buttons, make your own AI command and add extensions — a narrated walkthrough in nine steps.": "Markiere Text in einer beliebigen App, und PopBar erscheint direkt darüber mit Aktionen per Klick. Aktivieren, festlegen, wann sie erscheint, korrigieren, übersetzen und die KI fragen, Korrekturen direkt im Text einfügen, Schaltflächen anordnen, eigene KI-Befehle erstellen und Erweiterungen hinzufügen – eine kommentierte Anleitung in neun Schritten."
 }

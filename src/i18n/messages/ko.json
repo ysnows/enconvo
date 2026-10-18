@@ -1628,7 +1628,7 @@
   "Track your agents on the desktop and command your Mac from Telegram, Discord or Slack": "데스크톱에서 에이전트를 추적하고 Telegram, Discord 또는 Slack에서 Mac을 제어하세요",
   "Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.": "추적은 퍼스트 파티 쿠키를 사용합니다. 검색 엔진, 크롤러 및 기타 자동화 도구의 방문은 집계되지 않으므로, 방문자 수가 직접 운영하는 클릭 카운터보다 적을 수 있습니다. 로그인한 적이 없는 방문자가 이후 브라우저 데이터를 삭제하거나 기기를 바꾸는 경우처럼 회원님의 링크와 연결할 수 없는 구매는 자동으로 실적에 반영되지 않습니다. 해당 고객이 회원님을 통해 방문했음을 입증할 수 있다면 저희에게 문의해 주세요. 저희 재량으로 해당 구독을 회원님의 실적으로 인정할 수 있으며, 그 이후의 결제에 대해 수수료를 받게 됩니다. 그 이전의 결제와 일회성 구매는 이 방식으로 반영되지 않습니다.",
   "Transcription": "전사",
-  "Translate, fix spelling, read aloud, and inline edits — one selection, every action.": "번역, 맞춤법 교정, 소리 내어 읽기, 인라인 편집까지 — 한 번의 선택으로 모든 작업을.",
+  "Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.": "번역, 제자리 수정, 소리 내어 읽기, 화면 낙서, 확장 프로그램 추가까지 — 한 번의 선택으로 모든 작업을.",
   "Trial code": "체험 코드",
   "Try Again": "다시 시도",
   "Try a different category, provider, or search term.": "다른 카테고리, 제공업체 또는 검색어를 사용해 보세요.",
@@ -2294,5 +2294,8 @@
   "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "신청할 때 사용한 Enconvo 계정으로 로그인하세요. 제휴 대시보드도 같은 비밀번호를 사용합니다.",
   "Back to sign in": "로그인으로 돌아가기",
   "Your password has been updated.": "비밀번호가 변경되었습니다.",
-  "Go to Affiliate dashboard": "제휴 대시보드로 이동"
+  "Go to Affiliate dashboard": "제휴 대시보드로 이동",
+  "Tutorials": "튜토리얼",
+  "Set up PopBar and use it every day, step by step": "PopBar 설정부터 일상 활용까지, 단계별로",
+  "Select text in any app and PopBar pops up above it with one-click actions. Turn it on, choose when it shows, fix, translate and ask AI, let fixes land inline, arrange your buttons, make your own AI command and add extensions — a narrated walkthrough in nine steps.": "어떤 앱에서든 텍스트를 선택하면 그 위에 PopBar가 원클릭 작업과 함께 나타납니다. 켜기, 표시 시점 선택, 맞춤법 수정·번역·AI에게 묻기, 수정 내용을 바로 반영, 버튼 정리, 나만의 AI 명령 만들기, 확장 프로그램 추가까지 — 9단계 내레이션 가이드입니다."
 }

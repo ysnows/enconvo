@@ -1628,7 +1628,7 @@
   "Track your agents on the desktop and command your Mac from Telegram, Discord or Slack": "在桌面上追蹤你的代理,並透過 Telegram、Discord 或 Slack 指揮你的 Mac",
   "Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.": "追蹤依賴第一方 Cookie。來自搜尋引擎、爬蟲及其他自動化工具的造訪不會被計入，因此您的訪客數可能低於您自行設置的點擊計數器。對於我們無法連結到您連結的購買，例如訪客從未登入，之後清除了瀏覽器資料或更換了裝置，我們不會自動記入您的名下。如果您能向我們證明此類客戶來自您的推薦，請與我們聯絡：我們可自行決定將其訂閱記入您的名下，此後該訂閱的付款將為您帶來佣金。在此之前的付款以及一次性購買不會以這種方式記入。",
   "Transcription": "轉錄",
-  "Translate, fix spelling, read aloud, and inline edits — one selection, every action.": "翻譯、拼字修正、朗讀、行內編輯——一次選取,所有操作。",
+  "Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.": "翻譯、原地修正、朗讀、螢幕塗鴉，還能加入擴充功能——一次選取,所有操作。",
   "Trial code": "試用碼",
   "Try Again": "重試",
   "Try a different category, provider, or search term.": "試試其他類別、供應商或搜尋關鍵字。",
@@ -2294,5 +2294,8 @@
   "Use the Enconvo account you applied with. Your Affiliate dashboard uses the same password.": "請使用提交申請時的 Enconvo 帳戶登入。推廣夥伴後台與 Enconvo 共用相同密碼。",
   "Back to sign in": "返回登入",
   "Your password has been updated.": "密碼已更新。",
-  "Go to Affiliate dashboard": "進入推廣夥伴後台"
+  "Go to Affiliate dashboard": "進入推廣夥伴後台",
+  "Tutorials": "教學",
+  "Set up PopBar and use it every day, step by step": "一步步設定 PopBar，日常用起來",
+  "Select text in any app and PopBar pops up above it with one-click actions. Turn it on, choose when it shows, fix, translate and ask AI, let fixes land inline, arrange your buttons, make your own AI command and add extensions — a narrated walkthrough in nine steps.": "在任何應用程式中選取文字，PopBar 就會在上方彈出一鍵操作。開啟它、選擇何時出現、修正拼字、翻譯和問 AI、讓修改直接寫回原文、整理按鈕、建立自己的 AI 指令並加入擴充功能——分九步講解的影片教學。"
 }
