@@ -9,6 +9,227 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.8 Changelog (2026-10-19)
+
+Thanks for all the feedback during the betas. This release brings a brand-new
+side panel to every chat, adds Codex, Grok Build and Antigravity beside Claude
+Code, and rebuilds Local LLM into a fast on-device model engine.
+
+## Highlights
+
+- **A brand-new side panel** in every chat, with tabs for files, web pages, a
+  terminal, Side chats and the agent's changes.
+- **Codex, Grok Build and Antigravity** join Claude Code as coding agents, and
+  the new Orchestrator Board runs coding tasks for a Project.
+- **Local LLM (MLX)**, a powerful, fast on-device model engine with Hugging
+  Face model search, live memory and speed charts, and local models that answer
+  questions about your documents in seconds.
+- **Mini Apps in the Smart Bar**, including Clipboard History, File Search and
+  Browser Bookmarks.
+- **Sync with iCloud** for paid members, and API keys that reach a new Mac
+  without a passphrase.
+- **Plugin Studio** builds plugins with you in a chat, and plugins from the
+  store now update themselves.
+- **New providers**: Antigravity, GitHub Copilot, OpenRouter speech, Mistral
+  account sign-in and MiniMax M3.1 Flash.
+
+## Automations
+
+- Changed Scheduled to Automations, with filters, a Run box for tasks you start
+  by hand, and switches for Important mail alerts.
+- Added triggers for folders, apps, Apple Mail and Gmail, Discord and Telegram
+  messages, MCP server events and transcribed recordings.
+- Added web page and feed, clipboard, calendar, meeting, login and webhook
+  triggers, and Mac triggers for waking, unlocking, plugging in and time away.
+- Added conditions you describe in your own words, which AI checks for each
+  event, even in a screenshot or scanned PDF, with Try on recent events.
+- Added running automations by hand from the SmartBar, the PopBar and buttons on
+  the Dynamic Island, which also shows each run's progress.
+- Added an Approval step to workflows that waits up to 24 hours for your answer,
+  and a step-by-step view of each run with Retry from the failed step.
+- Added retries for steps that only read or ask a model, grouping of events that
+  come close together, an hourly limit of 20 runs, and a loop guard.
+- Added a Needs you card for failed events, pausing after 5 failed runs in a
+  row, and a workflow of your choice to run when an automation fails.
+- Added Make it run the same way every time, which turns a reliable agent
+  automation into a workflow, and Undo for changes made in chat.
+
+## Coding Agents and Orchestrator
+
+- Added Codex as a coding agent with your ChatGPT sign-in, its own models,
+  reasoning effort and permission modes, and your plan's usage limits.
+- Added subagents, file change cards with Undo, background commands, generated
+  images, `!` commands, /compact, /review, /goal and forking to Codex chats.
+- Added Grok Build and Google Antigravity as coding agents, and Enconvo's skills
+  and actions in Codex, Grok Build and Antigravity chats.
+- Added one-click Install and Update for Claude Code, Codex and Grok Build
+  without Terminal, with your account, plan and usage on their settings pages.
+- Added a project's Codex, Grok Build and Antigravity sessions to the new-chat
+  page, including ones started in a terminal, to continue as chats.
+- Added Continue in Terminal or iTerm to the ⋯ menu, and Copy command for any
+  other terminal, in Claude Code, Codex and Grok Build chats.
+- Added the Orchestrator Board, which plans a Project's tasks and runs each
+  coding task in its own worktree, to merge or open as a pull request.
+
+## Chat and Side Panel
+
+- Added a brand-new side panel to the Chat Window, Smart Bar and Dynamic
+  Island, with tabs for Files, web pages, a Terminal and Side chats.
+- Added Side chats with /btw for a quick question while the chat keeps working,
+  and a Changes tab with Undo for the files each turn changed.
+- Added web pages in the side panel that the agent can open and use to check its
+  work, asking you before paying, sending, deleting or publishing.
+- Added diagrams to chat replies and Markdown previews, drawing Mermaid blocks
+  in the chat's colors with a button to switch to the code.
+- Added web page cards for HTML pages in replies, HTML previews that run their
+  scripts, and editing a file's source in the side panel with ⌘S.
+- Added a conversation map along the edge of long chats, a mic button in the
+  Chat Window's message box, and Up to bring back what you sent before.
+- Changed chat search to return results several times faster without missing
+  older chats, and added output speed to each reply's Details.
+
+## Smart Bar, PopBar and Mini Apps
+
+- Added Mini Apps: plugin apps open in the Smart Bar with a back button and an
+  Actions menu (⌘K), and plugins can show searchable lists there.
+- Added File Search and Browser Bookmarks Mini Apps, and Clipboard History now
+  opens as a Mini App with ⌘1–⌘9 to paste.
+- Added Auto-switch Input Source to the Smart Bar, and removed its Use
+  Application as Context First and Shake to Dynamic Island options.
+- Changed the Smart Bar to list your recent commands and apps near the top, find
+  apps by names in other languages, and offer Quit App and Force Quit.
+- Fixed the PopBar hotkey to hide the PopBar when pressed again and show it
+  under the selected text, and Pinyin input in the PopBar's Ask field.
+
+## Computer Use
+
+- Changed agent mode to act in a Mac app's window right away and see only what
+  changed after each step, so desktop tasks start sooner and use fewer tokens.
+- Added right-clicks to the Computer and Browser Operators, and a screenshot
+  fallback for controls and lists an app shows only on screen.
+- Fixed Computer Use in Spotify and other web-based apps, so menus, drop-downs,
+  sliders, checkboxes and long lists work as asked.
+- Fixed Computer Use typing into background apps such as the App Store and into
+  spreadsheet cells, and reporting actions as done when nothing happened.
+- Removed the Computer Use and Browser Use MCP servers for other AI apps such as
+  Claude Code, Codex and Cursor, along with Connect AI Clients (MCP).
+
+## Dynamic Island, Read Aloud and Avatars
+
+- Added activity chips to the Dynamic Island's Home for downloads, Read Aloud,
+  working Agents and waiting questions, and two activities on the notch.
+- Changed Read Aloud to open its controls when you click the notch, hold its
+  place during a Voice Command or call, and leave the Avatar uncovered.
+- Added Natural lip sync on Apple silicon Macs and the iPhone, an on-device
+  model that moves an Avatar's lips and tongue with the voice she speaks.
+
+## Voice and Dictation
+
+- Changed Voice Command on the Mac to open apps, run quick actions and start
+  browser searches as soon as you finish speaking, two or three at a time.
+- Added browser search to Mac voice calls, and calls now find apps by names in
+  other languages or the names people call them.
+- Fixed Voice Command talking over you when you speak again, and voice calls
+  pausing when Enconvo Cloud's ElevenLabs voice runs out of credits.
+- Changed On-Device Cleanup to Enconvo Tidy 1, which also cleans up Chinese,
+  Japanese, Korean, German, French, Spanish, Portuguese and Italian.
+- Changed On-Device Cleanup to work on macOS 14 too, and removed its Tone
+  setting and the Spokenly Cleanup 1 download, freeing about 730 MB.
+- Fixed Dictation in Pages moving the cursor, crashes when Dictation read
+  Enconvo's own window, and permission alerts hiding behind other windows.
+
+## Recordings and Downloads
+
+- Changed meeting recording to happen on Settings › Recordings, with a live
+  transcript, Ask AI during the meeting, notes, bookmarks and Pause.
+- Added an Audio sources window for the microphone, call audio and transcription
+  model, a no-sound warning, and WeChat calls in the Meeting reminder.
+- Added video and audio download progress to the Dynamic Island, with Cancel, a
+  percent ring on the notch and Show in Finder when done.
+- Changed video downloads to start in half the time, fetch long videos up to
+  three times faster, save to chat history and reuse a file you already have.
+- Fixed YouTube links from a playlist or Mix downloading the whole list.
+
+## Local Models and Knowledge Base
+
+- Changed the MLX provider into Local LLM, a powerful, fast built-in engine for
+  macOS 15 and later, with live memory and speed charts and a best model picked
+  for your Mac.
+- Added Hugging Face model search, Bonsai 2 models with vision, Thinking and
+  Unload when idle, and Qwen3.5 4B as the default local model.
+- Changed local model downloads to resume after a restart, retry on network
+  drops and check free disk space before they start.
+- Changed the local Anthropic and Responses endpoints to read PDFs, follow a
+  JSON schema, and answer Claude Code on a local model much faster.
+- Changed chat to search a long knowledge base item or recording you @-mention,
+  so local models answer in seconds, and follow-ups keep searching it.
+- Fixed agents on local models losing their tools, and knowledge base answers
+  switching to English or guessing when a search timed out.
+
+## Models and Enconvo Cloud
+
+- Added Antigravity and GitHub Copilot providers with Google or GitHub sign-in.
+- Added Mistral account sign-in for Mistral AI, Voxtral and Mistral OCR.
+- Added OpenRouter as a text-to-speech and speech-to-text provider, so its
+  speech models work with one OpenRouter API key.
+- Added MiniMax M3.1 Flash on Enconvo Cloud and with your own key, at half the
+  price of MiniMax M3 and about three times faster.
+- Changed provider settings to show API Key, Subscription and Enconvo Cloud as
+  sign-in cards, with a Cloud points button on Enconvo Cloud providers.
+- Added DeepSeek to Web Search and Web Fetch; past the free monthly quota,
+  Enconvo Cloud search uses it at 35 points per search with results.
+- Added Enconvo Cloud to the agent's ElevenLabs tools, such as sound effects,
+  music and dubbing, so they work without your own ElevenLabs key.
+- Removed the Temperature setting from every AI model provider, and Gemini AI
+  OAuth and Qwen account sign-in, which now take an API key.
+- Removed the Japanese voices from MLX Kokoro, which always failed to speak.
+
+## Plugins and Connectors
+
+- Added Plugin Studio, where Create plugin opens a chat that builds plugins and
+  PopBar extensions with you, ready to use or publish to the plugin store.
+- Added automatic updates for plugins from the store, GitHub, npm, marketplaces
+  and the PopBar catalog, holding back ones that change hooks you allowed.
+- Added Comments and Report to plugin store pages, and review status, Publish
+  again and Withdraw to the plugins you published.
+- Added entry points for plugins with their own interface in the Chat Window
+  sidebar, the side panel, SmartBar search, @ and the PopBar.
+- Added a Location & Maps plugin for travel times, when to leave and places
+  nearby or anywhere, using Apple Maps with no API key.
+- Changed uninstalling a plugin to also delete its data, unless you add
+  `--keep-data` to `enconvo plugin uninstall`.
+- Removed installing .dxt files; MCP bundles now install only as .mcpb files.
+- Added about 300 new Connectors, including Greenhouse, GitBook, DigitalOcean,
+  Runway, Luma, Kling AI and Canny.
+
+## Sync and Settings
+
+- Added iCloud as a Sync storage option for paid members, with changes from your
+  other Macs often arriving within seconds.
+- Changed API key sync so a new computer is approved from one that already has
+  your keys with a six-digit code, instead of a passphrase.
+- Fixed Sync losing edits made while it was off, bringing back deleted items,
+  and replacing newer settings or API keys with older copies.
+- Changed Settings search to open results without a pause, keep typing smooth,
+  and rank pages and whole-word matches first.
+- Fixed web pages shown inside Enconvo being able to send commands to the app,
+  and plugin names or synced settings changing files outside Enconvo's folders.
+
+## iPhone and Android
+
+- Added Codex chats to the iPhone app, and a project's Codex sessions to the
+  iPhone and Android apps, including ones started in a terminal.
+- Added message search to Search chats in the iPhone app, finding what was said
+  in your iPhone's and Mac's chats, with previews.
+- Added hiding the Avatar during voice chats on iPhone and Android, and web page
+  cards that open HTML pages full screen in the iPhone app.
+- Changed Mac chats in the iPhone app to keep typing and sending through a brief
+  connection drop, and to show your first message the moment you tap Send.
+- Fixed text in the iPhone app showing in English in other languages, across
+  chat lists, search, settings, pairing, errors and VoiceOver labels.
+
+---
+
 # Enconvo 2.5.7 Changelog (2026-10-15)
 
 Thanks for your patience and for all the feedback that shaped this release. It
