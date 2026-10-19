@@ -2648,7 +2648,7 @@
     "Evaluate once",
     "Every model and service,",
     "Every settled charge records the exact formula, measured usage, and catalog version that produced it.",
-    "Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4, MiniMax M3, and GLM-5.3-Flash.",
+    "Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4, MiniMax M3/M3.1 Flash, and GLM-5.3-Flash.",
     "Everything you capture becomes searchable, chattable knowledge.",
     "Explore Enconvo Cloud point rates for chat, image and video generation, speech, search, and document services.",
     "Explore real video walkthroughs for writing, research, Excel, workflows, and AI agents on your Mac.",
@@ -4210,9 +4210,9 @@
     "Create a workflow from the starter template, add a step by hand, let the workflow assistant add another, then run it and check what every step produced — a narrated walkthrough in eight steps.",
     "Create and edit Excel workbooks with your AI agent",
     "David Park",
-    "DeepSeek, MiniMax M3 & GLM-5.3-Flash",
-    "DeepSeek, MiniMax M3 & GLM-5.3-Flash at half price.",
-    "DeepSeek, MiniMax M3 & GLM-5.3-Flash at quarter price.",
+    "DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash",
+    "DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at half price.",
+    "DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at quarter price.",
     "Demo video coming soon",
     "Developer",
     "Dictation & voice commands",
@@ -4591,8 +4591,8 @@
     "{p0}=; Path=/; Max-Age=0; SameSite=Lax{p1}",
     "{p0}={p1}.{p2}; Max-Age={p3}; Path=/; SameSite=Lax{p4}",
     "{p0}={p1}; Path=/; Max-Age={p2}; SameSite=Lax{p3}",
-    "⚡ DeepSeek, MiniMax M3 & GLM-5.3-Flash at 1/2 price — up to 5M points of usage",
-    "⚡ DeepSeek, MiniMax M3 & GLM-5.3-Flash at 1/4 price — up to 20M points of usage"
+    "⚡ DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at 1/2 price — up to 5M points of usage",
+    "⚡ DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at 1/4 price — up to 20M points of usage"
   ],
   "/login": [
     "/go/",

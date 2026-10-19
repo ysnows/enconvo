@@ -881,7 +881,7 @@ export default function CloudPricingPage() {
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-content-muted">
                 {t(
-                  'Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4, MiniMax M3, and GLM-5.3-Flash.'
+                  'Every tier includes hosted AI with no API keys. Higher tiers add more monthly points and cheaper usage on boost models — DeepSeek V4, MiniMax M3/M3.1 Flash, and GLM-5.3-Flash.'
                 )}
               </p>
             </div>

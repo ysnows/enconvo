@@ -325,7 +325,7 @@ const PLAN_DIFFS: { feature: string; hint: string; cells: DiffCell[] }[] = [
   },
   {
     feature: 'Model discounts',
-    hint: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash',
+    hint: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash',
     cells: [
       { text: 'Standard rate', tone: 'muted' },
       { text: 'Standard rate', tone: 'muted' },
@@ -1088,14 +1088,14 @@ const CLOUD_TIERS: CloudTier[] = [
   },
   {
     name: 'Pro',
-    description: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash at half price.',
+    description: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at half price.',
     badge: 'Most popular',
     featured: true,
     monthly: { price: '$50', lookupKey: 'pro_monthly' },
     annual: { price: '$480', perMonth: '$40', lookupKey: 'pro_yearly' },
     features: [
       '2,500,000 points / month',
-      '⚡ DeepSeek, MiniMax M3 & GLM-5.3-Flash at 1/2 price — up to 5M points of usage',
+      '⚡ DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at 1/2 price — up to 5M points of usage',
       'Every Cloud model & service — chat, image, TTS, transcription',
       'Latest frontier models — GPT, Claude, Gemini & more',
       'No API keys needed',
@@ -1105,12 +1105,12 @@ const CLOUD_TIERS: CloudTier[] = [
   },
   {
     name: 'Max',
-    description: 'DeepSeek, MiniMax M3 & GLM-5.3-Flash at quarter price.',
+    description: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at quarter price.',
     monthly: { price: '$100', lookupKey: 'max_monthly' },
     annual: { price: '$960', perMonth: '$80', lookupKey: 'max_yearly' },
     features: [
       '5,000,000 points / month',
-      '⚡ DeepSeek, MiniMax M3 & GLM-5.3-Flash at 1/4 price — up to 20M points of usage',
+      '⚡ DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at 1/4 price — up to 20M points of usage',
       'Every Cloud model & service — chat, image, TTS, transcription',
       'Latest frontier models — GPT, Claude, Gemini & more',
       'No API keys needed',
