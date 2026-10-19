@@ -44,9 +44,10 @@ export async function workerRequest<T>(path: string, init: RequestInit = {}): Pr
     }
 }
 
-/** A signed-in JSON POST. */
-export function workerPost<T>(path: string, accessToken: string, body: unknown = {}) {
+/** A signed-in JSON POST; `init` adds request options such as an abort signal. */
+export function workerPost<T>(path: string, accessToken: string, body: unknown = {}, init: RequestInit = {}) {
     return workerRequest<T>(path, {
+        ...init,
         method: 'POST',
         headers: { 'Content-Type': 'application/json', accessToken },
         body: JSON.stringify(body),

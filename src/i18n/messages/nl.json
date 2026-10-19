@@ -2337,5 +2337,7 @@
   "{points} ({usd})": "{points} ({usd})",
   "The points end with the plan.": "De punten vervallen met het abonnement.",
   "Free, no card needed. It ends on its own.": "Gratis, geen kaart nodig. Het stopt vanzelf.",
-  "One per account. The points end with the plan.": "Eén per account. De punten vervallen met het abonnement."
+  "One per account. The points end with the plan.": "Eén per account. De punten vervallen met het abonnement.",
+  "You've already claimed this offer": "Je hebt deze aanbieding al geactiveerd",
+  "It was added to your account earlier.": "Deze is eerder aan je account toegevoegd."
 }

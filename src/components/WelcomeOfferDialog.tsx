@@ -18,6 +18,7 @@ import { trackEvent } from '@/lib/analytics'
 import { formatRewardUsd } from '@/lib/invite'
 import { burstConfetti } from '@/lib/ltd-confetti'
 import {
+  claimEnded,
   formatOfferDate,
   offerHomePath,
   refusalCopy,
@@ -48,6 +49,15 @@ type FocusRef = MutableRefObject<(HTMLAnchorElement & HTMLButtonElement) | null>
 const textLink =
   'font-medium text-content underline decoration-hairline-strong underline-offset-4 hover:decoration-content'
 const eyebrow = 'text-[11px] font-medium uppercase tracking-[0.16em]'
+/** A busy Claim or Try again button keeps focus (aria-disabled, not disabled) and ignores clicks. */
+const busyButton = 'aria-disabled:cursor-wait aria-disabled:opacity-60'
+
+/**
+ * Each step's title takes focus when a click moves the popup to that step, so the answer is read
+ * out and keyboard focus stays in the popup.
+ */
+const stepTitle = { tabIndex: -1, 'data-step-title': true } as const
+const titleFocus = 'focus:outline-none'
 
 /** One line of a step; the lines rise in one after another. */
 function Rise({
@@ -200,7 +210,10 @@ function GiftMark({
 
 function Title({ children }: { children: ReactNode }) {
   return (
-    <Dialog.Title className="mt-4 pr-10 text-2xl font-semibold leading-tight text-content [text-wrap:balance]">
+    <Dialog.Title
+      {...stepTitle}
+      className={`mt-4 pr-10 text-2xl font-semibold leading-tight text-content [text-wrap:balance] [word-break:auto-phrase] ${titleFocus}`}
+    >
       {children}
     </Dialog.Title>
   )
@@ -241,7 +254,10 @@ function OfferStep({
         <p className={`${eyebrow} text-signal-blue`}>{t('A gift for you')}</p>
       </Rise>
       <Rise i={1}>
-        <Dialog.Title className="mt-2 text-[28px] font-semibold leading-[34px] text-content [text-wrap:balance]">
+        <Dialog.Title
+          {...stepTitle}
+          className={`mt-2 text-[28px] font-semibold leading-[34px] text-content [text-wrap:balance] [word-break:auto-phrase] ${titleFocus}`}
+        >
           <I18nText
             source={'{days} days of Plus Cloud'}
             values={{
@@ -263,7 +279,7 @@ function OfferStep({
         </Rise>
       )}
       <Rise i={3}>
-        <p className="mx-auto mt-3 max-w-[320px] text-sm leading-5 text-content-muted [text-wrap:balance]">
+        <p className="mx-auto mt-3 max-w-[320px] text-sm leading-5 text-content-muted [text-wrap:balance] [word-break:auto-phrase]">
           {t('Free, no card needed. It ends on its own.')}
         </p>
       </Rise>
@@ -275,8 +291,8 @@ function OfferStep({
                 ref={focusRef}
                 type="button"
                 onClick={() => void claimFromPopup()}
-                disabled={claiming}
-                className={`${primaryButton} w-full`}
+                aria-disabled={claiming || undefined}
+                className={`${primaryButton} ${busyButton} w-full`}
               >
                 {claiming && (
                   <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -286,8 +302,7 @@ function OfferStep({
               <button
                 type="button"
                 onClick={closeWelcomeOffer}
-                disabled={claiming}
-                className="min-h-[40px] text-[13px] font-medium text-content-muted transition-colors hover:text-content disabled:opacity-60"
+                className="min-h-[40px] text-[13px] font-medium text-content-muted transition-colors hover:text-content"
               >
                 {t('Not now')}
               </button>
@@ -359,6 +374,8 @@ function ClaimedStep({
   focusRef: FocusRef
 }) {
   const { t, locale } = useI18n()
+  // Claimed long enough ago that the plan has ended: nothing is active to show.
+  const ended = claim.already_claimed && claimEnded(claim)
   // Short month, so the date fits its half of the card on a phone.
   const endsOn = formatOfferDate(claim.ends_at, locale, 'short')
   const download = (arch: 'arm64' | 'x64') =>
@@ -368,64 +385,87 @@ function ClaimedStep({
       <div className="text-center">
         <Rise i={0} className="mt-5">
           <p className={`${eyebrow} text-signal-green`}>
-            {claim.already_claimed ? t('Already claimed') : t('Offer claimed')}
+            {ended
+              ? t('Welcome offer')
+              : claim.already_claimed
+                ? t('Already claimed')
+                : t('Offer claimed')}
           </p>
         </Rise>
         <Rise i={1}>
-          <Dialog.Title className="mt-2 text-2xl font-semibold leading-[30px] text-content [text-wrap:balance]">
-            {t('Your {days}-day Plus Cloud plan is active', { days: claim.days })}
+          <Dialog.Title
+            {...stepTitle}
+            className={`mt-2 text-2xl font-semibold leading-[30px] text-content [text-wrap:balance] [word-break:auto-phrase] ${titleFocus}`}
+          >
+            {ended
+              ? t("You've already claimed this offer")
+              : t('Your {days}-day Plus Cloud plan is active', {
+                  days: claim.days,
+                })}
           </Dialog.Title>
         </Rise>
         <Rise i={2}>
-          <dl
-            className={`mt-5 grid ${endsOn ? 'grid-cols-2' : 'grid-cols-1'} rounded-[18px] border border-hairline bg-white/[0.03]`}
-          >
-            {endsOn && <Stat label={t('Active until')} value={endsOn} />}
-            <Stat
-              label={t('AI points')}
-              value={t('{points} ({usd})', {
-                points: claim.points.toLocaleString(locale),
-                usd: formatRewardUsd(claim.usd),
-              })}
-              divided={!!endsOn}
-            />
-          </dl>
-          <p className="mt-2 text-xs leading-5 text-content-ash">
-            {t('The points end with the plan.')}
-          </p>
+          {ended ? (
+            <p className="mx-auto mt-3 max-w-[320px] text-[15px] leading-[22px] text-content-body [text-wrap:balance] [word-break:auto-phrase]">
+              {t('It was added to your account earlier.')}
+            </p>
+          ) : (
+            <>
+              <dl
+                className={`mt-5 grid ${endsOn ? 'grid-cols-2' : 'grid-cols-1'} rounded-[18px] border border-hairline bg-white/[0.03]`}
+              >
+                {endsOn && <Stat label={t('Active until')} value={endsOn} />}
+                <Stat
+                  label={t('AI points')}
+                  value={t('{points} ({usd})', {
+                    points: claim.points.toLocaleString(locale),
+                    usd: formatRewardUsd(claim.usd),
+                  })}
+                  divided={!!endsOn}
+                />
+              </dl>
+              <p className="mt-2 text-xs leading-5 text-content-ash">
+                {t('The points end with the plan.')}
+              </p>
+            </>
+          )}
         </Rise>
       </div>
-      <Rise i={3}>
-        <p className={`${metaLabel} mt-6`}>{t('Next steps')}</p>
-        <ol className="mt-3 space-y-3">
-          {[
-            t('Download Enconvo for Mac.'),
-            state.email ? (
-              <I18nText
-                key="sign-in"
-                source={'Open it and sign in as {email}.'}
-                values={{
-                  email: (
-                    <span className="break-words text-content">{state.email}</span>
-                  ),
-                }}
-              />
-            ) : (
-              t('Open it and sign in with this account.')
-            ),
-          ].map((step, index) => (
-            <li
-              key={index}
-              className="flex items-start gap-3 text-[15px] leading-[22px] text-content-body"
-            >
-              <span className="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full border border-hairline-strong text-xs font-medium text-content">
-                {index + 1}
-              </span>
-              <span className="min-w-0">{step}</span>
-            </li>
-          ))}
-        </ol>
-      </Rise>
+      {!ended && (
+        <Rise i={3}>
+          <p className={`${metaLabel} mt-6`}>{t('Next steps')}</p>
+          <ol className="mt-3 space-y-3">
+            {[
+              t('Download Enconvo for Mac.'),
+              state.email ? (
+                <I18nText
+                  key="sign-in"
+                  source={'Open it and sign in as {email}.'}
+                  values={{
+                    email: (
+                      <span className="break-words text-content">
+                        {state.email}
+                      </span>
+                    ),
+                  }}
+                />
+              ) : (
+                t('Open it and sign in with this account.')
+              ),
+            ].map((step, index) => (
+              <li
+                key={index}
+                className="flex items-start gap-3 text-[15px] leading-[22px] text-content-body"
+              >
+                <span className="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full border border-hairline-strong text-xs font-medium text-content">
+                  {index + 1}
+                </span>
+                <span className="min-w-0">{step}</span>
+              </li>
+            ))}
+          </ol>
+        </Rise>
+      )}
       <Rise i={4}>
         <Actions>
           <div className="flex flex-col gap-3 sm:flex-row">
@@ -599,8 +639,8 @@ function FailedStep({
         ref={focusRef}
         type="button"
         onClick={() => void claimFromPopup()}
-        disabled={claiming}
-        className={`${primaryButton} w-full`}
+        aria-disabled={claiming || undefined}
+        className={`${primaryButton} ${busyButton} w-full`}
       >
         {claiming && (
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -610,8 +650,7 @@ function FailedStep({
       <button
         type="button"
         onClick={closeWelcomeOffer}
-        disabled={claiming}
-        className={`${secondaryButton} w-full disabled:opacity-60`}
+        className={`${secondaryButton} w-full`}
       >
         {t('Close')}
       </button>
@@ -698,6 +737,39 @@ export default function WelcomeOfferDialog({
     morph.oncancel = done
   })
 
+  // A click that moves the popup to another step remounts its content: focus the new step's
+  // title, so the answer is read out and focus doesn't fall out of the popup with the old button.
+  const stepKey = view.step === 'offer' ? `offer:${state.signedIn}` : view.step
+  const focusedStep = useRef(stepKey)
+  useEffect(() => {
+    if (focusedStep.current === stepKey) return
+    focusedStep.current = stepKey
+    const title =
+      panelRef.current?.querySelector<HTMLElement>('[data-step-title]')
+    ;(title ?? focusRef.current)?.focus({ preventScroll: true })
+  }, [stepKey])
+
+  // Read out while claiming and the answer a click brought, the same step's again included; a
+  // popup that opens on an answer is announced by its title.
+  const clicked = useRef(false)
+  if (claiming) clicked.current = true
+  const answered = clicked.current && !claiming
+  let status = ''
+  if (claiming) status = t('Claiming…')
+  else if (answered && view.step === 'claimed')
+    status =
+      view.claim.already_claimed && claimEnded(view.claim)
+        ? t("You've already claimed this offer")
+        : view.claim.already_claimed
+          ? t('Already claimed')
+          : t('Offer claimed')
+  else if (answered && view.step === 'refused')
+    status = t(refusalCopy(view.reason).title)
+  else if (answered && view.step === 'failed')
+    status = view.signIn
+      ? t('Sign in again to claim')
+      : t("We couldn't claim your offer")
+
   let content: ReactNode = null
   if (view.step === 'offer' && state.info)
     content = (
@@ -767,12 +839,14 @@ export default function WelcomeOfferDialog({
             <button
               type="button"
               onClick={closeWelcomeOffer}
-              disabled={claiming}
-              className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-[13px] text-content-muted transition-colors hover:bg-white/[0.06] hover:text-content disabled:opacity-60 sm:right-4 sm:top-4"
+              className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center rounded-[13px] text-content-muted transition-colors hover:bg-white/[0.06] hover:text-content sm:right-4 sm:top-4"
               aria-label={t('Close')}
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>
+            <p role="status" aria-live="polite" className="sr-only">
+              {status}
+            </p>
             {gift && <GiftMark opened={opened} boxRef={giftRef} />}
             <div
               key={view.step}

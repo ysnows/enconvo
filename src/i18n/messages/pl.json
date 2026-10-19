@@ -2337,5 +2337,7 @@
   "{points} ({usd})": "{points} ({usd})",
   "The points end with the plan.": "Punkty wygasają razem z planem.",
   "Free, no card needed. It ends on its own.": "Za darmo, bez karty. Kończy się samo.",
-  "One per account. The points end with the plan.": "Jeden na konto. Punkty wygasają razem z planem."
+  "One per account. The points end with the plan.": "Jeden na konto. Punkty wygasają razem z planem.",
+  "You've already claimed this offer": "Ta oferta została już odebrana",
+  "It was added to your account earlier.": "Została już wcześniej dodana do Twojego konta."
 }

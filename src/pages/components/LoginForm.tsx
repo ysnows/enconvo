@@ -21,6 +21,7 @@ import {
   authFlowHref,
   oauthCallbackUrl,
 } from '@/lib/auth-flow'
+import { offerReturnPath } from '@/lib/welcome-offer'
 
 export default function LoginForm({
   loginState,
@@ -33,6 +34,14 @@ export default function LoginForm({
   const { t, locale } = useI18n()
   const affiliateLogin =
     !!affiliateReturnPath(router.query) && router.query.from !== 'app'
+  const returnUrl = Array.isArray(router.query.returnUrl)
+    ? router.query.returnUrl[0]
+    : router.query.returnUrl
+  // A Welcome offer sign-in returns to the homepage, which claims it; the app isn't opened.
+  const offerLogin =
+    typeof returnUrl === 'string' &&
+    !!offerReturnPath(returnUrl) &&
+    router.query.from !== 'app'
 
   const supabase = createClientComponentClient()
 
@@ -70,16 +79,17 @@ export default function LoginForm({
     })
 
     // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
-    const opened = affiliateLogin
-      ? 'opened'
-      : await NativeRouter.openApp(
-          Array.isArray(router.query.source)
-            ? router.query.source[0]
-            : router.query.source,
-          Array.isArray(router.query.handoff)
-            ? router.query.handoff[0]
-            : router.query.handoff
-        )
+    const opened =
+      affiliateLogin || offerLogin
+        ? 'opened'
+        : await NativeRouter.openApp(
+            Array.isArray(router.query.source)
+              ? router.query.source[0]
+              : router.query.source,
+            Array.isArray(router.query.handoff)
+              ? router.query.handoff[0]
+              : router.query.handoff
+          )
     if (typeof opened === 'object') alert(opened.error)
 
     try {

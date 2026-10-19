@@ -2337,5 +2337,7 @@
   "{points} ({usd})": "{points}（价值 {usd}）",
   "The points end with the plan.": "点数随套餐一同到期。",
   "Free, no card needed. It ends on its own.": "免费，无需绑卡，到期自动结束。",
-  "One per account. The points end with the plan.": "每个账号限领一次。点数随套餐一同到期。"
+  "One per account. The points end with the plan.": "每个账号限领一次。点数随套餐一同到期。",
+  "You've already claimed this offer": "你已领取过此优惠",
+  "It was added to your account earlier.": "此前已加入你的账号。"
 }

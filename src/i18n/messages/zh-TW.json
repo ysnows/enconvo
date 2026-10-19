@@ -2337,5 +2337,7 @@
   "{points} ({usd})": "{points}（價值 {usd}）",
   "The points end with the plan.": "點數隨方案一同到期。",
   "Free, no card needed. It ends on its own.": "免費，無需綁卡，到期自動結束。",
-  "One per account. The points end with the plan.": "每個帳號限領一次。點數隨方案一同到期。"
+  "One per account. The points end with the plan.": "每個帳號限領一次。點數隨方案一同到期。",
+  "You've already claimed this offer": "你已領取過此優惠",
+  "It was added to your account earlier.": "先前已加入你的帳號。"
 }

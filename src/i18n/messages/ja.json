@@ -2337,5 +2337,7 @@
   "{points} ({usd})": "{points}（{usd} 相当）",
   "The points end with the plan.": "ポイントはプランの終了とともに失効します。",
   "Free, no card needed. It ends on its own.": "無料、カード登録不要。期間が終わると自動で終了します。",
-  "One per account. The points end with the plan.": "1アカウントにつき1回まで。ポイントはプランの終了とともに失効します。"
+  "One per account. The points end with the plan.": "1アカウントにつき1回まで。ポイントはプランの終了とともに失効します。",
+  "You've already claimed this offer": "このオファーはすでに受け取り済みです",
+  "It was added to your account earlier.": "以前にアカウントへ追加されています。"
 }

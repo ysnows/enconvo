@@ -2337,5 +2337,7 @@
   "{points} ({usd})": "{points}({usd} 상당)",
   "The points end with the plan.": "포인트는 요금제와 함께 종료됩니다.",
   "Free, no card needed. It ends on its own.": "무료, 카드 등록 불필요. 기간이 끝나면 자동으로 종료됩니다.",
-  "One per account. The points end with the plan.": "계정당 1회. 포인트는 요금제와 함께 종료됩니다."
+  "One per account. The points end with the plan.": "계정당 1회. 포인트는 요금제와 함께 종료됩니다.",
+  "You've already claimed this offer": "이미 받은 혜택입니다",
+  "It was added to your account earlier.": "이전에 계정에 추가되었습니다."
 }

@@ -38,8 +38,8 @@ export interface WelcomeOfferClaim {
     usd: number
     /** The account's points after the claim; null when it was claimed before. */
     balance: number | null
-    /** When this account's plan ends. */
-    ends_at: string
+    /** When this account's plan ends; null when the Worker no longer has it (a claim long ago). */
+    ends_at: string | null
     /** This account claimed the offer before; it is shown as a success too. */
     already_claimed: boolean
 }
@@ -63,6 +63,20 @@ export type ClaimView =
     | { step: 'failed'; signIn: boolean }
 
 export type WelcomeOfferView = { step: 'offer' } | { step: 'claiming' } | ClaimView
+
+/**
+ * Refusals that end once time passes (a trial checkout closes, the campaign starts): the popup
+ * asks to open the link again later, so they neither close the offer for good nor count as
+ * this tab's answer.
+ */
+const LATER_REASONS: readonly RefusalReason[] = ['offer_not_started', 'other_code_open']
+
+export function isLaterRefusal(view: WelcomeOfferView | null | undefined): boolean {
+    return view?.step === 'refused' && LATER_REASONS.includes(view.reason)
+}
+
+/** A claim that hangs this long counts as a network failure, worth another try. */
+export const CLAIM_TIMEOUT_MS = 15_000
 
 export interface WelcomeOfferState {
     slug: string
@@ -108,6 +122,12 @@ export function offerReturnPath(path: unknown): string | null {
     const [beforeHash] = path.split('#')
     const [pathname, query] = beforeHash.split('?')
     return isOfferLanding(pathname) && query && offerFromSearch(query) ? path : null
+}
+
+/** True while the address bar is the homepage carrying this offer's link. */
+export function onOfferLink(slug: string): boolean {
+    if (typeof window === 'undefined') return false
+    return isOfferLanding(window.location.pathname) && offerFromSearch(window.location.search) === slug
 }
 
 /** The homepage link a visitor returns to after signing up or in (the locale stays). */
@@ -168,8 +188,28 @@ export function fetchWelcomeOffer(slug: string, signal?: AbortSignal) {
     return workerRequest<WelcomeOfferInfo>(`/api/welcome_offer/offer/${encodeURIComponent(slug)}`, { signal })
 }
 
-export function postWelcomeOfferClaim(accessToken: string, slug: string) {
-    return workerPost<WelcomeOfferClaim>('/api/welcome_offer/claim', accessToken, { offer: slug })
+function timeoutSignal(ms: number): AbortSignal | undefined {
+    if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') return AbortSignal.timeout(ms)
+    if (typeof AbortController === 'undefined') return undefined
+    const controller = new AbortController()
+    setTimeout(() => controller.abort(), ms)
+    return controller.signal
+}
+
+/** A claim that hasn't answered within `timeoutMs` is dropped as a network failure. */
+export function postWelcomeOfferClaim(accessToken: string, slug: string, timeoutMs = CLAIM_TIMEOUT_MS) {
+    return workerPost<WelcomeOfferClaim>(
+        '/api/welcome_offer/claim',
+        accessToken,
+        { offer: slug },
+        { signal: timeoutSignal(timeoutMs) }
+    )
+}
+
+/** A claimed plan that has ended, or whose end the Worker no longer has. */
+export function claimEnded(claim: WelcomeOfferClaim, now = Date.now()): boolean {
+    const ends = claim.ends_at ? new Date(claim.ends_at).getTime() : NaN
+    return Number.isNaN(ends) || ends <= now
 }
 
 /** An ISO time as a date in the visitor's language, or '' when it isn't one. */
@@ -240,7 +280,7 @@ export function setWelcomeOfferState(next: WelcomeOfferState | null) {
     listeners.forEach((listener) => listener())
 }
 
-const inFlight = new Map<string, Promise<ClaimView>>()
+const inFlight = new Map<string, Promise<ClaimView | null>>()
 const outcomes = new Map<string, ClaimView>()
 
 /** True while this tab is claiming `slug` or already has a final answer for it. */
@@ -249,33 +289,52 @@ export function hasClaimOutcome(slug: string): boolean {
 }
 
 /**
- * Claim `slug` for the signed-in account. Calls for the same slug share one in-flight
- * request. The cookie is cleared on success or a final refusal and kept for network
- * errors, 5xx and 401, so a later sign-in tries again. A final answer also stops the
- * popup from opening again on later visits to the link. The analytics choke point.
+ * Runs `task` while no other tab of this browser runs one for `slug`. A sign-in reaches every
+ * open tab at once, so without this two tabs would claim together.
  */
-export function claimOffer(accessToken: string, slug: string, trigger: ClaimTrigger): Promise<ClaimView> {
+function oneTabAtATime<T>(slug: string, task: () => Promise<T>): Promise<T> {
+    const locks = typeof navigator !== 'undefined' ? navigator.locks : undefined
+    if (!locks || typeof locks.request !== 'function') return task()
+    return locks.request(`welcome-offer:${slug}`, task) as Promise<T>
+}
+
+/** A claim answer's bookkeeping: the cookie, the closed popup, this tab's answer and analytics. */
+function recordClaim(slug: string, view: ClaimView, trigger: ClaimTrigger) {
+    if (view.step === 'failed') return
+    if (readOfferCookie() === slug) clearOfferCookie()
+    if (view.step === 'claimed')
+        trackEvent(
+            'welcome_offer_claimed',
+            { offer: slug, already_claimed: !!view.claim.already_claimed, trigger },
+            { includePagePath: false }
+        )
+    else trackEvent('welcome_offer_refused', { offer: slug, reason: view.reason, trigger }, { includePagePath: false })
+    // "Open the link again later": the link must still work then.
+    if (isLaterRefusal(view)) return
+    dismissOffer(slug)
+    outcomes.set(slug, view)
+}
+
+/**
+ * Claim `slug` for the signed-in account. Calls for the same slug share one in-flight request,
+ * and tabs take turns. An automatic claim goes ahead only while the cookie still waits, so a
+ * tab that waited for another tab's claim stops there (its answer is null). The cookie is
+ * cleared on success or a refusal and kept for network errors, timeouts, 5xx and 401, so a
+ * later sign-in tries again. A final answer also stops the popup from opening again on later
+ * visits to the link; a refusal that ends with time doesn't. The analytics choke point.
+ */
+export function claimOffer(accessToken: string, slug: string, trigger: ClaimTrigger): Promise<ClaimView | null> {
     const pending = inFlight.get(slug)
-    if (pending) return pending
-    const request = postWelcomeOfferClaim(accessToken, slug)
-        .then((result) => {
-            const view = claimView(result)
-            if (view.step === 'failed') return view
-            if (readOfferCookie() === slug) clearOfferCookie()
-            dismissOffer(slug)
-            outcomes.set(slug, view)
-            if (view.step === 'claimed')
-                trackEvent(
-                    'welcome_offer_claimed',
-                    { offer: slug, already_claimed: !!view.claim.already_claimed, trigger },
-                    { includePagePath: false }
-                )
-            else trackEvent('welcome_offer_refused', { offer: slug, reason: view.reason, trigger }, { includePagePath: false })
-            return view
-        })
-        .finally(() => {
-            inFlight.delete(slug)
-        })
+    // A click while this tab's automatic claim was skipped claims on its own.
+    if (pending) return trigger === 'button' ? pending.then((view) => view ?? claimOffer(accessToken, slug, trigger)) : pending
+    const request = oneTabAtATime(slug, async () => {
+        if (trigger === 'auto' && readOfferCookie() !== slug) return null
+        const view = claimView(await postWelcomeOfferClaim(accessToken, slug))
+        recordClaim(slug, view, trigger)
+        return view
+    }).finally(() => {
+        inFlight.delete(slug)
+    })
     inFlight.set(slug, request)
     return request
 }
