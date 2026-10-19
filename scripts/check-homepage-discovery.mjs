@@ -60,7 +60,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-mac-agent-v1.jpg')
   )
   assert.ok(
-    html.includes('poster="/posters/enconvo-live-avatar-iphone-duo-v9-20261010.jpg"') &&
+    /poster="\/_next\/static\/media\/enconvo-live-avatar-iphone-duo-v9-20261010\.[\w-]+\.webp"/.test(html) &&
       html.includes('id="hero-tab-ai-companion" role="tab" aria-selected="true"')
   )
   assert.ok(

@@ -3,6 +3,11 @@
 // ("Hero showcase", "Hero tab", "Sub-scene", "Benefit label").
 // Sub-scenes without `media` render as styled placeholders until their demo
 // clip is recorded; dropping a video into `media` later needs no code change.
+// Posters are WebP imports (hashed, cached for good): the first one is the
+// homepage's preloaded LCP image, 45 KB instead of the 119 KB JPEG.
+
+import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-iphone-duo-v9-20261010.webp'
+import appSidebarPoster from '@/images/posters/app-sidebar.webp'
 
 export interface SubSceneMedia {
     type: 'video' | 'image'
@@ -39,7 +44,7 @@ export const heroTabs: HeroTab[] = [
                 media: {
                     type: 'video',
                     src: 'https://file.enconvo.com/videos/enconvo-live-avatar-iphone-duo-v9-20261010.mp4',
-                    poster: '/posters/enconvo-live-avatar-iphone-duo-v9-20261010.jpg',
+                    poster: liveAvatarPoster.src,
                 },
             },
         ],
@@ -54,7 +59,7 @@ export const heroTabs: HeroTab[] = [
                 id: 'launch-film',
                 label: 'Launch film',
                 caption: 'Finder, Calendar, Notes, and Excel — one sidebar does the work in every app.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch.mp4', poster: '/posters/app-sidebar.jpg' },
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch.mp4', poster: appSidebarPoster.src },
             },
         ],
     },
