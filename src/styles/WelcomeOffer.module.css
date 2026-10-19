@@ -1,0 +1,234 @@
+/* The Welcome offer popup (src/components/WelcomeOfferDialog.tsx): its arrival, the gift,
+   and the claim reveal. Each animation runs once and ends within about 1.1 s; with
+   reduced motion only the fades remain. `linear()` is a soft spring (about 5% overshoot);
+   browsers without it keep the cubic-bezier before it. */
+
+.backdrop {
+  animation: fade 360ms ease-out both;
+}
+
+.panel {
+  animation:
+    fade 260ms ease-out both,
+    rise 680ms cubic-bezier(0.22, 1.12, 0.36, 1) both;
+  animation-timing-function: ease-out,
+    linear(0, 0.065, 0.215, 0.396, 0.574, 0.729, 0.852, 0.941, 1.001, 1.035, 1.051, 1.054, 1.05, 1.041, 1.031, 1.022, 1.013, 1.007, 1.003, 1, 0.998, 0.997, 0.997, 0.998, 1);
+}
+
+/* The offer's light: a soft glow from the top, a sweep across the card once on arrival,
+   and a flash from the gift when it opens. Clipped to the card's corners. */
+.decor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.aura {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 64% at 50% 0%, rgba(87, 193, 255, 0.13), rgba(87, 193, 255, 0) 62%);
+}
+
+/* Light catching the card's top edge, like a crystal rim. */
+.edge {
+  position: absolute;
+  top: 0;
+  left: 14%;
+  right: 14%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(134, 211, 255, 0), rgba(134, 211, 255, 0.6), rgba(134, 211, 255, 0));
+}
+
+.sweep {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 46%;
+  background: linear-gradient(
+    100deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.07) 40%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.07) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: translateX(-110%) skewX(-14deg);
+  animation: sweep 720ms cubic-bezier(0.45, 0, 0.25, 1) 340ms both;
+}
+
+.flare {
+  position: absolute;
+  left: 50%;
+  top: -96px;
+  width: 360px;
+  height: 300px;
+  margin-left: -180px;
+  background: radial-gradient(closest-side, rgba(134, 211, 255, 0.3), rgba(134, 211, 255, 0));
+  animation: flare 760ms ease-out var(--reveal-delay, 0ms) both;
+}
+
+/* One line of a step, rising in after the ones before it. */
+.item {
+  animation: item 460ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--delay, 0ms) + var(--i, 0) * 55ms);
+}
+
+/* The gift: it pops in on arrival, and its lid lifts when the offer is claimed. */
+.gift {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto;
+  animation:
+    fade 300ms ease-out var(--gift-delay, 0ms) both,
+    pop 640ms cubic-bezier(0.22, 1.12, 0.36, 1) var(--gift-delay, 0ms) both;
+  animation-timing-function: ease-out,
+    linear(0, 0.073, 0.242, 0.447, 0.645, 0.814, 0.941, 1.026, 1.074, 1.093, 1.092, 1.079, 1.061, 1.041, 1.024, 1.01, 1.001, 0.995, 0.992, 0.991, 0.992, 0.993, 0.995, 0.997, 1);
+}
+
+.glow {
+  position: absolute;
+  inset: -22px;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, rgba(87, 193, 255, 0.32), rgba(87, 193, 255, 0) 72%);
+  opacity: 0.7;
+  transition:
+    opacity 520ms ease-out,
+    transform 620ms cubic-bezier(0.22, 1.12, 0.36, 1);
+}
+
+.lid {
+  transform-box: fill-box;
+  transform-origin: 8% 100%;
+  transition: transform 560ms cubic-bezier(0.22, 1.12, 0.36, 1);
+  transition-timing-function: linear(0, 0.073, 0.242, 0.447, 0.645, 0.814, 0.941, 1.026, 1.074, 1.093, 1.092, 1.079, 1.061, 1.041, 1.024, 1.01, 1.001, 0.995, 0.992, 0.991, 0.992, 0.993, 0.995, 0.997, 1);
+}
+
+.rays {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 420ms ease-out 60ms,
+    transform 620ms cubic-bezier(0.22, 1.12, 0.36, 1) 60ms;
+}
+
+.opened .glow {
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+.opened .lid {
+  transform: translate(-3px, -11px) rotate(-15deg);
+}
+
+.opened .rays {
+  opacity: 1;
+  transform: none;
+}
+
+.spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0.55;
+  animation: twinkle 600ms ease-out both;
+  animation-delay: calc(var(--gift-delay, 0ms) + var(--i, 0) * 60ms + 180ms);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(28px) scale(0.94);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  from {
+    transform: translateY(8px) scale(0.6);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes item {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(330%) skewX(-14deg);
+  }
+}
+
+@keyframes flare {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes twinkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.2) rotate(-30deg);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.15) rotate(0deg);
+  }
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion: fades only. No movement, light sweep, flash or confetti. */
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .gift {
+    animation: fade 200ms ease-out both;
+  }
+
+  .item {
+    animation-name: fade;
+    animation-duration: 240ms;
+  }
+
+  .sweep,
+  .flare {
+    display: none;
+  }
+
+  .glow,
+  .lid,
+  .rays {
+    transition: none;
+  }
+
+  .spark {
+    animation: none;
+  }
+}

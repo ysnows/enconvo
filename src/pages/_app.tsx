@@ -11,8 +11,10 @@ import { AppProps } from 'next/app'
 import { SocialMetadata } from '@/components/SocialMetadata'
 import { InviteToast } from '@/components/InviteToast'
 import { AffiliateOfferToast } from '@/components/AffiliateOfferToast'
+import { WelcomeOffer } from '@/components/WelcomeOffer'
 import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
 import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
+import { useWelcomeOfferAutoClaim } from '@/lib/welcome-offer-auto-claim'
 
 const privateRoutes = new Set([
   '/account',
@@ -72,6 +74,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       )
   }, [router.isReady, router.query.language, router.locale])
   useInviteAutoRedeem()
+  useWelcomeOfferAutoClaim()
   useAffiliateJourney()
   return (
     <>
@@ -107,6 +110,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       <Component {...pageProps} />
       <InviteToast />
       <AffiliateOfferToast />
+      <WelcomeOffer />
     </>
   )
 }

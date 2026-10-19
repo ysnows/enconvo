@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/router'
 import { authFlowHref, oauthCallbackUrl } from '@/lib/auth-flow'
+import { offerReturnPath } from '@/lib/welcome-offer'
 
 import { Logo } from '@/components/Logo'
 import { useState } from 'react'
@@ -59,11 +60,12 @@ export default function RegisterForm({
     const returnUrl = Array.isArray(router.query.returnUrl)
       ? router.query.returnUrl[0]
       : router.query.returnUrl
-    // Web offer and Affiliate signups must return to their page after email
-    // confirmation rather than opening the native app.
+    // Web offer, Welcome offer and Affiliate signups must return to their page
+    // after email confirmation rather than opening the native app.
     const emailRedirectTo =
       typeof returnUrl === 'string' &&
-      /^\/(?:ltd|affiliate)(?:[?#/]|$)/.test(returnUrl)
+      (/^\/(?:ltd|affiliate)(?:[?#/]|$)/.test(returnUrl) ||
+        !!offerReturnPath(returnUrl))
         ? `${window.location.origin}/auth/callback?${new URLSearchParams({
             returnUrl,
             language: locale,
