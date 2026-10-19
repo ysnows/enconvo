@@ -38,8 +38,11 @@ export function Footer() {
               >
                 {t('Pricing')}
               </NavLink>
+              {/* No viewport prefetch: the release notes are 470 KB of page data that
+                  every homepage visit fetched on reaching the footer. Hover still prefetches. */}
               <NavLink
                 href="/changelog"
+                prefetch={false}
                 className="text-content-muted hover:text-content"
               >
                 {t('Releases')}
