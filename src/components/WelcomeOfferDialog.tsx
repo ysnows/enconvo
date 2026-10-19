@@ -332,7 +332,7 @@ function OfferStep({
         </Actions>
       </Rise>
       <Rise i={5}>
-        <p className="mt-6 border-t border-hairline pt-4 text-xs leading-5 text-content-ash">
+        <p className="mt-6 border-t border-hairline pt-4 text-xs leading-5 text-content-ash [text-wrap:balance] [word-break:auto-phrase]">
           {t('One per account. The points end with the plan.')}
           {claimBy && (
             <span className="mt-1 block">
