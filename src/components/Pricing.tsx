@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { Fragment, useEffect, useState } from 'react'
 import { Button } from '@/components/Button'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
-import { supabase } from '@/lib/supabase'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
 import {
@@ -67,6 +66,8 @@ async function startCheckout(
       return
     }
 
+    // Loaded on demand, like SiteNav's: the client stays out of the homepage's first load.
+    const { supabase } = await import('@/lib/supabase')
     const {
       data: { session },
     } = await supabase.auth.getSession()

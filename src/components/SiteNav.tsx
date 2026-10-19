@@ -6,7 +6,6 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 interface NavigationItem {
   name: string
@@ -56,23 +55,26 @@ export function SiteNav() {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [navigation, setNavigation] = useState<NavigationItem[]>(defaultNav)
-  const supabase = createClientComponentClient()
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        setNavigation([
-          { name: 'Features', href: '/#features' },
-          { name: 'Use Cases', href: '/use-cases' },
-          { name: 'Plugins', href: '/plugins' },
-          { name: 'Pricing', href: '/#pricing' },
-          { name: 'Docs', href: 'https://docs.enconvo.ai/' },
-          { name: 'Releases', href: '/changelog' },
-          { name: 'Affiliate', href: '/affiliate' },
-          { name: data.session.user.user_metadata.name, href: '/account' },
-        ])
-      }
-    })
+    // The Supabase client (~40 KB gzipped) only swaps "Log in" for the account
+    // link, so it loads after the page instead of before it can hydrate.
+    import('@/lib/supabase')
+      .then(({ supabase }) => supabase.auth.getSession())
+      .then(({ data }) => {
+        if (data.session) {
+          setNavigation([
+            { name: 'Features', href: '/#features' },
+            { name: 'Use Cases', href: '/use-cases' },
+            { name: 'Plugins', href: '/plugins' },
+            { name: 'Pricing', href: '/#pricing' },
+            { name: 'Docs', href: 'https://docs.enconvo.ai/' },
+            { name: 'Releases', href: '/changelog' },
+            { name: 'Affiliate', href: '/affiliate' },
+            { name: data.session.user.user_metadata.name, href: '/account' },
+          ])
+        }
+      })
   }, [])
 
   return (
