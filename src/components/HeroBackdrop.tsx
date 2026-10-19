@@ -17,8 +17,13 @@ const backdropStyles = `
     radial-gradient(ellipse at 14% 72%, rgba(63,189,177,.09), transparent 42%),
     radial-gradient(ellipse at 88% 76%, rgba(87,131,255,.07), transparent 40%),
     radial-gradient(ellipse 48% 16% at 50% 92%, rgba(63,189,177,.12), transparent);
-  -webkit-mask-image: linear-gradient(#000 74%, rgba(0,0,0,.75) 88%, transparent);
-  mask-image: linear-gradient(#000 74%, rgba(0,0,0,.75) 88%, transparent);
+}
+/* The bottom fade into the solid canvas. Fading with canvas paint matches a mask
+   (opaque until 74%, 75% at 88%, clear at the bottom) without one: a mask over the
+   animated layers had the GPU redraw the whole backdrop offscreen every frame. */
+[data-hero-backdrop]::after {
+  content: ''; position: absolute; inset: auto 0 0; height: 26%;
+  background: linear-gradient(rgba(7,8,10,0), rgba(7,8,10,.25) 53.846%, #07080a);
 }
 [data-aurora-defs] { position: absolute; width: 0; height: 0; }
 [data-aurora-layer] {
@@ -54,9 +59,8 @@ const backdropStyles = `
 [data-aurora-guides] {
   position: absolute; top: 0; bottom: 0; left: 50%;
   width: min(1168px, calc(100% - 64px)); transform: translateX(-50%);
-  border-inline: 1px solid rgba(207,228,242,.06);
-  -webkit-mask-image: linear-gradient(transparent, #000 15%, transparent 90%);
-  mask-image: linear-gradient(transparent, #000 15%, transparent 90%);
+  --guide: linear-gradient(rgba(207,228,242,0), rgba(207,228,242,.06) 15%, rgba(207,228,242,0) 90%);
+  background: var(--guide) left top / 1px 100% no-repeat, var(--guide) right top / 1px 100% no-repeat;
 }
 @keyframes enconvo-aurora-drift { to { transform: translate(2%, -2%) scale(1.05); } }
 @keyframes enconvo-aurora-main { to { transform: translate(2.5%, -3%) scale(1.04, 1.08); } }
