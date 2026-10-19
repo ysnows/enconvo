@@ -1,11 +1,14 @@
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react'
 import Head from 'next/head'
+import auroraBloom from '@/images/hero-aurora-bloom.webp'
 
 // Ship the decoration with the SSR markup, so refreshing never swaps a loading
 // background for a different renderer. Keep these styles out of deferred CSS.
 // Motion is transform-only, on static SVG layers the compositor moves. Redrawing
 // this full-viewport SVG every frame (path morphs, dash offsets) saturated
-// Safari's GPU process, which delayed clicks across the page.
+// Safari's GPU process, which delayed clicks across the page. The blurred bloom
+// is a bitmap (scripts/render-hero-bloom.cjs): Safari reran its SVG blurs each
+// time the drifting layer was retiled, freezing the page for seconds.
 const backdropStyles = `
 [data-hero-backdrop] {
   position: absolute; inset: 0; overflow: hidden;
@@ -22,7 +25,8 @@ const backdropStyles = `
   position: absolute; inset: 0; will-change: transform;
   animation: enconvo-aurora-drift 12s ease-in-out infinite alternate;
 }
-[data-aurora-layer] svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+[data-aurora-layer] :is(svg, [data-aurora-art]) { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+[data-aurora-art] img { position: absolute; left: -10%; top: -12.5%; width: 120%; height: 125%; max-width: none; }
 [data-aurora-layer='main'] { animation-name: enconvo-aurora-main; animation-duration: 10s; }
 [data-aurora-layer='return'] { animation-name: enconvo-aurora-return; }
 [data-aurora-layer='lower'] { animation-name: enconvo-aurora-lower; animation-duration: 14s; }
@@ -62,7 +66,7 @@ const backdropStyles = `
 @keyframes enconvo-aurora-sweep { from { transform: translateX(-100%); } to { transform: translateX(416.667%); } }
 @keyframes enconvo-aurora-sweep-track { from { transform: translateX(24%); } to { transform: translateX(-100%); } }
 @media (max-width: 639px) {
-  [data-aurora-layer] svg { width: 960px; max-width: none; left: 50%; transform: translateX(-50%); opacity: .8; }
+  [data-aurora-layer] :is(svg, [data-aurora-art]) { width: 960px; max-width: none; left: 50%; transform: translateX(-50%); opacity: .8; }
   [data-aurora-shade] { background: radial-gradient(ellipse 64% 36% at 50% 24%, rgba(7,8,10,.75), transparent); }
   [data-aurora-guides] { display: none; }
 }
@@ -158,25 +162,14 @@ export function HeroBackdrop({ paused = false }: { paused?: boolean }) {
             <stop offset="0.75" stopColor="#d7e4ff" />
             <stop offset="1" stopColor="#bcc6ff" stopOpacity="0" />
           </linearGradient>
-          <filter id={`${id}-bloom`} x="-10%" y="-20%" width="120%" height="140%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="26" />
-          </filter>
-          <filter id={`${id}-soft`} x="-5%" y="-5%" width="110%" height="110%" colorInterpolationFilters="sRGB">
-            <feGaussianBlur stdDeviation="5" />
-          </filter>
         </defs>
       </svg>
 
       <div data-aurora-layer="bloom">
-        <AuroraSvg>
-          <g filter={`url(#${id}-bloom)`} opacity="0.6">
-            <path d={ribbon} stroke={`url(#${id}-spectrum)`} strokeWidth="64" />
-            <path d={returnRibbon} stroke={`url(#${id}-return)`} strokeWidth="36" opacity="0.65" />
-            <path d={lowerRibbon} stroke={`url(#${id}-spectrum)`} strokeWidth="48" opacity="0.65" />
-          </g>
-          <path d={ribbon} stroke={`url(#${id}-spectrum)`} strokeWidth="12" opacity="0.45" filter={`url(#${id}-soft)`} />
-          <path d={returnRibbon} stroke={`url(#${id}-return)`} strokeWidth="5" opacity="0.45" filter={`url(#${id}-soft)`} />
-        </AuroraSvg>
+        <div data-aurora-art>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={auroraBloom.src} alt="" decoding="async" draggable={false} />
+        </div>
       </div>
 
       <div data-aurora-layer="main">
