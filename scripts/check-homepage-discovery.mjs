@@ -60,14 +60,16 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-mac-agent-v1.jpg')
   )
   assert.ok(
-    /poster="\/_next\/static\/media\/app-sidebar\.[\w-]+\.webp"/.test(html) &&
-      html.includes('id="hero-tab-app-sidebar" role="tab" aria-selected="true"')
+    /poster="\/_next\/static\/media\/popbar-launch-v7-20261018\.[\w-]+\.webp"/.test(html) &&
+      html.includes('id="hero-tab-popbar" role="tab" aria-selected="true"')
   )
   const tabs = [...html.matchAll(/id="hero-tab-([^"]+)"/g)].map((m) => m[1])
-  assert.equal(tabs[0], 'app-sidebar')
-  assert.equal(tabs.at(-1), 'ai-companion')
+  assert.deepEqual(tabs, [
+    'popbar', 'dynamic-island', 'voice', 'meeting-caption',
+    'knowledge-base', 'app-sidebar', 'ai-companion',
+  ])
   assert.ok(
-    html.includes('<video src="https://file.enconvo.com/videos/app-sidebar-launch.mp4"') &&
+    html.includes('<video src="https://file.enconvo.com/videos/popbar-launch-v7-20261018.mp4"') &&
       html.includes('preload="none"'),
     'the opening showcase uses the shared MP4 player'
   )

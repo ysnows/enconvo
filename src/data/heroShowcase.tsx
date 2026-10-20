@@ -10,6 +10,7 @@
 
 import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-fullscreen-20261020.webp'
 import appSidebarPoster from '@/images/posters/app-sidebar.webp'
+import popbarPoster from '@/images/posters/popbar-launch-v7-20261018.webp'
 
 export interface SubSceneMedia {
     type: 'video' | 'image'
@@ -34,16 +35,16 @@ export interface HeroTab {
 
 export const heroTabs: HeroTab[] = [
     {
-        id: 'app-sidebar',
-        benefitLabel: 'Works beside your apps',
-        productName: 'App Sidebar',
-        tagline: 'Dock an AI agent next to any app — it sees the app and works inside it.',
+        id: 'popbar',
+        benefitLabel: 'Fix any text instantly',
+        productName: 'PopBar',
+        tagline: 'Select text in any app and a toolbar appears with one-click actions.',
         subScenes: [
             {
                 id: 'launch-film',
                 label: 'Launch film',
-                caption: 'Finder, Calendar, Notes, and Excel — one sidebar does the work in every app.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch.mp4', poster: appSidebarPoster.src },
+                caption: 'Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/popbar-launch-v7-20261018.mp4', poster: popbarPoster.src },
             },
         ],
     },
@@ -58,20 +59,6 @@ export const heroTabs: HeroTab[] = [
                 label: 'Launch film',
                 caption: 'Voice, Live Screen, Doodle, and instant translation — one island does it all.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/dynamic-island-launch.mp4' },
-            },
-        ],
-    },
-    {
-        id: 'popbar',
-        benefitLabel: 'Fix any text instantly',
-        productName: 'PopBar',
-        tagline: 'Select text in any app and a toolbar appears with one-click actions.',
-        subScenes: [
-            {
-                id: 'launch-film',
-                label: 'Launch film',
-                caption: 'Translate, fix in place, read aloud, doodle on screen, and add extensions — one selection, every action.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/popbar-launch-v7-20261018.mp4' },
             },
         ],
     },
@@ -114,6 +101,20 @@ export const heroTabs: HeroTab[] = [
                 label: 'Launch film',
                 caption: 'Search and chat with your documents, notes, and captured ideas.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/knowledgebase-launch-v3.mp4?v=3' },
+            },
+        ],
+    },
+    {
+        id: 'app-sidebar',
+        benefitLabel: 'Works beside your apps',
+        productName: 'App Sidebar',
+        tagline: 'Dock an AI agent next to any app — it sees the app and works inside it.',
+        subScenes: [
+            {
+                id: 'launch-film',
+                label: 'Launch film',
+                caption: 'Finder, Calendar, Notes, and Excel — one sidebar does the work in every app.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch.mp4', poster: appSidebarPoster.src },
             },
         ],
     },
