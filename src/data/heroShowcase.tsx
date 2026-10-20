@@ -8,7 +8,7 @@
 // Films are H.264 with the index first (`-movflags +faststart`), around 2 Mbps:
 // the `-web` files are x264 CRF 23 re-encodes of the 7.5 and 5 Mbps masters.
 
-import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-iphone-duo-v9-20261010.webp'
+import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-fullscreen-20261020.webp'
 import appSidebarPoster from '@/images/posters/app-sidebar.webp'
 
 export interface SubSceneMedia {
@@ -45,7 +45,7 @@ export const heroTabs: HeroTab[] = [
                 caption: 'Meet Enconvo Live Avatar',
                 media: {
                     type: 'video',
-                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-iphone-duo-v9-20261010.mp4',
+                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-fullscreen-20261020.mp4',
                     poster: liveAvatarPoster.src,
                 },
             },
