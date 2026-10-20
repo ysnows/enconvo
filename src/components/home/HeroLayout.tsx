@@ -32,7 +32,8 @@ const layout = `
 .${styles.skipLink} { position: fixed; top: 12px; left: 12px; z-index: 60; padding: 12px 16px; border-radius: 10px; transform: translateY(-160%); }
 .${styles.skipLink}:focus { transform: translateY(0); }
 .${styles.showcase} { width: 100%; max-width: 1120px; margin: 28px auto 0; }
-.${styles.tabScroller} { overflow-x: auto; padding: 5px; scrollbar-width: thin; }
+.${styles.tabScroller} { overflow-x: auto; padding: 5px; scrollbar-width: none; }
+.${styles.tabScroller}::-webkit-scrollbar { display: none; }
 .${styles.tabs} { display: flex; width: max-content; gap: 4px; margin: 0 auto; padding: 4px; border: 1px solid var(--home-stroke, rgba(255,255,255,.1)); border-radius: 12px; background: rgba(13,16,19,.88); }
 .${styles.tab} { flex: none; min-height: 40px; padding: 8px 14px; border: 1px solid transparent; border-radius: 8px; color: #9c9c9d; font-size: 13px; font-weight: 500; white-space: nowrap; }
 .${styles.tab}[aria-selected='true'] { color: #f4f4f6; border-color: var(--home-stroke-strong, rgba(255,255,255,.2)); background: rgba(255,255,255,.085); }

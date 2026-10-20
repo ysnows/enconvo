@@ -174,11 +174,12 @@
 .tabScroller {
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  scrollbar-width: thin;
-  scrollbar-color: #242728 transparent;
+  scrollbar-width: none;
   padding: 5px;
   scroll-padding-inline: 8px;
 }
+
+.tabScroller::-webkit-scrollbar { display: none; }
 
 .tabs {
   display: flex;

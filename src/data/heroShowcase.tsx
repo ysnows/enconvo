@@ -34,24 +34,6 @@ export interface HeroTab {
 
 export const heroTabs: HeroTab[] = [
     {
-        id: 'ai-companion',
-        benefitLabel: 'Your AI companion, in action',
-        productName: 'Enconvo',
-        tagline: 'Meet Enconvo Live Avatar',
-        subScenes: [
-            {
-                id: 'walkthrough',
-                label: 'Walkthrough',
-                caption: 'Meet Enconvo Live Avatar',
-                media: {
-                    type: 'video',
-                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-fullscreen-20261020.mp4',
-                    poster: liveAvatarPoster.src,
-                },
-            },
-        ],
-    },
-    {
         id: 'app-sidebar',
         benefitLabel: 'Works beside your apps',
         productName: 'App Sidebar',
@@ -132,6 +114,24 @@ export const heroTabs: HeroTab[] = [
                 label: 'Launch film',
                 caption: 'Search and chat with your documents, notes, and captured ideas.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/knowledgebase-launch-v3.mp4?v=3' },
+            },
+        ],
+    },
+    {
+        id: 'ai-companion',
+        benefitLabel: 'Your AI companion, in action',
+        productName: 'Enconvo',
+        tagline: 'Meet Enconvo Live Avatar',
+        subScenes: [
+            {
+                id: 'walkthrough',
+                label: 'Walkthrough',
+                caption: 'Meet Enconvo Live Avatar',
+                media: {
+                    type: 'video',
+                    src: 'https://file.enconvo.com/videos/enconvo-live-avatar-fullscreen-20261020.mp4',
+                    poster: liveAvatarPoster.src,
+                },
             },
         ],
     },
