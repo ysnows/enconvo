@@ -354,6 +354,19 @@ function affiliateJourneyLib(
     { globals }
   )
 }
+function campaignJourneyLib(
+  fetch = async () => {
+    throw new Error('No Worker call expected')
+  }
+) {
+  const globals = { fetch, AbortSignal, JSON }
+  const workerApi = load('src/lib/worker-api.ts', {}, { globals })
+  return load(
+    'src/lib/campaign-journey.ts',
+    { './worker-api': workerApi },
+    { globals }
+  )
+}
 function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
   const auth = load(
     'src/utils/auth.ts',
@@ -399,6 +412,7 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
       '@/data/ltdOffer': data,
       '@/lib/ltd-checkout': checkout,
       '@/lib/affiliate-journey': affiliateJourneyLib(fetch),
+      '@/lib/campaign-journey': campaignJourneyLib(fetch),
       '@/lib/affiliate-discount': discount,
       '@/lib/stripe-prices': prices,
       '@/lib/lifetime-pricing': pricing,
@@ -520,6 +534,7 @@ test('Wrong HTTP method, invalid plan, coupon failure, and session failure retur
 })
 
 const VISITOR = '0f6c2a8e3b1d4c5e9a7f1234567890ab'
+const CAMPAIGN_VISITOR = '7d1e5b9c2a4f4e8b9c0d1e2f3a4b5c6d'
 function workerFetch(
   reply = async () => ({
     ok: true,
@@ -575,6 +590,66 @@ test('Both checkouts name the Affiliate journey in Stripe metadata and record th
       plan: 'standard',
     })
     assert(steps[0].signal, 'the Worker call is bounded by a timeout')
+  }
+})
+
+test('Both checkouts name the Campaign journey visitor in Stripe metadata and record its Checkout step beside the Affiliate one', async () => {
+  for (const route of ['ltd_checkout', 'checkout_sessions']) {
+    const { stripe, calls } = fakeStripe()
+    const worker = workerFetch()
+    const res = response()
+    await handlerFor(
+      stripe,
+      route,
+      {},
+      worker.fetch
+    )(
+      request(
+        { lookupKey: 'standard', via: 'kenmoo' },
+        {
+          cookies: {
+            'sb-uihahglfncxadigplxnw-auth-token': '[]',
+            enconvo_via: `${VISITOR}.kenmoo`,
+            enconvo_utm: CAMPAIGN_VISITOR,
+          },
+        }
+      ),
+      res
+    )
+    assert.equal(res.statusCode, 200)
+    assert.equal(calls.sessions[0].metadata.via_visitor, VISITOR)
+    assert.equal(calls.sessions[0].metadata.utm_visitor, CAMPAIGN_VISITOR)
+    const steps = worker.calls.filter(
+      (call) => call.url === 'https://api.enconvo.com/api/campaign/checkout'
+    )
+    assert.equal(steps.length, 1)
+    assert.equal(steps[0].init.headers.accessToken, 'verified_token')
+    assert.deepEqual(JSON.parse(steps[0].init.body), {
+      visitor: CAMPAIGN_VISITOR,
+      session: 'cs_test_a1b2c3d4e5f6g7h8',
+      plan: 'standard',
+    })
+    assert(steps[0].signal, 'the Worker call is bounded by a timeout')
+    assert.equal(
+      worker.calls.filter(
+        (call) => call.url === 'https://api.enconvo.com/api/affiliate/checkout'
+      ).length,
+      1
+    )
+  }
+  // A malformed campaign cookie adds nothing and calls nothing.
+  for (const route of ['ltd_checkout', 'checkout_sessions']) {
+    const { stripe, calls } = fakeStripe()
+    const worker = workerFetch()
+    await handlerFor(stripe, route, {}, worker.fetch)(
+      request(
+        { lookupKey: 'standard', via: 'kenmoo' },
+        { cookies: { 'sb-uihahglfncxadigplxnw-auth-token': '[]', enconvo_utm: 'short' } }
+      ),
+      response()
+    )
+    assert.equal(calls.sessions[0].metadata.utm_visitor, undefined)
+    assert.equal(worker.calls.length, 0)
   }
 })
 

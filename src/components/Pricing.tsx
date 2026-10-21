@@ -10,6 +10,7 @@ import { Button } from '@/components/Button'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
+import { reportCampaignDownload } from '@/lib/campaign-journey'
 import {
   lifetimePrices,
   lifetimeSale,
@@ -62,6 +63,7 @@ async function startCheckout(
     if (lookupKey === 'free') {
       trackEvent('download_click', { arch: 'auto', placement: 'pricing_free' })
       reportAffiliateDownload()
+      reportCampaignDownload()
       window.location.href = 'https://api.enconvo.com/app/download'
       return
     }

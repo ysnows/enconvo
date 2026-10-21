@@ -14,6 +14,7 @@ import { AffiliateOfferToast } from '@/components/AffiliateOfferToast'
 import { WelcomeOffer } from '@/components/WelcomeOffer'
 import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
 import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
+import { useCampaignJourney } from '@/lib/campaign-journey-tracking'
 import { useWelcomeOfferAutoClaim } from '@/lib/welcome-offer-auto-claim'
 
 const privateRoutes = new Set([
@@ -76,6 +77,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   useInviteAutoRedeem()
   useWelcomeOfferAutoClaim()
   useAffiliateJourney()
+  useCampaignJourney()
   return (
     <>
       <SocialMetadata pathname={router.pathname} />

@@ -8,6 +8,11 @@ import {
   reportAffiliateCheckout,
 } from '@/lib/affiliate-journey'
 import {
+  campaignJourneyFrom,
+  campaignMetadata,
+  reportCampaignCheckout,
+} from '@/lib/campaign-journey'
+import {
   affiliateDiscountQuote,
   checkoutDiscount,
   isInvalidRequest,
@@ -98,6 +103,7 @@ async function handler(req, res) {
     }
 
     const journey = affiliateJourneyFrom(req.cookies)
+    const campaignVisitor = campaignJourneyFrom(req.cookies)
 
     // Create a checkout session with Stripe
     // For one-time payments, we enable invoice creation to ensure customers receive an invoice
@@ -117,7 +123,10 @@ async function handler(req, res) {
       customer_email: email,
       // Send invoice for one-time payments (when mode is 'payment')
       invoice_creation: mode === 'payment' ? { enabled: true } : undefined,
-      metadata: affiliateMetadata(journey),
+      metadata: {
+        ...affiliateMetadata(journey),
+        ...campaignMetadata(campaignVisitor),
+      },
     }
 
     // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied, and
@@ -145,12 +154,16 @@ async function handler(req, res) {
         allow_promotion_codes: true,
       })
     }
-    await reportAffiliateCheckout(
-      req.accessToken,
-      journey,
-      session.id,
-      lookupKey
-    )
+    // Both journeys record the Checkout step side by side, so neither slows the other.
+    await Promise.all([
+      reportAffiliateCheckout(req.accessToken, journey, session.id, lookupKey),
+      reportCampaignCheckout(
+        req.accessToken,
+        campaignVisitor,
+        session.id,
+        lookupKey
+      ),
+    ])
 
     res.json({ url: session.url })
     res.end()

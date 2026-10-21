@@ -10,6 +10,11 @@ import {
   affiliateMetadata,
   reportAffiliateCheckout,
 } from '@/lib/affiliate-journey'
+import {
+  campaignJourneyFrom,
+  campaignMetadata,
+  reportCampaignCheckout,
+} from '@/lib/campaign-journey'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
@@ -39,6 +44,7 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
     if (typeof req.body.via === 'string' && req.body.via)
       cancelParams.set('via', req.body.via.slice(0, 200))
     const journey = affiliateJourneyFrom(req.cookies)
+    const campaignVisitor = campaignJourneyFrom(req.cookies)
     // The success page shows Team admins where to assign their Seats (ADR 0112).
     const planParam = req.body.lookupKey === 'teams' ? '&plan=teams' : ''
     const session = await stripe.checkout.sessions.create({
@@ -62,18 +68,28 @@ async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
           : (discount.discounts && lifetimeSale(now)?.campaign) ||
             'enconvo-ltd',
         ...affiliateMetadata(journey),
+        ...campaignMetadata(campaignVisitor),
       },
     })
     if (!session.url)
       throw new LtdCheckoutError(
         'Checkout is temporarily unavailable. Please try again.'
       )
-    await reportAffiliateCheckout(
-      req.accessToken,
-      journey,
-      session.id,
-      req.body.lookupKey
-    )
+    // Both journeys record the Checkout step side by side, so neither slows the other.
+    await Promise.all([
+      reportAffiliateCheckout(
+        req.accessToken,
+        journey,
+        session.id,
+        req.body.lookupKey
+      ),
+      reportCampaignCheckout(
+        req.accessToken,
+        campaignVisitor,
+        session.id,
+        req.body.lookupKey
+      ),
+    ])
     return res.status(200).json({ url: session.url })
   } catch (error) {
     if (error instanceof LtdCheckoutError) {
