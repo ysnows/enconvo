@@ -11,6 +11,7 @@
 import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-fullscreen-20261020.webp'
 import appSidebarPoster from '@/images/posters/app-sidebar.webp'
 import popbarPoster from '@/images/posters/popbar-launch-v7-20261018.webp'
+import dynamicIslandPoster from '@/images/posters/dynamic-island-everyday-v1-20261021.webp'
 
 export interface SubSceneMedia {
     type: 'video' | 'image'
@@ -58,7 +59,7 @@ export const heroTabs: HeroTab[] = [
                 id: 'launch-film',
                 label: 'Launch film',
                 caption: 'Voice, Live Screen, Doodle, and instant translation — one island does it all.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/dynamic-island-launch.mp4' },
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/dynamic-island-everyday-v1-20261021.mp4', poster: dynamicIslandPoster.src },
             },
         ],
     },
