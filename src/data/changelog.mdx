@@ -9,6 +9,261 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.9 Changelog (2026-10-23)
+
+Thanks for all the feedback during the betas. This release gives Enconvo a
+Memory that learns from your chats, lets you watch and take over the agent in
+your browser and apps, gives Live Talk and Voice Command their own settings with
+Enconvo Fast and Quick Actions, lets agents hand work to each other, and
+redesigns Recordings with free summaries.
+
+## Highlights
+
+- **Memory that learns from your chats**: Enconvo keeps your preferences, people
+  and plans as Memories, tidies them, pins the ones every agent must see, and
+  recalls across your chats, recordings and knowledge bases.
+- **Watch and take over the agent** in a browser tab or an app window, with a
+  glow, a cursor, Take over and Stop, and handoffs for sign-ins, CAPTCHAs and
+  payments.
+- **Live Talk and Voice Command settings** with Enconvo Fast, free up to $5 a
+  day, Fish Audio voices, and Quick Actions you can see and make yourself.
+- **Agents calling agents**: any agent, Claude Code and Codex included, can hand
+  part of its work to another agent, and AI apps on your Mac can ask your agents
+  for work.
+- **Recordings redesigned** with free automatic summaries, action items you can
+  tick off, a transcript with a player, and Live Translation.
+- **Chats that read cleaner**: interactive cards, the agent's work folded behind
+  one "Worked for …" line, and a suggested next message.
+- **Smart Bar in Liquid Glass**, built-in plugins with their own settings, and
+  every hotkey in one place.
+- **Phonon, a free voice on your devices**: an English voice from Gradium that
+  reads answers aloud and speaks in Live Talk and Voice Command almost at once,
+  on Macs with Apple silicon and macOS 15 or later and on iPhones with iOS 18.
+
+## Memory
+
+- Added Memory Review, which keeps your preferences, the people you mention and
+  your plans as Memories once a chat or a Live Talk call goes quiet, and updates
+  or forgets the ones it changed.
+- Added Memory Tidy, which merges duplicates, settles plans whose date has
+  passed and tidies tags once a day or once a week.
+- Added Pinned Memories, which every agent always sees, such as an allergy or
+  how you want to be addressed.
+- Added recall across your Memories, past chats, recordings and knowledge bases
+  in one search, keeping to the day, week or month you name.
+- Added a Memory page in Settings to turn Memory on or off, undo what it learned
+  or tidied, choose where agents recall from and pick its model, and a card in
+  chat that shows what it learned, with Undo.
+- Changed agents on a model running on your Mac to keep your past chats on your
+  Mac, without sending passages of them, or Memory Review, to the cloud.
+
+## Live Talk, Voice Command and Quick Actions
+
+- Added Live Talk and Voice Command pages in Settings, with a guide to each, to
+  choose how it hears you, the model it talks with and its voice.
+- Added Enconvo Fast, the default model for Live Talk and Voice Command: Claude
+  Haiku 5.5 with thinking off, which answers right away, sees a photo, your
+  camera or a shared screen, and is free up to $5 a day.
+- Added Fish Audio as a Text to Speech provider and Live Talk voice, with Drama
+  3, S2.1 Pro and S2 Pro, free for now on Enconvo Cloud.
+- Added Phonon, a free English voice from Gradium that runs on Macs with Apple
+  silicon and macOS 15 or later, for Read Aloud, Live Talk and Voice Command,
+  speaking almost at once.
+- Added Settings › Quick Actions, which shows what Voice Command and Live Talk
+  can run at once, and your own Quick Actions, made from a sentence or from
+  built-in actions, Shortcuts, apps, links and scripts.
+- Changed ElevenLabs to use Eleven v4 Turbo by default, and added Eleven v4
+  Turbo, v3 Conversational and Turbo v2 and v2.5 on Enconvo Cloud, with models
+  and voices that refresh without an app update.
+- Changed the ElevenLabs sound effects, music, dubbing and voice tools to need
+  your own ElevenLabs API key; Enconvo Cloud still covers ElevenLabs speech and
+  transcription.
+- Changed Live Talk to answer sooner, with Smart Turn for every speech model,
+  and added Parakeet and Fluid Speech Mini, which run free and offline on your
+  Mac, to the recommended speech models.
+- Changed tasks you hand off by voice to start sooner, with the app or web page
+  in front already read.
+- Fixed Voice Command missing your first words, and voice calls saying they did
+  something without starting it, starting a task twice, or answering from an
+  outdated state of your Mac.
+
+## Agents in Your Browser and Apps
+
+- Added a glow, a cursor and a control center over the browser tab or app window
+  the agent works in, with Take over, Stop and Return to agent.
+- Added handoffs for steps only you should take, such as a CAPTCHA, a sign-in, a
+  password or a payment: the agent waits, then goes on from where you left it.
+- Added browser scripts and App scripts, so the agent goes through long lists,
+  feeds and many pages in one step, and stops before anything that sends,
+  deletes or buys unless you asked for it.
+- Added reading the data a web page loads from its site, so the agent gets exact
+  numbers and tables, and remembers how it reached a site's or an app's data for
+  next time.
+- Changed the agent to treat instructions in web pages, files and emails as
+  content, never as commands, and to tell you when one asks for something you
+  didn't.
+- Changed Browser Use to handle dropdowns, date pickers, menus, rich text
+  editors, uploads and pages that load as you scroll far more reliably, in tabs
+  behind the one you're looking at too.
+- Changed Computer Use to wait until you stop typing or clicking before it acts
+  in a window, and to use what an app offers besides its window, such as
+  AppleScript commands and URL schemes.
+
+## Workflows and Agents
+
+- Added Judge and Classify steps to workflows, which answer yes or no, or pick
+  one of your options, in about a second.
+- Added workflows to Browser Use and Computer Use, with a repair agent that does
+  a failed step another way so the workflow goes on.
+- Added agent calls: any agent, Claude Code, Codex, Grok Build and Antigravity
+  included, can ask another agent to do part of its work, in a Permission mode
+  no wider than its own, and get the answer back.
+- Added Connect AI Clients to the Agents page, so AI apps on your Mac, such as
+  Claude Code, Codex CLI, Cursor and Claude Desktop, can ask your agents for
+  work over MCP.
+- Changed the agent to call its tools directly, so multi-step tasks finish
+  noticeably faster.
+- Fixed several ways an agent could reach past its Permission mode or skip
+  asking before running a script or a command that deletes files.
+
+## Chats
+
+- Added sliders, fields, choices, switches, progress bars, timelines and live
+  data to the cards the agent draws in chat.
+- Changed a finished agent reply to show only its answer, with its notes,
+  thinking and steps folded into one "Worked for …" line, and each step reading
+  as one line.
+- Added a suggested next message in the empty message box after a reply; press
+  Tab to use it.
+- Added file links in agent answers that open in the side panel, and one gallery
+  for a reply with several images.
+- Added a model and reasoning effort picker to new Claude Code and Codex chats.
+- Changed the Chat Window to show the agent at the top left, with a menu to
+  switch it in a new chat.
+- Added the pictures and files an Agent makes to the Dynamic Island, the voice
+  reply and the call card as soon as they're done.
+- Changed chats to start replying sooner, and Enconvo Cloud replies up to a
+  second and a half sooner after a break.
+
+## Recordings and Transcription
+
+- Changed a recording's page to show the transcript with a player that marks
+  when each speaker talks, beside the summary, action items, notes and Ask AI.
+- Added free automatic summaries of recordings with key points, decisions and
+  action items you can tick off.
+- Added Transcribe on this Mac for a recording whose transcription stopped, such
+  as when your Enconvo Cloud points ran out.
+- Added Live Translation to recordings with a model that can translate, such as
+  Soniox Realtime.
+- Changed the Recordings list to rows grouped by day with a Needs attention
+  filter, and the start view to change the microphone, call audio and model in
+  place.
+- Fixed many issues with renaming recordings, naming speakers, deleting
+  recordings and transcribing them again.
+
+## Smart Bar, Plugins and Mini Apps
+
+- Changed the Smart Bar, the Small Smart Bar and the App Sidebar to the look of
+  macOS Tahoe's Liquid Glass in Light and Dark Mode, with an Appearance option
+  in Settings › Smart Bar.
+- Changed list Mini Apps such as Clipboard, File Search and Bookmark Search to
+  open at once, search as you type, page through every item, and filter with a
+  menu beside the search field.
+- Added a Built-in tab to Plugins with settings pages for Clipboard History,
+  File Search and Browser Bookmarks, and Shortcut and Alias settings for each
+  Mini App.
+- Added an on/off switch to installed plugins, and switches for where each
+  plugin's views show up.
+- Fixed File Search taking seconds for each letter without Full Disk Access;
+  results now show as you type.
+- Changed Smart Bar search to rank what you use higher.
+
+## Hotkeys and AI Commands
+
+- Added Other Hotkeys and Find by hotkey to Settings › Shortcut, which list
+  every hotkey and what uses a key combination, with a clash warning and Use it
+  here.
+- Changed every hotkey field to one recorder that takes key combinations,
+  modifier keys pressed together, and Hold, Tap, Tap, Hold or Double Tap.
+- Changed Enconvo's default global shortcuts to only Smart Bar, Chat Window,
+  Dictation, Voice Command and App Sidebar.
+- Added All Commands to Settings › AI Commands: one model for every AI Command,
+  writing tool, PopBar button and Dictation's Polish and Translate, set to
+  Claude Haiku 5.5 on Enconvo Cloud.
+- Changed AI Commands and writing tools to answer in about a second, keep your
+  text's language and reply with the result alone.
+- Fixed the PopBar not showing for text selected in Google Docs and other web
+  editors that draw their pages on a canvas.
+
+## Dictation
+
+- Added a choice of where Dictation pastes when you switch apps while dictating.
+- Fixed custom Dictionary words with Parakeet, and pressing another key while
+  holding the Dictation key cancelling the dictation.
+- Fixed the first Dictation after Enconvo opens starting late, and stray symbols
+  while a terminal app was in front.
+
+## Dynamic Island and Avatars
+
+- Added a task list to the Dynamic Island: a Tasks chip opens a list grouped
+  into Needs you, Failed, Running and Done.
+- Changed the Dynamic Island settings to Home, Opening & Display and Character
+  tabs, with Home shortcuts you can drag, rename and add.
+- Changed the onboarding guide's host to Duet, Enconvo's own character, with an
+  upbeat new voice.
+- Added Live-Talk Voice to the Avatar's right-click menu, and the Avatar now
+  acts on Voice Command replies and does the motions you ask for right away.
+
+## Models and Local Models
+
+- Added Mercury 3 on Enconvo Cloud, Inception's diffusion model that writes over
+  1,000 tokens a second.
+- Added Reasoning Effort for Mistral Large 4, Medium 3.5 and Small 4, and fixed
+  Mistral's model list and Large 4 chats.
+- Removed GPT-OSS 120B, GPT-OSS 20B and Gemini 2.5 Flash Lite from Enconvo
+  Cloud; Mistral Small and MiniMax M3.1 Flash are the free models.
+- Added a Local Models page in Settings that shows what the models on your Mac
+  are doing, with Pause, Run everything in the cloud, and a choice of what reads
+  text in images.
+- Added Settings › Memory › Search, where the search index can be built free on
+  Enconvo Cloud instead of your Mac's GPU, and the knowledge base index upgrade
+  no longer keeps the GPU busy for hours.
+- Changed local model downloads to ask whether to switch to a model once it
+  finishes.
+- Changed the Enconvo Cloud model list to check for new models and prices every
+  hour.
+
+## Mac Apps
+
+- Changed Calendar, Contacts, Mail, Messages, Music, Notes, Reminders and Maps
+  into separate plugins on the Mac Apps tab, each turned on or off on its own.
+
+## iPhone and Android
+
+- Added a Side chat and Live Talk settings to the iPhone app, with Parakeet,
+  Fluid Speech Mini and Phonon hearing and speaking on the iPhone itself.
+- Added Start a Voice Chat for the Action Button, the Shortcuts app and Control
+  Center on iOS 18, without opening the app.
+- Added a viewfinder and camera control to Share Camera in iPhone voice chats.
+- Changed Mac chats on the iPhone to fold the agent's work behind "Worked for …"
+  and offer a suggested next message, as on the Mac.
+- Changed agent approvals and questions on the iPhone to arrive as Time
+  Sensitive notifications, and on iPhone and Android to show where they were
+  answered once you answer them elsewhere.
+
+## Reliability
+
+- Added crash and freeze reports on the Mac and iPhone while sharing analytics
+  is on, without any of your content.
+- Fixed Enconvo freezing until you restarted it when its background engine
+  stopped.
+- Fixed Retry deleting a chat's earlier messages, Clear All deleting archived
+  chats, and settings and API keys being erased when saved at the same moment.
+- Changed the built-in Node.js runtime to Node.js 26.12.1, with the latest
+  security fixes.
+
+---
+
 # Enconvo 2.5.8 Changelog (2026-10-19)
 
 Thanks for all the feedback during the betas. This release brings a brand-new
