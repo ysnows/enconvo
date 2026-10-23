@@ -6,7 +6,8 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
-const LAST_UPDATED = 'October 7, 2026'
+// An ISO date parses as UTC midnight, so the UTC format below shows this day in every time zone.
+const LAST_UPDATED = '2026-10-23'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 function Section({
@@ -424,6 +425,11 @@ export default function Privacy() {
               'The website enconvo.com uses Google Analytics to measure visits. The iPhone and Android apps use PostHog only when you turn on Settings > Share usage data. It is off by default for new installations. Events use a device identifier and include feature identifiers, app and system versions, status, counts and duration, never your chat content, files, API keys or email address. You can turn this off at any time.'
             )}
           </p>
+          <p>
+            {t(
+              "While product analytics is on in the desktop app, or Settings > Share usage data is on in the iPhone and Android apps, the apps also send crash and freeze reports to Sentry so we can find and fix problems. A report contains the stack trace, the app version, device and system details such as the model, system version and memory, the device identifier and the country of your region setting. We do not attach your prompts, chat content, files, API keys or email address to reports. Error messages are shortened, your home folder is removed from file paths, and Sentry is set not to store IP addresses. Our API servers also report errors to Sentry, with the request's route but not its content."
+            )}
+          </p>
         </Section>
 
         <Section title={t('Service providers')}>
@@ -443,6 +449,9 @@ export default function Privacy() {
             </Item>
             <Item title={t('Stripe')}>{t('Payments.')}</Item>
             <Item title={t('PostHog')}>{t('Product analytics.')}</Item>
+            <Item title={t('Sentry')}>
+              {t('Crash, freeze and error reports.')}
+            </Item>
             <Item title={t('Google Analytics')}>{t('Website analytics.')}</Item>
             <Item title={t('Resend')}>
               {t('Account and product update emails.')}
