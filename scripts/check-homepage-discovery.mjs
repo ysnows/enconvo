@@ -57,7 +57,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   )
   assert.ok(
     html.includes('summary_large_image') &&
-      html.includes('enconvo-mac-agent-v1.jpg')
+      html.includes('enconvo-speak-select-ask-v2.jpg')
   )
   assert.ok(
     /poster="\/_next\/static\/media\/popbar-launch-v7-20261018\.[\w-]+\.webp"/.test(html) &&

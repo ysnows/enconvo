@@ -20,8 +20,8 @@ const IMAGES = [
     square: true,
   },
   {
-    src: '/og/enconvo-mac-agent-v1.jpg',
-    file: 'enconvo-assistant-1200x630.jpg',
+    src: '/og/enconvo-speak-select-ask-v2.jpg',
+    file: 'enconvo-speak-select-ask-v2-1200x630.jpg',
     name: 'Share image: assistant',
     size: '1200 × 630 JPG',
     square: false,

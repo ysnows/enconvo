@@ -324,7 +324,7 @@ export default function LtdPage({ initialAffiliateCode, now }: LtdPageProps) {
         <meta property="og:url" content={pageUrl} />
         <meta
           property="og:image"
-          content="https://www.enconvo.com/og/enconvo-mac-agent-v1.jpg"
+          content="https://www.enconvo.com/og/enconvo-speak-select-ask-v2.jpg"
         />
         <meta
           property="og:image:alt"
@@ -335,7 +335,7 @@ export default function LtdPage({ initialAffiliateCode, now }: LtdPageProps) {
         <meta name="twitter:description" content={t(description)} />
         <meta
           name="twitter:image"
-          content="https://www.enconvo.com/og/enconvo-mac-agent-v1.jpg"
+          content="https://www.enconvo.com/og/enconvo-speak-select-ask-v2.jpg"
         />
       </Head>
 

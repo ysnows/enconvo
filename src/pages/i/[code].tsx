@@ -45,7 +45,7 @@ const DOWNLOAD_ARM64 =
   'https://api.enconvo.com/app/download?arch=arm64&platform=darwin'
 const DOWNLOAD_X64 =
   'https://api.enconvo.com/app/download?arch=x64&platform=darwin'
-const OG_IMAGE = `${SITE_URL}/og/enconvo-mac-agent-v1.jpg`
+const OG_IMAGE = `${SITE_URL}/og/enconvo-speak-select-ask-v2.jpg`
 
 export const getServerSideProps: GetServerSideProps<InvitePageProps> =
   withI18nProps(async ({ params, res }) => {

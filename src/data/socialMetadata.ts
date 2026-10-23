@@ -8,9 +8,9 @@ interface SocialPage {
 }
 
 const brandImage = {
-  image: '/og/enconvo-mac-agent-v1.jpg',
+  image: '/og/enconvo-speak-select-ask-v2.jpg',
   imageAlt:
-    'Enconvo — The assistant your Mac was promised. A native AI sidebar organizes files alongside Finder, framed by blue light ribbons.',
+    'Enconvo — Speak it. Select it. Ask it. The Dynamic Island, the PopBar over selected text, and the SmartBar on a Mac.',
 }
 
 // Public pages only. Private, payment, auth, API and placeholder routes must not
