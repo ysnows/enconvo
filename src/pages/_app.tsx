@@ -80,6 +80,15 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   useCampaignJourney()
   return (
     <>
+      {/* Next's default viewport has no initial-scale. Without it Safari on the
+          iPhone Duo can carry a zoom across a fold change and crop the page. */}
+      <Head>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1"
+          key="viewport"
+        />
+      </Head>
       <SocialMetadata pathname={router.pathname} />
       <LocaleMetadata />
       {(privateRoutes.has(router.pathname) ||

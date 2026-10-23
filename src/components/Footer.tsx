@@ -13,7 +13,7 @@ export function Footer() {
       <Container>
         <div className="py-16">
           <nav className="mt-10 text-sm" aria-label={t('quick links')}>
-            <div className="-my-1 flex justify-center gap-x-6">
+            <div className="-my-1 flex flex-wrap justify-center gap-x-6 gap-y-1">
               <NavLink
                 href="/#features"
                 className="text-content-muted hover:text-content"
@@ -52,7 +52,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col items-center border-t border-hairline py-10 sm:flex-row sm:justify-between">
           <div className="mt-6 sm:mt-0">
-            <p className="text-sm text-content-muted">
+            <p className="text-center text-sm text-content-muted">
               <I18nText
                 source={'Copyright © {p0} Enconvo. All rights reserved.'}
                 values={{ p0: new Date().getFullYear() }}
@@ -62,7 +62,7 @@ export function Footer() {
 
           <div className="flex gap-x-6"></div>
 
-          <div className="flex space-x-6 text-sm text-content-muted">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-content-muted">
             <Link href="/privacy" className="hover:text-content-muted">
               {t('Privacy Policy')}
             </Link>
