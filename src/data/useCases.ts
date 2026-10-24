@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'dictation-step-by-step',
+    title: 'Type with your voice in any app, step by step',
+    description:
+      'Hold or tap the right Command key, talk, and your words are typed wherever you’re writing. Let it read names off your screen, teach it a name, polish or translate what you said, and pick the speech model — even one that runs on your Mac — a narrated walkthrough in seven steps.',
+    youtubeId: 'wqYet4Kdono',
+    category: 'Tutorials',
+    date: '2026-10-24',
+    docsUrl: 'https://docs.enconvo.ai/features/dictation',
+  },
+  {
     slug: 'ai-commands-step-by-step',
     title: 'Make your own AI command, step by step',
     description:
