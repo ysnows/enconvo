@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'ai-commands-step-by-step',
+    title: 'Make your own AI command, step by step',
+    description:
+      'Turn a prompt you use all the time into a command of its own. Describe what it should do, try it on your own text, change it in your own words, add it to PopBar and give it a hotkey, then run it on your notes in any app — a narrated walkthrough in six steps.',
+    youtubeId: 'zRD7Yg_Grjw',
+    category: 'Tutorials',
+    date: '2026-10-24',
+    docsUrl: 'https://docs.enconvo.ai/features/ai-commands',
+  },
+  {
     slug: 'popbar-step-by-step',
     title: 'Set up PopBar and use it every day, step by step',
     description:
