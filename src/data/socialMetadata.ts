@@ -52,6 +52,12 @@ export const socialPages: Record<string, SocialPage> = {
       'Download the Enconvo Android beta and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
     ...brandImage,
   },
+  '/apps': {
+    title: 'More apps from the Enconvo team',
+    description:
+      'Every app the Enconvo team makes, in one place: Enconvo, an AI agent launcher for Mac, and NeatShot, free screenshots and screen recording for Mac.',
+    ...brandImage,
+  },
   '/privacy': {
     title: 'Enconvo Privacy Policy',
     description: 'How Enconvo handles app permissions, data, and privacy.',

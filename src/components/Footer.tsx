@@ -63,6 +63,9 @@ export function Footer() {
           <div className="flex gap-x-6"></div>
 
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-content-muted">
+            <Link href="/apps" className="hover:text-content">
+              {t('More apps')}
+            </Link>
             <Link href="/privacy" className="hover:text-content-muted">
               {t('Privacy Policy')}
             </Link>

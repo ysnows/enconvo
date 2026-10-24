@@ -46,6 +46,7 @@ const navigationRoutes = new Set([
   '/use-cases',
   '/android',
   '/changelog',
+  '/apps',
   '/affiliate',
   '/affiliate/dashboard',
   '/affiliate/terms',
