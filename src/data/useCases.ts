@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'computer-use-step-by-step',
+    title: 'Let your Mac click, type and browse for you, step by step',
+    description:
+      'Turn on Computer Use, give it Accessibility and Screen Recording, and add the browser extension to Chrome. Then hold the right Option key and ask: it works in Safari, right inside your browser, in your Mac’s own apps, and even on a whole task — a narrated walkthrough in seven steps.',
+    youtubeId: '0CbQA7d8zqU',
+    category: 'Tutorials',
+    date: '2026-10-25',
+    docsUrl: 'https://docs.enconvo.ai/features/computer-use',
+  },
+  {
     slug: 'dictation-step-by-step',
     title: 'Type with your voice in any app, step by step',
     description:
