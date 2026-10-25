@@ -16,6 +16,14 @@ import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
 import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
 import { useCampaignJourney } from '@/lib/campaign-journey-tracking'
 import { useWelcomeOfferAutoClaim } from '@/lib/welcome-offer-auto-claim'
+import { useMarketingTracking } from '@/lib/marketing-tracking'
+import { CookieConsent } from '@/components/CookieConsent'
+import {
+  GA_MEASUREMENT_ID,
+  clearAnalyticsStorage,
+  clearMarketingStorage,
+} from '@/lib/cookie-consent'
+import { useCookieConsent } from '@/lib/use-cookie-consent'
 
 const privateRoutes = new Set([
   '/account',
@@ -23,6 +31,7 @@ const privateRoutes = new Set([
   '/register',
   '/auth',
   '/auth/callback',
+  '/confirm-age',
   '/payment',
   '/pay_success',
   '/cloud-points',
@@ -41,12 +50,20 @@ const noindexRoutes = new Set([
   '/share/[id]',
 ])
 
+// Pages the app opens for sign-in or a hand-off don't ask about cookies: nothing optional runs on
+// them without a choice made elsewhere, and the footer's Cookie settings still open the banner.
+const cookieBannerHiddenRoutes = new Set([
+  ...Array.from(privateRoutes),
+  '/device',
+  '/share/[id]',
+])
+
 const navigationRoutes = new Set([
   '/',
   '/use-cases',
   '/android',
-  '/changelog',
   '/apps',
+  '/changelog',
   '/affiliate',
   '/affiliate/dashboard',
   '/affiliate/terms',
@@ -75,10 +92,20 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
         { locale, scroll: false }
       )
   }, [router.isReady, router.query.language, router.locale])
+  const { ready: consentReady, consent } = useCookieConsent()
+  const analyticsAllowed = consentReady && consent?.analytics === true
+  const marketingAllowed = consentReady && consent?.marketing === true
+  // What a category stored before it was withdrawn, or before this site asked, goes.
+  useEffect(() => {
+    if (!consentReady) return
+    if (!analyticsAllowed) clearAnalyticsStorage()
+    if (!marketingAllowed) clearMarketingStorage()
+  }, [consentReady, analyticsAllowed, marketingAllowed])
   useInviteAutoRedeem()
   useWelcomeOfferAutoClaim()
-  useAffiliateJourney()
-  useCampaignJourney()
+  useAffiliateJourney(marketingAllowed)
+  useCampaignJourney(marketingAllowed)
+  useMarketingTracking(marketingAllowed)
   return (
     <>
       {/* Next's default viewport has no initial-scale. Without it Safari on the
@@ -99,19 +126,33 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
           <meta name="robots" content="noindex, follow" />
         </Head>
       )}
-      <Script
-        src="https://www.googletagmanager.com/gtag/js?id=G-JBLMBKBEN2"
-        strategy="afterInteractive"
-      />
-      <Script id="google-analytics" strategy="afterInteractive">
-        {`
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
+      {/* Google Analytics loads only once the visitor allows analytics (lib/cookie-consent).
+          Advertising storage and signals stay off: the site measures visits, nothing more. */}
+      {analyticsAllowed && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              window['ga-disable-${GA_MEASUREMENT_ID}'] = false;
+              gtag('consent', 'default', {
+                analytics_storage: 'granted',
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied'
+              });
+              gtag('set', 'linker', { domains: ['macworthy.com', 'enconvo.com'] });
+              gtag('js', new Date());
 
-          gtag('config', 'G-JBLMBKBEN2');
-        `}
-      </Script>
+              gtag('config', '${GA_MEASUREMENT_ID}', { allow_google_signals: false });
+            `}
+          </Script>
+        </>
+      )}
 
       {!navigationRoutes.has(router.pathname) &&
         !router.pathname.startsWith('/go/') && (
@@ -123,6 +164,14 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       <InviteToast />
       <AffiliateOfferToast />
       <WelcomeOffer />
+      <CookieConsent
+        ready={consentReady}
+        consent={consent}
+        hidden={
+          cookieBannerHiddenRoutes.has(router.pathname) ||
+          router.pathname.startsWith('/go/')
+        }
+      />
     </>
   )
 }

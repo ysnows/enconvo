@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 
 // An ISO date parses as UTC midnight, so the UTC format below shows this day in every time zone.
-const LAST_UPDATED = '2026-10-23'
+const LAST_UPDATED = '2026-10-25'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 function Section({
@@ -426,6 +426,20 @@ export default function Privacy() {
             )}
           </p>
           <p>
+            <I18nText
+              source={
+                'On enconvo.com, Google Analytics and the marketing cookies that credit a campaign or partner run only after you allow them in the cookie banner. Our {p0} lists every cookie the website uses and how to change your choice.'
+              }
+              values={{
+                p0: (
+                  <Link className="text-indigo-600" href="/cookies">
+                    {t('Cookie Policy')}
+                  </Link>
+                ),
+              }}
+            />
+          </p>
+          <p>
             {t(
               "While product analytics is on in the desktop app, or Settings > Share usage data is on in the iPhone and Android apps, the apps also send crash and freeze reports to Sentry so we can find and fix problems. A report contains the stack trace, the app version, device and system details such as the model, system version and memory, the device identifier and the country of your region setting. We do not attach your prompts, chat content, files, API keys or email address to reports. Error messages are shortened, your home folder is removed from file paths, and Sentry is set not to store IP addresses. Our API servers also report errors to Sentry, with the request's route but not its content."
             )}
@@ -471,8 +485,16 @@ export default function Privacy() {
         </Section>
 
         <Section id="account-deletion" title={t('Retention and deletion')}>
-          <p>{t("Enconvo for Android handles Phone chats, attachments, personal instructions and AI requests as described for the iPhone app. Push notifications use Google's Firebase Cloud Messaging. In Android Settings > Delete account, you can permanently delete your Enconvo account under the retention terms below. When you use Report AI content, only the content you confirm and the reason you select are sent to Enconvo for private safety review. Reports are kept for up to 30 days and removed when you delete your account.")}</p>
-          <p>{t('On iPhone, use Settings > Delete account to permanently delete your Enconvo account, synced Phone and desktop chats and files, and connected-service authorizations. Active Cloud subscriptions are cancelled, and purchased plans and unused points are lost. We retain payment and legally required financial records; publicly licensed work may remain available under its licence. Local data on your other devices is not remotely erased. AI data sharing requires your permission before sending content, and you can withdraw it in Settings > Allow AI data sharing.')}</p>
+          <p>
+            {t(
+              "Enconvo for Android handles Phone chats, attachments, personal instructions and AI requests as described for the iPhone app. Push notifications use Google's Firebase Cloud Messaging. In Android Settings > Delete account, you can permanently delete your Enconvo account under the retention terms below. When you use Report AI content, only the content you confirm and the reason you select are sent to Enconvo for private safety review. Reports are kept for up to 30 days and removed when you delete your account."
+            )}
+          </p>
+          <p>
+            {t(
+              'On iPhone, use Settings > Delete account to permanently delete your Enconvo account, synced Phone and desktop chats and files, and connected-service authorizations. Active Cloud subscriptions are cancelled, and purchased plans and unused points are lost. We retain payment and legally required financial records; publicly licensed work may remain available under its licence. Local data on your other devices is not remotely erased. AI data sharing requires your permission before sending content, and you can withdraw it in Settings > Allow AI data sharing.'
+            )}
+          </p>
           <p>
             {t(
               'We keep account, plan, and usage records while your account is active. Operational logs are deleted after at most 7 days. To delete your account and the data tied to it, including synced Phone chats, email us at '
@@ -503,6 +525,12 @@ export default function Privacy() {
           <p>
             {t(
               'Enconvo is not directed to children under 13, and we do not knowingly collect personal data from them.'
+            )}
+          </p>
+          <p>
+            {t(
+              'Creating an account asks for your month and year of birth. We keep only the fact that you met the minimum age, not your date of birth. If someone below the minimum age tries to sign up, we delete the account at once. If you believe a child has given us personal data, email {p0} and we will delete it.',
+              { p0: SUPPORT_EMAIL }
             )}
           </p>
         </Section>

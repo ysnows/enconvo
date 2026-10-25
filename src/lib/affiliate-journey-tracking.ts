@@ -11,9 +11,11 @@ import { affiliateCode, affiliateSub, isAppDownloadLink, readAffiliateJourney, r
  * is reported so the Worker can record the signup or sign-in. Supabase loads only for
  * a browser with a journey.
  */
-export function useAffiliateJourney() {
+export function useAffiliateJourney(enabled: boolean) {
   const router = useRouter()
   useEffect(() => {
+    // Only with the visitor's consent to marketing cookies (lib/cookie-consent).
+    if (!enabled) return
     let cancelled = false
     let listening = false
     let unsubscribe: (() => void) | null = null
@@ -73,5 +75,5 @@ export function useAffiliateJourney() {
     }
     // `router.events` is one emitter for the app's lifetime.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [enabled])
 }

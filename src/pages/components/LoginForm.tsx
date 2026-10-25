@@ -22,6 +22,7 @@ import {
   oauthCallbackUrl,
 } from '@/lib/auth-flow'
 import { offerReturnPath } from '@/lib/welcome-offer'
+import { beginGoogleSignupMeasurement } from '@/lib/signup-analytics'
 
 export default function LoginForm({
   loginState,
@@ -164,6 +165,7 @@ export default function LoginForm({
       )
 
       // Someone who chose "Use a different account" picks their Google account too.
+      beginGoogleSignupMeasurement()
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {

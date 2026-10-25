@@ -253,7 +253,7 @@ export default function Account() {
                       <input
                         type="checkbox"
                         checked={
-                          emailPreference?.product_updates_subscribed ?? true
+                          emailPreference?.product_updates_subscribed ?? false
                         }
                         disabled={
                           emailPreferenceLoading || emailPreferenceSaving

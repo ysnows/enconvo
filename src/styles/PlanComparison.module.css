@@ -36,7 +36,8 @@
 .table [data-featured] { background: rgba(87,193,255,.045); }
 .table [data-group-start] { border-left: 1px solid rgba(255,255,255,.1); }
 .planHead { padding: 22px 12px 8px; vertical-align: top; }
-.planCtaCell { padding: 6px 12px 20px !important; vertical-align: bottom !important; border-bottom: 1px solid rgba(255,255,255,.1) !important; }
+.planCtaCell { padding: 6px 12px 20px !important; vertical-align: top !important; border-bottom: 1px solid rgba(255,255,255,.1) !important; }
+.planCtaNote { margin-top: 8px; color: #9c9c9d; font-size: 11px; line-height: 1.45; text-wrap: pretty; }
 .ctaCorner { border-bottom: 1px solid rgba(255,255,255,.1) !important; }
 .planBadgeSlot { display: flex; align-items: center; height: 24px; }
 .planBadgeSlot .tag { padding-top: 1px; padding-bottom: 1px; }

@@ -506,6 +506,7 @@
 .page .planPurchase:active { transform: translateY(1px); }
 .page .planPurchase:disabled { opacity: .6; cursor: wait; }
 .planDetailsLink { display: block; margin-top: 12px; color: #9cbdcd; font-size: 12px; text-align: center; }
+.planRenewal { margin-top: 10px; color: #9c9c9d; font-size: 12px; line-height: 1.55; text-wrap: pretty; }
 .planAllowance { display: flex; flex-wrap: wrap; align-items: baseline; gap: 7px; margin-top: 24px; }
 .planAllowance strong { color: #dbe7ed; font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
 .planAllowance > span { color: #9c9c9d; font-size: 12px; }

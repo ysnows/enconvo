@@ -1,0 +1,89 @@
+import { useI18n } from '@/i18n/I18nProvider'
+import { useMemo } from 'react'
+import type { BirthMonth } from '@/lib/age-gate'
+
+const selectClass =
+  'h-10 w-full rounded-md border border-[#333333] bg-[#1C1C1C] px-3 text-sm text-white focus:border-[#555555] focus:outline-none focus:ring-1 focus:ring-[#555555] invalid:text-[#666666]'
+
+/**
+ * The neutral month-and-year-of-birth question of the sign-up age check (lib/age-gate). It
+ * doesn't say what age passes.
+ */
+export function BirthMonthField({
+  month,
+  year,
+  onChange,
+}: {
+  month: string
+  year: string
+  onChange: (month: string, year: string) => void
+}) {
+  const { t, locale } = useI18n()
+  const months = useMemo(() => {
+    const format = new Intl.DateTimeFormat(locale, {
+      month: 'long',
+      timeZone: 'UTC',
+    })
+    return Array.from({ length: 12 }, (_, index) => ({
+      value: String(index + 1),
+      label: format.format(new Date(Date.UTC(2000, index, 1))),
+    }))
+  }, [locale])
+  const years = useMemo(() => {
+    const current = new Date().getFullYear()
+    return Array.from({ length: current - 1900 + 1 }, (_, index) =>
+      String(current - index)
+    )
+  }, [])
+
+  return (
+    <fieldset className="space-y-1">
+      <legend className="mb-1 text-[12px] leading-4 text-[#777F8A]">
+        {t('Date of birth')}
+      </legend>
+      <div className="grid grid-cols-2 gap-2">
+        <select
+          aria-label={t('Month')}
+          required
+          value={month}
+          onChange={(event) => onChange(event.target.value, year)}
+          className={selectClass}
+        >
+          <option value="" disabled>
+            {t('Month')}
+          </option>
+          {months.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </select>
+        <select
+          aria-label={t('Year')}
+          required
+          value={year}
+          onChange={(event) => onChange(month, event.target.value)}
+          className={selectClass}
+        >
+          <option value="" disabled>
+            {t('Year')}
+          </option>
+          {years.map((item) => (
+            <option key={item} value={item}>
+              {item}
+            </option>
+          ))}
+        </select>
+      </div>
+    </fieldset>
+  )
+}
+
+/** The chosen month and year, or null until both are set. */
+export function birthMonthFrom(month: string, year: string): BirthMonth | null {
+  const m = Number(month)
+  const y = Number(year)
+  return month && year && Number.isInteger(m) && Number.isInteger(y)
+    ? { month: m, year: y }
+    : null
+}

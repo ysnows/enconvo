@@ -15,9 +15,11 @@ const NO_VISIT = /^\/(?:[a-z]{2}(?:-[A-Z]{2})?\/)?(?:auth|login|register|reset_p
  * (the existing one, then every SIGNED_IN) is reported so the Worker can record the signup or
  * sign-in. Supabase loads only for a browser with a journey.
  */
-export function useCampaignJourney() {
+export function useCampaignJourney(enabled: boolean) {
   const router = useRouter()
   useEffect(() => {
+    // Only with the visitor's consent to marketing cookies (lib/cookie-consent).
+    if (!enabled) return
     let cancelled = false
     let listening = false
     let unsubscribe: (() => void) | null = null
@@ -82,5 +84,5 @@ export function useCampaignJourney() {
     }
     // `router.events` is one emitter for the app's lifetime; `Router.pathname` is the live route.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [enabled])
 }

@@ -93,7 +93,11 @@ async function accountHarness(initial = null) {
 console.log('PASS: account restoration, stale response isolation, sign-out, token refresh, retry and stale form submission')
 
 const { authFlowHref, affiliateReturnPath } = await load('lib/auth-flow.ts')
-const { trackEvent } = await load('lib/analytics.ts')
+const { trackEvent } = await load('lib/analytics.ts', {
+  './marketing-attribution': await load('lib/marketing-attribution.ts'),
+  // The visitor allowed analytics; check-marketing-analytics covers the consent gate itself.
+  './cookie-consent': { hasConsent: category => category === 'analytics' },
+})
 const access = await load('lib/affiliate-access.ts', { '@/lib/analytics': { trackEvent }, '@/lib/auth-flow': { authFlowHref } })
 const component = name => ({ children }) => React.createElement('div', { 'data-component': name }, children)
 const terms = { commission_rate: 20, minimum_payout: 5000, hold_days: 30, cookie_days: 90 }

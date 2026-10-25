@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { Container } from '@/components/Container'
 import { NavLink } from '@/components/NavLink'
+import { openCookieSettings } from '@/lib/cookie-consent'
 
 export function Footer() {
   const { t, locale } = useI18n()
@@ -72,6 +73,16 @@ export function Footer() {
             <Link href="/terms" className="hover:text-content-muted">
               {t('Terms of Service')}
             </Link>
+            <Link href="/cookies" className="hover:text-content-muted">
+              {t('Cookie Policy')}
+            </Link>
+            <button
+              type="button"
+              onClick={openCookieSettings}
+              className="hover:text-content"
+            >
+              {t('Cookie settings')}
+            </button>
           </div>
         </div>
       </Container>

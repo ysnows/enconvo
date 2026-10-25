@@ -22,6 +22,8 @@ async function loadTs(path, dependencies = {}) {
     (name) =>
       Object.hasOwn(dependencies, name)
         ? dependencies[name]
+        : name === '@/lib/signup-analytics'
+        ? { beginGoogleSignupMeasurement() {}, recordWebsiteSignup() {}, recordGoogleSignup() {} }
         : requireFromFile(name),
     module,
     module.exports
@@ -194,11 +196,17 @@ for (const locale of locales) {
             },
           }),
         },
-        '@/lib/email-preferences-client': {
-          consumeRegistrationEmailPreference: () => null,
-          syncCurrentEmailPreference: async () => {},
-          updateCurrentEmailPreference: async () => {},
-        },
+        '@/lib/age-gate': await loadTs('../src/lib/age-gate.ts'),
+        '@/lib/finish-oauth-sign-in': await loadTs(
+          '../src/lib/finish-oauth-sign-in.ts',
+          {
+            '@/lib/email-preferences-client': {
+              consumeRegistrationEmailPreference: () => null,
+              syncCurrentEmailPreference: async () => {},
+              updateCurrentEmailPreference: async () => {},
+            },
+          }
+        ),
       }
     )
     Callback()
@@ -556,7 +564,11 @@ globalThis.window = {
     )
   },
 }
-const { trackEvent } = await loadTs('../src/lib/analytics.ts')
+const { trackEvent } = await loadTs('../src/lib/analytics.ts', {
+  './marketing-attribution': await loadTs('../src/lib/marketing-attribution.ts'),
+  // The visitor allowed analytics (lib/cookie-consent).
+  './cookie-consent': { hasConsent: (category) => category === 'analytics' },
+})
 for (const language of locales)
   for (const name of [
     'website_language_picker_opened',

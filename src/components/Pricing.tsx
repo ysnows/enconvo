@@ -117,6 +117,12 @@ async function startCheckout(
   }
 }
 
+interface Renewal {
+  /** What each renewal charges before tax, e.g. `$96`. */
+  amount: string
+  period: 'month' | 'year'
+}
+
 interface PlanProps {
   name: string
   price: string
@@ -131,6 +137,41 @@ interface PlanProps {
   detailsHref?: string
   features: string[]
   featured?: boolean
+  /** A subscription's renewal, stated under its button. */
+  renewal?: Renewal
+}
+
+// The auto-renewal terms under a Cloud plan's button: what renews, how to cancel and when
+// cancelling takes effect (the billing portal cancels at the end of the paid period).
+// Checkout repeats them beside Stripe's Subscribe button (lib/renewal-terms.ts).
+function RenewalTerms({
+  amount,
+  period,
+  compact = false,
+  className,
+}: Renewal & { compact?: boolean; className: string }) {
+  const { t } = useI18n()
+  const values = { p0: amount }
+  const text = compact
+    ? period === 'year'
+      ? t(
+          'Renews automatically at {p0}/year plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid year.',
+          values
+        )
+      : t(
+          'Renews automatically at {p0}/month plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid month.',
+          values
+        )
+    : period === 'year'
+    ? t(
+        'Renews automatically at {p0}/year plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid year.',
+        values
+      )
+    : t(
+        'Renews automatically at {p0}/month plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid month.',
+        values
+      )
+  return <p className={className}>{text}</p>
 }
 
 function PlanFeatures({ features }: { features: string[] }) {
@@ -162,6 +203,7 @@ function Plan({
   detailsHref,
   features,
   featured = false,
+  renewal,
 }: PlanProps) {
   const { t, locale } = useI18n()
 
@@ -231,6 +273,9 @@ function Plan({
             </>
           )}
         </Button>
+        {renewal && (
+          <RenewalTerms {...renewal} className={styles.planRenewal} />
+        )}
         {detailsHref && (
           <a
             href={localizePath(detailsHref, locale)}
@@ -816,6 +861,20 @@ function PlanComparison({
                           featured={plan.featured}
                         />
                       )}
+                      {tier ? (
+                        <RenewalTerms
+                          compact
+                          amount={
+                            isAnnual ? tier.annual.price : tier.monthly.price
+                          }
+                          period={isAnnual ? 'year' : 'month'}
+                          className={compare.planCtaNote}
+                        />
+                      ) : (
+                        <p className={compare.planCtaNote}>
+                          {t('One-time payment. Never renews.')}
+                        </p>
+                      )}
                     </td>
                   )
                 })}
@@ -1269,6 +1328,11 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
                   featured={tier.featured}
                   description={t(tier.description)}
                   features={tier.features.slice(1)}
+                  renewal={
+                    isAnnual
+                      ? { amount: tier.annual.price, period: 'year' }
+                      : { amount: tier.monthly.price, period: 'month' }
+                  }
                 />
               )
             })}

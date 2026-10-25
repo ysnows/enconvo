@@ -1,5 +1,7 @@
 // Named GA4 conversion events, so SEO work can be judged by downloads and
 // checkouts per landing page instead of by traffic alone.
+import { marketingEventParams } from './marketing-attribution'
+import { hasConsent } from './cookie-consent'
 
 type EventParams = Record<string, string | number | boolean | undefined>
 
@@ -16,9 +18,14 @@ export function trackEvent(
   options: { includePagePath?: boolean } = {}
 ) {
   if (typeof window === 'undefined') return
+  // Nothing is measured, or queued for later, before the visitor allows analytics.
+  if (!hasConsent('analytics')) return
   try {
     const payload = {
       ...params,
+      ...(['sign_up', 'download_click', 'website_referral_landed'].includes(name)
+        ? marketingEventParams()
+        : {}),
       ...(options.includePagePath === false
         ? // GA also derives location, title and referrer when they are omitted.
           // Use public brand context for events on private or deep-link pages.

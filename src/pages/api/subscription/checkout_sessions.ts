@@ -18,6 +18,7 @@ import {
   isInvalidRequest,
 } from '@/lib/affiliate-discount'
 import { checkoutPriceId } from '@/lib/stripe-prices'
+import { checkoutRenewalTerms } from '@/lib/renewal-terms'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const TEAMS_MIN_SEATS = 5
@@ -129,6 +130,13 @@ async function handler(req, res) {
       },
     }
 
+    // A subscription's Subscribe button carries its renewal terms, read from its price while
+    // the Affiliate's code is checked.
+    const renewalTerms =
+      mode === 'subscription'
+        ? checkoutRenewalTerms(stripe, line_items)
+        : Promise.resolve(null)
+
     // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied, and
     // a lifetime license gets a running sale's coupon when that takes more off; everyone else
     // can type a code. Stripe takes one or the other, never both.
@@ -138,6 +146,8 @@ async function handler(req, res) {
       line_items,
       now
     )
+    const terms = await renewalTerms
+    if (terms) session_data.custom_text = { submit: { message: terms } }
     const discounts = checkoutDiscount(lookupKey, line_items, affiliate, now)
     let session: Stripe.Checkout.Session
     try {

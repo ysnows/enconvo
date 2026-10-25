@@ -4,10 +4,11 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import {
-  consumeRegistrationEmailPreference,
-  syncCurrentEmailPreference,
-  updateCurrentEmailPreference,
-} from '@/lib/email-preferences-client'
+  ageConfirmationMetadata,
+  consumeRegistrationAgeConfirmation,
+  needsAgeConfirmation,
+} from '@/lib/age-gate'
+import { finishOAuthSignIn } from '@/lib/finish-oauth-sign-in'
 
 export default function AuthCallback() {
   const router = useRouter()
@@ -31,57 +32,27 @@ export default function AuthCallback() {
         await router.push('/login?error=auth', undefined, { locale })
       }
       if (session) {
-        const registrationPreference = consumeRegistrationEmailPreference()
-
-        try {
-          if (registrationPreference !== null) {
-            await supabase.auth.updateUser({
-              data: { product_updates_subscribed: registrationPreference },
+        // The sign-up age check (lib/age-gate). A Google sign-up started on /register
+        // answered it there; an account Google just created from /login is asked first.
+        const answeredOnRegister = consumeRegistrationAgeConfirmation()
+        if (needsAgeConfirmation(session.user)) {
+          const { error: updateError } = answeredOnRegister
+            ? await supabase.auth.updateUser({
+                data: ageConfirmationMetadata(),
+              })
+            : { error: true }
+          if (updateError) {
+            // The OAuth code is spent; /confirm-age keeps only where the sign-in was for.
+            const query = { ...router.query }
+            for (const key of ['code', 'error', 'error_description'])
+              delete query[key]
+            await router.push({ pathname: '/confirm-age', query }, undefined, {
+              locale,
             })
-            await updateCurrentEmailPreference(
-              session.access_token,
-              registrationPreference
-            )
-          } else {
-            await syncCurrentEmailPreference(session.access_token)
+            return
           }
-        } catch (preferenceError) {
-          console.error('Unable to sync email preferences:', preferenceError)
         }
-
-        // Carry from/source/handoff back to /login so an OAuth login started from
-        // the app (e.g. the onboarding guide) still hands off with its source.
-        const from = Array.isArray(router.query.from)
-          ? router.query.from[0]
-          : router.query.from
-        const source = Array.isArray(router.query.source)
-          ? router.query.source[0]
-          : router.query.source
-        const handoff = Array.isArray(router.query.handoff)
-          ? router.query.handoff[0]
-          : router.query.handoff
-        const returnUrl = Array.isArray(router.query.returnUrl)
-          ? router.query.returnUrl[0]
-          : router.query.returnUrl
-        // A page that sent the user to sign in (e.g. /redeem/<code>) gets them back
-        // directly; /login only fires SIGNED_IN for a sign-in made on that page.
-        if (
-          !from &&
-          returnUrl?.startsWith('/') &&
-          returnUrl !== '/' &&
-          !returnUrl.startsWith('//') &&
-          !returnUrl.startsWith('/pricing?plan=')
-        ) {
-          await router.push(returnUrl, undefined, { locale })
-          return
-        }
-        const params = new URLSearchParams()
-        if (from) params.set('from', from)
-        if (source) params.set('source', source)
-        if (handoff) params.set('handoff', handoff)
-        if (returnUrl?.startsWith('/')) params.set('returnUrl', returnUrl)
-        const qs = params.toString()
-        await router.push(qs ? `/login?${qs}` : '/login', undefined, { locale })
+        await finishOAuthSignIn(supabase, session, router, locale)
       }
     }
 

@@ -23,7 +23,9 @@ async function loadTs(path, mocks = {}) {
   const module = { exports: {} }
   const requireFromFile = createRequire(url)
   new Function('require', 'module', 'exports', outputText)(
-    (name) => (Object.hasOwn(mocks, name) ? mocks[name] : requireFromFile(name)),
+    (name) => (Object.hasOwn(mocks, name) ? mocks[name] : name === '@/lib/signup-analytics'
+      ? { beginGoogleSignupMeasurement() {}, recordWebsiteSignup() {}, recordGoogleSignup() {} }
+      : requireFromFile(name)),
     module,
     module.exports
   )
@@ -598,7 +600,10 @@ test('analytics payloads carry only the slug and enums, never page URLs or ident
   browser({ search: '?offer=fake0offer0token&utm_source=newsletter' })
   window.gtag = (...args) =>
     pending.push(fetch(`http://127.0.0.1:${sink.address().port}`, { method: 'POST', body: JSON.stringify(args) }))
-  const analytics = await loadTs('../src/lib/analytics.ts')
+  const analytics = await loadTs('../src/lib/analytics.ts', {
+    './marketing-attribution': await loadTs('../src/lib/marketing-attribution.ts'),
+    './cookie-consent': { hasConsent: (category) => category === 'analytics' },
+  })
   worker()
   const workerFetch = globalThis.fetch
   globalThis.fetch = (url, init) => (String(url).startsWith('http://127.0.0.1') ? realFetch(url, init) : workerFetch(url, init))
@@ -641,6 +646,8 @@ test('registering from an offer link confirms the email back on the website', as
       '@/lib/auth-flow': authFlow,
       '@/lib/welcome-offer': offer,
       '@/lib/email-preferences-client': { saveRegistrationEmailPreference() {}, syncCurrentEmailPreference: async () => {} },
+      '@/lib/age-gate': await loadTs('../src/lib/age-gate.ts'),
+      '@/components/BirthMonthField': { BirthMonthField: () => null, birthMonthFrom: () => ({ month: 1, year: 1990 }) },
       '@supabase/auth-helpers-nextjs': {
         createClientComponentClient: () => ({
           auth: {
@@ -678,6 +685,7 @@ test('registering from an offer link confirms the email back on the website', as
     const button = find(tree, (node) => node.props?.children?.includes?.('Create account'))
     await button.props.onClick()
     assert.equal(signUp.options.emailRedirectTo, expected, returnUrl)
+    assert.equal(signUp.options.data.age_minimum, 13, returnUrl)
   }
 })
 
@@ -904,11 +912,14 @@ test('a password sign-in from the offer never opens the app; Google returns thro
       },
       '@/i18n/server': { i18nStaticProps: () => ({}) },
       '@/i18n/locale': { getLocale: (locale) => locale },
-      '@/lib/email-preferences-client': {
-        consumeRegistrationEmailPreference: () => null,
-        syncCurrentEmailPreference: async () => {},
-        updateCurrentEmailPreference: async () => {},
-      },
+      '@/lib/age-gate': await loadTs('../src/lib/age-gate.ts'),
+      '@/lib/finish-oauth-sign-in': await loadTs('../src/lib/finish-oauth-sign-in.ts', {
+        '@/lib/email-preferences-client': {
+          consumeRegistrationEmailPreference: () => null,
+          syncCurrentEmailPreference: async () => {},
+          updateCurrentEmailPreference: async () => {},
+        },
+      }),
       '@supabase/auth-helpers-nextjs': {
         createClientComponentClient: () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'a' } }, error: null }) } }),
       },

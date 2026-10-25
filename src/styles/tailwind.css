@@ -75,3 +75,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Bottom toasts move up while the cookie banner shows (components/CookieConsent). */
+.cookie-banner-aware {
+  transform: translateY(calc(-1 * var(--cookie-banner-offset, 0px)));
+  transition: transform 200ms ease;
+}

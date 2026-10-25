@@ -114,12 +114,16 @@
 
             <tr>
               <td style="padding:22px 8px 0;font-size:12px;line-height:19px;color:#71717a;">
-                <p style="margin:0 0 8px;">You are receiving this because product updates are enabled for your Enconvo account.</p>
-                <p style="margin:0;">
-                  <a href="{{manage_preferences_url}}" style="color:#52525b;text-decoration:underline;">Manage preferences</a>
+                <!-- Required in every marketing email (CAN-SPAM, PECR, GDPR); scripts/check-marketing-email.mjs
+                     refuses a draft without them. Resend replaces RESEND_UNSUBSCRIBE_URL per contact and adds the
+                     one-click List-Unsubscribe headers; the address comes from src/data/legal.ts. -->
+                <p style="margin:0 0 8px;">You are receiving this because you chose to get product updates for your Enconvo account.</p>
+                <p style="margin:0 0 8px;">
+                  <a href="https://www.enconvo.com/account" style="color:#52525b;text-decoration:underline;">Manage preferences</a>
                   <span style="color:#a1a1aa;"> · </span>
-                  <a href="{{unsubscribe_url}}" style="color:#52525b;text-decoration:underline;">Unsubscribe</a>
+                  <a href="{{{RESEND_UNSUBSCRIBE_URL}}}" style="color:#52525b;text-decoration:underline;">Unsubscribe</a>
                 </p>
+                <p style="margin:0;">THE GREAT LIONHEART PTE. LTD. · {{company_postal_address}}</p>
               </td>
             </tr>
           </table>
