@@ -44,7 +44,7 @@ function sections(terms: ProgramTerms) {
     {
       title: 'What you earn',
       body: [
-        `You earn ${terms.commission_rate}% of each payment made on enconvo.com by a customer you referred, unless we agreed a different rate with you; your dashboard shows your rate. This covers licenses, extra seats, Cloud plans and their renewals and upgrades, and Cloud points packs.`,
+        `You earn ${terms.commission_rate}% of each payment made on enconvo.com by a customer you referred, unless we agreed a different rate with you; your dashboard shows your rate. This covers licenses, extra seats, and Cloud plans and their renewals and upgrades. Cloud points packs do not earn a commission.`,
         'The commission is calculated on what the customer actually paid, after discounts and before taxes. Payments in currencies other than US dollars, purchases made outside enconvo.com and gifts or credits we hand out do not earn a commission.',
         'A rate change applies to payments made after the change. Commissions already recorded keep the rate they were recorded at.',
       ],
@@ -54,7 +54,7 @@ function sections(terms: ProgramTerms) {
       body: [
         `A visitor becomes your referral when they open your link and then pay within ${terms.cookie_days} days on the same browser. If they open another Affiliate's link before paying, the most recent link gets the referral.`,
         `Someone who signs up or signs in to Enconvo after opening your link also stays your referral for ${terms.cookie_days} days from their latest sign-up or sign-in through it, so a purchase in the app or on another device still counts, unless they come through another Affiliate's link in between. Your dashboard shows until when each sign-up can still earn you commission.`,
-        "A customer who buys through your link or your promotion code stays yours: their renewals, upgrades and later purchases on enconvo.com, such as a license or a points pack bought months later, earn you commission for as long as they keep paying. A later purchase through another Affiliate's link or promotion code moves the customer to that Affiliate.",
+        "A customer who buys through your link or your promotion code stays yours: their renewals, upgrades and later purchases on enconvo.com, such as a license bought months later, earn you commission for as long as they keep paying. A later purchase through another Affiliate's link or promotion code moves the customer to that Affiliate.",
         'Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.',
       ],
     },

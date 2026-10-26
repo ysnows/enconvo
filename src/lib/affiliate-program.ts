@@ -41,7 +41,7 @@ export interface ProgramTerms {
  * that accepted an earlier day is asked to accept again. Change it with any change to the terms
  * text or to the Worker's PROGRAM_TERMS numbers the page shows.
  */
-export const AFFILIATE_TERMS_VERSION = '2026-10-02'
+export const AFFILIATE_TERMS_VERSION = '2026-10-27'
 
 /** What the Worker answers before its terms arrive; kept equal to PROGRAM_TERMS there. */
 export const DEFAULT_TERMS: ProgramTerms = {
