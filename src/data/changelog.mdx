@@ -9,6 +9,332 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.10 Changelog (2026-10-27)
+
+Thanks for all the feedback during the betas. This release turns Projects into
+teams of your agents led by a Lead, opens Artifacts and Docs beside the chat,
+has your iPhone ring when an agent needs you, brings scheduled tasks back to the
+chat they came from, and lets Coding agents work in git worktrees of their own.
+
+## Highlights
+
+- **Projects that work as a team**: give a Project a Lead and members from your
+  agents and Coding agents; the Lead plans who does what, members carry it out
+  on the Board through Playbooks, another member reviews the work, and a
+  Boundary keeps them to the folders, Connectors and knowledge bases you allow.
+- **Artifacts and Docs beside the chat**: pages, apps and diagrams the agent
+  makes open beside the chat with numbered versions, the docs it writes are
+  yours to edit with comments, Suggesting and @Enconvo, and Excel, Numbers and
+  OpenDocument sheets open there too.
+- **Agent Phone**: your iPhone rings when an agent needs your answer while
+  you're away from your Mac, and with Twilio or Telnyx agents can call your
+  number, or call someone for you, such as a restaurant, and report back in the
+  chat.
+- **Scheduled tasks that report back, and /loop**: a scheduled task's result
+  comes back to the chat you set it up in, where its agent tells you what it
+  found, with a notification on your phone, and /loop runs a prompt again on an
+  interval or whenever the agent decides.
+- **Coding agents in worktrees**: each chat can work in a git worktree of its
+  own, on a new branch, a branch or a pull request, and Finish with a commit, a
+  merge or a pull request, and the Changes tab reviews each turn's changes as in
+  Codex.
+- **Codex and Claude Code as in their own apps**: Codex chats get Plan mode,
+  Approve for me, $ mentions and Codex's own commands such as /status, /diff and
+  /usage, Claude Code chats get Claude Artifacts and your claude.ai Connectors,
+  and every Coding agent gets a permission mode picker.
+- **Compare answers**: send one message to 2 to 6 agents and see where their
+  answers agree and differ, with a recommendation.
+- **Doodle in the side panel**: mark up and comment on a PDF, picture, file,
+  artifact or web page beside the chat, and your numbered marks go with your
+  next message.
+- **A new Knowledge Base**: it opens in the Chat Window in under a second with
+  thousands of items, with Ask, a table view and Library views.
+- **Memory you can see and steer**: Memory files what it learns under the
+  people, projects, places and topics it's about, with a Map of how they relate,
+  the Memory page shows every Memory in full, and each Agent can choose which
+  Memories it reads and whether it saves new ones.
+- **Your AI plans on the iPhone**: Phone chats sign in with your ChatGPT, Grok,
+  Le Chat, GitHub Copilot or Antigravity plan with no API key, and the iPhone's
+  AI Model page gets 13 more providers and models added by ID.
+- **An iPhone app that does more**: Phone chats can use your calendar,
+  reminders, contacts, Home and alarms, a Mac chat opens its files, changes and
+  terminal in the side panel, and Compare answers, Project plans and on-device
+  dictation come to the phone.
+- **Live Talk hears you as you speak** with Soniox, AssemblyAI, Azure,
+  ElevenLabs, Volcengine and xAI, so answers start sooner, and Kokoro adds free,
+  offline voices in English, Mandarin and Japanese on Macs with Apple silicon
+  and the iPhone.
+- **The Chat Window in glass**: it takes on the Smart Bar's translucent look, a
+  chat moves between the Smart Bar, the Dynamic Island and the Chat Window with
+  its running reply, switching chats shows the whole chat at once, and finished
+  chats archive in a click or on their own.
+- **New models**: GPT-6.1 Terra, OpenAI's new mid-range model, and Kimi K3.1 Pro
+  with a 1M-token context, on Enconvo Cloud and with your own key, and the model
+  picker shows your subscription's 5-hour and weekly limits.
+- **Agents that handle your Mac and files better**: Computer Use can swipe,
+  scrolls in about half the time and clicks more reliably, and agents read text
+  in older encodings such as GBK and Big5 and search inside PDF, Office, EPUB
+  and iWork files.
+- **New Connectors and plugins**: Twilio, Telnyx and Bland Connectors send
+  messages, place calls and manage phone numbers and AI voice agents, an Airmail
+  plugin writes and files your email, and Pollinations makes images on a free
+  tier with no key.
+- **Your own Avatar characters**: make a plush character in Settings › Avatar,
+  describe one for your AI model to draft, or add one from the OpenAvatar
+  gallery.
+- **See what Enconvo did**: an Activity log in Settings › Usage Statistics lists
+  every AI request, tool call and scheduled task, kept only on your Mac, and
+  Submit Diagnostics… sends recent logs and crash reports with personal details
+  taken out.
+- **Fewer freezes and crashes**: Enconvo no longer stops for seconds when a slow
+  app launches or you select text in a busy app, no longer quits when you start
+  Dictation with AirPods, and no longer holds about 250 MB of memory after
+  launch.
+
+## Artifacts and Docs
+
+- Added Artifacts: pages, small apps, diagrams and programs the agent makes open
+  beside the chat with numbered versions you can restore, edit or download, and
+  the Chat Window sidebar lists them all.
+- Added Docs: ask for a report, plan or letter and the agent writes a doc beside
+  the chat that you edit with tables, images and charts, comments, Suggesting
+  and earlier versions.
+- Added asking Enconvo inside a doc: type @ on an empty line, select text and
+  choose Edit with Enconvo, or mention @Enconvo in a comment.
+
+## Projects and Worktrees
+
+- Added members to Projects: give a Project a Lead and members, your agents and
+  Coding agents each with a role, or start from a template, and new chats in the
+  Project start with its Lead.
+- Added Work plans: the Lead shows who does what, which you can change or
+  reassign before Start, then runs each task in its own chat on the Board, and
+  you can hand work to a Project from any chat or the @ menu.
+- Added Playbooks: the built-in Build, Fix a bug, Review and Research Playbooks,
+  or your own from the Workflow editor, take a task step by step, with the
+  member you choose for each part.
+- Added reviews, checks and recovery to Work plans: a task that changes files is
+  reviewed by another member, and tasks cut short, stalled or going in circles
+  run again or wait for you.
+- Added a Needs you tray, Allow in this Project, a points budget, Pause and Stop
+  plan to Project chats, with a Run log of each decision the Lead made.
+- Added a Boundary to each Project that keeps its agents to the folders, Mac
+  control, Connectors, MCP servers and knowledge bases you pick, even with Full
+  access.
+- Added Projects at work to the Dynamic Island, turning amber when a member
+  needs you so you can answer in place.
+- Added Worktrees to git Projects: a chat can work in its own worktree on a new
+  branch, a branch or a pull request, with its own ports and Prepare command,
+  set up in Project settings.
+- Added Finish to worktree chats: commit with a drafted message, merge or open a
+  pull request, and archive the worktree once it's merged, with Restore to bring
+  it back.
+
+## Side Panel and Doodle
+
+- Added Doodle to the side panel: draw on a PDF, picture, file, artifact or web
+  page, or point at a paragraph or table and comment on it, typed or spoken, and
+  the numbered marks go with your next message.
+- Added spreadsheets to the side panel: Excel, Numbers and OpenDocument sheets
+  open with their sheets and merged cells, and you can copy cells out.
+- Changed the Changes tab into a review, as in Codex, one turn at a time with
+  unified or side-by-side diffs, opened from Review on a turn's files changed
+  card.
+
+## Chats and Chat Window
+
+- Changed the Chat Window to the Smart Bar's translucent look, following the
+  Liquid Glass setting on macOS 27, with an Appearance option in Settings › Chat
+  Window.
+- Added Open in Chat Window to the Smart Bar and the Dynamic Island, and
+  Continue in Smart Bar (⇧⌘O) to the Chat Window, which move a chat with its
+  running reply.
+- Added Compare answers to the + menu: pick 2 to 6 agents, a saved set or Second
+  Opinion, and the chat's agent lays out where their answers agree and differ.
+- Added quick archiving: archive chats from the sidebar, several at once, all
+  finished ones from the ⋯ menu, or automatically after 3, 7 or 30 days.
+- Added /loop to agent chats, as in Claude Code, which runs a prompt again on an
+  interval or whenever the agent decides.
+- Changed Automations to Scheduled, where a task's result comes back to the chat
+  you set it up in, with a notification on your phones, and a task can pause
+  until a date.
+- Changed switching chats to show the whole chat at once at its latest message,
+  and the sidebar's status marks to quieter ones, as in Codex.
+- Added the PopBar to text selected in the Chat Window, and ↑ and ↓ in an empty
+  message box to step through the prompts sent in that chat.
+- Changed messages sent while a reply runs to show at once and queued messages
+  to show their pictures and files, and fixed Edit on a sent message doing
+  nothing.
+- Fixed attaching an .ico, BMP, TIFF or HEIC image breaking a chat, and keys
+  typed in Enconvo's windows going to the Dynamic Island.
+
+## Coding Agents
+
+- Added Codex's own commands to Codex chats, such as /status, /diff, /usage,
+  /mcp, /plugins, /hooks and /fork, with $ mentions of apps and skills.
+- Added Plan mode and the Approve for me permission mode to Codex chats, and
+  Hooks, Skills, Plugins, Apps and Personality to Codex's settings.
+- Added a permission mode picker to new Claude Code, Codex, Grok Build and
+  Antigravity chats, and model and effort pickers to Grok Build and Antigravity
+  chats.
+- Added Claude Artifacts and claude.ai Connectors to Claude Code chats on a
+  Claude subscription, and Claude in Chrome and Output Style to Claude Code's
+  settings.
+- Added Grok Build's questions and plan approval to Grok Build chats, and your
+  Antigravity plan's Claude models to Antigravity chats.
+- Changed renaming a Claude Code or Codex chat to rename its session too, and
+  Continue in Terminal to keep the options from the agent's settings.
+- Fixed Coding agent chats that won't start because of a setting, which now
+  point to the setting to change.
+
+## Memory and Knowledge Base
+
+- Changed the Knowledge Base to open in the Chat Window instead of its own
+  window, with Ask, a table view and Library views, and in under a second with
+  thousands of items.
+- Changed web pages and long files you save to a knowledge base or Memory to be
+  read by sections, so agents get more of what they say.
+- Changed the Memory page, now in the Chat Window sidebar too, to show every
+  Memory in full, grouped by Pinned and by day or project, with filters and an
+  editable detail panel.
+- Added Concepts to Memory, filing your Memories under the people, projects,
+  places and topics they are about, and a Map view of your Memories and
+  knowledge base items.
+- Added a Memory section to each Agent's settings to choose which Memories it
+  reads and whether it saves new ones.
+- Removed the Memory card at the end of a chat: Memory now learns quietly, and
+  Settings › Memory lists each change with Undo, going back 90 days for Memory
+  Tidy.
+- Fixed Memory saving relative dates instead of the date, passing illnesses and
+  things you asked it to forget, writing in a language other than yours, and
+  saving while Memory is off.
+
+## Live Talk, Voices and Dictation
+
+- Changed Live Talk to hear you as you speak with Soniox on your own key,
+  AssemblyAI, Azure, ElevenLabs Scribe v2 Realtime, Volcengine and xAI, and with
+  xAI to speak over one connection for the whole call, so answers start sooner.
+- Added Kokoro to Text to Speech and Live Talk on Macs with Apple silicon and
+  macOS 15 or later: free, offline voices in English, Mandarin and Japanese.
+- Fixed Phonon seeming to switch between a man's and a woman's voice mid-reply,
+  and changed it to download from Enconvo's own server, much faster in many
+  places.
+- Changed SenseVoice on your Mac to write punctuation and numbers as digits, and
+  fixed Dictation with Soniox stopping with "Context is too long".
+
+## Agent Phone
+
+- Added Agent Phone: when an agent's question waits while you're away from your
+  Mac, your iPhone rings after the time you choose, and you answer by voice.
+- Added Twilio and Telnyx to Settings › Agent Phone, so agents can call your
+  phone number when your iPhone can't ring, with Test call and quiet hours.
+- Added calls agents make for you, such as booking a table, through Twilio or
+  Telnyx, keeping to what the agent wrote down and reporting back in the chat.
+
+## Agents in Your Apps and Files
+
+- Added a swipe action to Computer Use, made its scrolls take about half as
+  long, and fixed dozens of cases with clicks, keys, checkboxes and sliders.
+- Changed agents to read and edit text in older encodings such as GBK, Big5 and
+  Shift_JIS, and to search inside PDF, Office, EPUB and iWork files.
+- Fixed many cases in agents' file, calendar, reminder, Apple Notes, Obsidian
+  and Contacts tools, such as names with curly quotes and all-day events.
+- Fixed web pages crashing in Chrome and Edge with "Aw, Snap!" while Browser Use
+  worked in them, with the Enconvo browser extension 0.1.16.
+- Removed the Tools tab from Agent settings, since every Agent already uses its
+  built-in tools, your MCP tools and everything you install.
+
+## Smart Bar, Plugins and Connectors
+
+- Added Twilio, Telnyx and Bland Connectors for sending messages, placing calls
+  and managing phone numbers and AI voice agents in your accounts.
+- Added an Airmail plugin that writes an email from what you dictate or type,
+  opens it in Airmail's composer, and searches, replies to and files your mail.
+- Added Pollinations to Image Generation, with Sign in with Pollinations and a
+  limited free tier that needs no key.
+- Added a hotkey for each app in Settings › Applications that opens it, brings
+  it to the front or hides it.
+- Changed the Smart Bar's Pin window back to a toolbar button, and list hotkeys
+  such as Clipboard History to open the list at once.
+- Changed Screen Doodle text to grow and wrap as you type, and fixed Screen
+  Doodle closing by itself when the Dock or the menu bar showed.
+- Fixed weather, Emoji Picker, the calculator, File Search, Clipboard History,
+  the compress commands and Mistral OCR in many cases.
+
+## Pet and Avatar
+
+- Added an Ask box to the Pet: click it, or drop files, text or images on it, to
+  ask its Agent, and the answer appears above the Pet.
+- Added your own Avatar characters: make a plush in Settings › Avatar, describe
+  one for your AI model to draft, or add one from the OpenAvatar gallery.
+- Removed the Puppy, Bear and Cat characters; the iPhone and Android apps now
+  start with Duet, as the Mac does.
+
+## Models and Sign-ins
+
+- Added GPT-6.1 Terra, OpenAI's new mid-range model, with your own key, a
+  ChatGPT sign-in and on Enconvo Cloud, as the OpenAI provider's default.
+- Added Kimi K3.1 Pro and K3.1 Pro Highspeed, Moonshot's newest models with a
+  1M-token context, on Enconvo Cloud and with your own key.
+- Added a subscription's 5-hour and weekly limits to the model picker, and
+  clearer sign-in progress in Settings › AI Model.
+- Changed agents on Claude Haiku 5.5 to think at Low effort by default, so they
+  answer in your language and get dates right more often.
+- Fixed LM Studio chats on a model loaded with a short context, Gemini Web
+  Search not searching, and ChatGPT plan usage failing to load.
+
+## iPhone and Android
+
+- Changed Settings › API Keys in the iPhone app to Settings › AI Model, as on
+  the Mac, with 13 more providers, OpenAI and Anthropic Compatible ones, and
+  models added by ID.
+- Added sign-ins with your ChatGPT, Grok, Le Chat, GitHub Copilot or Antigravity
+  plan, so Phone chats use your plan's models with no API key.
+- Added iPhone Apps to Phone chats for events, reminders, contacts, places, Home
+  accessories and alarms, and agents on your Mac can ask your iPhone too.
+- Added the side panel to iPhone chats, with web pages and, for a Mac chat, its
+  Files, Changes, Side chats, MCP Apps, Terminal and Doodle.
+- Added Compare answers, chats with a Project's Lead and its Work plan, and a
+  Live Activity for a Project at work to the iPhone app.
+- Added Nemotron 3.5 Multilingual and SenseVoice Small for Dictation and Live
+  Talk, and Kokoro voices on iOS 18 to iOS 26.3, all free and on the iPhone.
+- Added iPhone Duo layouts that put chats, docs, sources and files side by side
+  on the open inner display.
+- Changed iPhone voice calls to a Siri-style look, with light around the
+  screen's edge that pulses with the voices.
+- Added dropping photos and files on a chat, and sharing files of any size to a
+  Mac chat.
+- Fixed phones losing the Mac after a short Enconvo relay outage until you
+  relaunched Enconvo.
+
+## Usage, Plans and Privacy
+
+- Added an Activity log to Settings › Usage Statistics with every AI request,
+  tool call and scheduled task, kept only on your Mac, and fixed cached tokens
+  being counted twice.
+- Added the renewal terms below every Enconvo Cloud subscribe button, and
+  changed the Affiliate program so Cloud points packs no longer earn a
+  commission.
+- Changed AI-made pages and shared chats to load fonts from Enconvo's servers
+  instead of Google Fonts, and shared chat links to leave out steps' details and
+  your folder paths.
+
+## Reliability
+
+- Added Submit Diagnostics… to the menu bar menu, which sends recent logs and
+  crash reports with personal details taken out, with each report in
+  Settings › Diagnostics.
+- Fixed Enconvo freezing for seconds when a slow app launched, when you selected
+  text in a busy app, at launch, or while your microphone switched.
+- Fixed Enconvo quitting when you started Dictation with AirPods, staying
+  unresponsive after its engine got stuck, and crashing now and then when you
+  sent a message.
+- Fixed Enconvo keeping about 250 MB of memory after launch, loading its local
+  embedding model after every launch, and Keep Awake staying on after you turned
+  it off.
+
+---
+
 # Enconvo 2.5.9 Changelog (2026-10-23)
 
 Thanks for all the feedback during the betas. This release gives Enconvo a
