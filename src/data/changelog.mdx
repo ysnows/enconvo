@@ -153,7 +153,7 @@ Thanks for all the feedback during the beta. This release adds Ideas to Projects
 
 ## Worktrees
 
-- Changed where worktrees go: a Project's chat worktrees and its Board tasks' worktrees are now together in ~/.enconvo/worktrees/<Project>/, each named after its worktree or task; ones made before stay where they are.
+- Changed where worktrees go: a Project's chat worktrees and its Board tasks' worktrees are now together in `~/.enconvo/worktrees/<Project>/`, each named after its worktree or task; ones made before stay where they are.
 - Added Archive to a Found worktree's row in the sidebar, so a worktree another tool made can leave the list without being deleted: it moves to Archived worktrees, its folder and branch stay as they are, and Undo shows it as Found again.
 - Changed the chat details card to name the Main checkout when a chat works in a Project folder that has worktrees, and to show a worktree made outside Enconvo, such as Claude Code's, under Worktree instead of Workspace.
 - Fixed the sidebar's Main checkout row keeping a Project's old branch name after the branch was switched by a chat or in a terminal: it now follows the branch the message box shows.
@@ -283,7 +283,7 @@ Thanks for all the feedback during the beta. This release adds Ideas to Projects
 
 ## Coding Agents
 
-- Added /new and /clear to Codex chats and /clear (also found as /reset and /new) to Claude Code chats in the Chat Window, which start a new chat with the same agent in the same Project or Worktree, as each agent's terminal app does, and in Codex chats /new <name> or /clear <name> names the new chat and its Codex thread.
+- Added /new and /clear to Codex chats and /clear (also found as /reset and /new) to Claude Code chats in the Chat Window, which start a new chat with the same agent in the same Project or Worktree, as each agent's terminal app does, and in Codex chats `/new <name>` or `/clear <name>` names the new chat and its Codex thread.
 - Fixed the command menu of Codex and Claude Code chats opening again after a command with arguments was typed quickly, so Enter sends the command instead of picking it from the menu.
 - Fixed Claude Code, Codex, Grok Build and Antigravity chats in the Chat Window keeping the stop button after a reply had finished.
 - Fixed a Claude Code, Codex, Grok Build or Antigravity chat open in a window not showing a message sent to it from another window, the iPhone or a Hub task, or its reply, until the chat was opened again.
