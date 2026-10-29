@@ -9,6 +9,652 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.11 Changelog (2026-10-29)
+
+Thanks for all the feedback during the beta. This release adds Ideas to Projects, gives every chat Work plans and a Board, adds seven built-in agents, draws interactive apps and many new kinds of answers and charts in chat, brings most of the terminal commands of Claude Code, Codex and Grok Build into their chats, and brings the iPhone app to iPad and Mac Screen to the phones. Update the iPhone app to 1.2.13 and the Android app to 1.4.1 to try the phone changes.
+
+## Highlights
+
+- **Mac Screen and Take Control**: see your Mac's screen live on your iPhone or iPad from Remote, then Take Control to click, scroll and type on it.
+- **Ideas for Projects**: write down what you want a Project to do, or talk it through with the lead first, then start an idea to have the lead plan it in a chat of its own and follow its tasks on the idea's card from Not started to Done.
+- **Work plans and a Board in every chat**: name your other Agents with @ in any chat and Mavis gives each its part in a Work plan, with one Board for the tasks of all your chats outside a Project and a start page that shows what needs you.
+- **Bring any Agent into a Project with @**: naming an Agent in a Lead chat adds it to the members, a Project takes as many members as it needs, and the Lead picker in the chat's header changes the lead and the members.
+- **A Board that works like Linear**: arrow keys and single-key shortcuts, picking several cards for one action, Display options, Group by Agent, hidden lanes, and a calmer look with filled cards.
+- **Seven built-in agents**: Coder, Designer, Reviewer, Researcher, Writer, Planner and Advisor join Mavis, each with its own role instructions, and the Designer works on the design canvas with your design system.
+- **Interactive apps in answers**: when an answer needs real logic, such as a simulator whose sliders recompute a chart, a filter, a game or something to drag and draw, the Agent writes a small app right in the chat, with a Fix button if it fails.
+- **New kinds of answers**: diagrams, quizzes, flashcards, checklists, step-by-step walkthroughs, tabs, schedules, option cards and maps on Apple Maps, drawn right in the conversation.
+- **Nine new charts**: funnel, scatter, bubble, heatmap, Gantt, waterfall, Sankey, calendar and treemap charts, plus target lines and marked points on line charts.
+- **Questions on cards**: the Agent asks what it needs before a task as questions you answer by picking options or typing, and offers candidates such as names for you to tick and send back.
+- **Claude Code as in its terminal**: `/plugin` and a Plugins section in Claude Code's settings, plus `/rewind`, `/tasks`, `/context`, `/model`, `/mcp`, `/resume`, `/config` and 18 other commands in the chat, as in Claude Code's terminal.
+- **More of Codex in its chats**: `/model`, `/permissions`, `/resume`, `/new`, `/delete`, `/import` from Claude Code or Cursor, `/app` to continue in the Codex app, `/copy`, `/cd`, `/mention` and file search in `@`.
+- **Grok Build as in its terminal**: Plan mode, steering while it works, `/resume`, `/rewind`, `/model`, `/usage`, `/export` and more.
+- **A background tray**: the subagents, commands and monitors a chat has running show above the message box with how long they've run, their latest output and a stop button.
+- **Projects follow a moved folder**: point a Project at its folder's new place in Project settings, and its chats and worktrees come along.
+- **The Dynamic Island's History holds every chat**: date groups, scrolling through every chat, a title search and pinning, with a button that opens all chats in the Chat Window.
+- **File Search understands paths and your folders**: type a path such as ~/.claude to look in that folder, and a Search Folders setting with My Folders in Search In looks only where you choose.
+- **Skills from GitHub**: paste a link to a repository or a skill's folder to install it, and Check for updates offers Update all when the repositories move on.
+- **Skills and Plugins in Desktop Sync**: the skills you install or make and the plugins you install sync between your computers, each with its own switch under Settings › Sync.
+- **OpenCode and OpenCode Go**: add your OpenCode Console API key once to chat with OpenCode's pay-as-you-go models or the models of your OpenCode Go subscription.
+- **Chat Window opacity**: an Opacity slider in Settings › Chat Window takes the window anywhere from clear glass to solid, previewing as you drag.
+- **Upgrade your license**: Plus and Pro license owners can upgrade to Pro or Teams in Settings › Account and pay only the difference.
+- **The iPhone app on iPad**: the chat list stays beside the chat, the side panel opens beside it with a divider to drag, the menu bar has the Mac's shortcuts, Apple Pencil draws in Doodle, and side panel tabs open in windows of their own.
+- **xAI voices on the phones**: xAI on your own account, with an API key or the Grok sign-in, and xAI on Enconvo Cloud now read aloud, take dictation and run Live Talk in the iPhone, iPad and Android apps.
+- **Answers on the phones look like the Mac's**: charts, quizzes, flashcards, checklists, walkthroughs, tabs, timelines, flowcharts, maps and calculators that work out their results as you change them.
+
+## Projects and Work Plans
+
+- Changed @ in a Project's Lead chat, on the Mac and the iPhone: naming members no longer sends your message straight to them; Mavis, the lead, plans the work and gives each member you named its part in a Work plan, and files can now go with the message.
+- Changed a Work plan for members you name with @ in a Project's Lead chat or a chat with Agents to start right away, so you no longer press Start after every message that names who should do the work; a plan whose member can't run yet still waits for Start.
+- Added @ that brings an Agent into a Project: naming one of your Agents with @ in a Lead chat adds it to the members, with a line you can undo, and gives it its part, unless you turn off Anyone you @ joins in the header's Members view; in a Project without members, the first Agents you name become its members.
+- Changed a Project's members so one is enough and there is no limit of six: add as many Agents and Coding agents as the Project needs, in Project settings or from the Lead chat's header.
+- Added a Lead picker to the header of a Project's Lead chat, so you can change the Project's Lead and add, remove or give roles to its members right from the chat, as an ordinary chat lets you pick its Agent.
+- Changed Projects made without members so they work like any other: their chats have the Lead and Members picker with Chat and Board, a Board, and the start page with the Lead's card, and the last member can leave from the header.
+- Added the Project's Board to a Lead chat's start page: before the first message, cards for Needs you, To review, Running and New results take the members' place, clicking a card lists its tasks under it with Allow once, Decline, Try again or Review (clicking it again folds the list), and a task opens the Board right at it.
+- Changed a Project's lead so it does the work no member fits itself, the Project's files included, without stopping after a set number of steps and handing the rest to a member.
+- Changed Work plans in a Project whose folder isn't a git repository: the tasks that change files now take turns in the folder on their own, while tasks that only read run beside them, and the plan's card shows which task each one waits for, before and after Start.
+- Changed the Work plan card to a simpler layout: each task is one line with its member on the right and its Done when line beneath it, Approve up front folds into one line, and the Permission mode and cost share the footer beside Start.
+- Added task chips to Lead chats and task chats: each Board task number, such as T-65, shows the task's state and name (the number alone when the reply names it again), hovering previews it, a click opens its detail in the side panel beside the chat, and ⌘-click opens it on the Board.
+- Added automatic retries for Board and Work plan tasks that a passing AI model error cuts short, such as an overloaded or rate-limited model, a server error or a dropped connection: the task runs again in its chat after a pause, picking up where it stopped, up to three times, its card says while it waits, and it fails and notifies you only when the model keeps failing.
+- Removed the "You allowed … once" lines that piled up above a Lead chat's message box after you answered its members' approvals.
+- Fixed a long command in a Lead chat's approval card filling the window: it now scrolls in a box of its own height.
+- Fixed a Claude Code or Codex task in a Work plan handing on its chat's warnings, such as Codex's MCP startup notice, and its notes from before its last step together with its answer, so the task's card, the Lead and the tasks after it get only the answer; Paste and Copy on a Coding agent's reply leave such warnings out too.
+- Fixed a forked chat's copy of a Work plan card starting or changing the plan of the chat it came from: the copy now says to start and change the plan there, with Open chat.
+- Added a way to point a Project at its folder again after the folder was moved or renamed: Project settings marks the missing folder, and Change… picks its new place, keeping the Project's chats and worktrees.
+- Fixed pointing a Project at its moved folder when a worktree made inside it (such as Claude Code's `claude -w`) moved along: git now works in that worktree again, and the worktree Enconvo took in from it follows to its new place instead of showing as missing.
+- Fixed a Claude Code or Codex chat in a Project, including one that was replying at the time, refusing new messages with "The folder no longer exists" after the Project was pointed at its folder's new place; the chat now follows the folder and goes on with its conversation.
+- Fixed Claude Code forgetting what it remembered about a Project after the Project was pointed at its folder's new place.
+
+## Ideas
+
+- Added Ideas to Projects with members, beside Chat and Board: write down what you want the Project to do and press Return, or talk it through with the lead first, then start an idea to have the lead plan it in a chat of its own and follow its tasks on the idea's card, from Not started through Planning and In progress to Done.
+- Added dragging ideas in Not started into your own order, also with Option-Up and Option-Down, as with To start's tasks on the Board.
+- Added saving an added idea again from its chat: when you and the lead change what it asks for there, the lead updates that idea on the Ideas board instead of writing down another.
+- Added an idea draft's card to its chat that stays in view after the lead's turn ends and when you open the chat later, so a draft you left when the chat beside Ideas closed can still be added, added and started, or dismissed, and it no longer offers Add once the draft is dismissed or merged.
+- Changed Board cards in a Project to name the idea their task came from instead of labeling every planned task as the lead's idea.
+
+## Chats Outside a Project
+
+- Added Work plans to chats outside a Project: Mavis can hand parts of a bigger request to your other Agents and Coding agents in a Work plan, never by starting them straight from her or her Subagents, and every task works in the chat's own folder, where the tasks that change files take turns.
+- Changed chats outside a Project so Mavis gives work to your other Agents only when you name them with @; otherwise she does the request herself.
+- Added your other Agents to the @ menu of chats outside a Project, on the Mac and in the iPhone app: naming one there has Mavis give it its part of the request in a Work plan.
+- Added a Board to chats outside a Project: the Chat | Board tabs in their header open one Board with the tasks your Agents work on across all those chats, each card naming its chat, and Start, Stop or a follow-up on a card acts in that chat.
+- Added a start page to new chats outside a Project: under "What can I help with?" it shows the tasks that need you, wait for review, are running or just finished, or, when there are none, every agent you can chat with in one row that scrolls sideways, the ones you chat with most first, where clicking one names it with @ in your message, as a Project's member cards do; a coding agent whose CLI isn't installed stays out of the row.
+- Changed the start page of a new chat so its Board, member and Agent cards ease in one after another once they load, and picking a Board card unfolds and folds its tasks smoothly.
+- Added Start without and Give this task to on the Work plan card of chats outside a Project, on the Mac and in the iPhone app: a task whose Agent is paused, deleted or not signed in says why, with Sign in where it helps, Start without starts the rest, and before you press Start a task can go to any of your other Agents, those already working in the chat listed first.
+- Fixed a chat outside a Project refusing a Work plan or Give this task to for a new Agent once six of your Agents had worked in it; Agents with no task waiting or running there now make room.
+- Fixed tasks given out by a chat outside a Project saying they came from "New Chat": they now name the chat by its title, also after you rename it.
+- Fixed deleting a chat that had moved from outside a Project into one leaving the Work plan it proposed there waiting or running on the Project's Board.
+- Fixed a chat moved into a Project after giving tasks to your other Agents still offering them in its @ menu and working outside the Project's Boundary.
+- Fixed Mavis adding a review to a one-Agent Work plan in a chat outside a Project once other Agents had worked in that chat.
+
+## The Board
+
+- Changed the Board's look: an empty Board now shows a picture of how tasks reach it with one way to start (New chat on the Chats Board, Add task elsewhere), each lane ends at its last card instead of running down the whole Board, on a fainter background, with an empty lane keeping room for a card and saying what it waits for, cards are filled instead of outlined, with the task's number and age at the top, its Agent at the top right and a clear state mark, and keep their other actions under a More button in the corner, so a narrow card shows its details without spilling over, and a task's details open in a Liquid Glass panel whose steps show glossy marks, with Open chat and Stop up top, a failed task's Try again, Lend another Agent and Skip under its title, and the rest under More.
+- Changed the Board to open at once when you come back to it, showing it as you left it while it catches up, and to start loading as the pointer rests on a Project's or the Chats Board's Board tab; a first open shows its lanes instead of "Opening the Board…".
+- Added arrow keys and Linear's single keys to the Board: the arrows move between cards, up and down in a lane and across to the next lane with tasks, the card they reach shows a blue edge and halo, an open task's details follow the card, and closing them puts the keys back on that card; Space opens or closes the card under the pointer, C starts a new task, Option-Shift-Up and Option-Shift-Down move a To start card to the top or the bottom, and dragging the Board's empty space scrolls its lanes sideways when they don't fit.
+- Added lane options to the Board, as in Linear: hovering a lane's header shows its menu, where Hide lane moves the lane to a Hidden lanes column at the right that brings it back with a click, and turning off Show empty lanes moves lanes with no tasks there too; in a narrow window that column folds to a strip that lists them, a hidden Needs you with tasks waiting for you glows amber there, To start's header also gets a + for a new task, and each Board remembers how you set out its lanes.
+- Added Display to the Board, as in Linear: it turns Show empty lanes on or off and picks what cards show (Agent, number and age, status, buttons, workflow, Planned by, reviews, waiting Additions, chat, branch, commits and attempt), its button counts what is off, Reset to Default turns it all back on, and each Board remembers it.
+- Added picking several Board cards at once, as in Linear: X picks the card under the pointer or the one the arrow keys reached, Shift-X or Shift-click picks every card from the last one picked, Command-click adds or removes one, and a floating bar starts, merges, stops or drops the picked tasks each action applies to, names in its tooltip the ones it leaves, asks once more before dropping, and Esc clears the picks.
+- Added Group by Agent to the Board: each lane gathers its cards under their Agent, with the Agent's face, name and count, and each Board remembers the choice.
+- Added a note when the Board's filters or search leave every lane empty, with Clear filters to bring every task back.
+- Removed the Board's tasks from under their Project in the Chat Window sidebar, so it lists only your own chats and worktrees: follow the tasks and open their chats on the Board.
+- Fixed the Board's member faces: the chosen member now shows a blue edge, and a narrow window hides the faces that don't fit instead of cutting one off.
+- Fixed the Board's search box and a task's edit fields losing their edge while you type in them; they now show a blue edge.
+- Fixed the Board in a narrow chat window cutting off New task and the filters: the base branch, New task's label, the running slots and then Project settings step aside, and the filters drop their counts before one is cut.
+- Fixed Tab on the Board's filter row shifting it sideways or stopping on member faces hidden in a narrow window; the Board's buttons, filters, faces and New task's choices, and the buttons on task rows in chats, now show where Tab is.
+- Fixed opening a Board task on the Board from elsewhere opening the Board without the task: it now opens with that task's details showing, where its Merge and Drop are, also when the Board is already open on another task, and a filter or search that hides its card clears.
+
+## Board Tasks
+
+- Fixed a Board task whose worktree folder was deleted outside Enconvo: trying it again or adding to it now brings the folder back from the task's branch with its work, instead of its agent failing or working in the Project's own folder.
+- Fixed the Board saying a task's branch was gone when only its worktree folder had been deleted; it now shows the branch's commits, and never reads changes from a git repository above that folder, such as a home folder kept in git.
+- Fixed asking a Board task for more in its own chat making Mavis work in the Project's own folder instead of the task's worktree.
+- Fixed asking a Board task for more in its own chat after its worktree was removed, because the task changed nothing or the folder was deleted, working in the Project's own folder or failing: the task now gets its worktree back first.
+- Fixed a Claude Code or Codex Board task's chat refusing a new message with "The folder no longer exists" after the Board removed the task's worktree because it changed nothing; the worktree now comes back first, in the same folder even when the task was renamed since.
+- Fixed trying a Board task again, or adding to it, after the Board removed its worktree because it changed nothing: the round now gets a new worktree first instead of running without one.
+- Fixed a Board task that a restart cut, after its worktree folder was deleted, being told another branch's commits, or none, instead of its own when it ran again.
+- Fixed asking a finished Board task more in its own chat making its member work in the Project's own folder instead of the task's worktree, and that worktree being removed while the member worked in it.
+- Fixed a Board task whose request named a file by its path in the Project's folder being told both to change it and never to touch that checkout; the task now changes its own worktree's copy.
+- Fixed a Board task merged outside the Board, such as with git in a terminal, keeping its worktree and branch on disk with no way to remove them from the sidebar: the Board now removes them once it sees the merge, as its own Merge does, and clears ones left behind this way before; a worktree with uncommitted changes stays.
+- Fixed a Board task merged with git outside Enconvo keeping its worktree on disk until its Board was opened: Enconvo now notices the merge within a few minutes and removes the worktree and branch, as the Board's own Merge does, including the worktrees earlier versions left behind after such a merge.
+- Fixed Board tasks merged by hand, or sent another round after a merge, moving to Done while their worktree still held work nobody had merged; they now stay in To review until that work is merged too.
+- Fixed new work on a Board task merged by hand staying hidden under Done after a follow-up in its chat: the task goes back to To review.
+- Fixed a Board task whose pull request was merged on GitHub losing the worktree changes it hadn't committed, and waiting for an open terminal on its chat before it finishes.
+- Fixed a Board task whose pull request was merged on GitHub while the Project's check or a member's answer still ran in its worktree losing that worktree under them, which failed the merged task when the check sent it back.
+- Fixed a Board task whose pull request was merged on GitHub while the Project's check ran starting a fix round on the merged pull request when the check failed.
+- Fixed a Board task that failed or hit a usage limit staying in Needs you after its work was merged; it now moves to Done, and adding to it starts a new task.
+- Fixed a merged Board task offering Remove worktree again and again when only files a dev server wrote back were left in its folder.
+- Fixed the Board's task drawer saying a task's leftover worktree holds uncommitted changes when it was kept for another reason, such as a pull request squashed on GitHub; it now says what removing it keeps.
+- Fixed the Board removing the worktree of a task merged by hand while the Project's check, or a new round of the task, was still running in it.
+- Fixed the Board removing a finished task's worktree while its Coding agent chat went on in a terminal, or while a Project member's question was being answered in the task's chat.
+- Fixed the Board removing a finished task's worktree folder when its branch had taken commits since the Board last looked, which left the task pointing at a folder that was gone.
+- Fixed a Board without a Base branch treating a task as merged when you only checked its branch out on a branch of your own, which removed the task's worktree, its ignored files included, and its branch.
+- Fixed the Board counting a worktree that an agent made inside a task's worktree as the task's uncommitted changes, and removing that inner worktree even when the task's own changes kept its worktree.
+- Fixed the Board removing a task's worktree, with files written meanwhile, when the task started another round or files were written there while the removal was still checking the worktree.
+- Fixed a Board worktree removal that was called off because its task started another round still removing the worktrees made inside it, and leaving behind a saved copy of the task's uncommitted changes each time it was tried.
+- Fixed Merge, Open pull request, Remove worktree and Drop on the Board committing or removing a task's work while its Coding agent chat went on in a terminal: they now ask you to quit the agent there first.
+- Fixed the Board starting another round in a task's Coding agent chat while that chat went on in a terminal: sending a task back and Try again now ask you to quit the agent there first, and a pull request's failing checks wait until it ends.
+- Fixed a Board task's new rounds (a lead's send-back, a review's findings, a failed check, a lent Agent or a workflow step) starting beside a Coding agent that was continued in Terminal from the task or one of its step chats; they now wait or say why until the agent there ends.
+- Fixed Merge, Drop and Remove worktree going ahead on a Board task that started another round while they were checking for an open terminal, which could commit the round's half-written files or remove its worktree.
+- Fixed Merge on the Board taking in commits a Board task made after Merge was pressed, such as a new round's half-done work, when the merge had to wait for other work in the Project's repository.
+- Fixed Stop on a Board task while it was still getting ready (bringing back its worktree or running the Project's prep command) letting the round's agent work anyway, and leaving the prep command running in the background.
+- Fixed stopping a Board task right after an Addition or a retry still running the Project's prep command for up to 10 minutes, and a workflow's check step going on after its task was stopped.
+- Fixed an Addition to a Board task, or a failed check's fix round, starting a round in a task that changed while the Addition was checking its chat, such as one whose pull request was merged meanwhile, and a Lead's send-back or a fix round starting in a Work plan you had just paused or stopped.
+- Fixed pressing Try again twice in quick succession on a failed or stopped task starting two rounds at once in its chat.
+- Fixed a Project member's long-running answer in an ended task's chat losing that chat after 20 minutes, which let a second question join the run and let the Board remove the task's worktree while the answer still worked there.
+- Fixed Try again on a Board task that follows a workflow ending at once with an old run's result when its previous turn failed before it started, and a workflow step refused by an open terminal leaving an empty step chat behind that later skipped the task's brief.
+- Fixed a Board task that follows a workflow leaving its workflow run going after its round failed, such as when it was to pick the run up again after Enconvo reloaded and a terminal was open on one of its chats, so that Try again ran a second copy beside it.
+- Fixed a workflow step of a Board task that was stopped just before its member started leaving out the task's brief and your added words when the step ran again, and a Board task's worktree being merged or removed while a member answered in its chat after Enconvo reloaded the plugin.
+- Fixed a Board task that follows a workflow losing, when Enconvo reloaded the plugin mid-run, the words you had added for its later steps, and running two of its steps at once.
+- Fixed the chat details card of a Board task's chat, and of its workflow steps' chats, showing the Project's branch and changes instead of the task's worktree: it now names the worktree, its branch against the Board's Base, what it changed, its pull request and its ports, Open in opens the worktree, and it updates while open when the task merges, opens a pull request or changes state, or when you come back from editing in another app.
+- Fixed a Board task whose worktree was deleted by hand still showing that worktree in its chat's details card when a dev server wrote its cache back into the folder.
+- Fixed a Board task whose branch took in its Base, such as after resolving a merge conflict in its worktree, counting the Base's commits and files as its own on the Board and giving those files to the Project check as the task's.
+- Fixed Board cards and task rows showing a code block's language, such as "text", in place of the first line of a task's result.
+
+## Worktrees
+
+- Changed where worktrees go: a Project's chat worktrees and its Board tasks' worktrees are now together in ~/.enconvo/worktrees/<Project>/, each named after its worktree or task; ones made before stay where they are.
+- Added Archive to a Found worktree's row in the sidebar, so a worktree another tool made can leave the list without being deleted: it moves to Archived worktrees, its folder and branch stay as they are, and Undo shows it as Found again.
+- Changed the chat details card to name the Main checkout when a chat works in a Project folder that has worktrees, and to show a worktree made outside Enconvo, such as Claude Code's, under Worktree instead of Workspace.
+- Fixed the sidebar's Main checkout row keeping a Project's old branch name after the branch was switched by a chat or in a terminal: it now follows the branch the message box shows.
+- Fixed a chat whose worktree was archived, deleted or is on another computer listing under the Project's main checkout in the sidebar: it now sits in a Worktree unavailable group after the worktrees.
+- Fixed a main checkout chat's details showing Changes +0 −0 when the uncommitted work was new files: their lines now count, as they do for a worktree.
+- Fixed Archive merged worktrees skipping a worktree whose pull request was merged on GitHub while a chat was working in it: it is now archived when the chat finishes, unless the chat added work after the merge.
+- Fixed Start from offering to continue the Base branch itself, which made a worktree whose Finish merged into itself and whose changes never showed: the Base branch is now only offered as the branch a new one starts from.
+- Fixed Start from listing only the 30 newest open pull requests: typing now finds older ones by title, branch or number.
+- Fixed switching the main checkout's branch offering a branch a worktree holds when the Project has more than 200 branches, where git then refused the switch: every branch a worktree holds is now marked In a worktree.
+- Fixed a worktree's branch sometimes keeping its placeholder name when the agent was committing at the moment Enconvo named it.
+- Fixed an archived worktree that couldn't be restored because Finder had left a hidden file in its old folder; when something else really is there, the message now says what to move and offers Reveal in Finder.
+- Fixed a worktree whose folder was deleted while a dev server kept running in it: it now shows as missing instead of letting chats run in a folder without the Project, and Archive and Delete work for it again.
+- Fixed restoring a worktree whose folder was deleted when the worktrees folder is reached through a symlink, such as a ~/.config kept in a dotfiles folder.
+- Fixed a worktree another tool made and locked showing in the sidebar as a Found worktree after its folder was deleted or its drive was put away, and restoring one you had archived while its drive was away, both of which gave its chats a folder that wasn't there.
+- Fixed a worktree made outside Enconvo that isn't on a branch offering New chat and Archive in the sidebar that always failed: its row now says No branch and how to use it.
+- Fixed Claude Code, Codex and other Coding agent chats in a worktree running dev servers and commands without the worktree's own ports, so they no longer clash with the main checkout's or another worktree's.
+- Fixed Claude Code, Codex, Grok Build and Antigravity chats in a worktree changing the Project's own copy of a file when asked about a path in the Project's folder; they now change the worktree's copy and leave the Project's checkout alone.
+- Fixed a fork or Side chat of a Claude Code, Codex, Grok Build or Antigravity chat in a worktree listing under the Project's main checkout, without the worktree's ports, while it worked in the worktree.
+- Fixed a Claude Code session you ran in a worktree's folder opening from the new chat page as a chat of the Project's main checkout; it now opens in its worktree, with the worktree's ports.
+- Fixed a Claude Code session you ran in a worktree made outside Enconvo, such as with `claude -w`, opening from the new chat page as a chat of the Project's main checkout, or of the worktree whose folder it sits in; the worktree is now added to the Project and the chat opens in it.
+- Fixed Continue in Terminal on the new chat page's session list resuming a Claude Code session you ran in a worktree in the Project's main checkout, where it changed your own copy of the files; it now resumes in its worktree, with the worktree's ports.
+- Fixed Continue in Terminal and Copy Command for a Claude Code, Codex or Grok Build chat in a worktree leaving out the worktree's own ports, so the terminal's agent ran its commands on the Project's default ports and could change the Project's own copy of a file.
+- Fixed archiving or deleting a worktree while one of its Claude Code, Codex or Grok Build chats was open in a terminal: the agent there kept working in the removed folder and could break Restore; the confirmation now says so, and archiving quits that agent first, while a merge, a pull request merged on GitHub, or archiving the worktree's last chat from the sidebar keeps such a worktree instead of archiving it.
+- Fixed a new worktree copying the worktrees Claude Code keeps inside your Project (in .claude/worktrees) when Files to copy names their folder, which made a large copy and let git commands in it change the other worktree's branch; they are now left out.
+- Fixed archiving or deleting a worktree that has another worktree inside it, such as one `claude -w` made there, deleting that worktree's uncommitted changes and leaving git listing a folder that's gone; a clean one is now removed properly with its branch kept, and one with uncommitted changes, or one open in Enconvo with chats of its own, keeps the worktree, and the Archive dialog and Delete name it before you confirm.
+- Fixed committing or merging a worktree that has another worktree inside it, such as one `claude -w` made there, committing that worktree as a broken submodule entry; it's now left out, and it no longer counts as an uncommitted change.
+- Fixed the Works in menu counting a worktree `claude -w` made inside your Project as an edited file of the main checkout.
+
+## Agents
+
+- Added seven built-in agents beside Mavis in Agents and the agent picker: Coder, Designer, Reviewer, Researcher, Writer, Planner and Advisor, each with its own role instructions, with the Designer working on the design canvas with your design system or Enconvo Crystal.
+- Added a Built-in badge on the Agents page for the agents that come with Enconvo, so they are told apart from the ones you made.
+- Changed the agents that come with Enconvo so they can be paused but no longer deleted, since deleting one was permanent across updates with no way to get it back.
+- Added an Edited or Default chip on each instruction field of a built-in agent (Instruction, User Message, CHARACTER.md and IDENTITY.md) with a Reset to default button that asks before it discards your text.
+- Added a notice on a built-in agent's instruction field when an Enconvo update changes the default text you edited, with Use new default and Keep mine.
+- Changed clearing an instruction field of a built-in agent to put the default back when you leave the field, instead of saving empty text that the default silently replaced, and the field says so while it is empty.
+- Changed the instruction fields on an agent's settings page to save a moment after you stop typing, and when you switch tabs or leave the page, instead of on every keystroke.
+- Changed the Reset configuration confirmation of an agent to say what goes back to its defaults (instructions including CHARACTER.md and IDENTITY.md, model, voice, memory and behavior) and that its chats, files and paused state stay.
+
+## Answers in Chat
+
+- Added interactive apps to chat answers on the Mac: when an answer needs real logic, such as a simulator whose sliders recompute a chart and totals, a filter that regroups figures, a game, an animation or something to drag and draw, the Agent now writes a small app with the chat's own components and theme, light and dark, styled the way you ask when you ask for a look of your own.
+- Added a Fix button to an interactive app that fails in chat, which shows what went wrong and asks the Agent to repair it.
+- Changed interactive simulations you ask for to explore an idea to play right in the chat answer instead of opening as an artifact; an app you ask to build and keep still opens as an artifact.
+- Added diagrams to chat answers: when an answer explains steps, a decision with branches, the layers of a system, a cycle or a phased plan, the agent draws it as a clean diagram right in the conversation.
+- Changed answers about messages passed between parties, states and their transitions, or how data relates to draw a real sequence, state or relationship diagram in the chat instead of squeezing it into a step-by-step flow.
+- Added tree diagrams to chat answers: an org chart, a taxonomy or another hierarchy now draws each part under the one it belongs to, joined by lines and colored by branch, and shows as an indented list in a narrow window.
+- Added practice quizzes to chat answers: pick an option, check it in place, and see why it is right or wrong.
+- Added flashcards to chat answers: cards to memorize, such as vocabulary or terms, turn over with a tap one at a time.
+- Added checklists to chat answers: a packing list or the things to do before an event shows as items you tick off in place, with a count of what is done, and the ticks stay when you open the chat again.
+- Added ticking off task lists in chat replies: a list of boxes the agent writes in its reply can be ticked in place too, and the ticks stay when you open the chat again.
+- Added step-by-step walkthroughs to chat answers: when you ask to go through something one step at a time, step through it with Previous and Next, or jump to a step from the progress bar.
+- Added tabs to chat answers: a workout program or other plan by day shows one day at a time under a row of tabs, each day's exercises a list you tick off as you go, instead of a list or table for each day.
+- Added schedules to chat answers: a day planned hour by hour or a week of study shows as a calendar with each block as tall as it lasts, colored by kind with each kind's hours added up, and as a list by day in a narrow window.
+- Added option cards to chat answers: when you ask which of a few plans or products to pick, they show side by side with their prices, what each has and lacks, and the best fit marked, also when you ask in Chinese or another language.
+- Changed answers that compare a few options you're choosing between, such as plans, to show them side by side in a table with the best fit marked instead of a list.
+- Added maps to chat answers: when an answer is about places, such as the stops of a day trip or a trip planned day by day, they show numbered on an Apple Maps map with a route line and the list under it.
+- Added funnel charts to chat answers: stages such as a signup or sales funnel draw as narrowing bars with how many each step keeps and loses and the steepest drop marked, and the answer's text names the same steps and figures.
+- Added scatter charts to chat answers and the iPhone and Android apps: two measures of the same items, such as study time and exam scores, draw as points on two number axes, colored by group, with a fitted trend line and its correlation when asked, where the Agent drew a picture by hand before.
+- Added bubble charts to chat answers and the iPhone and Android apps: when each item has a third measure, such as a product line's revenue beside its growth and margin, the points become bubbles sized by it with each one's name on or beside it and the range of sizes in the legend, where the Agent drew a picture by hand before.
+- Added heatmaps to chat answers and the iPhone and Android apps: one measure across two categories, such as calls by weekday and time of day, draws as a grid of cells shaded by value, with the busiest cell named and a low-to-high scale, where the Agent built a table colored by hand before.
+- Added Gantt charts to chat answers and the iPhone and Android apps: tasks that each run from a start to an end, in weeks, days or dates, line up as bars on one timeline so overlapping work shows at a glance, colored by team or phase, where the Agent drew a diagram with made-up calendar dates before.
+- Added waterfall charts to chat answers and the iPhone and Android apps: how a starting figure becomes a final one, such as revenue to net profit, draws as a bar per step from the running total, increases green and decreases red, with subtotals and the total standing from zero, where the Agent built the bars by hand before.
+- Added Sankey charts to chat answers and the iPhone and Android apps: amounts that flow from where they come from to where they go, such as income into spending and savings, draw as bands as wide as what they carry, each destination in its own color, where the Agent drew boxes with the amounts written in before.
+- Added calendar charts to chat answers and the iPhone and Android apps: the days something happened, such as a month of workouts or a habit, fill in on a month grid so streaks and gaps show at a glance, and daily amounts shade deeper on busier days with the highest day named, where the Agent built a table of dates before.
+- Added treemaps to chat answers and the iPhone and Android apps: how one whole splits into parts, such as disk space or a budget by department and line item, now shows as tiles as large as each part, a department's items in its own color with each tile's amount and share written in it and each department's total under the chart, where the Agent drew horizontal bars or a crowded flow chart before.
+- Added target lines and marked points to line charts in chat answers and the iPhone and Android apps: a goal, an average or a limit draws as a dashed line with its value, and a launch, a peak or a function's vertex and roots get a ring on the line with a short note, where the Agent drew a flat extra line or wrote the note into a month's name.
+- Changed charts in chat answers to a cleaner look, with several series on one chart, a legend, values on hover, and line, area, pie and donut charts.
+- Changed calculators and choices in chat answers: each slider shows its name and value above a wider track, a choice among a few options shows as buttons that wrap with the picked one filled, and a choice can show the picked option's details.
+- Changed the Agent to ask what it needs before a task, such as your preferences for a trip or a purchase, as questions in the chat that you answer by picking options or typing, several in one go, instead of a list of questions in its reply.
+- Added picking several options in a chat card, such as the names you like, and sending your picks to the Agent, on the Mac and the iPhone.
+- Changed the Agent to offer candidates you pick from, such as names, as options you tick and send back, instead of a list in its reply.
+- Fixed Agents set to Auto answering without tools when a request needs a card, such as options to pick from, questions to answer first, a comparison or a quiz, so the card didn't show.
+- Fixed options you pick in a chat card showing as blank pills in the Chat Window, and changed picked options to a light outlined fill, so the card's send button stands out, on the Mac and the iPhone.
+- Fixed visual answers that sometimes showed "This view couldn't be shown" instead of the answer: small markup slips, such as a tag left open, are now mended as the view draws, earlier chats included, and the agent draws again any view still broken.
+- Fixed visual answers that sometimes came out as boxes of loose text or an empty table instead of the timeline, table or map they were meant to be, and maps that showed a failed step before they appeared.
+- Fixed chat answers that sometimes showed a card's raw markup as text instead of the card or a plain answer.
+- Fixed chat answers that sometimes added a box of plain text, such as a diagram's title or its code, beside the answer itself.
+- Fixed chat answers repeating under a visual answer what it already shows, or only pointing to it: the text now ends with what the view doesn't say, such as the takeaway or what to do next.
+- Fixed sequence diagrams in chat answers that showed only their code when a message or note contained a semicolon.
+- Fixed state and sequence diagrams inside a chat answer's card showing as code: they now draw as diagrams.
+- Fixed architecture and layer diagrams in chat answers that were sometimes written as Mermaid code instead of drawn as the chat's own diagram.
+- Fixed the start and end capsules of step diagrams in chat answers showing only their name and dropping details such as a count.
+- Fixed practice questions on a topic with math that sometimes came as text to answer in a reply instead of a quiz you check in place, and worked calculations that were sometimes drawn as a step diagram instead of formatted math.
+- Fixed plans laid out by day or by time, such as a trip itinerary or a study week, that sometimes came back as a table for each day instead of a timeline or a calendar.
+- Fixed progress bars in chat answers stopping at 100% when an amount is past its budget or target: they now show the real percentage and mark the part beyond the target, and the iPhone and Android apps show the real percentage too.
+- Fixed planned-versus-actual figures, such as spending against a budget, that sometimes came back as a text table instead of bars showing which items are over.
+- Fixed charts in chat answers that left the unit, such as the percent sign, off their axis and values when the Agent named it only in the axis or series name.
+- Fixed chart values and sliders in chat answers showing a space before K, M, B or T, such as "$42 K".
+- Fixed amounts in chat answer calculators showing extra zeros, such as 2.00 eggs in a recipe scaled to your servings.
+- Fixed tables in chat answers running past the card's edge when a cell held a long note: cells now wrap to fit.
+- Fixed tables in chat answers that showed empty, or made the Agent redo its answer, when it gave the rows and columns as data; they now show on the Mac and on the phones.
+- Fixed Chinese and Japanese tables in chat answers wrapping one character to a line in a narrow chat: each column keeps room for a few characters, and a table too wide for the chat scrolls sideways.
+- Fixed headings of groups in chat answers, such as each day's title in a trip plan, that went missing on the Mac and on the phones.
+- Fixed figure tiles in chat answers that cut off a long label; the label now wraps, and the figures beside it stay in line.
+- Fixed colored words in chat answers showing as raw HTML tags on the Mac and in the iPhone and Android apps: they now show in a color that reads in light and dark themes.
+
+## Chats and the Chat Window
+
+- Added a tray above the message box listing what a chat has working in the background: its subagents, the one waiting on your approval first with a Review button, and the commands and monitors the agent or a subagent left running, each with how long it has run, its latest output and a stop button, and a command started while the window was in the background shows as soon as you come back to it; stopping a subagent now stops the commands it left running too, and Claude Code chats show their background tasks in the same tray.
+- Added argument hints to the message box, the Smart Bar and the Dynamic Island, as Claude Code shows them: typing a command and a space, such as /loop, /btw or /compact, or a skill whose SKILL.md has an argument-hint, shows what it takes dimmed after it until you type more.
+- Added an Opacity slider to Settings › Chat Window, so you can make the Chat Window anywhere from clear glass to solid, previewing live as you drag; the Chat Window now starts at 75%, more solid than before.
+- Changed the message box in a wide window to match the message list's width: the message box and the queued messages and cards above it now line up with the conversation instead of stretching across the window.
+- Changed the Chat Window sidebar's chat rows: hovering a row now shows only Pin and Archive, resting on it shows its full title with its Project and Worktree beside the row, and right-clicking it opens a menu to rename, pin, mark as unread or read, move to a Project, fork, share, copy, open its folder in another app, archive or delete the chat.
+- Changed a running chat in the Chat Window sidebar to show just its spinner, without the sheen on its title.
+- Changed the chat list in the Chat Window to keep a chat's subagents folded under its row until you unfold them; the subagent you have open still shows, and a chat you unfold stays unfolded.
+- Changed a Project's chats in the sidebar to show the first five, with Show more adding five at a time and Show less folding them back, remembered per Project; a chat that runs, waits for you, has a result you haven't read or is open still shows past them.
+- Fixed Delete all chats in the sidebar's Chats menu deleting every chat, those in Projects and pinned ones included: it now deletes only the chats in the Chats list, says how many in its confirmation, and leaves chats that run or wait for you, or whose subagents still run, alone.
+- Fixed Delete all chats in a Project's menu and in the Projects menu deleting chats that still run or wait for you, pinned chats, and Board task chats the list doesn't show: they now delete only the chats the Projects list, leave a chat whose subagent still runs, and say in your language how many they delete.
+- Fixed Show more in the sidebar's Chats list folding back to 40 chats whenever a chat ran or got a new message.
+- Fixed a chat that was never titled and began with a background task's notice showing the notice's raw tags as its title in the sidebar and in search.
+- Fixed pinning, renaming or deleting a chat, and renaming or removing a Project, failing without a word: the sidebar now says when one fails.
+- Fixed opening a chat from the chat list, a link in a chat, the archived chats list or a Board task so it comes in with its title, messages, queued messages, cards and the lines above them, instead of showing them a moment later and moving the conversation.
+- Fixed a running chat opened from another chat or from a new chat showing only your message or an empty conversation until its reply caught up: it now opens on the reply written so far.
+- Fixed the message box's model and reasoning, permission mode, coding agent mode and model, points pill and kept knowledge sources, and the header's agent name, changing a moment after a chat opened: each chat shows its own in the frame that opens it.
+- Fixed the side panel's Files tab and the Worktree chip flashing empty or a no-folder notice before the chat's own files and Worktree showed when the chat opened.
+- Fixed a Claude Code or Codex chat running on another Mac showing its message box before the read-only notice when opened again.
+- Fixed the chat list redrawing the row of the chat being opened and the one open before it, which made the list flicker as you switched chats.
+- Fixed the Chat Window not catching up when you switch back to it from another app: background commands started meanwhile now appear above the message box within a moment, and its other lists (Worktrees, artifacts, a Claude Code chat's state) read again too, instead of waiting until the chat runs again.
+- Fixed the Changes review freezing the Chat Window for a second or more as it opened or showed again, and a file clicked in the chat while the side panel was closed now scrolls into view once the panel opens.
+- Changed a turn's changed files under a reply to start folded.
+- Changed an agent's Load Tools step to read as Looked up and the tools it loaded, and a run of steps that did other work no longer says it used a tool for it.
+- Fixed a finished Install card, such as one saying a plugin still needs setup, disappearing into the folded list of tools the agent used.
+- Fixed the / menu in the message box picking the command under a resting pointer instead of the best match when you press Enter.
+- Fixed the terminal, the code editor in a file preview, the book reader and the workflow YAML editor showing their light colors on the Mac's dark glass.
+- Fixed the Artifacts library listing only your 200 most recently changed artifacts: the next ones now load as you scroll toward the end.
+
+## Coding Agents
+
+- Added /new and /clear to Codex chats and /clear (also found as /reset and /new) to Claude Code chats in the Chat Window, which start a new chat with the same agent in the same Project or Worktree, as each agent's terminal app does, and in Codex chats /new <name> or /clear <name> names the new chat and its Codex thread.
+- Fixed the command menu of Codex and Claude Code chats opening again after a command with arguments was typed quickly, so Enter sends the command instead of picking it from the menu.
+- Fixed Claude Code, Codex, Grok Build and Antigravity chats in the Chat Window keeping the stop button after a reply had finished.
+- Fixed a Claude Code, Codex, Grok Build or Antigravity chat open in a window not showing a message sent to it from another window, the iPhone or a Hub task, or its reply, until the chat was opened again.
+- Fixed question cards in Claude Code, Codex, Grok Build and Antigravity chats saying "Enconvo Agent asks"; they now name the agent that asks.
+- Fixed a forked Grok Build or Antigravity chat, or a /btw Side chat of one, opening read-only with "This chat runs on another Mac. Continue it there." on the Mac it was made on; a new fork continues in the same folder with the same model and mode, and one made before this fix starts a new session that hears the conversation so far.
+- Fixed a call about a Claude Code, Codex, Grok Build or Antigravity chat's waiting question opening a chat that showed "This chat runs on another Mac. Continue it there." instead of a box to type in; that chat is now one of your main Agent.
+- Fixed a Claude Code or Codex chat that held messages before the agent started in it, such as one a Live Talk call began, opening read-only with "This chat runs on another Mac. Continue it there."; its first message now starts the agent with the conversation so far.
+- Fixed editing a message in a Claude Code or Codex chat that held messages before the agent started in it: the agent keeps the earlier conversation, and Codex no longer keeps answering the message you replaced.
+- Fixed forking a Claude Code or Codex chat that held messages before the agent started in it, such as one a Live Talk call began: a fork or Side chat no longer fails before the agent's first reply or from one of those messages, and a fork from a later message shows them too.
+
+## Claude Code
+
+- Added Plugins to Claude Code's settings page: browse the installed plugins and every marketplace's, search them, install one, turn it on or off, or uninstall it, as `/plugin` does in the terminal, with a plugin listed in both the Anthropic Directory and an official Anthropic marketplace shown once, as "Anthropic Directory + official".
+- Added `/plugin` to Claude Code chats: `/plugin list` shows the installed plugins as Claude Code's terminal does, including which ones need `/reload-plugins`, and the other forms point to the Plugins section of Claude Code's settings.
+- Added `/plugin install` with a plugin's name to Claude Code chats, as the terminal does: it shows the plugin's details with Claude Code's choice of installing it for you, for everyone on the project, or for you in this project only, offers another scope for a plugin installed only for one project, asks to add the marketplace first with `--marketplace <source>`, then installs the plugin, turns it on in the chat, and asks for the options the plugin leaves unset before ending on "Installed and configured"; installing a plugin you already have opens the same form when options are still unset.
+- Added `/plugin enable`, `/plugin disable` and `/plugin uninstall` with a plugin's name to Claude Code chats, which act at once as in Claude Code's terminal, asking first before an uninstall touches a project's shared settings or the plugin's saved data, and enabling a plugin asks for the options it leaves unset and ends on "Enabled and configured", or "Configuration skipped" when you close the form.
+- Added `/plugin configure <plugin>` to Claude Code chats, which asks each of the plugin's options as a card and saves them as the terminal does, leaving sensitive options such as keys to the terminal so they never appear in the chat.
+- Added `/plugin marketplace list`, `add`, `remove` and `update` to Claude Code chats, which list, add, remove and refresh plugin marketplaces at once as the terminal does, updating the plugins installed from a refreshed one.
+- Added `/plugin help` and `/plugin validate` to Claude Code chats: help shows the terminal's plugin command list, and validate checks a plugin, marketplace or folder of skills, agents and commands and shows Claude Code's report.
+- Added `/reload-plugins` to Claude Code chats, which applies plugin changes made since the chat started and lists what was loaded, and asks for `--force` when the reload would cost the conversation's cache, as Claude Code's terminal does.
+- Added Claude Code's Rewind dialog to `/rewind` (`/checkpoint`, `/undo`) in Claude Code chats: pick an earlier message, then restore the code, the conversation or both to before it, as in the terminal, and a restored conversation puts the message back in the message box.
+- Added the Background dialog to `/tasks` (`/bashes`) in Claude Code chats: see what runs in the background, open a shell's details with its command and latest output, and stop a task, as in the terminal; a shell that ended shows whether it completed, failed or was stopped, its real runtime and its output, and a background agent that just ended stays listed for 30 seconds, where picking it shows how it ran.
+- Added the Context Usage card to `/context` in Claude Code chats: the colored grid of the context window, the model and tokens in use, usage by category, the auto-compact window, the MCP tools, agents, memory files and skills that fill it, and Claude Code's suggestions, as Claude Code draws them in the terminal, with `/context all` opening every list.
+- Added Claude Code's /model dialog to Claude Code chats: /model lists Claude Code's models with the one in use ticked, and a model's card sets it as the default for new sessions, uses it for this session only, or adjusts its effort first, as in Claude Code's terminal app.
+- Added Claude Code's /mcp dialog to Claude Code chats: /mcp lists the chat's MCP servers with their status and tools, and from a server's card you see its details and tools, reconnect, turn it off or on, sign in or clear a sign-in, as in Claude Code's terminal app; a message sent while the dialog shows runs once it closes.
+- Added /resume to Claude Code chats in the Chat Window (/continue works too): it lists your saved Claude Code sessions from this chat's folder or every project, can show only the current branch's, searches their titles, and opens the one you pick as its chat, and /resume followed by a session ID or title opens that session directly, as Claude Code's terminal app does.
+- Added `/config` (`/settings`) to Claude Code chats: every setting with its current value, then pick one and change it, as in the terminal.
+- Added `/plan` to Claude Code chats: it turns plan mode on, sends a description to Claude in plan mode, or shows the current plan and opens it with `/plan open`, as in the terminal.
+- Added `/diff` to Claude Code chats: list the folder's uncommitted changes, or a branch's changes against its base, and open any file's diff, as in the terminal.
+- Added /copy to Claude Code chats, as in Claude Code's terminal: it offers Claude's last answer, or an earlier one with /copy N, whole or one of its code blocks or quotes, and puts the pick on the clipboard and in a file, and a new Skip the /copy Picker setting, also followed when it's on in Claude Code's own `/config`, copies the whole answer at once.
+- Added `/export` to Claude Code chats, which copies the conversation or saves it to a file exactly as Claude Code's terminal writes it, asking how and for the filename unless one follows the command.
+- Added `/status` to Claude Code chats, showing the same version, session, account, model, MCP server and settings details as Claude Code's Status tab.
+- Added `/permissions` (and `/allowed-tools`) to Claude Code chats, which lists the allow, ask and deny rules and the workspace's folders and adds or deletes them, as Claude Code's terminal does.
+- Added `/add-dir` to Claude Code chats, which adds a working directory for the session or remembers it in the project's local settings, as Claude Code's terminal does.
+- Added `/memory` to Claude Code chats, which turns Auto-memory and Auto-dream on or off and opens your CLAUDE.md files and memory folders, as Claude Code's terminal does.
+- Added `/skills` to Claude Code chats, which lists your skills with their source and size, searches and sorts them, and turns each one on, name-only, user-only or off for the folder, as Claude Code's terminal does.
+- Added `/hooks` to Claude Code chats, which lists your hooks event by event and opens each one on what it runs and where it comes from, as Claude Code's terminal does.
+- Added `/sandbox` to Claude Code chats, which picks the sandbox mode, the unsandboxed fallback and excluded commands for the commands Claude runs, as Claude Code's terminal does.
+- Added `/chrome` to Claude Code chats, which shows Claude in Chrome's status and lets you install or reconnect the extension, pick the browser it uses, and set whether Claude Code turns it on by default, as Claude Code's terminal does.
+- Added the Advisor picker to a bare `/advisor` in Claude Code chats: choose the advisor model or No advisor, with the current one checked, as in the terminal.
+- Added the Auto-compact window dialog to a bare `/autocompact` in Claude Code chats: see the current window, then pick auto or 100k to 1M tokens, as in the terminal.
+- Added `/release-notes` to Claude Code chats, which lists Claude Code's versions newest first and shows the notes of the one you pick, or of every version, as Claude Code's terminal does.
+- Added `/help` to Claude Code chats: the General tab with its shortcuts, then Claude Code's default commands or your custom ones, as in the terminal.
+- Added the folder's files to @ in Claude Code chats, as in Claude Code's terminal: @ lists the files and folders matching what follows it, a bare @ lists the folder's top level, and files the folder's .gitignore ignores stay out unless Claude Code's respectGitignore setting is off.
+- Changed new Claude Code chats to start in Auto, where Claude decides which actions need your OK, unless Claude Code's settings name another default mode; a model without Auto starts in Accept edits.
+- Changed Claude Code's tasks in a Project set to Approve for me to start in Claude Code's Auto mode, so they ask only before risky actions instead of stopping for approval on almost every command.
+- Fixed a reasoning effort picked in a Claude Code chat showing as the model's default effort in later chats.
+- Fixed Claude Code chats showing a loading line above an open card, such as /copy's, /model's or /mcp's: the card now takes its place, as in Claude Code's terminal.
+- Fixed a ! command sent while Claude Code was still answering in a Claude Code chat leaving the chat stuck on Working after the command ran.
+
+## Codex
+
+- Added Codex's /model dialog to Codex chats: it lists Codex's models with the one in use marked, then their reasoning levels with Max and Ultra under More reasoning…, and sets the pick as your default in Codex's config.toml or uses it for this session only, as in Codex's terminal app.
+- Added Codex's /permissions to Codex chats: it lists Ask for approval, Approve for me, Full Access and Read Only as Codex's terminal app does, marks the current one and any your admin's requirements rule out, asks before Full Access, and keeps the pick for the chat, its forks and Side chats, also when it continues in a terminal.
+- Added /resume to Codex chats in the Chat Window: it lists your saved Codex sessions from this chat's folder or every folder, sorted by last update or creation date and searchable, and opens the one you pick as its chat, as Codex's terminal app does.
+- Added /delete to Codex chats in the Chat Window: after you confirm, it permanently deletes the session and its Codex thread, with its subagent threads, and opens a new Codex chat, as Codex's terminal app does.
+- Added `/import` to Codex chats, which brings over your Claude Code or Cursor settings, instructions, MCP servers, hooks, skills, commands, plugins and recent chats into Codex as Codex's own `/import` does, with a summary to import everything found or choose items, and a report once the import finishes.
+- Added `/app` to Codex chats on macOS, which continues the chat in the Codex Desktop app as Codex's own `/app` does, opening the same session there while the chat keeps it.
+- Added /copy to Codex chats, as in Codex's terminal app: it offers the last answer whole, each code block and each quote in it, or right after /status the status and its fields, and puts the one picked on the clipboard.
+- Added /cd and /rollout to Codex chats, as in Codex's terminal app: /cd followed by a folder moves the chat there, relative to its folder or from ~, and Codex works in that folder from the next message, while /rollout shows where the session's rollout file is.
+- Added `/mention` to Codex chats, which writes `@` in the message box to mention a file as Codex's own `/mention` does, whether picked from the `/` menu or sent.
+- Added file search to the `@` menu in Codex chats, which lists the chat folder's files and folders as Codex's own `@` finds them, writing the picked path or attaching a picked image.
+- Added /usage daily, /usage weekly and /usage cumulative to Codex chats, as in Codex's terminal app: the usage card's token activity opens on the calendar, a bar a week or the running total, and a switch on the card changes between them.
+- Added Codex's Usage menu to `/usage` in Codex chats, which offers View analytics or Redeem reset as Codex's own `/usage` does, listing your usage limit resets and asking before using one.
+- Fixed /model, /personality, /approve, /warnings and /archive sent while a Codex turn runs: they ask at once without holding up the message, and a pick made after the turn ends still takes effect and says what changed.
+
+## Grok Build and Antigravity
+
+- Added Plan to the mode picker of Grok Build chats, also on Shift+Tab, and /plan and /view-plan (also /show-plan and /plan-view), as in Grok Build's terminal: Grok Build plans before it makes changes, /plan with a description starts planning that task, /view-plan shows the plan Grok Build wrote, and picking another mode takes it out of plan mode.
+- Added steering to Grok Build chats: a message sent while Grok Build works goes into its running turn and shows in the chat at once, as Grok Build's terminal interject does, while Antigravity chats keep it for the next turn.
+- Added /resume to Grok Build chats, as in Grok Build's terminal: it picks a session from the chat's folder to continue, narrows the list as you type, finds sessions by what was said in them under Extended search results, and /resume with a session id or title opens that session at once.
+- Added /rewind (also /undo) to Grok Build chats, as in Grok Build's terminal: it lists the earlier turns, asks before going back, takes the conversation back to before the one you pick and puts that message back in the box to edit, and Grok Build's settings now have a Confirm Before Rewind switch.
+- Added /new (also /clear) and /delete to Grok Build chats, as in Grok Build's terminal: /new starts a new chat, and /delete asks first, then deletes the session and its history for good and opens a new chat.
+- Added /model (/m) and /effort to Grok Build chats, which work as in Grok Build's terminal: pick a model, its context window and its reasoning level from cards or type them, and the switch is saved as Grok Build's default for new sessions.
+- Added /context-window to Grok Build chats, which works as in Grok Build's terminal: pick the current model's context window from a card or type its size, for the rest of the session.
+- Added `/context` to Grok Build chats, which shows Grok Build's Context usage tab as a card, with the window's squares, the tokens of each part and when auto-compact comes, without sending the command to Grok.
+- Added `/session-info` (also `/status` and `/info`) to Grok Build chats, which shows Grok Build's Session info tab as a card, with the version, session ID, folder, model, turn and context, where a click on a value copies it.
+- Added `/usage` and `/cost` to Grok Build chats: they show your plan's usage limit with its bar and reset time, and the session's tokens, model calls and cost, as Grok Build's terminal does.
+- Added /rename and /title to Grok Build chats, which name the session as Grok Build's terminal does, and Grok Build chats now take the titles Grok gives its sessions and pass a rename in Enconvo on to Grok.
+- Added /copy and /export to Grok Build chats, as in Grok Build's terminal: /copy copies the latest answer, or the Nth latest with /copy N, to the clipboard or a new file, counting answers and naming a taken file the way the terminal does, and /export saves the whole conversation to a new file or copies it to the clipboard in the same Markdown.
+- Changed Edit in Grok Build chats to keep the session, so Grok Build forgets the edited message and what followed and goes on with what came before.
+- Fixed a Grok Build chat whose first message was a command the chat answers itself sending that command to Grok along with the next message.
+- Fixed pictures Antigravity generates in a chat, which now show in the chat, also when an Antigravity session is opened again, and its permission cards and tool steps now name the tool instead of reading "Allow run …??" or staying on "Running …".
+
+## Loop
+
+- Added starting /loop by asking the agent in plain words to do something repeatedly, such as checking something every few minutes or keeping an eye on it, which runs it in the chat as typing /loop would.
+- Added /proactive as another name for /loop, as in Claude Code: typed in a chat it starts the same loop, and the message box's / menu finds Loop by that name.
+- Changed /loop sent while a reply is still being written to wait in the queue and start once the reply ends, as in Claude Code, instead of being turned away; Cmd+Return queues it the same way.
+- Changed a self-paced /loop to continue after Enconvo restarts: when you open its chat again, its next run comes back at the time it was set for, and if that time passed while Enconvo was closed or its runtime was restarting, the chat says the run won't happen and the loop continues when you reply asking it to.
+- Changed the Smart Bar and the App Sidebar to show a waiting self-paced /loop above the input, with its next run and a stop button, as the Chat Window does.
+- Changed stopping a reply so it also stops a self-paced /loop, as Esc does in Claude Code: the loop's next wake-up is canceled, including one the reply was setting as you stopped it, and the chat shows Pending wakeup cancelled, while a /loop with an interval keeps running.
+- Changed a self-paced /loop's run to end with the delay the agent chose for the next run and its reason, such as Next run in 20 min and why, shown outside the run's folded work, as Claude Code prints them after each iteration.
+- Changed when a self-paced /loop wakes up to match Claude Code: on the whole minute after the delay the agent picked, moved a minute earlier when that keeps a short wait under five minutes or a long one under an hour, and the agent's step and its list of scheduled tasks now show that time, with the wake-up listed as a daily one-shot task.
+- Changed when a self-paced /loop wakes up on its own to match Claude Code: only a run the loop woke up for gets the fallback run about 20 minutes later when it sets no next run, not the turn you typed /loop in, and an agent that cancels the loop's pending wake-up by its ID during a run leaves the loop that fallback instead of ending it.
+- Changed a self-paced /loop to pick its wait with the model's prompt cache in mind, as Claude Code does: the agent checks again within about 4 minutes while watching something closely, or waits 20 minutes or more, so fewer runs read the whole chat again uncached.
+- Changed a self-paced /loop to tell the agent how many runs in a row found nothing to do, as Claude Code does, so it can ease off or notify you instead of reporting the same quiet check again.
+- Changed a self-paced /loop typed again with the same prompt to keep its 7-day limit, as Claude Code does, instead of starting a new 7 days each time; a stop, a new prompt or an hour without a run starts them anew.
+- Changed a self-paced /loop to schedule its next run without a Load Tools step first, as Claude Code keeps its wake-up tool always at hand.
+- Changed a /loop with no prompt to give the agent its loop.md, or the built-in maintenance prompt, once, as Claude Code does: later runs point back to it until the file changes, so a long loop.md no longer fills the chat's context again with every run.
+- Changed a /loop with no prompt to cut a loop.md longer than 25,000 characters at a line break and tell the agent it was cut, as Claude Code does, instead of cutting it off mid-line without a word.
+- Changed a /loop with no prompt to notify you mid-loop as Claude Code does: once when it can't go on without you, finds nothing to do three runs in a row, ends, or sees a major update such as a failed CI (continuous integration) run, not on every run.
+- Changed a /loop with no prompt, such as /loop 2h, to leave out the question about making an Automation and the line saying the loop stops when Enconvo quits, as Claude Code does, and to say in its confirmation whether it runs your loop.md or the built-in maintenance prompt.
+- Changed when /loop's scheduled tasks run to match Claude Code: a task every five minutes first runs 4 minutes 45 seconds after it is made, even when the agent schedules it on its own, a daily task usually runs 30 minutes after its time, and a run held up by a busy chat moves the next one to after it.
+- Changed /loop's scheduled tasks to read cron expressions as Claude Code does: a day field that covers every day, such as 1-31, leaves the date to the other field, a step on a single number such as 5/15 is refused with the range to write instead, and a task's schedule reads as Every 5 minutes, Weekdays at 9:00 AM or Every Monday at 9:00 AM.
+- Changed /loop's steps in the chat to read as Claude Code's: scheduling a task shows Scheduled with the task's ID, its schedule and next run, listing the tasks shows each one with its next run, and canceling one shows Cancelled with its ID.
+- Changed /loop's list of scheduled tasks in the chat to read as Claude Code's: each task is one line with its ID in bold, then its schedule, next run and prompt, marked recurring or one-shot and session-only, a one-shot task shows its schedule, an empty list says No scheduled jobs, next run times are rounded to the minute with the weekday on other days, and a long prompt is cut by its width on screen, so one in Chinese or with emoji is cut where Claude Code cuts it.
+- Changed /loop's lines for scheduling, listing and canceling tasks to stay in view after a turn ends, outside its Worked for line, with the listed tasks shown under their line without opening it, as Claude Code's terminal shows the rows under these calls.
+- Changed what /loop's scheduling tools tell the agent to Claude Code's own wording, so the agent reports each task's schedule, whether it repeats, and its next run to the minute as Claude Code does.
+- Added a way for agents to list the commands their chat started that are still running, so a self-paced /loop checks whether its monitor still runs before starting another and finds it to stop when the loop ends, as Claude Code does with its task list.
+- Fixed an agent that waited for something with a long-running command, such as a self-paced /loop watching for a file to appear, not hearing when the command ended: it now continues as soon as the command exits, as with background commands, and also hears when a dev server it started stops on its own.
+- Fixed a self-paced /loop's watch for an event running on with no time limit: it now ends after 30 minutes, as Claude Code's does, and wakes the loop when it ends.
+- Fixed Esc in the Smart Bar, the App Sidebar and the Dynamic Island closing or folding it while a self-paced /loop waited for its next run: Esc now stops the loop and shows Pending wakeup cancelled, as in the Chat Window and Claude Code.
+- Fixed a self-paced /loop stopping without a word when Enconvo's runtime restarted during one of its runs: the loop now goes on from its fallback run about 20 minutes later, keeping its run count.
+- Fixed a /loop task that came due while a reply was running being dropped when Enconvo's runtime restarted before the reply ended: a one-time task now still runs once the chat is free, and a repeating task runs the time it was waiting for.
+- Fixed a self-paced /loop whose wake-up runs a prompt without /loop going quiet when a run neither schedules the next one nor stops: it now gets one fallback run about 20 minutes later, as Claude Code's does.
+- Fixed a self-paced /loop that reached its 7-day limit telling the agent the loop was stopped, so the agent now says the loop expired and that /loop starts it again.
+- Fixed a /loop task or wake-up canceled at the moment it came due still running once.
+- Fixed /loop's list of scheduled tasks showing a next run time already gone by for a task that came due while the chat was busy; it now says the task runs now, as Claude Code's list does.
+- Fixed /loop one-time tasks set inside the hour the clock turns back, which now run that night as in Claude Code instead of a year later, and changed the errors for a date that never comes and for too many tasks to Claude Code's wording.
+- Fixed /loop asking whether to make an Automation when the prompt only mentions something nightly or daily, such as a nightly build, instead of asking for a daily schedule; the agent now asks only when the words say how often the loop runs, as Claude Code does.
+- Fixed /loop with an interval of 45 to 59 minutes, which runs every hour, leaving out the line under its confirmation that the loop stops when Enconvo quits.
+- Fixed /loop every five minutes, or an interval alone ending in a full stop, running the loop's default tasks every five minutes; as in Claude Code, it now shows how to use /loop and starts nothing.
+- Fixed a self-paced /loop refusing a wake-up whose reason is empty, and telling the agent its wait was cut short when it only asked for a fraction of a second, as Claude Code does neither.
+- Fixed a self-paced /loop whose prompt has &, < or > changing it on every run, such as && turning into &amp;&amp;, which also kept the loop from ever reaching its 7-day limit.
+- Fixed a /loop sent during a reply starting anyway when you stopped the reply just as it finished, such as with Esc in the Smart Bar or Stop on the phone; it now stays in the queue for you to send, as the other queued messages do.
+- Fixed a /loop waiting in the queue moving behind the messages sent after it when it couldn't start at once, so those ran before it.
+- Fixed a Loop's runs, and other turns that start on their own, not showing in an open chat: each run now appears with its line and reply as it happens, instead of taking the place of the reply before it.
+
+## Side Panel Doodle
+
+- Fixed the side panel Doodle quoting a word split across styles, such as a token of highlighted code, a highlighted search term or a bold first letter, with spaces inside it, or cutting part of it off at the ends of a passage dragged with the Paragraph tool.
+- Fixed the side panel Doodle's Paragraph tool running words together in Arabic or Hebrew text when they sat in links or styled words of their own.
+- Fixed a Doodle mark over Chinese or Japanese text in the side panel quoting it with a stray space, splitting a word, where a line breaks before a link or a bold word.
+- Fixed the side panel Doodle sending a broken character when it shortened the words under a mark right inside an emoji.
+- Fixed a Doodle mark on a file or web page in the side panel quoting words you can't see under it, such as code or a side list scrolled out of sight, or the end of a title cut short.
+- Fixed a Doodle mark on a web page in the side panel quoting words hidden under a bar fixed at the top of the page or a dialog over it.
+- Fixed the side panel Doodle's Comment tool quoting the words of hidden parts of a page, such as a closed menu, with the paragraph or passage picked, and refusing a passage dragged across them.
+- Fixed a region boxed with the side panel Doodle's Comment tool on a web page quoting only its first 300 characters.
+- Fixed the side panel Doodle's Comment tool picking a whole list on a web page laid out in a table, such as a news site's front page: a table or code taller than most of the view is now read paragraph by paragraph.
+- Fixed the side panel Doodle's Comment tool taking a table, code block or quote set in a figure (as WordPress and Jekyll sites set them) for a picture with no words: it now picks them as what they are.
+- Fixed the side panel Doodle quoting nothing for a picture whose alternative text is empty: it now quotes the picture's caption, label or title.
+- Fixed the Doodle Paragraph tool in the side panel picking a long run of lines in a log or a long code file, far from the line you point at, where no blank line comes near; it now picks that line.
+- Fixed the side panel Doodle reading only the word at one end of a line: a line now quotes the words it underlines or strikes through, whichever way it was drawn.
+- Fixed the side panel Doodle sending a picked code block or table to the AI as one line: it keeps its lines, and code keeps its indents.
+- Fixed the side panel Doodle's Screenshot tool taking in the chat or window beside the side panel when its box was dragged past the panel's edge.
+- Fixed side panel Doodle marks on a long web page or document being slow to read the words under them, or losing those words, when many were moved or pasted at once, and a mark far down a long paragraph quoting nothing.
+- Fixed scrolling a side panel tab while Doodle is on: a slight sideways drift over a wide code block or table no longer stops the page from scrolling, and content that can't scroll sideways no longer slides out of place.
+- Fixed a wide table or code block on a right-to-left page, such as one in Arabic or Hebrew, not scrolling sideways, and vertical text, such as Japanese set in columns, not scrolling on with the wheel or trackpad, in a side panel tab while Doodle is on.
+- Fixed ⌘C and ⌘X not copying the text selected on a web page in the side panel while Doodle was on and no mark was picked.
+- Fixed the side panel Doodle's select tool and eraser missing a long, flat ring, such as one drawn round a line of words, near its ends, and a press on a wide arrow's head away from its shaft.
+- Fixed cutting a mark in the side panel Doodle and pasting it, which lost the mark's comment: a cut and paste now moves the mark with its comment, a copy still starts without one, and a cut brought back with Undo no longer takes its comment along when pasted in another chat.
+- Fixed Copy view as image in the side panel Doodle, which failed in the Mac app: the copy now holds the newest marks, and it can be used as soon as a view has marks.
+- Fixed the Doodle list above the message box losing a note's edited words when the pencil or a click outside the list ended the edit.
+
+## Memory
+
+- Fixed a Memory about you, such as a food allergy, that you mentioned in a Project's chat being kept for that Project only, so your other chats never used it; agents and Memory Review now save such Memories for every chat and keep only the Project's own facts in the Project.
+- Fixed an agent outside a Project reaching a Project's Memories: being shown them when it saved one much like them, which led it to delete what you had just asked it to remember, deleting or bringing them up when you asked it to forget or change something, such as a Project's note about a former colleague when you asked to forget your old job, and finding them when it searched your Memories and past chats together or read a person or topic from your Memory's Concepts.
+- Fixed a subagent started in a Project's chat not knowing the Memories saved for that Project, and keeping what it saved out of the Project.
+- Fixed agents sometimes describing a Memory about you as someone else's, such as calling your own food dislikes your child's while planning her party.
+- Fixed agents applying a Memory about someone else to a task that is only yours, such as holding a lunch you order for yourself to your partner's food allergy.
+- Fixed the agent sometimes saving a change, such as a new home address, as a second Memory beside the old one once you have many Memories; it now finds the old Memory and updates it.
+- Fixed Memory Tidy deleting an older Memory when a later one changed only one detail in it, which lost the rest, such as where your router is after your Wi-Fi password changed; the two are now merged.
+- Fixed agents deleting a whole Memory when you asked them to forget only one detail in it, such as removing your Wi-Fi network's name along with its password.
+- Fixed agents writing the mistake and its correction into a Memory when you corrected part of it, such as noting that a mango allergy had been saved by error, instead of keeping only what is true.
+- Fixed the agent adding things you didn't say to a Memory, such as the day it was saved, a date it guessed, a detail from another Memory or a remark of its own; it now saves only what you said.
+- Fixed Memory Review adding a detail you didn't give to a Memory it learns from a chat, taken from another Memory, such as calling a friend you named only by first name your manager because your manager has that name, or adding the city you live in to a place you mentioned.
+- Fixed agents and Memory Tidy making up a day for a Memory that gives only a month, such as a child's birthday month written with the age right after it: Memory Tidy keeps the month, and agents plan around the day and ask which day it is.
+- Fixed agents refusing to remember a password or door code you explicitly asked them to keep; it stays hidden from other chats until you ask for it, and a password written without "is" or a colon after the word "password" is now hidden too.
+- Fixed a Memory holding a saved password hiding the words after the password from agents too, which made them say they could not confirm a changed password was saved.
+- Fixed Memory Tidy sometimes rewriting or deleting a Memory that holds a password or key you asked to keep, which lost the secret.
+- Fixed agents missing details inside a file or web page you saved to Memory, such as a rule in a team handbook, and looking it up on the web instead.
+- Fixed agents asked to keep a file sometimes saving only a note about it, because adding the file to a knowledge base failed or Memory kept only their summary of it.
+- Fixed agents asked to replace a file saved to Memory with a new version sometimes overwriting your original file on disk, which left the old version in Memory.
+- Fixed asking a voice call to note something down for later, such as where you parked, saving it as a reminder or a note instead of a Memory, so a later call asking for it could not find it.
+- Fixed the agent in a Telegram or Discord group sometimes saying it had remembered something a member asked it to keep, when Memory is off in group chats; it now says Memory works only in a private chat with it.
+- Fixed an open chat changing a Memory back, or asking which was right, after you edited that Memory on the Memory page; the agent now goes by your edit.
+- Fixed a Memory the agent saves during a chat having no link back to that chat on the Memory page: the link shows the chat's current name, points to the chat where the Memory last changed, and goes away when the chat is deleted.
+- Fixed the agent not knowing when or where it learned something it remembers; asked, it now gives the day the Memory was saved and the chat's name, or says that chat was deleted.
+- Fixed Undo after forgetting a Memory on the Memory page, Save again on a chat's Memory card, and Undo or Redo in the Memory history bringing a deleted Memory back as a new one for every chat: it now returns to its Project and the Agent that saved it, with its original dates.
+- Fixed agents bringing back a Memory you deleted when asked what they remember about you, because the chat where you first asked them to remember it was still in Chat History, and mentioning that you had asked them to forget something.
+
+## Workflows
+
+- Added who does each step to the workflow editor: every step card names its Agent, Member slot or tier, with the model and reasoning effort it runs on, and the inspector lets you pick the Agent, slot or tier template, a model and a reasoning effort for that step's run only.
+- Added a reasoning effort (low, medium or high) to workflow prompt and agent steps, for that step's run only and settable from the run's inputs; an agent step can now pick its Agent from the run's inputs, falling back to the run's default Agent when its pick names none, and a workflow with Member slots can mix them with named Agents and its own models.
+- Changed the workflow list so every row is a workflow, with no separate Playbook kind: a row shows its steps, parallel lanes, schedule and when it was edited, a Member slots · N tag when it declares slots, a Pinned in steps · N tag for steps that name their own Agent or model, and a Used in column with how many Projects use it; the list filters by All, With Member slots and With a schedule.
+- Changed the workflow editor, the Board and the Run log to say workflow and Member slot where they said Playbook.
+- Changed where a Project's Member slots are filled: open a workflow in a Project, from its title bar, the Used in column or a Board task's Open the workflow, and a bar above the canvas shows each slot with the member filling it there, the slots the lead filled from the Project's members, or that the Project has no members yet with Add members; a slot's chip, or its badge on a step card, opens a picker with the slot's description and the lead's suggestions, the change applies to that Project only, Run waits until every slot is filled, and Project settings no longer have their own Playbooks page.
+- Changed Member slots so a Project's Agent fills a workflow's empty slots with the members whose Member roles match them, and a slot you fill or empty yourself stays as you left it.
+- Changed workflows with Member slots so any of them can be given to a Board task in a Project as soon as its slots are filled there, without adding it to the Project first, and one that can't run yet says whether the Project needs members or which slots are still empty.
+- Changed Board tasks that follow a workflow to run steps that name their own Agent through the Board, like slot steps: in the task's worktree, at its Permission mode and within the Project's Boundary, each shown on the task's card with its Agent, and failing with the reason when that Agent doesn't exist, is paused or isn't signed in, or when Enconvo can't read the list of Agents just then; a step that names a Coding agent by its own key, such as coding_agent|codex, runs on the Agent that wraps it.
+- Fixed the workflow editor's step palette and Add step list leaving out the Agent step in a workflow with Member slots, though such a step may name its own Agent: you no longer have to write it in YAML.
+- Fixed Workflow agent steps whose `agent:` template picked an Agent that doesn't exist failing instead of running on the default Agent; an Agent key written out still fails as written.
+- Fixed Workflow steps whose AI request failed (the provider refused the model or answered with an error) or couldn't start (the provider couldn't load) finishing as done with the error as their reply; the step now fails with that error.
+- Fixed a Board task's later-slot workflow steps working outside the Project's Boundary and losing the task's worktree when the Project's folders left it out.
+
+## Dynamic Island and File Search
+
+- Added date groups, scrolling through every chat, a title search and pinning to the Dynamic Island's History, which showed only about five chats before, with a button at the bottom that opens all chats in the Chat Window, or searches their messages there for what you typed.
+- Fixed the Dynamic Island's History keeping the Mac busy while one of its chats was running.
+- Fixed chat previews in the Dynamic Island showing the model's thinking or Markdown marks instead of its reply.
+- Added a Search Folders setting to File Search, with a My Folders choice in Search In that looks only in those folders, Desktop, Documents and Downloads unless changed, one folder per line.
+- Fixed File Search treating a path such as ~/.claude or /Library/Logs/x as a loose name search, which showed an unrelated folder whose name only resembled the letters typed while the hidden folder named stayed out: a path now looks in the folder it names, whatever the Search In scope, for the name after its last slash, with the exact path first and that folder's own files next, finds a hidden file or folder the path names, and a path ending in a slash, such as ~/ or ~/.claude/, lists the folder.
+- Fixed File Search treating a Search Folder inside Library or a hidden folder, such as iCloud Drive or ~/.config, as noise: its files now show and rank by name like any other folder's, with only the hidden and cache folders below it still set aside.
+- Changed File Search to list an app first when you type its name, a typo of it or a word of it, such as Safari, "safair", or "chrome" for Google Chrome, before the files named after it, which used to come first when they were newer, while an app that only contains the letters, such as Xcode for "code", still comes after a file named as typed.
+- Changed File Search to show a hidden file named as typed with a dot in front, such as .zshrc for "zshrc", as the exact match, while other hidden files still need the dot typed or the Show Hidden Files setting; the Finder now comes first for "Finder".
+- Changed File Search's index to skip file contents, since it searches names only, so it reads no files after a change and keeps no content index on disk.
+- Fixed File Search waiting while its index was busy applying a burst of disk changes: a search it doesn't answer within 1.5 seconds now falls back to Spotlight.
+- Fixed File Search without Full Disk Access never showing some Desktop, Documents and Downloads files on Macs where Spotlight takes over three seconds to list them: the listing now runs to the end, and typing on narrows it instead of asking again.
+- Changed File Search to leave one or two typed letters to the index alone, since Spotlight listing those takes seconds and shows nothing useful.
+
+## Skills, Plugins and Sync
+
+- Added Add from GitHub to the Skills page: paste a link to a repository with SKILL.md at its root, or to a skill's folder inside one, and the skill installs into your skills folder and opens, with Enconvo remembering where it came from.
+- Added Check for updates to the Skills page for skills added from GitHub: each skill whose repository has moved on gets an Update available mark and an Update button in its details, and the result offers Update all.
+- Fixed the launch-time update of a skill added from GitHub into a folder other than ~/.enconvo/skills, which installed the new copy into ~/.enconvo/skills instead of the folder the skill was in.
+- Added Skills and Plugins to Desktop Sync, each with its own switch under Settings › Sync: the skills you install or make, with whether each is on, and the plugins you install from the Enconvo store, GitHub, npm or a link now sync between your computers, which install them from where they came from and uninstall what you uninstall, while plugins that come with Enconvo, plugins you are developing, Connectors and sign-ins stay on each computer.
+- Removed the Bland Connector from the Plugins page; if you already installed it, it stays installed.
+- Fixed a Connector, such as Twilio, missing from the Plugins page on a Mac where its plugin folder had been left with only empty folders in it.
+
+## Models, Sign-in and Settings
+
+- Added OpenCode and OpenCode Go as AI model providers: add your OpenCode Console API key once under Settings › AI Model to chat with OpenCode's pay-as-you-go models, such as Claude, GPT and Gemini, or with the models of your OpenCode Go subscription.
+- Fixed the model picker listing a provider you had only looked at in Settings: a built-in provider such as OpenRouter or DeepSeek now appears in the pickers once its API key or sign-in is saved, so opening its page no longer adds it with no key, while Enconvo Cloud, local models and providers you created stay listed as before.
+- Added a Back to Enconvo button to the page an OpenAI, xAI or Antigravity sign-in ends on in the browser, and a sign-in started in Settings or the guide now brings that window back by itself once it connects, as one started from a chat does.
+- Changed signing in with a Claude subscription or Claude Code: copying the code the sign-in page shows is enough, and Enconvo signs in without it being pasted; the code stays out of Clipboard History.
+- Fixed AI Commands that follow the default model, such as PopBar buttons, the Translator and Dictation's Polish and Translate, showing your default model in their model button and picker while running on the All Commands model, so an Out of Cloud points notice could name a model the button never showed; the button now shows the All Commands model, the picker's Use default reads All AI Commands for these commands, a reasoning effort picked for one of them now applies, and the notice after picking another model points to Settings › AI Commands.
+- Added Upgrade to Pro and Upgrade to Teams in Settings › Account and the Plans page for Plus and Pro license owners: what you paid for your license counts toward the new one, so you pay only the difference, promo codes still apply, every Mac you use keeps a seat on Teams, and a refund within 30 days gives your old license back.
+- Fixed Automation showing as Not granted on the Permissions page and in the Computer Use permission prompt after a relaunch, when the grant stood but System Events wasn't running.
+- Fixed Set up Telnyx in Settings › Agent Phone doing nothing when Telnyx was already connected in Plugins: it now waits while the Telnyx plugin updates, and says so when Agent Phone can't use it yet.
+
+## Voice
+
+- Fixed a reply being read aloud talking over Dictation, as when you clicked the mic in the Dynamic Island's, Chat Window's or Smart Bar's input or pressed the Dictation hotkey while the answer was read: the reading now pauses before Dictation starts listening, including the sentences still to come, and reads on from where it paused when you finish or cancel, while a reading you had paused yourself stays paused, one that was stopped or replaced while you dictated doesn't come back, and Voice Command keeps its own behavior.
+- Changed voice calls on the Mac to pause her the moment you start talking over her, before your words are recognized: your words then stop her for good, while an "mm", a cough or a laugh lets her go on from just before where she stopped, and talking while your microphone is muted doesn't pause her.
+- Fixed a voice call that hears you with a local speech model being slow to stop when you talk over her: it now listens again about every quarter second while you go on, where it waited a second and a half after first hearing too little, and a word or two said over her, such as "wait", stops her as soon as you pause after it.
+- Fixed a voice call on the Mac or iPhone staying on after you said goodbye in a longer sentence, such as "I just need to say hi and say goodbye, bye": Jev now reads whether your words and her reply end the call, in any language, and the call hangs up once her goodbye has played; a goodbye to someone else, or more words after hers, keeps the call on.
+
+## iPad and Mac Screen
+
+- Added iPad support to the iPhone app: the chat list stays beside the chat on a wide screen, the side panel opens beside the chat with Full Screen in its tab strip, chats keep to a readable column, the app works in a resizable window, and strings that named the iPhone name the iPad.
+- Added the iPad menu bar's commands with the Mac's shortcuts: File › New Chat (⌘N), and in View Show Sidebar (⌃⌘S), Show Side Panel, Full Screen Panel, Doodle, a Mac chat's Files (⌘P), Changes (⌃⇧G), Terminal (⌃`) and Side chat (⌥⌘S) in the side panel, Open Location (⌘L), Reload Page (⌘R), Back (⌘[) and Forward (⌘]) for the side panel's page, Show Next and Previous Tab (⌃⇥ and ⌃⇧⇥), Show Tab (⌘1 to ⌘9) and Reopen Closed Tab (⇧⌘T); Edit › Find (⌘F, ⌘G and ⇧⌘G) finds in the side panel's page.
+- Added a divider between the chat and the side panel on iPad that you drag to resize them, as on the Mac; the width you leave stays for every chat.
+- Added side panel windows on iPad: drag a web page's tab out of the side panel, or choose Open in New Window from its menu, and it opens in a window of its own with its tabs and New Tab, a button that brings back the chat it came from, and closing its last tab closes it.
+- Added Apple Pencil to the side panel's Doodle on iPad: once the Pencil marks, a finger scrolls the page, a Draw with Finger switch in Doodle's bar lets a finger mark too, and a hovering Pencil shows where it will land.
+- Added the Live Talk avatar beside the chat on iPad, as on iPhone Duo's inner display, with Full Screen and Back to the chat in her header; a link or the side panel opened from the chat meanwhile shows over the chat.
+- Changed notes at the top of the iPad app to show as a centred line instead of a bar across the whole window.
+- Added Mac Screen to the iPhone and iPad app: see your Mac's screen live from Remote, take control to click, scroll and type on it with trackpad or direct touch gestures and the phone's keyboard, with the toolbar on iPhone Duo's bar edge and a trackpad half when half folded; agents using the screen wait while you have it, a dropped connection, such as the phone moving to another network, connects again by itself, and Settings › Connections › Screen on the Mac turns it off.
+- Added a Screen button to your connected Mac in a new chat's Runs on menu in the iPhone and iPad app, with a one-time tip that points to it, so Mac Screen is a tap away when you start a chat; each Mac there now says only whether it's connected.
+
+## iPhone and Android
+
+- Added the / menu to Enconvo chats in the iPhone and Android apps: typing / at the start of a message lists /loop, /compact and your skills, with what each takes, and typing a command and a space shows its argument hint dimmed after it, in Claude Code and Codex chats too.
+- Added interactive apps to Mac chats on the iPhone, where they run as they do on the Mac, Fix button included.
+- Changed the Work plan card in the iPhone app to say what each task waits for, as on the Mac: before Start, the tasks it runs after or its turn in a folder the tasks share, and once the plan runs, the task, the lead's check or the free slot it waits for.
+- Changed the message box of a new chat that runs on your Mac in the iPhone and iPad app to match the Mac chat's, with the text above a row of round buttons.
+- Changed the iPhone app's message box so Return on a hardware keyboard sends and Shift-Return starts a new line, as on the Mac.
+- Changed the side panel's Terminal tab to show only the Escape key above the keyboard while a hardware keyboard is attached, on iPad and iPhone.
+- Added Android phones to the phone apps Mac agents can use: an agent can ask a paired Android phone where you are or set an alarm on it, as it can an iPhone.
+- Fixed web pages at plain http:// addresses not opening in the iPhone app's side panel or from a link in a chat: they now load as they do in Safari.
+- Fixed the iPhone app offering Move to Project for a chat that works in a worktree, where moving always failed.
+- Fixed sliders, drawing areas and sideways-scrolling parts of chat widgets on the iPhone, where a drag on them scrolled the chat or opened the sidebar instead.
+- Fixed questions the Agent asks in a chat started on the iPhone, which were cancelled when the Dynamic Island on the Mac closed while you were still answering them on the phone.
+- Fixed a background command's output in a Claude Code chat on the iPhone and iPad app staying on its first lines on iOS 26 instead of following the newest ones.
+- Fixed the Remote row at the top of the iPhone app's chat list cutting off whether your Mac is online when its name is long.
+- Added xAI on your own account to the iPhone and iPad app's Text-to-Speech, Dictation and Live Talk: with an xAI API key or the Grok sign-in in Settings › AI Model › xAI, answers read aloud in xAI's voices, dictation streams to xAI's real-time speech recognition, and calls in phone chats hear and speak with xAI, all straight to xAI with no Cloud points.
+- Added xAI on Enconvo Cloud to Dictation and Live Talk in the iPhone, iPad and Android apps, paid for with Cloud points and needing no xAI account, beside xAI on your own account.
+- Changed the Text-to-Speech, Dictation and Live Talk settings in the iPhone, iPad and Android apps to list their services the way Settings › AI Model lists its providers, with Default on the one in use and a Cloud tag on each Enconvo Cloud service, as on the Mac; Text-to-Speech lists xAI on Enconvo Cloud and xAI on your own account as two services, and each service opens its own page with the account it uses, the model to download, the voice with a sample, and Set as Default.
+- Fixed Live Talk calls in Mac chats in the iPhone, iPad and Android apps with Listen or Speak set to xAI on your own account: they now use the xAI account on the phone, the Grok sign-in included, so a call no longer ends with an xAI sign-in error when the Mac has no xAI account, and replies are spoken in the xAI voice you chose instead of a Gemini voice.
+- Changed Kokoro voices in the iPhone app to work on iOS 27.2 and later too, whose Core ML no longer crashes them during long readings; they stay unavailable on iOS 26.4 to 27.1.
+- Fixed voice samples in the iPhone and Android apps' Text-to-Speech and Live Talk settings cutting into a voice chat in progress; they now ask you to end the call first.
+- Fixed Text-to-Speech settings in the iPhone and Android apps showing a system voice that's no longer on the phone by its identifier instead of its name.
+- Fixed the iPhone and Android apps naming the regions of system voices in the phone's language instead of the app's.
+- Fixed the voice filters in the iPhone and Android apps hiding the filter you pick at the screen's edge.
+- Fixed Dictation's Languages and Details in the iPhone app treating Cantonese as Chinese for models other than Soniox.
+- Fixed the Dictation row in the iPhone and Android apps' Settings saying the model isn't downloaded while it downloads.
+- Fixed the Android app's Text-to-Speech settings showing voices you install in Android's settings only after the app restarts.
+- Fixed the Android app cutting off a voice sample you start right after leaving a voices page.
+- Fixed the Android app letting go of the dictation model after Mac Screen or another screen opened over it, so the next dictation waited for the model to load again.
+- Fixed the Android app's Settings opening a page twice, or going back two pages, after a quick second tap.
+- Fixed the Android app sometimes going back two pages when a change from your Mac arrived just as you left a voices page.
+- Fixed the Android app sometimes closing when a web page or Terminal in a chat's side panel stopped, such as after the app was away for a while; the tab now loads again on its own.
+
+## Answers on the iPhone and Android
+
+- Added charts to answers in the iPhone and Android apps: the bar, line, area, pie, donut and funnel charts the Agent draws now show on the phone, where they were left out before.
+- Added sliders, number fields, pickers and switches to answers in the iPhone and Android apps: a calculator or another view the Agent builds with them works its results out again as you change them, as on the Mac, where the inputs were left out and the results blank before; a button can send your values along with its prompt, and Reset Values in the card's menu puts them back.
+- Added quizzes you can answer in the iPhone and Android apps: pick an option and check it to see whether it's right, the answer and why, then try again, as on the Mac, where the phone showed only the question and its options before.
+- Added flashcards you can study in the iPhone and Android apps: tap a card or Flip card to see its back and note, and move through the deck with the arrows, as on the Mac, where the phone showed the fronts and backs as a list before.
+- Added checklists you can tick off in the iPhone and Android apps: tap an item to tick it or clear it, with the count and a progress bar filling as you go, as on the Mac, where the phone showed the items as a list before.
+- Added tabs in the iPhone and Android apps, as on the Mac: a plan in parts, such as the days of a workout, shows one part at a time under a row of tabs you tap, where the phone showed every part in a long list before.
+- Added step-by-step walkthroughs in the iPhone and Android apps, as on the Mac: an explanation in stages, such as how a recipe or an algorithm goes, shows one step at a time with Previous, Next and a bar of the steps you can tap, where the phone showed every step in a list before.
+- Added schedules to answers in the iPhone and Android apps: a day or week the Agent plans shows as an agenda by day, each block's time beside a bar of its kind's color, with a legend of the kinds and their hours, as on the Mac, where it was a plain list before.
+- Changed option comparisons in the iPhone and Android apps to look like the Mac's: plans or products to choose from show as cards, each with its price, what it includes and lacks, and the best fit ringed with its badge, where the phone showed a plain list before.
+- Changed timelines in the iPhone and Android apps to look like the Mac's: itineraries, histories and the steps of a process show each event as a dot on a line, its time beside its title and its details under them, where the phone showed a plain bulleted list before.
+- Changed flowcharts in the iPhone and Android apps to look like the Mac's: steps go down a column with arrows between them, a start or end in a small capsule, a decision in a diamond, and its Yes and No branches side by side under their labels, where the phone showed a numbered list before.
+- Changed roadmaps in the iPhone and Android apps to look like the Mac's: phases stand side by side, each a colored header over its progress bar with its title and percentage, and the overall completion shows under them, where the phone showed a bulleted list before.
+- Changed trees in the iPhone and Android apps to look like the Mac's: org charts and breakdowns show as colored boxes joined by lines, or as an indented outline when they are too wide for the screen, where the phone showed a bulleted list before.
+- Changed cycles in the iPhone and Android apps to look like the Mac's: stages sit around a loop as numbered colored circles joined by arrows, with the title in the middle and a key of what each stage does under it, where the phone showed a numbered list before.
+- Changed maps in the iPhone app to look like the Mac's: places are marked by number on an Apple Maps picture, joined by a dashed line when they make a route, with the numbered list of them under it, where the phone showed a plain list before; the Android app shows the numbered list.
+- Changed weather cards in answers in the iPhone and Android apps to show like the Mac's: the conditions now with their tiles, the next six hours and the days ahead, or the one-row card, loaded live for the named place or for where the phone is, where the phone left the weather out before.
+- Changed flow charts and trees in answers in the iPhone and Android apps to show their icons as on the Mac: each box's icon sits above its name, and in an outline it takes the place of the dot, where the phone left the icons out before.
+- Changed step lists in answers in the iPhone and Android apps to show as on the Mac: each step is a row with its icon in a tinted tile beside its name and description, where the phone showed a plain bulleted list before.
+- Changed colored words in answers in the iPhone and Android apps to show as on the Mac: right answers in green, mistakes in red and other colored or bold words keep their color and weight and stay on the line with the words around them, where the phone showed them plain before.
+- Changed progress bars in answers in the iPhone and Android apps to show as on the Mac: each one is a thin bar in its color under its label and share, with its note under it, and one past its limit, such as spending over a budget, marks where the limit falls and stripes the part beyond it, where the phone showed a row of number tiles before.
+- Changed Mermaid diagrams in answers in the iPhone and Android apps, such as sequence and state diagrams, to show drawn as on the Mac while the Mac is connected, where the phone showed their code before; a tap opens the diagram to zoom in.
+- Changed the main next step under an answer in the iPhone and Android apps to look as on the Mac: a button the Agent makes full width spans the card on a line of its own as a rounded pill with an arrow after its label.
+- Fixed an answer in the iPhone and Android apps losing everything after a part that changes with a choice, when that part's text held an apostrophe.
+
+## Languages
+
+- Fixed Chinese switching between the formal "您" and the informal "你", as an empty chat asking "有什么可以帮您？" and the Mac's location and photo permission prompts; it says "你" throughout.
+- Fixed Traditional Chinese mixing in mainland wording, as an agent called 智能體, 智慧體 or 智慧代理 on different screens, and 保存, 點擊 and 剪貼板 for save, click and clipboard; it says 代理程式, 儲存, 按一下 and 剪貼簿 throughout.
+- Fixed Korean switching from the formal "합니다" to the casual "해요" on some screens, as a stopped task saying "작업을 멈췄어요", and Simplified Chinese showing "模型與服務費率" in traditional characters.
+- Fixed German text switching between the informal du and the formal Sie, as in the chat list reading "auf Ihrem Mac" under "Was soll dein Mac tun?"; it says du throughout.
+- Fixed French text switching between the formal vous and the informal tu, as in Settings › Dictation reading "ce que tu dis"; it says vous throughout.
+- Fixed Portuguese on the Mac mixing in Brazilian words, as Sync, Scheduled Tasks, Teams and the design canvas saying "equipe", "arquivo", "salvar" and "excluir" next to "Definições"; they say "equipa", "ficheiro", "guardar" and "eliminar".
+- Fixed Portuguese switching between the formal "o seu" and the informal "o teu", as on the xAI page offering "Usar o teu plano" next to "o seu plano"; it says o seu throughout.
+- Fixed Portuguese addressing the reader as "você" and starting sentences with a bare "Seu" or "Sua", as the Agent Phone settings saying "Uma tarefa precisa de você"; it says "si" and "o seu" as European Portuguese does.
+- Fixed Portuguese on iPhone and iPad mixing Brazilian and European Portuguese, as in Settings › AI Model saying both "Ajustes" and "Definições" or both "login" and "sessão"; it reads as European Portuguese throughout.
+- Fixed the iPhone app's Portuguese permission prompts for the camera, location, contacts, calendars, reminders, Home and alarms using Brazilian wording such as "câmera" and "código de pareamento"; they now read as European Portuguese.
+- Fixed Settings › AI Model's sign-in choices on iPhone and iPad in German and French, where In use left no room for the choice's name; In use now moves under a name it would cut.
+- Fixed the New chat button at the bottom of the iPad chat list in French, where the pencil hung off the button and "Nouvelle discussion" was cut off.
+- Fixed the iPhone app's Home showing "Ask anything" in English in the message box when the app uses another language.
+- Fixed the iPhone app's chat list, Remote, open chats and sheets, and a chat's messages, such as file cards, changed-file summaries and the buttons under a reply, keeping some labels in the previous language after you change the app's language in Settings.
+- Fixed VoiceOver reading many of the iPhone app's buttons, such as a chat's Side Panel, Chat options, Add photos and Dictate, and the Back, Forward, Reload, Share, Find and More buttons of a side panel page, in the previous language after you change the app's language in Settings.
+- Fixed VoiceOver reading the iPhone app's sidebar button in English when the app uses another language.
+- Fixed VoiceOver announcing in English, in every language, that a chat moved to or out of a project, that an invite code was copied, or that a file arrived during a call.
+- Fixed the iPhone app's file changes card showing its file count in English, and VoiceOver reading its files and line counts in English, when the app uses another language.
+- Fixed the iPhone app naming a web page, window, app or messages added to a message in English in every language.
+- Fixed the iPhone app's settings showing their status, pairing errors, notices and dates in English in every other language, the pairing steps naming a button the iPhone no longer has, and copy confirmations for plugin routes, invite links and phone app links reading in English.
+- Fixed some Worktree messages showing in English in every language, such as the warning that a terminal still has one of a Project's chats open when you archive or delete it, and the reasons a Worktree can't be archived or restored.
+- Fixed the chat's tool summaries, such as "Read a file, ran commands", the "Working for", "Worked for" and "You stopped after" lines, the chat's message buttons, the Permissions menu and tool steps (search counts, approval buttons, output labels) staying in English when Enconvo is set to another language.
+- Fixed chat error and status messages (attaching files, sending, editing, forking, compacting and inserting prompts) showing in English when Enconvo is set to another language.
+- Fixed the message box's slash menu and the model chip's reasoning level (Low, Medium, High, and the rest) showing in English when Enconvo is set to another language.
+- Fixed the chat's Install card and the app context chips above the message box showing English text when Enconvo is set to another language.
+- Fixed the menus and messages of visualizations and cards in chat (copying, downloading, resetting values and the download dialog) showing in English when Enconvo is set to another language.
+- Fixed agent question and approval cards showing their hints, placeholders, "asks" heading and answered labels in English in every other language.
+- Fixed the conversation points pill's Context and Usage tabs showing English group names, counts and notes when Enconvo uses another language.
+- Fixed Archived Chats (the settings page, the sidebar panel and its menu), the archive and restore messages, and the workflow canvas's input and end steps showing in English, and the archived chats' dates ignoring Enconvo's language.
+- Fixed the Memory page (its filters, the box for adding a Memory, the details panel and who reads each Memory) showing in English, and its dates ignoring Enconvo's language.
+- Fixed the saved post preview, an agent's Memory settings, the changes review, the Claude Code usage limits and the archived chat banner showing English in every other language.
+- Fixed Ask AI in the knowledge base, and the chat menus of the workflow Assistant, Plugin Studio and scheduling chats, showing English lines and times when Enconvo uses another language.
+- Fixed Ask AI in the knowledge base asking its suggested questions and Explain in English, which could bring the answer back in English, and showing citation places and errors in English when Enconvo uses another language.
+- Fixed the lines under Ask AI answers that say what was read and searched, and its status while it works, showing in English when Enconvo uses another language.
+- Fixed knowledge base messages (renaming, moving files to the Trash, pasting files, relinking a folder, saving transcripts), knowledge base items' type, date, size and status (card labels, the sort and Types menus, the list columns and the details panel), and a Project's Finish setting notes showing in English when Enconvo is set to another language.
+- Fixed the MCP servers page's messages (connecting, installing, updating, importing and signing out of a server), its AI model access choices and its version notes showing in English when Enconvo is set to another language.
+- Fixed the Skills page's messages (installing, uninstalling, importing and moving skills to the Trash), its switch names and the detail panel's source and date showing in English when Enconvo is set to another language.
+- Fixed the Plugins page's subtitle, its Connector messages (connecting, disconnecting and changing the default account) and its buttons' names showing in English when Enconvo is set to another language.
+- Fixed a Connector's page and its row on the Plugins page showing English or mistranslated, spliced sentences in other languages, such as the line about turning off macOS access after Disconnect.
+- Fixed the card an agent shows to connect a Connector, its Gmail Mail Alerts question, and the API key form staying in English when Enconvo uses another language.
+- Fixed the Computer Use settings showing English permission cards and browser connection times when Enconvo uses another language.
+- Fixed the OpenClaw, Hermes and Ollama setup guides in AI model settings (their steps, statuses, setup dialogs and messages) showing in English when Enconvo is set to another language.
+- Fixed model routes, tag management, reply details, the workflow overview, the knowledge source card and the skill install dialog showing English in every other language, the Command Return shortcut reading as "command result" in German, French, Spanish, Italian and Portuguese, and Chinese leaving the Dynamic Island untranslated on some screens.
+- Fixed the X post saving settings, knowledge base filters and categories, the workflow step palette, the Smart Bar appearance setting and Live Talk's napping status showing English in every other language.
+- Fixed IM Channels' connection messages, the knowledge base editor's word count, read-only and save messages, and New Knowledge Base and Screen Doodle settings messages showing in English when Enconvo is set to another language.
+- Fixed Settings › Account's plan details, the Appearance, refund and log out messages, Settings search messages, the log out and remove Project dialogs, and the Cancel button of several confirmations showing in English when Enconvo is set to another language.
+- Fixed the plans dialog and Settings › Permissions showing in English in other languages: plan cards, the benefits table, the buy, upgrade and add-seat buttons, and each macOS permission's name and purpose now follow the app's language, with point counts written the language's way.
+- Fixed the Points page showing its history, daily usage chart and savings line partly in English or in a garbled word order in other languages, with its dates and numbers now written the way the app's language writes them, and Chinese calling points 点数 everywhere.
+- Fixed Manage devices, Invite Friends, Redeem Code and About showing parts of their text in English or in English word order in other languages, writing dates and counts the language's way, and fixed Korean sentences that ended with a Chinese full stop.
+- Fixed the icon picker, Raycast extension installs from GitHub, device limit notices, the redeem page and the MCP bundle installer showing English in every other language, and Portuguese addressing you informally on some screens, as "Tenta novamente" after an error.
+- Fixed the Close button label of dialogs, the sidebar toggle, page buttons in Points usage and Heartbeat logs, workflow task states, and a few chat and speech model errors showing in English when Enconvo is set to another language.
+- Fixed settings dropdowns showing a garbled empty-search line and English search hints, and settings text and number fields showing an English "Enter …" hint, when Enconvo is set to another language.
+- Fixed page lists showing "Next step" instead of "Next page" in Chinese, the local model's memory usage showing as the Memory feature, German calling the Memory feature "Speicher", and page and count lines such as "Showing 1–20 of 80" keeping English word order in other languages.
+- Fixed lines in chat, skills, MCP install, heartbeat, credentials, subscription usage, avatars and knowledge bases showing English word order or stray words in other languages, such as Chinese file counts ending in "秒", and wrote their times and dates in the app's language.
+- Fixed searches with no match, delete and authorization prompts and other settings lines in languages other than English, which split a quoted name or a count from its sentence, such as Chinese reading 未找到匹配“的文件 before the search term.
+
+---
+
 # Enconvo 2.5.10 Changelog (2026-10-27)
 
 Thanks for all the feedback during the betas. This release turns Projects into
