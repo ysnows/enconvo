@@ -774,6 +774,26 @@ function ReleaseTag({ tone }: { tone: 'latest' | 'beta' }) {
   )
 }
 
+function ReleaseVideoPlayer({ video }: { video: ReleaseVideo | null }) {
+  if (!video) {
+    return null
+  }
+
+  return (
+    <div className="mt-6 aspect-video overflow-hidden rounded-2xl border border-hairline bg-black">
+      <iframe
+        src={`https://www.youtube-nocookie.com/embed/${video.id}?rel=0`}
+        title={video.title}
+        className="h-full w-full"
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerPolicy="strict-origin-when-cross-origin"
+        allowFullScreen
+      />
+    </div>
+  )
+}
+
 function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
   return (
     <div lang="en">
@@ -782,19 +802,6 @@ function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
           className="mb-7 text-[16px] leading-[1.75] text-content-body [overflow-wrap:anywhere]"
           dangerouslySetInnerHTML={richText(entry.intro, query)}
         />
-      )}
-      {entry.video && (
-        <div className="mb-7 aspect-video overflow-hidden rounded-2xl border border-hairline bg-black">
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${entry.video.id}?rel=0`}
-            title={entry.video.title}
-            className="h-full w-full"
-            loading="lazy"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          />
-        </div>
       )}
       {entry.highlights.length > 0 && (
         <div className="grid gap-[18px]">
@@ -900,6 +907,7 @@ function ReleaseEntry({
                 __html: markQuery(escapeHtml(entry.headline), query),
               }}
             />
+            <ReleaseVideoPlayer video={entry.video} />
             <div className="mt-[22px]">
               <ReleaseNotes entry={entry} query={query} />
             </div>
@@ -956,6 +964,7 @@ function ReleaseEntry({
                 </button>
               )}
             </div>
+            <ReleaseVideoPlayer video={entry.video} />
             <div
               id={notesId}
               className="cl-fold"
