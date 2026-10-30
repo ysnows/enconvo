@@ -37,3 +37,36 @@ export function oauthCallbackUrl(
   }
   return url.toString()
 }
+
+const EMAIL_LINK_KEYS = new Set(['token_hash', 'type', 'redirect_to'])
+
+/**
+ * Where an email's /auth/confirm link goes once it has signed in: the redirect the sign-up or
+ * password reset asked for (`redirect_to`, the templates' `{{ .RedirectTo }}`), on this site
+ * only, else the page for the link's type. Pasted from the email's text, the link arrives with
+ * the redirect's own query unescaped and split into ours, so those keys go back onto it.
+ */
+export function emailLinkDestination(search: string, origin: string) {
+  const params = new URLSearchParams(search)
+  const fallback =
+    params.get('type') === 'recovery' ? '/reset_password' : '/login'
+  let target: URL
+  try {
+    target = new URL(params.get('redirect_to') || fallback, origin)
+  } catch {
+    target = new URL(fallback, origin)
+  }
+  // The Site URL stands in for a redirect Supabase didn't allow; it has nothing to continue.
+  // A path that starts with `//` would leave the site once it is the only part kept.
+  if (
+    target.origin !== origin ||
+    target.pathname === '/' ||
+    target.pathname.startsWith('//')
+  )
+    target = new URL(fallback, origin)
+  params.forEach((value, key) => {
+    if (!EMAIL_LINK_KEYS.has(key) && !target.searchParams.has(key))
+      target.searchParams.append(key, value)
+  })
+  return `${target.pathname}${target.search}`
+}

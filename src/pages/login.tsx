@@ -2,12 +2,18 @@ import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
+import Link from 'next/link'
+import { LogOut, User } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 import LoginSuccess from '@/pages/components/LoginSuccess'
 import { LoginAccountChooser } from '@/components/LoginAccountChooser'
 import { NativeRouter } from '@/utils/app/native_router'
 import { affiliateReturnPath } from '@/lib/auth-flow'
+import {
+  PageCornerActions,
+  pageCornerControlClass,
+} from '@/components/PageCorner'
 
 export default function Login() {
   const { t, locale } = useI18n()
@@ -186,60 +192,22 @@ export default function Login() {
   return (
     <>
       <div>
-        <header className="absolute inset-x-0 top-0 z-50">
-          <nav
-            className="flex items-center justify-between p-6 lg:px-8"
-            aria-label={t('Global')}
-          >
-            <div className="ml-32 flex items-center lg:flex-1 "></div>
-
-            <div className="mr-32  lg:flex lg:gap-x-12">
-              {loginState === 'success' && (
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => router.push('/account')}
-                    className="flex items-center space-x-2 rounded-md bg-gray-800 px-4 py-2 text-gray-300 transition-all duration-200 hover:bg-gray-700 hover:text-white"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
-                    <span>{t('Account')}</span>
-                  </button>
-
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-2 rounded-md bg-gray-800 px-4 py-2 text-gray-300 transition-all duration-200 hover:bg-gray-700 hover:text-white"
-                  >
-                    <svg
-                      className="h-5 w-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                      />
-                    </svg>
-                    <span>{t('Log Out')}</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </nav>
-        </header>
+        {loginState === 'success' && (
+          <PageCornerActions>
+            <Link href="/account" className={pageCornerControlClass}>
+              <User size={14} aria-hidden="true" />
+              <span className="sr-only sm:not-sr-only">{t('Account')}</span>
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className={pageCornerControlClass}
+            >
+              <LogOut size={14} aria-hidden="true" />
+              <span className="sr-only sm:not-sr-only">{t('Log out')}</span>
+            </button>
+          </PageCornerActions>
+        )}
 
         {loginState === 'choose' ? (
           <LoginAccountChooser

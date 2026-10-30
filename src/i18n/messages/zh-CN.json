@@ -2461,5 +2461,14 @@
   "This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.": "此兑换码让你的 Enconvo 账户成为 {p0} 个终身席位的团队管理员，每个席位对应一台享有 Premium 功能的 Mac，另附 {p1} Cloud 点数，可与团队共享。",
   "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "无需付款，也无需绑卡。你当前登录的账户将成为团队管理员，占用第一个席位，并在 Enconvo App 中通过邮箱分配其余席位。已在管理团队或已持有某个团队席位的账户无法兑换。",
   "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.": "你的账户已在管理一个团队。Teams 兑换码会新建一个团队，请用不在任何团队中的账户兑换。",
-  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "你的账户持有其他团队的席位。请让该团队的管理员取消分配，或用不在任何团队中的账户兑换此码。"
+  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "你的账户持有其他团队的席位。请让该团队的管理员取消分配，或用不在任何团队中的账户兑换此码。",
+  "Log out": "退出登录",
+  "Confirm your email - Enconvo": "确认邮箱 - Enconvo",
+  "Checking your link…": "正在检查链接…",
+  "This link is invalid or has expired": "此链接无效或已过期",
+  "Email links work once. If you already activated your account, log in. Otherwise, enter your email to get a new link.": "邮件中的链接只能使用一次。如果您已激活账户，请直接登录；否则，请输入邮箱以获取新链接。",
+  "Password reset links work once. Request a new one to set your password.": "重置密码链接只能使用一次。请重新获取链接以设置密码。",
+  "Send a new link": "发送新链接",
+  "Request a new link": "获取新链接",
+  "We've sent a new link to {p0}.": "我们已向 {p0} 发送了新链接。"
 }

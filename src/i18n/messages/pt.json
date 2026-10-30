@@ -2461,5 +2461,14 @@
   "This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.": "Este código torna a sua conta Enconvo administradora de uma equipa com {p0} lugares vitalícios, cada um num Mac com as funcionalidades Premium, com {p1} pontos Cloud para partilhar com a sua equipa.",
   "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "Nada a pagar e sem cartão. A conta com que tem sessão iniciada passa a ser a administradora da equipa, ocupa o primeiro lugar e atribui os restantes por e-mail na app Enconvo. As contas que já gerem uma equipa ou têm um lugar numa equipa não o podem resgatar.",
   "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.": "A sua conta já gere uma equipa. Um código Teams cria uma nova, por isso resgate-o com uma conta que não pertença a nenhuma equipa.",
-  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "A sua conta tem um lugar noutra equipa. Peça ao administrador dessa equipa que o retire, ou resgate este código com uma conta que não pertença a nenhuma equipa."
+  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "A sua conta tem um lugar noutra equipa. Peça ao administrador dessa equipa que o retire, ou resgate este código com uma conta que não pertença a nenhuma equipa.",
+  "Log out": "Terminar sessão",
+  "Confirm your email - Enconvo": "Confirme o seu e-mail - Enconvo",
+  "Checking your link…": "A verificar a ligação…",
+  "This link is invalid or has expired": "Esta ligação é inválida ou expirou",
+  "Email links work once. If you already activated your account, log in. Otherwise, enter your email to get a new link.": "As ligações enviadas por e-mail só funcionam uma vez. Se já ativou a sua conta, inicie sessão. Caso contrário, introduza o seu e-mail para receber uma nova ligação.",
+  "Password reset links work once. Request a new one to set your password.": "As ligações para repor a palavra-passe só funcionam uma vez. Peça uma nova para definir a sua palavra-passe.",
+  "Send a new link": "Enviar uma nova ligação",
+  "Request a new link": "Pedir uma nova ligação",
+  "We've sent a new link to {p0}.": "Enviámos uma nova ligação para {p0}."
 }

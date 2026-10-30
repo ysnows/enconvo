@@ -2461,5 +2461,14 @@
   "This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.": "Este código convierte tu cuenta de Enconvo en administradora de un equipo de {p0} puestos de por vida, cada uno un Mac con las funciones Premium, con {p1} puntos de Cloud para compartir con tu equipo.",
   "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "No hay nada que pagar ni hace falta tarjeta. La cuenta con la que has iniciado sesión pasa a ser la administradora del equipo, ocupa el primer puesto y asigna los demás por correo electrónico en la app de Enconvo. Las cuentas que ya administran un equipo o tienen un puesto en uno no pueden canjearlo.",
   "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.": "Tu cuenta ya administra un equipo. Un código de Teams crea uno nuevo, así que canjéalo con una cuenta que no esté en ningún equipo.",
-  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "Tu cuenta tiene un puesto en otro equipo. Pide al administrador de ese equipo que te lo quite, o canjea este código con una cuenta que no esté en ningún equipo."
+  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "Tu cuenta tiene un puesto en otro equipo. Pide al administrador de ese equipo que te lo quite, o canjea este código con una cuenta que no esté en ningún equipo.",
+  "Log out": "Cerrar sesión",
+  "Confirm your email - Enconvo": "Confirma tu correo - Enconvo",
+  "Checking your link…": "Comprobando el enlace…",
+  "This link is invalid or has expired": "Este enlace no es válido o ha caducado",
+  "Email links work once. If you already activated your account, log in. Otherwise, enter your email to get a new link.": "Los enlaces de los correos solo funcionan una vez. Si ya activaste tu cuenta, inicia sesión. Si no, introduce tu correo para recibir un enlace nuevo.",
+  "Password reset links work once. Request a new one to set your password.": "Los enlaces para restablecer la contraseña solo funcionan una vez. Solicita uno nuevo para establecer tu contraseña.",
+  "Send a new link": "Enviar un enlace nuevo",
+  "Request a new link": "Solicitar un enlace nuevo",
+  "We've sent a new link to {p0}.": "Hemos enviado un enlace nuevo a {p0}."
 }

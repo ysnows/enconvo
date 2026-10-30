@@ -3,7 +3,7 @@ import '@/styles/tailwind.css'
 import React, { useEffect } from 'react'
 import { getLocale } from '@/i18n/locale'
 import { I18nProvider } from '@/i18n/I18nProvider'
-import { LanguageSwitcher } from '@/components/LanguageSwitcher'
+import { PageCorner } from '@/components/PageCorner'
 import { LocaleMetadata } from '@/components/LocaleMetadata'
 import Script from 'next/script'
 import Head from 'next/head'
@@ -31,6 +31,7 @@ const privateRoutes = new Set([
   '/register',
   '/auth',
   '/auth/callback',
+  '/auth/confirm',
   '/confirm-age',
   '/payment',
   '/pay_success',
@@ -154,13 +155,14 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
         </>
       )}
 
-      {!navigationRoutes.has(router.pathname) &&
-        !router.pathname.startsWith('/go/') && (
-          <div className="fixed right-4 top-4 z-[60]">
-            <LanguageSwitcher placement="page" />
-          </div>
-        )}
-      <Component {...pageProps} />
+      <PageCorner
+        visible={
+          !navigationRoutes.has(router.pathname) &&
+          !router.pathname.startsWith('/go/')
+        }
+      >
+        <Component {...pageProps} />
+      </PageCorner>
       <InviteToast />
       <AffiliateOfferToast />
       <WelcomeOffer />

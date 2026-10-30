@@ -99,7 +99,8 @@ export default function RegisterForm({
       ? router.query.returnUrl[0]
       : router.query.returnUrl
     // Web offer, Welcome offer and Affiliate signups must return to their page
-    // after email confirmation rather than opening the native app.
+    // after email confirmation rather than opening the native app. Only a sign-up
+    // the app opened (from=app) hands the account to the app afterwards.
     const emailRedirectTo =
       typeof returnUrl === 'string' &&
       (/^\/(?:ltd|affiliate)(?:[?#/]|$)/.test(returnUrl) ||
@@ -110,7 +111,6 @@ export default function RegisterForm({
           })}`
         : `${window.location.origin}${authFlowHref('/login', {
             ...router.query,
-            from: 'app',
             language: locale,
           })}`
 
@@ -205,7 +205,7 @@ export default function RegisterForm({
         />
       </Head>
 
-      <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A] [color-scheme:dark]">
         <div className="w-full max-w-[320px] space-y-8 px-4">
           <div className="flex flex-col items-center space-y-6">
             <Link href="/" aria-label={t('Home')}>
@@ -259,7 +259,7 @@ export default function RegisterForm({
                   variant="outline"
                   onClick={signInWithGoogle}
                   disabled={googleIsLoading}
-                  className="relative h-10 w-full rounded-xl border-[#333333] bg-[#242424] font-medium text-[#888888] shadow-sm transition-all duration-200 hover:bg-[#2C2C2C] hover:text-[#999999] hover:shadow"
+                  className="relative h-10 w-full rounded-[10px] border-[#333333] bg-[#242424] font-medium text-[#D4D4D4] shadow-sm transition-all duration-200 hover:bg-[#2C2C2C] hover:text-white hover:shadow"
                 >
                   {googleIsLoading ? (
                     <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
@@ -306,7 +306,7 @@ export default function RegisterForm({
                       autoComplete="name"
                       onChange={(e) => setName(e.target.value)}
                       value={name}
-                      className="h-10 border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
+                      className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
                     />
                   </div>
 
@@ -318,7 +318,7 @@ export default function RegisterForm({
                       autoComplete="email"
                       onChange={(e) => setEmail(e.target.value)}
                       value={email}
-                      className="h-10 border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
+                      className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
                     />
                   </div>
 
@@ -329,7 +329,7 @@ export default function RegisterForm({
                       required
                       onChange={(e) => setPassword(e.target.value)}
                       value={password}
-                      className="h-10 border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
+                      className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
                     />
                   </div>
 
@@ -363,7 +363,7 @@ export default function RegisterForm({
                   <Button
                     onClick={signUp}
                     disabled={emailIsLoading}
-                    className="h-10 w-full rounded-xl bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
+                    className="h-10 w-full rounded-[10px] bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
                   >
                     {emailIsLoading && (
                       <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />

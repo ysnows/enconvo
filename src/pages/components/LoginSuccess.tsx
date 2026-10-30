@@ -61,7 +61,7 @@ export default function LoginSuccess({ handleOpenApp, user, fromApp = false }) {
 
             <Button
               onClick={handleOpenApp}
-              className="h-10 w-full max-w-[200px] rounded-xl bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
+              className="h-10 w-full max-w-[200px] rounded-[10px] bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
             >
               {t('Open Enconvo')}
             </Button>
