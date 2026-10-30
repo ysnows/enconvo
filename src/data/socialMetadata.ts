@@ -47,9 +47,9 @@ export const socialPages: Record<string, SocialPage> = {
       'Enconvo — A better Mac assistant. A release timeline highlights New features, Improvements, and Fixes.',
   },
   '/android': {
-    title: 'Enconvo for Android — Download the APK',
+    title: 'Enconvo for Android — Google Play and APK',
     description:
-      'Download the Enconvo Android beta and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
+      'Get Enconvo for Android on Google Play or as an APK, and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
     ...brandImage,
   },
   '/apps': {

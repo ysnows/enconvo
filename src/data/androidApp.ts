@@ -1,15 +1,18 @@
-// Where to get the Enconvo Android app. It is a beta installed from an APK
-// rather than Google Play. The Mac app's Connections card links to the same
-// page (modules/companion/src/mac/android_app.ts). Change both together.
+// Where to get the Enconvo Android app: Google Play, or the APK where Play isn't
+// an option. The Mac app's Connections card links to the same places
+// (modules/companion/src/mac/android_app.ts). Change both together.
 
 /** The download page. The QR code opens it on the phone. */
 export const ANDROID_APP_PAGE_URL = 'https://enconvo.com/android'
+
+export const ANDROID_APP_PLAY_URL =
+  'https://play.google.com/store/apps/details?id=com.enconvo.companion'
 
 /** Always the latest release; each build is uploaded over it. */
 export const ANDROID_APP_APK_URL =
   'https://file.enconvo.com/android/Enconvo-Companion.apk'
 
-export const ANDROID_APP_VERSION = '1.4.0'
+export const ANDROID_APP_VERSION = '1.4.1'
 
 /** The app's minSdk is 28. */
 export const ANDROID_APP_MIN_ANDROID_VERSION = '9'

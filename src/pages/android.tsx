@@ -9,30 +9,28 @@ import {
   primaryButton,
   secondaryButton,
 } from '@/components/landing-styles'
+import { GooglePlayGlyph } from '@/components/GooglePlayGlyph'
 import { SiteNav } from '@/components/SiteNav'
 import {
   ANDROID_APP_APK_URL,
   ANDROID_APP_MIN_ANDROID_VERSION,
+  ANDROID_APP_PLAY_URL,
   ANDROID_APP_QR,
   ANDROID_APP_VERSION,
 } from '@/data/androidApp'
 import { IPHONE_APP_TESTFLIGHT_URL } from '@/data/iphoneApp'
 import { trackEvent } from '@/lib/analytics'
 
-// Where the Android app is installed from: the APK, how to sideload it, and how
-// to pair it. The homepage card, the QR codes and the Mac app's Connections
-// card all lead here.
+// Where the Android app is installed from: Google Play or the APK, how to
+// sideload the APK, and how to pair. The homepage card, the QR codes and the Mac
+// app's Connections card all lead here.
 
 const MAC_DOWNLOAD_URL = 'https://api.enconvo.com/app/download'
 
 const STEPS = [
   {
-    title: 'Download the APK',
-    body: 'Tap Download APK on your phone. If your browser warns about the file type, choose Download anyway.',
-  },
-  {
-    title: 'Allow the install',
-    body: 'Open the downloaded file. When Android asks, allow your browser to install unknown apps, then tap Install.',
+    title: 'Get the app',
+    body: "Tap Get it on Google Play and install Enconvo. If Google Play isn't an option on your phone, install the APK instead.",
   },
   {
     title: 'Open Enconvo',
@@ -42,6 +40,11 @@ const STEPS = [
     title: 'Pair with your Mac',
     body: "On your Mac, open Enconvo Settings → Connections and click Show pairing code, or Pair another phone if a phone is already paired. Scan the code, and the phone signs in with your Mac's Enconvo account.",
   },
+]
+
+const APK_STEPS = [
+  'Tap Download APK on your phone. If your browser warns about the file type, choose Download anyway.',
+  'Open the downloaded file. When Android asks, allow your browser to install unknown apps, then tap Install.',
 ]
 
 const card = 'rounded-[10px] border border-hairline bg-surface-card p-6'
@@ -56,11 +59,11 @@ export default function AndroidPage() {
   return (
     <>
       <Head>
-        <title>{t('Enconvo for Android — Download the APK')}</title>
+        <title>{t('Enconvo for Android — Google Play and APK')}</title>
         <meta
           name="description"
           content={t(
-            'Download the Enconvo Android beta and pair it with Enconvo on your Mac to use its agents and chats from your phone.'
+            'Get Enconvo for Android on Google Play or as an APK, and pair it with Enconvo on your Mac to use its agents and chats from your phone.'
           )}
         />
         <link
@@ -74,12 +77,7 @@ export default function AndroidPage() {
         <main className="mx-auto max-w-[1080px] px-4 pb-24 pt-32 sm:px-6 sm:pt-40 lg:px-12">
           <section className="flex items-center justify-between gap-12">
             <div className="min-w-0 max-w-2xl">
-              <div className="flex items-center gap-3">
-                <p className={metaLabel}>{t('Android app')}</p>
-                <span className="rounded-full bg-signal-yellow/[0.12] px-2 py-0.5 text-[10px] font-semibold uppercase leading-4 tracking-[0.08em] text-signal-yellow">
-                  {t('Beta')}
-                </span>
-              </div>
+              <p className={metaLabel}>{t('Android app')}</p>
               <h1 className="mt-4 text-4xl font-semibold leading-tight sm:text-5xl sm:leading-[1.1]">
                 {t('Enconvo for Android')}
               </h1>
@@ -89,19 +87,38 @@ export default function AndroidPage() {
                 )}
               </p>
               <div className="mt-8">
-                <a
-                  href={ANDROID_APP_APK_URL}
-                  onClick={() =>
-                    trackEvent('download_click', {
-                      platform: 'android',
-                      placement: 'android_page',
-                    })
-                  }
-                  className={`${primaryButton} w-full sm:w-auto`}
-                >
-                  <Download className="h-4 w-4" aria-hidden="true" />
-                  {t('Download APK')}
-                </a>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <a
+                    href={ANDROID_APP_PLAY_URL}
+                    onClick={() =>
+                      trackEvent('download_click', {
+                        platform: 'android',
+                        channel: 'google_play',
+                        placement: 'android_page',
+                      })
+                    }
+                    target="_blank"
+                    rel="noreferrer"
+                    className={`${primaryButton} w-full sm:w-auto`}
+                  >
+                    <GooglePlayGlyph className="h-4 w-4" />
+                    {t('Get it on Google Play')}
+                  </a>
+                  <a
+                    href={ANDROID_APP_APK_URL}
+                    onClick={() =>
+                      trackEvent('download_click', {
+                        platform: 'android',
+                        channel: 'apk',
+                        placement: 'android_page',
+                      })
+                    }
+                    className={`${secondaryButton} w-full sm:w-auto`}
+                  >
+                    <Download className="h-4 w-4" aria-hidden="true" />
+                    {t('Download APK')}
+                  </a>
+                </div>
                 <p className="mt-3 text-sm text-content-muted">
                   {t('Version {version} · Android {android} or later', versions)}
                 </p>
@@ -133,14 +150,14 @@ export default function AndroidPage() {
 
           <section id="install" className="mt-20 scroll-mt-28 sm:mt-24">
             <h2 className="text-2xl font-semibold sm:text-3xl">
-              {t('Install in four steps')}
+              {t('Install in three steps')}
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-content-muted">
               {t(
-                "The beta isn't on Google Play yet, so you install the APK from this page. Android asks once before it lets your browser install apps."
+                'Google Play installs the app and keeps it up to date. Pairing works the same from either install.'
               )}
             </p>
-            <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <ol className="mt-8 grid gap-3 lg:grid-cols-3">
               {STEPS.map((step, index) => (
                 <li key={step.title} className={`${card} p-5`}>
                   <span
@@ -158,6 +175,25 @@ export default function AndroidPage() {
                 </li>
               ))}
             </ol>
+          </section>
+
+          <section id="apk" className={`${card} mt-3 scroll-mt-28`}>
+            <h2 className="text-lg font-semibold">{t('Install the APK instead')}</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-content-body">
+              {t(
+                "For phones without Google Play, or where Enconvo isn't listed there. Android asks once before it lets your browser install apps."
+              )}
+            </p>
+            <ol className="mt-4 max-w-2xl list-decimal space-y-2 pl-5 text-sm leading-6 text-content-muted">
+              {APK_STEPS.map((step) => (
+                <li key={step}>{t(step)}</li>
+              ))}
+            </ol>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-content-muted">
+              {t(
+                'The APK checks for updates and installs them for you. You can also download the latest APK here and install it over the app you have.'
+              )}
+            </p>
           </section>
 
           <section className="mt-16 grid gap-3 md:grid-cols-2">
@@ -225,11 +261,6 @@ export default function AndroidPage() {
             </div>
           </section>
 
-          <p className="mt-10 text-sm leading-6 text-content-ash">
-            {t(
-              'The app checks for updates and installs them for you. You can also download the latest APK here and install it over the app you have.'
-            )}
-          </p>
         </main>
         <Footer />
       </div>

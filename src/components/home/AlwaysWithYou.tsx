@@ -1,12 +1,14 @@
 import { localizePath } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
 import Link from 'next/link'
-import { Download, Smartphone } from 'lucide-react'
+import { Smartphone } from 'lucide-react'
 import { CompanionVisual } from './SectionVisuals'
 import styles from '@/styles/Home.module.css'
 import { Container } from '@/components/Container'
+import { GooglePlayGlyph } from '@/components/GooglePlayGlyph'
 import {
   ANDROID_APP_MIN_ANDROID_VERSION,
+  ANDROID_APP_PLAY_URL,
   ANDROID_APP_QR,
   ANDROID_APP_SECTION_ID,
   ANDROID_APP_VERSION,
@@ -181,7 +183,6 @@ export function AlwaysWithYou() {
                   <div className={styles.mobilePlatformName}>
                     <AndroidGlyph />
                     <span>Android</span>
-                    <span className={styles.mobileTagBeta}>{t('Beta')}</span>
                   </div>
                   <p className={styles.mobilePlatformMeta}>
                     {t('Version {version} · Android {android} or later', {
@@ -190,23 +191,32 @@ export function AlwaysWithYou() {
                     })}
                   </p>
                   <div className={styles.iphoneActions}>
-                    <Link
-                      href="/android"
+                    <a
+                      href={ANDROID_APP_PLAY_URL}
                       onClick={() =>
                         trackEvent('android_app_click', {
+                          channel: 'google_play',
                           placement: 'always_with_you',
                         })
                       }
+                      target="_blank"
+                      rel="noreferrer"
                       className={styles.iphoneButton}
                     >
-                      <Download aria-hidden="true" />
-                      {t('Get the Android app')}
-                    </Link>
+                      <GooglePlayGlyph />
+                      {t('Get it on Google Play')}
+                    </a>
                     <Link
-                      href="/android#install"
+                      href="/android#apk"
+                      onClick={() =>
+                        trackEvent('android_app_click', {
+                          channel: 'apk',
+                          placement: 'always_with_you',
+                        })
+                      }
                       className={styles.iphoneSecondaryLink}
                     >
-                      {t('How to install')}
+                      {t('Download APK')}
                       <span aria-hidden="true">→</span>
                     </Link>
                   </div>
