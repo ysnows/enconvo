@@ -43,6 +43,8 @@ interface RedeemPageProps {
   priceUsd: number
   tier: LicenseCodeTier
   points: number
+  /** A Teams code's Seats, 0 for any other code */
+  seats: number
   requiresCard: boolean
 }
 
@@ -72,6 +74,7 @@ export const getServerSideProps: GetServerSideProps<RedeemPageProps> =
       priceUsd: DEFAULT_PRICE_USD,
       tier: 'standard',
       points: DEFAULT_LICENSE_POINTS,
+      seats: 0,
       requiresCard: true,
     }
 
@@ -95,6 +98,7 @@ function describe(info: RedeemCodeInfo): Partial<RedeemPageProps> {
         status: info.status,
         tier: info.tier,
         points: info.points,
+        seats: info.seats ?? 0,
       }
     : {
         kind: 'trial',
@@ -192,15 +196,18 @@ function UnavailableCode({
 function LicenseRedeemed({
   tier,
   points,
+  seats,
   email,
 }: {
   tier: LicenseCodeTier
   points: number
+  seats: number
   email: string | null
 }) {
   const { t, locale } = useI18n()
 
   const license = LICENSES[tier]
+  const account = email ? <span className="text-content">{email}</span> : t('your account')
   return (
     <>
       <div className="flex items-center gap-3">
@@ -214,20 +221,25 @@ function LicenseRedeemed({
         />
       </h1>
       <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
-        <I18nText
-          source={
-            'Your lifetime {p0} license is on {p1}, and {p2} Cloud points were added to your balance. Open Enconvo on your Mac and sign in with this account to start using it.'
-          }
-          values={{
-            p0: t(license.name),
-            p1: email ? (
-              <span className="text-content">{email}</span>
-            ) : (
-              t('your account')
-            ),
-            p2: points.toLocaleString(locale),
-          }}
-        />
+        {tier === 'teams' ? (
+          <I18nText
+            source={
+              '{p1} is now the Team admin of {p0} lifetime Seats and holds the first one, and {p2} Cloud points were added to its balance to share with your team. Open Enconvo on your Mac, sign in with this account, and assign the other Seats under Settings → Account → Teams.'
+            }
+            values={{ p0: seats.toLocaleString(locale), p1: account, p2: points.toLocaleString(locale) }}
+          />
+        ) : (
+          <I18nText
+            source={
+              'Your lifetime {p0} license is on {p1}, and {p2} Cloud points were added to your balance. Open Enconvo on your Mac and sign in with this account to start using it.'
+            }
+            values={{
+              p0: t(license.name),
+              p1: account,
+              p2: points.toLocaleString(locale),
+            }}
+          />
+        )}
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Link href="/downloads" className={primaryButton}>
@@ -249,7 +261,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
   const router = useRouter()
   // A lookup the server couldn't make is made again here, and may change the kind.
   const [info, setInfo] = useState(props)
-  const { kind, trialDays, priceUsd, tier, points, requiresCard } = info
+  const { kind, trialDays, priceUsd, tier, points, seats, requiresCard } = info
   const [status, setStatus] = useState<PageStatus>(initialStatus)
   const [granted, setGranted] = useState(false)
   const [endsAt, setEndsAt] = useState<string | null>(null)
@@ -318,6 +330,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
           kind: 'license',
           tier: answer.tier,
           points: answer.points,
+          seats: answer.seats ?? 0,
         }))
         setOpening(false)
         setGranted(true)
@@ -345,6 +358,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
   const price = `$${priceUsd}/month`
   const license = LICENSES[tier]
   const isLicense = kind === 'license'
+  const isTeams = isLicense && tier === 'teams'
 
   return (
     <>
@@ -367,7 +381,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
         <SiteNav />
         <main className="mx-auto max-w-[1240px] px-6 pb-24 pt-36 lg:px-12">
           {granted ? (
-            isLicense ? <LicenseRedeemed tier={tier} points={points} email={email} /> : (
+            isLicense ? <LicenseRedeemed tier={tier} points={points} seats={seats} email={email} /> : (
               <div>
                 <span className={metaLabel}>{t('Trial activated')}</span>
                 <h1 className="mt-6 text-4xl font-semibold">{t('Your free month of Plus Cloud is ready')}</h1>
@@ -398,7 +412,19 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                     ? t('Enconvo {p0}, yours for life', { p0: license.name })
                     : t('A free month of Enconvo Cloud')}
                 </h1>
-                {isLicense ? (
+                {isTeams ? (
+                  <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
+                    <I18nText
+                      source={
+                        'This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.'
+                      }
+                      values={{
+                        p0: <span className="font-semibold text-content">{seats.toLocaleString(locale)}</span>,
+                        p1: points.toLocaleString(locale),
+                      }}
+                    />
+                  </p>
+                ) : isLicense ? (
                   <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
                     <I18nText
                       source={
@@ -536,6 +562,12 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                         {t(', lifetime')}
                       </dd>
                     </div>
+                    {isTeams && (
+                      <div className="flex items-baseline justify-between gap-4 py-4">
+                        <dt className="text-content-muted">{t('Seats')}</dt>
+                        <dd className="text-content">{seats.toLocaleString(locale)}</dd>
+                      </div>
+                    )}
                     <div className="flex items-baseline justify-between gap-4 py-4">
                       <dt className="text-content-muted">{t('Macs')}</dt>
                       <dd className="text-content">{license.devices}</dd>
@@ -559,9 +591,13 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                     </div>
                   </dl>
                   <p className="mt-6 text-xs leading-5 text-content-ash">
-                    {t(
-                      "Nothing to pay and no card needed. The license goes on the account you're signed in with and can't be moved afterwards. Accounts that already have this license or a higher one can't redeem it."
-                    )}
+                    {isTeams
+                      ? t(
+                          "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it."
+                        )
+                      : t(
+                          "Nothing to pay and no card needed. The license goes on the account you're signed in with and can't be moved afterwards. Accounts that already have this license or a higher one can't redeem it."
+                        )}
                   </p>
                 </div>
               ) : (

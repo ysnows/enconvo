@@ -2456,5 +2456,8 @@
   "Renews automatically at {p0}/month plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid month.": "{p0}/월(세금 별도)로 자동 갱신됩니다. 결제 관리에서 언제든지 취소할 수 있으며, 플랜은 결제한 달이 끝날 때까지 유지됩니다.",
   "Renews automatically at {p0}/year plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid year.": "취소할 때까지 {p0}/년(세금 별도)으로 자동 갱신됩니다. 계정의 결제 관리에서 언제든지 취소할 수 있으며, 플랜은 결제한 연도가 끝날 때까지 활성 상태로 유지됩니다.",
   "Renews automatically at {p0}/month plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid month.": "취소할 때까지 {p0}/월(세금 별도)로 자동 갱신됩니다. 계정의 결제 관리에서 언제든지 취소할 수 있으며, 플랜은 결제한 달이 끝날 때까지 활성 상태로 유지됩니다.",
-  "One-time payment. Never renews.": "1회 결제. 갱신되지 않습니다."
+  "One-time payment. Never renews.": "1회 결제. 갱신되지 않습니다.",
+  "{p1} is now the Team admin of {p0} lifetime Seats and holds the first one, and {p2} Cloud points were added to its balance to share with your team. Open Enconvo on your Mac, sign in with this account, and assign the other Seats under Settings → Account → Teams.": "{p1} 계정이 이제 평생 좌석 {p0}개의 팀 관리자가 되어 첫 번째 좌석을 사용하며, 팀과 함께 쓸 수 있도록 Cloud 포인트 {p2}개가 잔액에 추가되었습니다. Mac에서 Enconvo를 열고 이 계정으로 로그인한 뒤 설정 → 계정 → Teams에서 나머지 좌석을 배정하세요.",
+  "This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.": "이 코드를 사용하면 Enconvo 계정이 평생 좌석 {p0}개의 팀 관리자가 됩니다. 좌석마다 Premium 기능이 포함된 Mac 1대를 쓸 수 있으며, 팀과 함께 쓸 Cloud 포인트 {p1}개도 제공됩니다.",
+  "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "결제나 카드 등록이 필요 없습니다. 로그인한 계정이 팀 관리자가 되어 첫 번째 좌석을 사용하고, 나머지 좌석은 Enconvo 앱에서 이메일로 배정합니다. 이미 팀을 관리 중이거나 다른 팀의 좌석을 가진 계정은 사용할 수 없습니다."
 }
