@@ -11,10 +11,14 @@ goes live only when it is pasted there.
 
 ## How the link works
 
-Each button links to the website's `/auth/confirm` page (`src/pages/auth/confirm.tsx`):
+When the redirect is on this site, each button links to the website's `/auth/confirm` page
+(`src/pages/auth/confirm.tsx`). The top of each template picks the link:
 
 ```
-{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&redirect_to={{ .RedirectTo }}
+{{ $link := .ConfirmationURL }}
+{{ if ge (len .RedirectTo) 24 }}{{ if eq (slice .RedirectTo 0 24) "https://www.enconvo.com/" }}
+  {{ $link = printf "%s/auth/confirm?token_hash=%s&type=signup&redirect_to=%s" .SiteURL .TokenHash (urlquery .RedirectTo) }}
+{{ end }}{{ end }}
 ```
 
 The page signs in with `supabase.auth.verifyOtp({ token_hash, type })`, so the link works in
@@ -30,6 +34,12 @@ hand-off (`from=app`, `source`, `handoff`), a `returnUrl`, and the page language
 `redirect_to` on its own site; anything else goes to `/login` (or `/reset_password` for a
 recovery link).
 
+Any other redirect keeps Supabase's own `{{ .ConfirmationURL }}`. The feedback site
+(`feedback.enconvo.com`) uses the same Supabase project: its email sign-in asks for a link
+with `create_user`, and a new address gets this Confirm signup email, whose link must go back
+to the feedback site's callback. A redirect that wasn't allowed arrives as the bare Site URL,
+which also keeps Supabase's link.
+
 Variables used, from Supabase's
 [email template docs](https://supabase.com/docs/guides/auth/auth-email-templates):
 
@@ -37,11 +47,10 @@ Variables used, from Supabase's
 - `{{ .TokenHash }}`: the hashed one-time token that `verifyOtp` takes.
 - `{{ .RedirectTo }}`: the redirect the sign-up or reset passed, if it is on the
   allow-list; otherwise the Site URL.
+- `{{ .ConfirmationURL }}`: Supabase's own verify link, used for redirects off this site.
 
-Supabase renders templates with Go's `html/template`, which percent-encodes
-`{{ .RedirectTo }}` inside the `href`. The plain-text copy of the link under the button
-shows it unencoded; `/auth/confirm` puts those query keys back onto the redirect, so a
-pasted link works too.
+Supabase renders templates with Go's `html/template`. `urlquery` percent-encodes the
+redirect, so the button and the plain-text copy under it carry the same link.
 
 ## Dashboard steps
 
@@ -55,8 +64,10 @@ Do these in order; nothing here is applied automatically.
    - Redirect URLs: keep entries that allow the addresses the site passes, for example
      `https://www.enconvo.com/**`. These are the same `/login`, `/auth/callback`, and
      `/reset_password` addresses the current emails use, so no new entry should be
-     needed. A redirect that isn't allowed becomes the Site URL, and the page then falls
-     back to `/login` without the app hand-off.
+     needed. A redirect that isn't allowed becomes the Site URL, and the email then
+     carries Supabase's own link, which lands on the home page without the app hand-off.
+     `https://feedback.enconvo.com/api/auth/callback` must stay allowed for the feedback
+     site's email sign-in.
 3. Authentication > Emails > Templates:
    - Confirm signup: set the subject above and paste `confirmation.html`.
    - Reset password: set the subject above and paste `recovery.html`.

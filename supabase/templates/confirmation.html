@@ -13,6 +13,9 @@
       Activate your account to start using Enconvo.
     </div>
 
+    {{- /* Links back to this site verify on /auth/confirm, which works in any browser. Any other redirect (the feedback site's email sign-in) keeps Supabase's own link. */ -}}
+    {{ $link := .ConfirmationURL }}{{ if ge (len .RedirectTo) 24 }}{{ if eq (slice .RedirectTo 0 24) "https://www.enconvo.com/" }}{{ $link = printf "%s/auth/confirm?token_hash=%s&type=signup&redirect_to=%s" .SiteURL .TokenHash (urlquery .RedirectTo) }}{{ end }}{{ end }}
+
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F4F5F7;border-collapse:collapse;">
       <tr>
         <td align="center" style="padding:32px 16px;">
@@ -32,7 +35,7 @@
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:24px auto 0;border-collapse:separate;">
                   <tr>
                     <td align="center" bgcolor="#111418" style="background:#111418;border-radius:10px;">
-                      <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&redirect_to={{ .RedirectTo }}" target="_blank" style="display:inline-block;padding:13px 26px;border-radius:10px;background:#111418;color:#FFFFFF;font-size:15px;font-weight:600;line-height:20px;text-decoration:none;"><span style="color:#FFFFFF;">Activate account</span></a>
+                      <a href="{{ $link }}" target="_blank" style="display:inline-block;padding:13px 26px;border-radius:10px;background:#111418;color:#FFFFFF;font-size:15px;font-weight:600;line-height:20px;text-decoration:none;"><span style="color:#FFFFFF;">Activate account</span></a>
                     </td>
                   </tr>
                 </table>
@@ -45,7 +48,7 @@
 
                 <p style="margin:18px 0 0;font-size:13px;line-height:20px;color:#6B7280;">
                   Button not working? Paste this link into your browser:<br>
-                  <a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&redirect_to={{ .RedirectTo }}" target="_blank" style="font-size:12.5px;color:#2563EB;word-break:break-all;">{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&redirect_to={{ .RedirectTo }}</a>
+                  <a href="{{ $link }}" target="_blank" style="font-size:12.5px;color:#2563EB;word-break:break-all;">{{ $link }}</a>
                 </p>
 
                 <p style="margin:14px 0 0;font-size:13px;line-height:20px;color:#6B7280;">
