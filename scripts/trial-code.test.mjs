@@ -25,7 +25,7 @@ async function page() {
     '@/components/landing-styles': { metaLabel: '', primaryButton: '', secondaryButton: '' },
     '@/lib/supabase': { supabase: {} },
     '@/lib/analytics': { trackEvent: () => {} },
-    '@/lib/redeem-code': { LICENSES: { standard: { name: 'Standard', devices: '1 Mac', updates: '1 year of free updates' } } },
+    '@/lib/redeem-code': { LICENSES: { standard: { name: 'Standard', devices: '1 Mac', updates: '1 year of free updates' }, teams: { name: 'Teams', devices: '1 per Seat', updates: 'Lifetime free updates' } } },
     '@/lib/trial-code': { normalizeTrialCode: value => value, formatTrialCode: value => value },
   }
   const module = { exports: {} }
@@ -49,6 +49,54 @@ test('no-card, original renewing and lifetime code pages show their own terms', 
   const license = renderToStaticMarkup(React.createElement(Page, { ...props, kind: 'license', points: 50000 }))
   assert.match(license, /yours for life/)
   assert.doesNotMatch(license, /Stripe asks|trial points expire/)
+})
+
+test('a Teams License code page shows its Seats and the Team admin terms', async () => {
+  const Page = await page()
+  const props = { code: 'LOCAL-TEST-ONLY', kind: 'license', status: 'available', trialDays: 30, priceUsd: 10, points: 2500000, tier: 'teams', seats: 50, requiresCard: true }
+  const teams = renderToStaticMarkup(React.createElement(Page, props))
+  assert.match(teams, /Enconvo Teams, yours for life/)
+  // The test I18nText fills text only, so the Seat count shows in the What you get list.
+  assert.match(teams, /the Team admin of .* lifetime Seats/)
+  assert.match(teams, /Seats<\/dt><dd[^>]*>50</)
+  assert.match(teams, /2,500,000/)
+  assert.match(teams, /Accounts that already manage a team or hold a Seat on one/)
+  assert.doesNotMatch(teams, /already have this license or a higher one|Stripe asks|trial points expire/)
+  const standard = renderToStaticMarkup(React.createElement(Page, { ...props, tier: 'standard', seats: 0, points: 50000 }))
+  assert.doesNotMatch(standard, /Team admin|Seats/)
+})
+
+test('Teams code terms exist in every locale with intact placeholders', async () => {
+  const keys = [
+    'This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.',
+    "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.",
+    '{p1} is now the Team admin of {p0} lifetime Seats and holds the first one, and {p2} Cloud points were added to its balance to share with your team. Open Enconvo on your Mac, sign in with this account, and assign the other Seats under Settings → Account → Teams.',
+  ]
+  const placeholders = text => (text.match(/\{\w+\}/g) ?? []).sort()
+  for (const locale of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'de', 'fr', 'it', 'pt', 'nl', 'pl']) {
+    const messages = JSON.parse(await readFile(new URL(`../src/i18n/messages/${locale}.json`, import.meta.url), 'utf8'))
+    for (const key of keys) {
+      assert.ok(messages[key], `${locale}: ${key}`)
+      assert.deepEqual(placeholders(messages[key]), placeholders(key), `${locale}: ${key}`)
+    }
+  }
+})
+
+test('the Worker\'s Teams code refusals are translated in every locale and ship with the redeem page', async () => {
+  const source = await readFile(new URL('../src/lib/redeem-code.ts', import.meta.url), 'utf8')
+  const refusals = [
+    "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.",
+    "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.",
+  ]
+  const map = JSON.parse(await readFile(new URL('../src/i18n/message-map.json', import.meta.url), 'utf8'))
+  for (const refusal of refusals) {
+    assert.ok(source.includes(JSON.stringify(refusal)), `redeem-code.ts names: ${refusal}`)
+    assert.ok(map['/redeem/[code]'].includes(refusal), `message map: ${refusal}`)
+  }
+  for (const locale of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'de', 'fr', 'it', 'pt', 'nl', 'pl']) {
+    const messages = JSON.parse(await readFile(new URL(`../src/i18n/messages/${locale}.json`, import.meta.url), 'utf8'))
+    for (const refusal of refusals) assert.ok(messages[refusal], `${locale}: ${refusal}`)
+  }
 })
 
 test('new trial terms exist in every locale with intact placeholders', async () => {

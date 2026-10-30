@@ -2456,5 +2456,10 @@
   "Renews automatically at {p0}/month plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid month.": "按 {p0}/月自动续订，另加税费。可随时在“管理账单”中取消；套餐有效期至已付费月份结束。",
   "Renews automatically at {p0}/year plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid year.": "在你取消之前，按 {p0}/年自动续订，另加税费。可随时在账户的“管理账单”中取消；套餐在已付费年度结束前保持有效。",
   "Renews automatically at {p0}/month plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid month.": "在你取消之前，按 {p0}/月自动续订，另加税费。可随时在账户的“管理账单”中取消；套餐在已付费月份结束前保持有效。",
-  "One-time payment. Never renews.": "一次性付款。永不续订。"
+  "One-time payment. Never renews.": "一次性付款。永不续订。",
+  "{p1} is now the Team admin of {p0} lifetime Seats and holds the first one, and {p2} Cloud points were added to its balance to share with your team. Open Enconvo on your Mac, sign in with this account, and assign the other Seats under Settings → Account → Teams.": "{p1} 现在是 {p0} 个终身席位的团队管理员，并占用第一个席位；另有 {p2} Cloud 点数已加入该账户余额，可与团队共享。在 Mac 上打开 Enconvo，用这个账户登录，然后在“设置 → 账户 → Teams”中分配其余席位。",
+  "This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.": "此兑换码让你的 Enconvo 账户成为 {p0} 个终身席位的团队管理员，每个席位对应一台享有 Premium 功能的 Mac，另附 {p1} Cloud 点数，可与团队共享。",
+  "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "无需付款，也无需绑卡。你当前登录的账户将成为团队管理员，占用第一个席位，并在 Enconvo App 中通过邮箱分配其余席位。已在管理团队或已持有某个团队席位的账户无法兑换。",
+  "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.": "你的账户已在管理一个团队。Teams 兑换码会新建一个团队，请用不在任何团队中的账户兑换。",
+  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "你的账户持有其他团队的席位。请让该团队的管理员取消分配，或用不在任何团队中的账户兑换此码。"
 }
