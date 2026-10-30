@@ -33,6 +33,11 @@ interface ReleaseSection {
   items: string[]
 }
 
+interface ReleaseVideo {
+  id: string
+  title: string
+}
+
 interface Release {
   version: string
   date: string
@@ -40,6 +45,7 @@ interface Release {
   shortDateLabel: string
   slug: string
   intro: string
+  video: ReleaseVideo | null
   sections: ReleaseSection[]
   highlights: string[]
   itemCount: number
@@ -123,6 +129,7 @@ function parseChangelog(source: string): Release[] {
     version: string
     date: string
     introLines: string[]
+    video: ReleaseVideo | null
     sections: ReleaseSection[]
     highlights: string[]
   } | null = null
@@ -173,6 +180,7 @@ function parseChangelog(source: string): Release[] {
       shortDateLabel: formatDate(current.date, 'short'),
       slug: slugForVersion(current.version),
       intro,
+      video: current.video,
       sections,
       highlights: current.highlights,
       itemCount,
@@ -189,6 +197,7 @@ function parseChangelog(source: string): Release[] {
       version,
       date,
       introLines: [],
+      video: null,
       sections: [],
       highlights: [],
     }
@@ -221,6 +230,15 @@ function parseChangelog(source: string): Release[] {
     if (fullReleaseMatch || shortReleaseMatch) {
       const match = fullReleaseMatch || shortReleaseMatch
       startRelease(match![1], match![2])
+      continue
+    }
+
+    const videoMatch = trimmed.match(
+      /^<YouTubePlayer\s+videoId="([a-zA-Z0-9_-]{11})"\s+title="([^"]+)"\s*\/>$/
+    )
+    if (current && videoMatch) {
+      current.video = { id: videoMatch[1], title: videoMatch[2] }
+      lastItems = null
       continue
     }
 
@@ -407,6 +425,7 @@ interface Entry {
   dateLabel: string
   shortDateLabel: string
   intro: string
+  video: ReleaseVideo | null
   highlights: string[]
   sections: ReleaseSection[]
   count: number
@@ -528,6 +547,7 @@ function buildEntries(
       dateLabel: release.dateLabel,
       shortDateLabel: release.shortDateLabel,
       intro: release.intro,
+      video: release.video,
       highlights: release.highlights,
       sections: release.sections,
       count: release.itemCount,
@@ -762,6 +782,19 @@ function ReleaseNotes({ entry, query }: { entry: Entry; query: string }) {
           className="mb-7 text-[16px] leading-[1.75] text-content-body [overflow-wrap:anywhere]"
           dangerouslySetInnerHTML={richText(entry.intro, query)}
         />
+      )}
+      {entry.video && (
+        <div className="mb-7 aspect-video overflow-hidden rounded-2xl border border-hairline bg-black">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${entry.video.id}?rel=0`}
+            title={entry.video.title}
+            className="h-full w-full"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
       )}
       {entry.highlights.length > 0 && (
         <div className="grid gap-[18px]">
