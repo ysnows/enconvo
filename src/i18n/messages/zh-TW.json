@@ -2459,5 +2459,7 @@
   "One-time payment. Never renews.": "一次性付款。永不續訂。",
   "{p1} is now the Team admin of {p0} lifetime Seats and holds the first one, and {p2} Cloud points were added to its balance to share with your team. Open Enconvo on your Mac, sign in with this account, and assign the other Seats under Settings → Account → Teams.": "{p1} 現在是 {p0} 個終身席位的團隊管理員，並使用第一個席位；另有 {p2} Cloud 點數已加入該帳號餘額，可與團隊共享。在 Mac 上開啟 Enconvo，以這個帳號登入，再於「設定 → 帳號 → Teams」中分配其餘席位。",
   "This code makes your Enconvo account the Team admin of {p0} lifetime Seats, each one a Mac with Premium features, with {p1} Cloud points to share with your team.": "此兌換碼讓你的 Enconvo 帳號成為 {p0} 個終身席位的團隊管理員，每個席位對應一台享有 Premium 功能的 Mac，另附 {p1} Cloud 點數，可與團隊共享。",
-  "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "無需付款，也不用綁定信用卡。你目前登入的帳號將成為團隊管理員，使用第一個席位，並在 Enconvo App 中以電子郵件分配其餘席位。已在管理團隊或已持有某個團隊席位的帳號無法兌換。"
+  "Nothing to pay and no card needed. The account you're signed in with becomes the Team admin, holds the first Seat and assigns the others by email in the Enconvo app. Accounts that already manage a team or hold a Seat on one can't redeem it.": "無需付款，也不用綁定信用卡。你目前登入的帳號將成為團隊管理員，使用第一個席位，並在 Enconvo App 中以電子郵件分配其餘席位。已在管理團隊或已持有某個團隊席位的帳號無法兌換。",
+  "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.": "你的帳號已在管理一個團隊。Teams 兌換碼會建立新的團隊，請用不在任何團隊中的帳號兌換。",
+  "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.": "你的帳號持有其他團隊的席位。請讓該團隊的管理員取消分配，或用不在任何團隊中的帳號兌換此碼。"
 }

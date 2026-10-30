@@ -40,6 +40,15 @@ export interface TrialGrant {
 
 export type RedeemResult = ({ kind: 'license' } & LicenseGrant) | ({ kind: 'checkout' } & TrialCheckout) | TrialGrant
 
+/**
+ * The Worker's refusals of a Teams code. The page shows the Worker's message translated,
+ * and a page ships only the translations named in its code (generate-i18n-message-map.mjs).
+ */
+export const TEAMS_CODE_REFUSALS = [
+    "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.",
+    "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.",
+] as const
+
 export const LICENSES: Record<LicenseCodeTier, { name: string; devices: string; updates: string }> = {
     standard: { name: 'Standard', devices: '1 Mac', updates: '1 year of free updates' },
     premium: { name: 'Premium', devices: 'Up to 3 Macs', updates: 'Lifetime free updates' },

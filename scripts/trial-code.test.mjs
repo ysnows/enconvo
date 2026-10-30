@@ -82,6 +82,23 @@ test('Teams code terms exist in every locale with intact placeholders', async ()
   }
 })
 
+test('the Worker\'s Teams code refusals are translated in every locale and ship with the redeem page', async () => {
+  const source = await readFile(new URL('../src/lib/redeem-code.ts', import.meta.url), 'utf8')
+  const refusals = [
+    "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.",
+    "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.",
+  ]
+  const map = JSON.parse(await readFile(new URL('../src/i18n/message-map.json', import.meta.url), 'utf8'))
+  for (const refusal of refusals) {
+    assert.ok(source.includes(JSON.stringify(refusal)), `redeem-code.ts names: ${refusal}`)
+    assert.ok(map['/redeem/[code]'].includes(refusal), `message map: ${refusal}`)
+  }
+  for (const locale of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'de', 'fr', 'it', 'pt', 'nl', 'pl']) {
+    const messages = JSON.parse(await readFile(new URL(`../src/i18n/messages/${locale}.json`, import.meta.url), 'utf8'))
+    for (const refusal of refusals) assert.ok(messages[refusal], `${locale}: ${refusal}`)
+  }
+})
+
 test('new trial terms exist in every locale with intact placeholders', async () => {
   const keys = [
     'Trial activated',

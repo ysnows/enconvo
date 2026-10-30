@@ -8483,6 +8483,8 @@
     "You've already claimed this offer",
     "Your AI companion, in action",
     "Your account already includes Enconvo Cloud, so there's nothing to add.",
+    "Your account already manages a team. A Teams code starts a new one, so redeem it with an account that isn't on a team.",
+    "Your account has a Seat on another team. Ask that team's admin to unassign it, or redeem this code with an account that isn't on a team.",
     "Your code hasn't been used. Start again whenever you're ready.",
     "Your free month of Plus Cloud is ready",
     "Your lifetime {p0} license is on {p1}, and {p2} Cloud points were added to your balance. Open Enconvo on your Mac and sign in with this account to start using it.",
