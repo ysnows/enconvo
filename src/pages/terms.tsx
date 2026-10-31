@@ -12,7 +12,7 @@ import { COMPANY_NAME, COPYRIGHT_NOTICE_EMAIL, DMCA_AGENT } from '@/data/legal'
 import { MINIMUM_AGE } from '@/lib/age-gate'
 
 // An ISO date parses as UTC midnight, so the UTC format below shows this day in every time zone.
-const LAST_UPDATED = '2026-10-25'
+const LAST_UPDATED = '2026-10-31'
 
 export default function Terms() {
   const { t, locale } = useI18n()
@@ -240,6 +240,22 @@ export default function Terms() {
               'If we remove or disable material because of a notice, we will tell the person who made it available. They may send our designated agent a counter-notice under 17 U.S.C. § 512(g)(3). We may restore the material 10 to 14 business days after we receive a valid counter-notice, unless the person who sent the original notice tells us they have filed a court action. In appropriate circumstances, we close the accounts of people who repeatedly infringe.'
             )}
           </p>
+        </div>
+        <div className="mt-16 max-w-2xl">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            {t('Acceptable use')}
+          </h2>
+          <p className="mt-6">
+            {t(
+              'You may not use Enconvo Cloud for anything illegal or harmful to others, including sexual content involving minors, instructions for serious crimes or violence, threats, and calls for hatred or violence against groups. You must also follow the usage policies of the model providers you reach through Enconvo Cloud.'
+            )}
+          </p>
+          <p className="mt-6">
+            {t(
+              'Enconvo Cloud may refuse a message that appears to break these rules. If an account keeps sending such messages, we may pause or suspend its Cloud AI, and a provider may restrict the account on its side. You can still sign in, manage or cancel your subscription, and delete your account. If you think we got it wrong, write to support@enconvo.com.'
+            )}
+          </p>
+          <p className="mt-6">{t('This section takes effect on November 14, 2026.')}</p>
         </div>
         <div className="mt-16 max-w-2xl">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">

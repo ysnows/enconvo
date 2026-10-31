@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 
 // An ISO date parses as UTC midnight, so the UTC format below shows this day in every time zone.
-const LAST_UPDATED = '2026-10-25'
+const LAST_UPDATED = '2026-10-31'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 function Section({
@@ -237,7 +237,17 @@ export default function Privacy() {
           </p>
           <p>
             {t(
-              'We use this content only to return the result you asked for. We do not store prompts or responses in our databases. Our servers keep short-lived operational logs, which can include parts of a request, to diagnose failures and prevent abuse. These logs are deleted automatically after at most 7 days. Providers process your request under their own terms for API customers.'
+              'We use this content only to return the result you asked for and, from November 14, 2026, to run the check described below. We do not store prompts or responses in our databases. Our servers keep short-lived operational logs, which can include parts of a request, to diagnose failures and prevent abuse. These logs are deleted automatically after at most 7 days. Providers process your request under their own terms for API customers.'
+            )}
+          </p>
+          <p>
+            {t(
+              "Starting November 14, 2026, before a message reaches an Enconvo Cloud model, we send the text you just wrote to OpenAI's moderation model to check it against our usage policy. If a message is refused or flagged, we keep the account, time, model and scores for up to 90 days, and never the words. Repeated refusals can pause Cloud AI on the account."
+            )}
+          </p>
+          <p>
+            {t(
+              "So that a provider's safety action applies to one account instead of everyone, we send OpenAI and Anthropic a stable identifier made from your account with each request. It is a one-way hash, not your email address. We delete our record of it with your account; providers keep their own safety records under their terms."
             )}
           </p>
         </Section>
