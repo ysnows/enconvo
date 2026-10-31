@@ -34,7 +34,7 @@ const faqs = [
     {
       question: 'Does Enconvo use my data for training?',
       answer:
-        'No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.',
+        'No, we do not use any user data for training. All data is encrypted during transmission. Your chats and files stay on your device unless you use a feature that syncs them, and Enconvo Cloud does not store your prompts or responses in its databases. The Privacy Policy has the details.',
     },
     {
       question: 'Is Enconvo an Electron app?',

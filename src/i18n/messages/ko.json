@@ -1043,7 +1043,7 @@
   "No visits in the last": "최근 방문 기록이 없습니다",
   "No visits in the last {p0} days. Share your link and visits appear here as they happen.": "최근 {p0}일 동안 방문이 없습니다. 링크를 공유하면 방문 기록이 발생하는 대로 여기에 표시됩니다.",
   "No, Enconvo is a native macOS application built for optimal performance and system integration.": "아니요, Enconvo는 최적의 성능과 시스템 통합을 위해 만들어진 네이티브 macOS 애플리케이션입니다.",
-  "No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.": "아니요, 사용자 데이터를 학습에 사용하지 않습니다. 모든 데이터는 전송 중 암호화되며, 기본적인 사용 분석 데이터만 저장합니다. 고객님의 데이터는 당사 서버에 저장되지 않습니다.",
+  "No, we do not use any user data for training. All data is encrypted during transmission. Your chats and files stay on your device unless you use a feature that syncs them, and Enconvo Cloud does not store your prompts or responses in its databases. The Privacy Policy has the details.": "아니요, 사용자 데이터를 학습에 사용하지 않습니다. 모든 데이터는 전송 중 암호화됩니다. 채팅과 파일은 동기화 기능을 사용하지 않는 한 기기에 저장되며, Enconvo Cloud는 프롬프트와 응답을 데이터베이스에 저장하지 않습니다. 자세한 내용은 개인정보 처리방침을 확인하세요.",
   "No. Cloud plans include a monthly point allowance with zero key setup. If you prefer your own keys or local models, that usage is free and unlimited on every tier — including the free one.": "아니요. 클라우드 플랜에는 매월 포인트가 포함되어 있어 키 설정이 필요 없습니다. 직접 키나 로컬 모델을 사용하시는 경우, 해당 사용량은 무료 등급을 포함한 모든 등급에서 무료이며 무제한입니다.",
   "No. You need a free Enconvo account, so your dashboard and payouts have somewhere to live.": "아니요. 대시보드와 지급 내역을 보관할 수 있도록 무료 Enconvo 계정이 필요합니다.",
   "Not a year.": "1년 미만입니다.",

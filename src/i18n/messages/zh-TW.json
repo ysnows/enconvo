@@ -1043,7 +1043,7 @@
   "No visits in the last": "最近沒有造訪記錄",
   "No visits in the last {p0} days. Share your link and visits appear here as they happen.": "最近 {p0} 天沒有造訪。分享您的連結,造訪紀錄會即時顯示在這裡。",
   "No, Enconvo is a native macOS application built for optimal performance and system integration.": "不,Enconvo 是原生 macOS 應用程式,專為達到最佳效能與系統整合而打造。",
-  "No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.": "不會。我們不會使用任何使用者資料進行訓練。所有資料在傳輸過程中皆經過加密,我們僅儲存基本的使用分析資料。您的資料絕不會儲存在我們的伺服器上。",
+  "No, we do not use any user data for training. All data is encrypted during transmission. Your chats and files stay on your device unless you use a feature that syncs them, and Enconvo Cloud does not store your prompts or responses in its databases. The Privacy Policy has the details.": "不會。我們不會使用任何使用者資料進行訓練。所有資料在傳輸過程中皆經過加密。除非您使用會同步資料的功能,否則您的聊天和檔案都保存在您的裝置上,Enconvo Cloud 也不會在資料庫中儲存您的提示詞和回覆。詳情請見隱私權政策。",
   "No. Cloud plans include a monthly point allowance with zero key setup. If you prefer your own keys or local models, that usage is free and unlimited on every tier — including the free one.": "不需要。雲端方案每月包含一定的點數額度,無需任何金鑰設定。如果您偏好使用自己的金鑰或本機模型,這部分用量在所有等級(包括免費等級)皆免費且不限量。",
   "No. You need a free Enconvo account, so your dashboard and payouts have somewhere to live.": "不可以。你需要一個免費的 Enconvo 帳號，這樣你的儀表板和撥款紀錄才有地方存放。",
   "Not a year.": "不足一年。",

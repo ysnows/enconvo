@@ -1043,7 +1043,7 @@
   "No visits in the last": "直近の訪問はありません",
   "No visits in the last {p0} days. Share your link and visits appear here as they happen.": "過去 {p0} 日間の訪問はありません。リンクを共有すると、訪問がここにリアルタイムで表示されます。",
   "No, Enconvo is a native macOS application built for optimal performance and system integration.": "いいえ、Enconvo は最適なパフォーマンスとシステム統合を実現するために作られた、ネイティブの macOS アプリです。",
-  "No, we do not use any user data for training. All data is encrypted during transmission and we only store basic usage analytics. Your data is never stored on our servers.": "いいえ、ユーザーデータをトレーニングに使用することは一切ありません。すべてのデータは送信中に暗号化され、保存するのは基本的な利用分析データのみです。お客様のデータが当社のサーバーに保存されることはありません。",
+  "No, we do not use any user data for training. All data is encrypted during transmission. Your chats and files stay on your device unless you use a feature that syncs them, and Enconvo Cloud does not store your prompts or responses in its databases. The Privacy Policy has the details.": "いいえ、ユーザーデータをトレーニングに使用することは一切ありません。すべてのデータは送信中に暗号化されます。チャットとファイルは、同期する機能を使わない限りお使いのデバイスに保存され、Enconvo Cloud はプロンプトや応答をデータベースに保存しません。詳しくはプライバシーポリシーをご覧ください。",
   "No. Cloud plans include a monthly point allowance with zero key setup. If you prefer your own keys or local models, that usage is free and unlimited on every tier — including the free one.": "いいえ。クラウドプランには毎月のポイント枠が含まれており、キーの設定は不要です。ご自身のキーやローカルモデルを使う場合、その利用は無料フリープランを含むすべてのプランで無制限です。",
   "No. You need a free Enconvo account, so your dashboard and payouts have somewhere to live.": "いいえ。ダッシュボードと支払いの保存先として、無料のEnconvoアカウントが必要です。",
   "Not a year.": "1年未満です。",
