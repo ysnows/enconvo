@@ -6,10 +6,11 @@ import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import ts from 'typescript'
 
-// Auto-renewal terms beside every Subscribe button: the Cloud plan cards and the comparison
-// table state the price, the period, that the plan renews until cancelled, where to cancel
-// and when cancelling takes effect; one-time purchases say they never renew. Checkout's own
-// text is built from the Stripe price (src/lib/renewal-terms.ts).
+// Auto-renewal terms beside every Subscribe button: the Cloud plan cards state the price, the
+// period, that the plan renews until cancelled, where to cancel and when cancelling takes
+// effect. The comparison table states the amount under each button and the rest once, in its
+// foot. One-time purchases say they never renew. Checkout's own text is built from the Stripe
+// price (src/lib/renewal-terms.ts).
 
 const compilerOptions = {
   module: ts.ModuleKind.CommonJS,
@@ -83,14 +84,18 @@ test('monthly Cloud cards and table cells state the monthly renewal under each b
       `card terms for ${amount}`
     )
     assert.ok(
-      html.includes(
-        `Subscribe</button><p class="planCtaNote">Renews automatically at ${amount}/month plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid month.</p>`
-      ),
+      html.includes(`Subscribe</button><p class="planNote">Auto-renews at ${amount}/month plus tax.</p>`),
       `table terms for ${amount}`
     )
   }
-  // The license card, then Standard, Premium and Teams in the table: all one-time purchases.
   const html = await renderPricing('monthly')
+  assert.ok(
+    html.includes(
+      'Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid month.'
+    ),
+    'table foot'
+  )
+  // The license card, then Standard, Premium and Teams in the table: all one-time purchases.
   assert.equal(html.split('One-time payment. Never renews.').length - 1, 4)
 })
 
@@ -98,8 +103,45 @@ test('annual Cloud cards state the yearly amount charged at each renewal', async
   for (const [cloud, amount] of [['Plus', '$96'], ['Pro', '$480'], ['Max', '$960']]) {
     const html = await renderPricing('annual', { cloud })
     assert.ok(html.includes(`Renews automatically at ${amount}/year plus tax until you cancel.`), `card terms for ${amount}`)
-    assert.ok(html.includes(`<p class="planCtaNote">Renews automatically at ${amount}/year plus tax.`), `table terms for ${amount}`)
+    assert.ok(html.includes(`<p class="planNote">Auto-renews at ${amount}/year plus tax.</p>`), `table terms for ${amount}`)
     assert.ok(!html.includes('/month plus tax'))
+    assert.ok(html.includes('the plan runs to the end of the paid year.'), 'table foot')
+  }
+})
+
+test('the comparison table has all seven plans, one cell each, and Free buys nothing', async () => {
+  const html = await renderPricing('annual')
+  const start = html.indexOf('role="table"')
+  const table = html.slice(start, html.indexOf('class="foot"', start))
+  const plans = [...table.matchAll(/<p class="planName">(\w+)/g)].map((match) => match[1])
+  assert.deepEqual(plans, ['Free', 'Standard', 'Premium', 'Teams', 'Plus', 'Pro', 'Max'])
+  const rows = table.split('role="rowheader"').slice(1)
+  assert.equal(rows.length, 7)
+  for (const row of rows) assert.equal(row.split('role="cell"').length - 1, 7, row.slice(0, 80))
+  assert.ok(table.includes('aria-label="Download — Free"'))
+  assert.ok(table.includes('aria-label="Subscribe — Pro"'))
+  assert.ok(!table.includes('Subscribe — Free'))
+})
+
+test('the feature list marks only what Free limits or leaves out', async () => {
+  const html = await renderPricing('annual')
+  assert.ok(!html.includes('Every plan<'))
+  for (const tag of ['Free: 60 min / month', 'Free: 5 min / month', 'Free: 1 active', 'Free: 1 running', 'Paid plans'])
+    assert.ok(html.includes(`>${tag}</span>`), tag)
+  // Two cards in a row hold the same number of item rows, so neither has empty space.
+  const cards = [...html.matchAll(/grid-column:span (\d+).*?--columns:(\d+).*?<\/ul>/g)].map((match) => ({
+    span: Number(match[1]),
+    rows: Math.ceil((match[0].split('class="featureItem"').length - 1) / Number(match[2])),
+  }))
+  assert.equal(cards.length, 7)
+  for (let i = 0; i < cards.length; ) {
+    if (cards[i].span === 12) {
+      i += 1
+      continue
+    }
+    assert.equal(cards[i].span + cards[i + 1].span, 12, `row at card ${i}`)
+    assert.equal(cards[i].rows, cards[i + 1].rows, `rows at card ${i}`)
+    i += 2
   }
 })
 

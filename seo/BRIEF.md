@@ -34,8 +34,9 @@ Success is measured by conversions, not traffic.
 | `download_click` | Hero "Download for macOS" menu item (arm64 or x64), or the Download APK button on `/android` | Mac: `arch` (`arm64`, `x64`, `auto`), `placement` (`hero`, `changelog`, `android_page`). Android: `platform` (`android`), `placement` (`android_page`). Mac clicks send no `platform`. Both send `page_path` |
 | `begin_checkout` | Any license or Cloud plan CTA in the homepage pricing section | `plan` (lookup key, e.g. `standard`, `premium`, `teams`, `monthly`, `pro_yearly`), `signed_in`, `page_path` |
 
-The pricing code also sends `download_click` with `placement: pricing_free`
-from its Free branch, but no homepage button uses that branch today.
+The homepage pricing section also sends `download_click`, with
+`placement: pricing_free` from the Free card and
+`placement: pricing_comparison` from the plan comparison table.
 
 The homepage Android card sends `android_app_click` with
 `placement: always_with_you` when it opens `/android`; the APK download itself is

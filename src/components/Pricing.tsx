@@ -7,7 +7,7 @@ import compare from '@/styles/PlanComparison.module.css'
 import cards from '@/styles/PricingCards.module.css'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
@@ -62,7 +62,11 @@ async function startCheckout(
   try {
     setIsLoading(true)
     if (lookupKey === 'free') {
-      trackEvent('download_click', { arch: 'auto', placement: 'pricing_free' })
+      trackEvent('download_click', {
+        arch: 'auto',
+        placement:
+          placement === 'comparison' ? 'pricing_comparison' : 'pricing_free',
+      })
       reportAffiliateDownload()
       reportCampaignDownload()
       window.location.href = 'https://api.enconvo.com/app/download'
@@ -143,8 +147,9 @@ interface PlanProps {
 }
 
 // The auto-renewal terms under a Cloud plan's button: what renews, how to cancel and when
-// cancelling takes effect (the billing portal cancels at the end of the paid period).
-// Checkout repeats them beside Stripe's Subscribe button (lib/renewal-terms.ts).
+// cancelling takes effect (the billing portal cancels at the end of the paid period). In the
+// comparison table, `compact` keeps each column to its amount, and the table's foot says the
+// rest once. Checkout repeats them beside Stripe's Subscribe button (lib/renewal-terms.ts).
 function RenewalTerms({
   amount,
   period,
@@ -155,14 +160,8 @@ function RenewalTerms({
   const values = { p0: amount }
   const text = compact
     ? period === 'year'
-      ? t(
-          'Renews automatically at {p0}/year plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid year.',
-          values
-        )
-      : t(
-          'Renews automatically at {p0}/month plus tax. Cancel anytime in Manage billing; the plan runs to the end of the paid month.',
-          values
-        )
+      ? t('Auto-renews at {p0}/year plus tax.', values)
+      : t('Auto-renews at {p0}/month plus tax.', values)
     : period === 'year'
     ? t(
         'Renews automatically at {p0}/year plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid year.',
@@ -175,110 +174,178 @@ function RenewalTerms({
   return <p className={className}>{text}</p>
 }
 
-// ---- Plan comparison: how paid plans differ, and every feature with its Free
+// ---- Plan comparison: how the seven plans differ, and every feature with its Free
 // limit. Values mirror the in-app plan picker (PlansDialog), the worker's
 // cloudTiers.ts and the sync quotas.
 
-type PaidPlan = {
+// The two Pricing dimension groups. The names are catalog keys.
+type PlanGroup = 'You bring the AI' | 'We bring the AI'
+const PLAN_GROUPS: { id: PlanGroup }[] = [
+  { id: 'You bring the AI' },
+  { id: 'We bring the AI' },
+]
+
+type PlanColumn = {
   name: string
-  kind: 'License' | 'Cloud'
+  group: PlanGroup
   best: string
   featured?: boolean
 }
 
-// Column order for the paid-plan table; Cloud prices come from CLOUD_TIERS.
-const PAID_PLANS: PaidPlan[] = [
-  { name: 'Standard', kind: 'License', best: 'One Mac, your own API keys.' },
+// Column order for the table; Cloud prices come from CLOUD_TIERS.
+const PLAN_COLUMNS: PlanColumn[] = [
+  {
+    name: 'Free',
+    group: 'You bring the AI',
+    best: 'Most of Enconvo, on your own keys.',
+  },
+  {
+    name: 'Standard',
+    group: 'You bring the AI',
+    best: 'One Mac, your own API keys.',
+  },
   {
     name: 'Premium',
-    kind: 'License',
+    group: 'You bring the AI',
     best: 'Lifetime updates on up to 3 Macs.',
   },
   {
     name: 'Teams',
-    kind: 'License',
+    group: 'You bring the AI',
     // {p0} is the seat price on the lifetime schedule.
     best: 'One account per person, +{p0} a seat.',
   },
-  { name: 'Plus', kind: 'Cloud', best: 'Light daily use, no API keys.' },
+  {
+    name: 'Plus',
+    group: 'We bring the AI',
+    best: 'Light daily use, no API keys.',
+  },
   {
     name: 'Pro',
-    kind: 'Cloud',
+    group: 'We bring the AI',
     best: 'Heavy daily use and agents.',
     featured: true,
   },
-  { name: 'Max', kind: 'Cloud', best: 'All-day agents and long tasks.' },
+  {
+    name: 'Max',
+    group: 'We bring the AI',
+    best: 'All-day agents and long tasks.',
+  },
 ]
 
-// A cell is text plus an optional meter: `bar` is a 0–100 fill, `dots` a
-// 1–5 count. `strong` marks a step up worth noticing.
-type DiffCell = {
-  text: string
-  bar?: number
-  dots?: number
-  strong?: boolean
-  tone?: 'muted' | 'good'
-}
-const PLAN_DIFFS: { feature: string; hint: string; cells: DiffCell[] }[] = [
+type DiffCell =
+  | { kind: 'included' }
+  | { kind: 'none' }
+  | {
+      kind: 'value'
+      text: string
+      unit?: string
+      unitValues?: Record<string, string>
+      tone?: 'good' | 'limit'
+    }
+const INCLUDED: DiffCell = { kind: 'included' }
+const NONE: DiffCell = { kind: 'none' }
+const amount = (text: string, unit?: string): DiffCell => ({
+  kind: 'value',
+  text,
+  unit,
+})
+
+// One cell per PLAN_COLUMNS entry, in its order.
+const PLAN_DIFFS: { feature: string; hint?: string; cells: DiffCell[] }[] = [
+  {
+    feature: 'All features',
+    hint: 'Free has limits, listed below',
+    cells: [
+      { kind: 'value', text: 'Has limits', tone: 'limit' },
+      INCLUDED,
+      INCLUDED,
+      INCLUDED,
+      INCLUDED,
+      INCLUDED,
+      INCLUDED,
+    ],
+  },
   {
     feature: 'Cloud points',
     hint: 'For Cloud models and services',
     cells: [
-      { text: '50,000 bonus', bar: 12 },
-      { text: '150,000 bonus', bar: 30, strong: true },
-      { text: '50,000 / seat', bar: 12 },
-      { text: '500K / month', bar: 50, strong: true },
-      { text: '2.5M / month', bar: 85, strong: true },
-      { text: '5M / month', bar: 100, strong: true },
+      amount('5,000', 'once'),
+      amount('50,000', 'bonus'),
+      amount('150,000', 'bonus'),
+      amount('50,000', 'per seat'),
+      amount('500K', 'a month'),
+      amount('2.5M', 'a month'),
+      amount('5M', 'a month'),
     ],
   },
   {
     feature: 'Model discounts',
     hint: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash',
     cells: [
-      { text: 'Standard rate', tone: 'muted' },
-      { text: 'Standard rate', tone: 'muted' },
-      { text: 'Standard rate', tone: 'muted' },
-      { text: 'Standard rate', tone: 'muted' },
-      { text: '1/2 price', strong: true, tone: 'good' },
-      { text: '1/4 price', strong: true, tone: 'good' },
+      NONE,
+      NONE,
+      NONE,
+      NONE,
+      NONE,
+      {
+        kind: 'value',
+        text: '1/2 price',
+        unit: 'up to {p0} points',
+        unitValues: { p0: '5M' },
+        tone: 'good',
+      },
+      {
+        kind: 'value',
+        text: '1/4 price',
+        unit: 'up to {p0} points',
+        unitValues: { p0: '20M' },
+        tone: 'good',
+      },
     ],
   },
   {
     feature: 'Mac devices',
     hint: 'Signed in at the same time',
     cells: [
-      { text: '1', dots: 1 },
-      { text: '3', dots: 3, strong: true },
-      { text: '1 per seat', dots: 1 },
-      { text: '5', dots: 5 },
-      { text: '5', dots: 5 },
-      { text: '5', dots: 5 },
+      amount('1'),
+      amount('1'),
+      amount('3'),
+      amount('1', 'per seat'),
+      amount('5'),
+      amount('5'),
+      amount('5'),
     ],
   },
   {
     feature: 'Sync storage',
     hint: 'Chats, settings & knowledge across Macs',
     cells: [
-      { text: '50 MB', bar: 50 },
-      { text: '100 MB', bar: 100, strong: true },
-      { text: '100 MB', bar: 100 },
-      { text: '100 MB', bar: 100 },
-      { text: '100 MB', bar: 100 },
-      { text: '100 MB', bar: 100 },
+      NONE,
+      amount('50 MB'),
+      amount('100 MB'),
+      amount('100 MB'),
+      amount('100 MB'),
+      amount('100 MB'),
+      amount('100 MB'),
     ],
   },
   {
-    feature: 'Updates & support',
+    feature: 'Updates',
     hint: 'New versions of Enconvo',
     cells: [
-      { text: '1 year of updates' },
-      { text: 'Lifetime updates', strong: true },
-      { text: 'Lifetime updates' },
-      { text: 'Updates + priority support', strong: true },
-      { text: 'Updates + priority support' },
-      { text: 'Updates + priority support' },
+      NONE,
+      amount('1 year'),
+      amount('Lifetime'),
+      amount('Lifetime'),
+      INCLUDED,
+      INCLUDED,
+      INCLUDED,
     ],
+  },
+  {
+    feature: 'Priority support',
+    cells: [NONE, NONE, NONE, NONE, INCLUDED, INCLUDED, INCLUDED],
   },
 ]
 
@@ -291,16 +358,22 @@ const ALL: Access = { kind: 'all' }
 const PAID: Access = { kind: 'paid' }
 const limit = (value: string): Access => ({ kind: 'limit', limit: value })
 
+// `span` is the card's width out of twelve and `columns` how its items are laid out: two
+// cards in a row hold the same number of item rows, so neither has empty space.
 const FEATURE_GROUPS: {
   title: string
   subtitle: string
   icon: string
+  span: number
+  columns: number
   items: { name: string; description: string; access: Access }[]
 }[] = [
   {
     title: 'AI & Agents',
     subtitle: 'Any model, one assistant',
     icon: 'M4 5h16v11H9l-5 4zM9 10h.01M12 10h.01M15 10h.01',
+    span: 7,
+    columns: 2,
     items: [
       {
         name: 'Chat with any model',
@@ -330,6 +403,8 @@ const FEATURE_GROUPS: {
     title: 'Computer & Browser Use',
     subtitle: 'Agents that do the clicking',
     icon: 'M5 3l13 7-5.5 1.8L10.5 18zM13 13l5 5',
+    span: 5,
+    columns: 1,
     items: [
       {
         name: 'Computer Use',
@@ -349,6 +424,8 @@ const FEATURE_GROUPS: {
     title: 'Everywhere on your Mac',
     subtitle: 'One shortcut away',
     icon: 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5',
+    span: 6,
+    columns: 1,
     items: [
       {
         name: 'SmartBar, PopBar & App Sidebar',
@@ -369,9 +446,35 @@ const FEATURE_GROUPS: {
     ],
   },
   {
+    title: 'Automation',
+    subtitle: 'Work that runs on its own',
+    icon: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
+    span: 6,
+    columns: 1,
+    items: [
+      {
+        name: 'Workflows',
+        description: 'Chain steps and tools on a visual canvas.',
+        access: limit('1'),
+      },
+      {
+        name: 'Scheduled tasks',
+        description: 'Run agents and workflows on a schedule.',
+        access: limit('1 active'),
+      },
+      {
+        name: 'IM bots',
+        description: 'Your assistant in Telegram, Discord, Slack and Lark.',
+        access: limit('1 running'),
+      },
+    ],
+  },
+  {
     title: 'Voice & Meetings',
     subtitle: 'Talk instead of type',
     icon: 'M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3zM5 11a7 7 0 0 0 14 0M12 18v3',
+    span: 12,
+    columns: 5,
     items: [
       {
         name: 'Dictation & voice commands',
@@ -404,6 +507,8 @@ const FEATURE_GROUPS: {
     title: 'Knowledge & Memory',
     subtitle: 'Answers from your own files',
     icon: 'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11',
+    span: 5,
+    columns: 1,
     items: [
       {
         name: 'Knowledge bases',
@@ -418,31 +523,11 @@ const FEATURE_GROUPS: {
     ],
   },
   {
-    title: 'Automation',
-    subtitle: 'Work that runs on its own',
-    icon: 'M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z',
-    items: [
-      {
-        name: 'Workflows',
-        description: 'Chain steps and tools on a visual canvas.',
-        access: limit('1'),
-      },
-      {
-        name: 'Scheduled tasks',
-        description: 'Run agents and workflows on a schedule.',
-        access: limit('1 active'),
-      },
-      {
-        name: 'IM bots',
-        description: 'Your assistant in Telegram, Discord, Slack and Lark.',
-        access: limit('1 running'),
-      },
-    ],
-  },
-  {
     title: 'Phone & Sync',
     subtitle: 'Your Mac, wherever you are',
     icon: 'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2',
+    span: 7,
+    columns: 2,
     items: [
       {
         name: 'iPhone & Android app',
@@ -469,14 +554,10 @@ const FEATURE_GROUPS: {
   },
 ]
 
+// A feature without a tag comes with every plan, Free included.
 function AccessTag({ access }: { access: Access }) {
   const { t } = useI18n()
-  if (access.kind === 'all')
-    return (
-      <span className={clsx(compare.tag, compare.tagAll)}>
-        {t('Every plan')}
-      </span>
-    )
+  if (access.kind === 'all') return null
   if (access.kind === 'paid')
     return (
       <span className={clsx(compare.tag, compare.tagPaid)}>
@@ -484,7 +565,7 @@ function AccessTag({ access }: { access: Access }) {
       </span>
     )
   return (
-    <span className={clsx(compare.tag, compare.tagLimit)}>
+    <span className={compare.tag}>
       {t('Free: {p0}', { p0: t(access.limit) })}
     </span>
   )
@@ -508,240 +589,332 @@ function PlanCheckoutButton({
       type="button"
       className={clsx(compare.planCta, featured && compare.planCtaFeatured)}
       disabled={isLoading}
-      aria-label={t('{p0} — {p1}', { p0: t(label), p1: planName })}
+      aria-label={t('{p0} — {p1}', { p0: t(label), p1: t(planName) })}
       onClick={() =>
         startCheckout(lookupKey, setIsLoading, locale, undefined, 'comparison')
       }
     >
-      {isLoading ? t('Going to checkout...') : t(label)}
+      {isLoading ? <span className={cards.spinner} /> : t(label)}
     </button>
   )
 }
 
+function BillingSwitch({
+  billing,
+  onBilling,
+}: {
+  billing: 'monthly' | 'annual'
+  onBilling: (billing: 'monthly' | 'annual') => void
+}) {
+  const { t } = useI18n()
+  const isAnnual = billing === 'annual'
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isAnnual}
+      aria-label={t('Annual billing, save 20%')}
+      className={cards.switch}
+      onClick={() => onBilling(isAnnual ? 'monthly' : 'annual')}
+    >
+      {t('Annual')} <b>−20%</b>
+      <span className={cards.track} />
+    </button>
+  )
+}
+
+function DiffValue({ cell }: { cell: DiffCell }) {
+  const { t } = useI18n()
+  if (cell.kind === 'none')
+    return (
+      <span className={compare.none} role="img" aria-label={t('Not included')}>
+        —
+      </span>
+    )
+  if (cell.kind === 'included')
+    return (
+      <svg
+        className={compare.check}
+        role="img"
+        aria-label={t('Included')}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.6}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M5.5 12.5 10 17l8.5-10" />
+      </svg>
+    )
+  return (
+    <>
+      <span className={compare.value} data-tone={cell.tone}>
+        {t(cell.text)}
+      </span>
+      {cell.unit && (
+        <span className={compare.valueUnit}>
+          {t(cell.unit, cell.unitValues)}
+        </span>
+      )}
+    </>
+  )
+}
+
+function planPrice(plan: PlanColumn, isAnnual: boolean, now: number) {
+  if (plan.name === 'Free') return '$0'
+  const tier = CLOUD_TIERS.find((item) => item.name === plan.name)
+  if (tier) return isAnnual ? tier.annual.perMonth : tier.monthly.price
+  const prices = lifetimePrices(now)
+  return usd(
+    saleCents(
+      plan.name === 'Teams'
+        ? teamsCents(TEAMS_BASE_SEATS, now)
+        : plan.name === 'Premium'
+        ? prices.premium.cents
+        : prices.standard.cents,
+      now
+    )
+  )
+}
+
+function planUnit(plan: PlanColumn, isAnnual: boolean) {
+  if (plan.name === 'Free') return 'forever'
+  if (plan.name === 'Teams') return 'one-time · 5 seats'
+  if (plan.group === 'You bring the AI') return 'one-time'
+  return isAnnual ? '/mo · billed yearly' : '/month'
+}
+
 function PlanComparison({
   billing,
+  onBilling,
   now,
   onChooseTeams,
 }: {
   billing: 'monthly' | 'annual'
+  onBilling: (billing: 'monthly' | 'annual') => void
   now: number
   onChooseTeams: () => void
 }) {
   const { t } = useI18n()
+  const [group, setGroup] = useState<PlanGroup>('You bring the AI')
   const isAnnual = billing === 'annual'
   const prices = lifetimePrices(now)
+  const shown = PLAN_COLUMNS.filter((plan) => plan.group === group).length
 
   return (
     <div id="compare" className={compare.root}>
-      <section className={compare.block} aria-labelledby="compare-paid">
-        <div className={clsx(compare.blockHeading, compare.blockHeadingSplit)}>
+      <section className={compare.block} aria-labelledby="compare-plans">
+        <div className={compare.heading}>
           <div>
-            <h3 id="compare-paid">{t('How paid plans differ')}</h3>
+            <h3 id="compare-plans">{t('How the plans differ')}</h3>
             <p>
               {t(
-                'Same features on all six plans. Only these five things change.'
+                'Every paid plan unlocks the same features. They differ in who brings the AI and how much comes with it.'
               )}
             </p>
           </div>
-          <div className={compare.legend}>
-            <span className={compare.tag}>
-              {t('One-time license: you bring the AI')}
-            </span>
-            <span className={clsx(compare.tag, compare.tagPaid)}>
-              {t('Cloud plan: AI included')}
-            </span>
-          </div>
         </div>
+
         <div
-          className={compare.tableScroll}
-          tabIndex={0}
-          role="region"
-          aria-label={t('How paid plans differ')}
+          className={compare.surface}
+          style={{ '--shown': shown } as CSSProperties}
         >
-          <table className={compare.table}>
-            <thead>
-              <tr>
-                <th scope="col" className={compare.corner}>
-                  <span className="sr-only">{t('Plan')}</span>
-                </th>
-                {PAID_PLANS.map((plan, i) => {
-                  const tier = CLOUD_TIERS.find((c) => c.name === plan.name)
-                  const price = tier
-                    ? isAnnual
-                      ? tier.annual.perMonth
-                      : tier.monthly.price
-                    : usd(
-                        saleCents(
-                          plan.name === 'Teams'
-                            ? teamsCents(TEAMS_BASE_SEATS, now)
-                            : plan.name === 'Premium'
-                            ? prices.premium.cents
-                            : prices.standard.cents,
-                          now
-                        )
-                      )
-                  const note = tier
-                    ? isAnnual
-                      ? '/mo · billed yearly'
-                      : '/month'
-                    : plan.name === 'Teams'
-                    ? 'once · 5 seats'
-                    : 'once'
-                  return (
-                    <th
-                      key={plan.name}
-                      scope="col"
-                      data-featured={plan.featured || undefined}
-                      data-group-start={i === 3 || undefined}
-                      className={compare.planHead}
+          <span className={compare.split} aria-hidden="true" />
+          <span className={compare.glow} aria-hidden="true" />
+
+          {/* Too narrow for all seven: one group at a time. */}
+          <div className={compare.groupBar}>
+            <TierSwitch<PlanGroup>
+              label="Plans to compare"
+              tabs={PLAN_GROUPS}
+              value={group}
+              onChange={setGroup}
+            />
+            {group === 'We bring the AI' && (
+              <BillingSwitch billing={billing} onBilling={onBilling} />
+            )}
+          </div>
+
+          <div role="table" aria-label={t('How the plans differ')}>
+            <div className={compare.band} role="row">
+              <span role="cell" />
+              <div role="columnheader" aria-colspan={4}>
+                <CardKind />
+              </div>
+              <div role="columnheader" aria-colspan={3}>
+                <CardKind cloud />
+                <BillingSwitch billing={billing} onBilling={onBilling} />
+              </div>
+            </div>
+
+            <div className={compare.plans} role="row">
+              <div className={compare.corner} role="cell">
+                <PlusIcon className={compare.cornerIcon} />
+                <p>
+                  <strong>{t('The two stack')}</strong>
+                  {t('Add a Cloud plan to any license, any time.')}
+                </p>
+              </div>
+              {PLAN_COLUMNS.map((plan) => {
+                const tier = CLOUD_TIERS.find((c) => c.name === plan.name)
+                const price = planPrice(plan, isAnnual, now)
+                return (
+                  <div
+                    key={plan.name}
+                    role="columnheader"
+                    className={clsx(
+                      compare.plan,
+                      plan.group !== group && compare.off
+                    )}
+                  >
+                    <p className={compare.planName}>
+                      {t(plan.name)}
+                      {plan.featured && <i>{t('Popular')}</i>}
+                    </p>
+                    <p className={compare.planBest}>
+                      {t(plan.best, { p0: usd(prices.teams_seat.cents) })}
+                    </p>
+                    <p
+                      className={clsx(
+                        compare.planPrice,
+                        price.includes('.') && compare.planPriceCents
+                      )}
                     >
-                      <div className={compare.planBadgeSlot}>
-                        {plan.featured && (
-                          <span className={clsx(compare.tag, compare.tagPaid)}>
-                            {t('Most popular')}
-                          </span>
+                      {price}
+                    </p>
+                    <p className={compare.planUnit}>
+                      {t(planUnit(plan, isAnnual))}
+                    </p>
+                    {plan.name === 'Teams' ? (
+                      <a
+                        href="#pricing-teams"
+                        className={compare.planCta}
+                        onClick={onChooseTeams}
+                      >
+                        {t('Choose seats')}
+                      </a>
+                    ) : (
+                      <PlanCheckoutButton
+                        lookupKey={
+                          tier
+                            ? isAnnual
+                              ? tier.annual.lookupKey
+                              : tier.monthly.lookupKey
+                            : plan.name.toLowerCase()
+                        }
+                        label={
+                          tier
+                            ? 'Subscribe'
+                            : plan.name === 'Free'
+                            ? 'Download'
+                            : 'Buy License'
+                        }
+                        planName={plan.name}
+                        featured={plan.featured}
+                      />
+                    )}
+                    {tier ? (
+                      <RenewalTerms
+                        compact
+                        amount={
+                          isAnnual ? tier.annual.price : tier.monthly.price
+                        }
+                        period={isAnnual ? 'year' : 'month'}
+                        className={compare.planNote}
+                      />
+                    ) : (
+                      <p className={compare.planNote}>
+                        {t(
+                          plan.name === 'Free'
+                            ? 'No card needed'
+                            : 'One-time payment. Never renews.'
                         )}
-                      </div>
-                      <p
-                        className={compare.planKind}
-                        data-cloud={plan.kind === 'Cloud' || undefined}
-                      >
-                        {t(plan.kind)}
                       </p>
-                      <p className={compare.planName}>{t(plan.name)}</p>
-                      <p className={compare.planPrice}>
-                        <strong>{price}</strong>
-                        <span>{t(note)}</span>
-                      </p>
-                      <p className={compare.planBest}>
-                        {t(plan.best, { p0: usd(prices.teams_seat.cents) })}
-                      </p>
-                    </th>
-                  )
-                })}
-              </tr>
-              <tr>
-                <td className={compare.ctaCorner} />
-                {PAID_PLANS.map((plan, i) => {
-                  const tier = CLOUD_TIERS.find((c) => c.name === plan.name)
-                  return (
-                    <td
-                      key={plan.name}
-                      data-featured={plan.featured || undefined}
-                      data-group-start={i === 3 || undefined}
-                      className={compare.planCtaCell}
-                    >
-                      {plan.name === 'Teams' ? (
-                        <a
-                          href="#pricing-teams"
-                          className={compare.planCta}
-                          onClick={onChooseTeams}
-                        >
-                          {t('Choose seats')}
-                        </a>
-                      ) : (
-                        <PlanCheckoutButton
-                          lookupKey={
-                            tier
-                              ? isAnnual
-                                ? tier.annual.lookupKey
-                                : tier.monthly.lookupKey
-                              : plan.name.toLowerCase()
-                          }
-                          label={tier ? 'Subscribe' : 'Buy License'}
-                          planName={plan.name}
-                          featured={plan.featured}
-                        />
-                      )}
-                      {tier ? (
-                        <RenewalTerms
-                          compact
-                          amount={
-                            isAnnual ? tier.annual.price : tier.monthly.price
-                          }
-                          period={isAnnual ? 'year' : 'month'}
-                          className={compare.planCtaNote}
-                        />
-                      ) : (
-                        <p className={compare.planCtaNote}>
-                          {t('One-time payment. Never renews.')}
-                        </p>
-                      )}
-                    </td>
-                  )
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {PLAN_DIFFS.map((row) => (
-                <tr key={row.feature}>
-                  <th scope="row" className={compare.rowHead}>
-                    <span>{t(row.feature)}</span>
-                    <span>{t(row.hint)}</span>
-                  </th>
-                  {row.cells.map((cell, i) => (
-                    <td
-                      key={i}
-                      data-featured={PAID_PLANS[i].featured || undefined}
-                      data-group-start={i === 3 || undefined}
-                      data-cloud={PAID_PLANS[i].kind === 'Cloud' || undefined}
-                    >
-                      <span
-                        className={compare.cellText}
-                        data-strong={cell.strong || undefined}
-                        data-tone={cell.tone}
-                      >
-                        {t(cell.text)}
-                      </span>
-                      {cell.bar !== undefined && (
-                        <span className={compare.meter} aria-hidden="true">
-                          <span style={{ width: `${cell.bar}%` }} />
-                        </span>
-                      )}
-                      {cell.dots !== undefined && (
-                        <span className={compare.dots} aria-hidden="true">
-                          {[1, 2, 3, 4, 5].map((d) => (
-                            <span
-                              key={d}
-                              data-on={d <= cell.dots! || undefined}
-                            />
-                          ))}
-                        </span>
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+
+            {PLAN_DIFFS.map((row) => (
+              <div
+                key={row.feature}
+                role="row"
+                className={clsx(
+                  compare.row,
+                  // A row of dashes says nothing once only one group shows.
+                  row.cells.every(
+                    (cell, i) =>
+                      cell.kind === 'none' || PLAN_COLUMNS[i].group !== group
+                  ) && compare.rowQuiet
+                )}
+              >
+                <div className={compare.rowLabel} role="rowheader">
+                  <span>{t(row.feature)}</span>
+                  {row.hint && <span>{t(row.hint)}</span>}
+                </div>
+                {row.cells.map((cell, i) => (
+                  <div
+                    key={PLAN_COLUMNS[i].name}
+                    role="cell"
+                    className={clsx(
+                      compare.cell,
+                      PLAN_COLUMNS[i].group !== group && compare.off
+                    )}
+                  >
+                    <DiffValue cell={cell} />
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <p className={compare.foot}>
+            {t(
+              isAnnual
+                ? 'Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid year.'
+                : 'Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid month.'
+            )}
+          </p>
+          {/* The phone table is for reading; buying and its terms stay on the cards. */}
+          <a className={compare.back} href="#pricing">
+            {t('Choose a plan')} <span aria-hidden="true">↑</span>
+          </a>
         </div>
       </section>
 
       <section className={compare.block} aria-labelledby="compare-features">
-        <div className={clsx(compare.blockHeading, compare.blockHeadingSplit)}>
+        <div className={compare.heading}>
           <div>
             <h3 id="compare-features">{t('What you get with Enconvo')}</h3>
             <p>
               {t(
-                'Most of Enconvo is on every plan, Free included. Tags show where Free has a limit.'
+                'All of this comes with every plan, Free included, unless it carries a mark.'
               )}
             </p>
           </div>
-          <div className={compare.legend}>
-            <span className={clsx(compare.tag, compare.tagAll)}>
-              {t('Every plan')}
-            </span>
-            <span className={clsx(compare.tag, compare.tagLimit)}>
+          <ul className={compare.legend}>
+            <li>
+              <span className={compare.dot} />
               {t('Free has a limit')}
-            </span>
-            <span className={clsx(compare.tag, compare.tagPaid)}>
-              {t('Paid plans')}
-            </span>
-          </div>
+            </li>
+            <li>
+              <span className={clsx(compare.dot, compare.dotPaid)} />
+              {t('Paid plans only')}
+            </li>
+          </ul>
         </div>
-        <div className={compare.featureGrid}>
-          {FEATURE_GROUPS.map((group) => (
-            <div key={group.title} className={compare.featureCard}>
+        <div className={compare.bento}>
+          {FEATURE_GROUPS.map((features) => (
+            <div
+              key={features.title}
+              className={clsx(
+                compare.featureCard,
+                features.span === 12 && compare.featureCardFull
+              )}
+              style={{ gridColumn: `span ${features.span}` }}
+            >
               <div className={compare.featureHead}>
                 <span className={compare.featureIcon}>
                   <svg
@@ -749,26 +922,27 @@ function PlanComparison({
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth={1.7}
+                    strokeWidth={1.6}
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
-                    <path d={group.icon} />
+                    <path d={features.icon} />
                   </svg>
                 </span>
                 <div>
-                  <h4>{t(group.title)}</h4>
-                  <p>{t(group.subtitle)}</p>
+                  <h4>{t(features.title)}</h4>
+                  <p>{t(features.subtitle)}</p>
                 </div>
               </div>
-              <ul>
-                {group.items.map((item) => (
-                  <li key={item.name}>
-                    <div>
-                      <span>{t(item.name)}</span>
-                      <span>{t(item.description)}</span>
-                    </div>
+              <ul
+                className={compare.featureItems}
+                style={{ '--columns': features.columns } as CSSProperties}
+              >
+                {features.items.map((item) => (
+                  <li key={item.name} className={compare.featureItem}>
+                    <span>{t(item.name)}</span>
                     <AccessTag access={item.access} />
+                    <p>{t(item.description)}</p>
                   </li>
                 ))}
               </ul>
@@ -1021,7 +1195,10 @@ function TierSwitch<Tier extends string>({
     <div className={cards.seg} role="group" aria-label={t(label)}>
       <span
         className={cards.thumb}
-        style={{ transform: `translateX(calc(${index} * (100% + 2px)))` }}
+        style={{
+          width: `calc((100% - ${8 + (tabs.length - 1) * 2}px) / ${tabs.length})`,
+          transform: `translateX(calc(${index} * (100% + 2px)))`,
+        }}
       />
       {tabs.map((tab) => (
         <button
@@ -1415,17 +1592,7 @@ function CloudCard({
             t('Billed monthly')
           )}
         </span>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={isAnnual}
-          aria-label={t('Annual billing, save 20%')}
-          className={cards.switch}
-          onClick={() => onBilling(isAnnual ? 'monthly' : 'annual')}
-        >
-          {t('Annual')} <b>−20%</b>
-          <span className={cards.track} />
-        </button>
+        <BillingSwitch billing={billing} onBilling={onBilling} />
       </div>
       <CardButton
         lookupKey={isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey}
@@ -1537,6 +1704,7 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
 
         <PlanComparison
           billing={billing}
+          onBilling={setBilling}
           now={now}
           onChooseTeams={() => setLicenseTier('Teams')}
         />
