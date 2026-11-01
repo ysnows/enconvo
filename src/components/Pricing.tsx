@@ -1011,7 +1011,9 @@ const FREE_ROWS: CardRow[] = [
 ]
 
 // What the app enforces on Free (LICENSE_DEVICES, the speech and Live Talk gates,
-// each module's plan gate, the one-time welcome points); any paid plan lifts all of it.
+// each module's plan gate, the one-time welcome points, one paired computer); any paid
+// plan lifts all of it, and pairs up to 10 devices per computer. The long labels sit in
+// the grid's wider middle column, so a new limit goes last.
 const FREE_LIMITS: { label: string; value: string }[] = [
   { label: 'Mac device', value: '1' },
   { label: 'Meetings / mo', value: '60 min' },
@@ -1022,13 +1024,14 @@ const FREE_LIMITS: { label: string; value: string }[] = [
   { label: 'Scheduled task', value: '1 active' },
   { label: 'IM bot', value: '1 running' },
   { label: 'Points, once', value: '5,000' },
+  ...(SHOW_2_5_12_FEATURES ? [{ label: 'Other computer', value: '1' }] : []),
 ]
 
 const PAID_ONLY: string[] = [
   'Remote',
   'Avatar',
   'Sync',
-  ...(SHOW_2_5_12_FEATURES ? ['Host conferences', 'Your other computers'] : []),
+  ...(SHOW_2_5_12_FEATURES ? ['Host conferences'] : []),
 ]
 
 function licenseRows(
@@ -1049,7 +1052,8 @@ function licenseRows(
           { text: 'Host conferences', desc: 'Guests join from a link.' },
           {
             text: 'Your other computers',
-            desc: 'Their chats, terminal and screen, from here.',
+            desc: 'Their chats, terminal and screen, from here. Up to {p0} paired devices per computer, phones included.',
+            descValues: { p0: '10' },
           },
         ]
       : []),

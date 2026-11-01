@@ -21,9 +21,9 @@ const compilerOptions = {
 const translate = (source, values = {}) =>
   source.replace(/\{(\w+)\}/g, (_, key) => String(values[key] ?? `{${key}}`))
 
-async function load(path, mock) {
+async function load(path, mock, edit = (source) => source) {
   const url = new URL(path, import.meta.url)
-  const { outputText } = ts.transpileModule(await readFile(url, 'utf8'), { compilerOptions })
+  const { outputText } = ts.transpileModule(edit(await readFile(url, 'utf8')), { compilerOptions })
   const module = { exports: {} }
   const require = createRequire(url)
   new Function('require', 'module', 'exports', outputText)(
@@ -37,8 +37,15 @@ async function load(path, mock) {
 // CSS modules: each class is its own name.
 const classes = { __esModule: true, default: new Proxy({}, { get: (_, name) => String(name) }) }
 
+// The cards as they will read once 2.5.12 ships: the source with its gate turned on.
+const GATE = /const SHOW_2_5_12_FEATURES = (?:true|false)/
+function release2512(source) {
+  assert.match(source, GATE)
+  return source.replace(GATE, 'const SHOW_2_5_12_FEATURES = true')
+}
+
 // The card shows one Cloud tier at a time, the plan table all of them.
-async function renderPricing(billing, { cloud = 'Plus', license = 'Standard' } = {}) {
+async function renderPricing(billing, { cloud = 'Plus', license = 'Standard', released = false } = {}) {
   const chosen = new Map([
     ['annual', billing],
     ['Plus', cloud],
@@ -70,7 +77,7 @@ async function renderPricing(billing, { cloud = 'Plus', license = 'Standard' } =
     '@/lib/affiliate-journey': { reportAffiliateDownload: () => {} },
     '@/lib/campaign-journey': { reportCampaignDownload: () => {} },
     '@/lib/lifetime-pricing': await load('../src/lib/lifetime-pricing.ts', {}),
-  })
+  }, released ? release2512 : undefined)
   return renderToStaticMarkup(React.createElement(Pricing, { renderedAt: Date.parse('2026-10-25T00:00:00Z') }))
 }
 
@@ -165,6 +172,27 @@ test('features still in beta stay off the public cards until 2.5.12 ships', asyn
   const html = await renderPricing('annual')
   assert.ok(!html.includes('Host conferences'))
   assert.ok(!html.includes('Your other computers'))
+  assert.ok(!html.includes('Other computer'))
+})
+
+test('once 2.5.12 ships, Free pairs one other computer and paid plans pair more', async () => {
+  const html = await renderPricing('annual', { released: true })
+  const start = html.indexOf('aria-label="Free"')
+  const free = html.slice(start, html.indexOf('</article>', start))
+  // Last, so the other nine keep their columns in the grid.
+  assert.ok(free.includes('<dt>Points, once</dt><dd>5,000</dd></div><div><dt>Other computer</dt><dd>1</dd></div></dl>'))
+  assert.equal(free.split('<dt>').length - 1, 10)
+  const chips = free.slice(free.indexOf('Paid plans only'))
+  assert.deepEqual(
+    [...chips.matchAll(/<li>([^<]+)<\/li>/g)].map((match) => match[1]),
+    ['Remote', 'Avatar', 'Sync', 'Host conferences']
+  )
+  assert.ok(
+    html.includes(
+      'Your other computers<span class="desc">Their chats, terminal and screen, from here. Up to 10 paired devices per computer, phones included.</span>'
+    )
+  )
+  assert.ok(html.includes('Host conferences<span class="desc">Guests join from a link.</span>'))
 })
 
 test('the license card follows its tier, and Teams shows its seat price', async () => {
