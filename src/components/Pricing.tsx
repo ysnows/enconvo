@@ -1,12 +1,13 @@
 import { I18nText } from '@/i18n/I18nText'
 import { localizePath, type Locale } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
+import auroraBloom from '@/images/hero-aurora-bloom.webp'
 import styles from '@/styles/Home.module.css'
 import compare from '@/styles/PlanComparison.module.css'
+import cards from '@/styles/PricingCards.module.css'
 import clsx from 'clsx'
 import Link from 'next/link'
-import { Fragment, useEffect, useState } from 'react'
-import { Button } from '@/components/Button'
+import { useEffect, useState, type ReactNode } from 'react'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
@@ -174,149 +175,9 @@ function RenewalTerms({
   return <p className={className}>{text}</p>
 }
 
-function PlanFeatures({ features }: { features: string[] }) {
-  const { t, locale } = useI18n()
-
-  return (
-    <ul className={styles.planFeatures}>
-      {features.map((feature) => (
-        <li key={feature}>
-          <CheckIcon className={styles.planCheck} />
-          <span>{t(feature)}</span>
-        </li>
-      ))}
-    </ul>
-  )
-}
-
-function Plan({
-  name,
-  price,
-  wasPrice,
-  priceNote,
-  billingNote,
-  allowance,
-  lookupKey,
-  badge,
-  description,
-  startText = 'Get started',
-  detailsHref,
-  features,
-  featured = false,
-  renewal,
-}: PlanProps) {
-  const { t, locale } = useI18n()
-
-  const [isLoading, setIsLoading] = useState(false)
-
-  return (
-    <section
-      aria-label={t('{p0} plan', { p0: name })}
-      data-spotlight
-      className={clsx(styles.planCard, featured && styles.planFeatured)}
-    >
-      <div className={styles.planIdentity}>
-        <div className={styles.planTitleRow}>
-          <h4>{t(name)}</h4>
-          {badge && <span className={styles.planBadge}>{t(badge)}</span>}
-        </div>
-        <p>{t(description)}</p>
-      </div>
-      <div className={styles.planPriceBlock}>
-        <div className={styles.planPriceRow}>
-          {wasPrice && (
-            <s className={styles.planWas}>
-              <span className="sr-only">{t('Original price ')}</span>
-              {wasPrice}
-            </s>
-          )}
-          <span className={styles.planAmount}>{price}</span>
-          {priceNote && <span className={styles.planUnit}>{t(priceNote)}</span>}
-        </div>
-        <p className={styles.planBillingNote}>{billingNote || t(' ')}</p>
-      </div>
-      <div className={styles.planAction}>
-        <Button
-          onClick={() => startCheckout(lookupKey, setIsLoading, locale)}
-          variant={featured ? 'solid' : 'outline'}
-          color="white"
-          className={styles.planPurchase}
-          disabled={isLoading}
-          aria-label={
-            isLoading
-              ? t('Going to checkout...')
-              : t('{p0} — {p1}', { p0: t(startText), p1: name })
-          }
-        >
-          {isLoading ? (
-            <>
-              <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-              {t('Going to checkout...')}
-            </>
-          ) : (
-            <>
-              {t(startText)}
-              <svg
-                className="ml-2 h-4 w-4"
-                aria-hidden="true"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
-            </>
-          )}
-        </Button>
-        {renewal && (
-          <RenewalTerms {...renewal} className={styles.planRenewal} />
-        )}
-        {detailsHref && (
-          <a
-            href={localizePath(detailsHref, locale)}
-            className={styles.planDetailsLink}
-          >
-            {t('See model & service rates')}
-          </a>
-        )}
-      </div>
-      {allowance && (
-        <p className={styles.planAllowance}>
-          <strong>{allowance.split(' points')[0]}</strong>
-          <span>{t('points / month')}</span>
-        </p>
-      )}
-      <PlanFeatures features={features} />
-    </section>
-  )
-}
-
-// ---- Plan comparison: what upgrading unlocks, how paid plans differ, and
-// every feature with its Free limit. Values mirror the in-app plan picker
-// (PlansDialog), the worker's cloudTiers.ts and the sync quotas.
-
-// Free limits; every paid plan (license or Cloud) lifts all of them.
-const UNLOCKS: { feature: string; free: string | null; paid: string }[] = [
-  { feature: 'Meeting recording', free: '60 min / month', paid: 'Unlimited' },
-  { feature: 'Live captions', free: '60 min / month', paid: 'Unlimited' },
-  { feature: 'Live Talk', free: '5 min / month', paid: 'Unlimited' },
-  { feature: 'Knowledge bases', free: '1', paid: 'Unlimited' },
-  { feature: 'Workflows', free: '1', paid: 'Unlimited' },
-  { feature: 'Scheduled tasks', free: '1 active', paid: 'Unlimited' },
-  { feature: 'IM bots', free: '1 running', paid: 'Unlimited' },
-  {
-    feature: 'Use your Mac from your phone (Remote)',
-    free: null,
-    paid: 'Included',
-  },
-  { feature: 'Avatar on iPhone & Android', free: null, paid: 'Included' },
-  { feature: 'Sync across Macs', free: null, paid: 'Included' },
-]
+// ---- Plan comparison: how paid plans differ, and every feature with its Free
+// limit. Values mirror the in-app plan picker (PlansDialog), the worker's
+// cloudTiers.ts and the sync quotas.
 
 type PaidPlan = {
   name: string
@@ -629,23 +490,6 @@ function AccessTag({ access }: { access: Access }) {
   )
 }
 
-function TickIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M5 12.5l4.5 4.5L19 7.5" />
-    </svg>
-  )
-}
-
 function PlanCheckoutButton({
   lookupKey,
   label,
@@ -677,74 +521,18 @@ function PlanCheckoutButton({
 function PlanComparison({
   billing,
   now,
+  onChooseTeams,
 }: {
   billing: 'monthly' | 'annual'
   now: number
+  onChooseTeams: () => void
 }) {
   const { t } = useI18n()
   const isAnnual = billing === 'annual'
   const prices = lifetimePrices(now)
 
   return (
-    <div className={compare.root}>
-      <section className={compare.block} aria-labelledby="compare-unlocks">
-        <div className={compare.blockHeading}>
-          <h3 id="compare-unlocks">{t('What upgrading unlocks')}</h3>
-          <p>
-            {t(
-              'Free has every feature below, with these limits. Any paid plan removes all of them.'
-            )}
-          </p>
-        </div>
-        <div className={compare.unlockGrid}>
-          <div className={compare.unlockCard}>
-            <div className={compare.unlockHead}>
-              <span>{t('Free')}</span>
-              <span>{t('$0, forever')}</span>
-            </div>
-            <ul>
-              {UNLOCKS.map((row) => (
-                <li key={row.feature}>
-                  <span>{t(row.feature)}</span>
-                  {row.free ? (
-                    <span className={clsx(compare.tag, compare.tagLimit)}>
-                      {t(row.free)}
-                    </span>
-                  ) : (
-                    <span className={compare.notIncluded}>
-                      {t('Not included')}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className={clsx(compare.unlockCard, compare.unlockPaid)}>
-            <div className={compare.unlockHead}>
-              <span>{t('Any paid plan')}</span>
-              <span>
-                {t(
-                  `from ${usd(
-                    saleCents(prices.standard.cents, now)
-                  )} once or $10 / month`
-                )}
-              </span>
-            </div>
-            <ul>
-              {UNLOCKS.map((row) => (
-                <li key={row.feature}>
-                  <span>{t(row.feature)}</span>
-                  <span className={compare.paidValue}>
-                    <TickIcon className={compare.tick} />
-                    {t(row.paid)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
+    <div id="compare" className={compare.root}>
       <section className={compare.block} aria-labelledby="compare-paid">
         <div className={clsx(compare.blockHeading, compare.blockHeadingSplit)}>
           <div>
@@ -844,7 +632,11 @@ function PlanComparison({
                       className={compare.planCtaCell}
                     >
                       {plan.name === 'Teams' ? (
-                        <a href="#pricing-teams" className={compare.planCta}>
+                        <a
+                          href="#pricing-teams"
+                          className={compare.planCta}
+                          onClick={onChooseTeams}
+                        >
                           {t('Choose seats')}
                         </a>
                       ) : (
@@ -988,6 +780,13 @@ function PlanComparison({
   )
 }
 
+// ---- The cards: Free, the Lifetime License and the Cloud Plan. Each product's
+// tiers fold into its own card, and the plan table below shows them side by side.
+
+// Hosting conferences and using other computers ship in 2.5.12, still in beta. The site
+// describes what the released app does, so turn this on when 2.5.12 is released.
+const SHOW_2_5_12_FEATURES = false
+
 // Teams lifetime license (ADR 0112): the buyer becomes the Team admin and
 // assigns each Seat to one person's own account, with one Mac per Seat.
 // The base price covers five seats; each one after that is the seat price
@@ -995,12 +794,328 @@ function PlanComparison({
 const TEAMS_MIN_SEATS = TEAMS_BASE_SEATS
 const TEAMS_MAX_SEATS = 500
 
-function TeamsPlan({ now, saleBadge }: { now: number; saleBadge?: string }) {
+type LicenseTier = 'Standard' | 'Premium' | 'Teams'
+type CloudTierName = 'Plus' | 'Pro' | 'Max'
+
+const LICENSE_TABS: { id: LicenseTier }[] = [
+  { id: 'Standard' },
+  { id: 'Premium' },
+  { id: 'Teams' },
+]
+const LICENSE_CTA: Record<LicenseTier, string> = {
+  Standard: 'Buy Standard',
+  Premium: 'Buy Premium',
+  Teams: 'Buy Teams License',
+}
+
+type CardRow = {
+  /** The row's message. `{p0}` in it is `strong`, set in bold. */
+  text: string
+  strong?: string
+  desc?: string
+  descValues?: Record<string, string>
+  /** An "everything in…" row, marked with a plus instead of a check. */
+  plus?: boolean
+  rates?: boolean
+}
+
+const FREE_ROWS: CardRow[] = [
+  {
+    text: 'Unlimited AI with your own API key',
+    desc: '20+ providers, plus local models.',
+  },
+  {
+    text: 'Agents, Computer Use & Browser Use',
+    desc: '100+ tools, MCP servers and skills.',
+  },
+  { text: 'SmartBar, PopBar & Dynamic Island' },
+  {
+    text: 'Dictation, voice commands & read aloud',
+    desc: 'Offline, or on Cloud points.',
+  },
+  { text: 'iPhone & Android app' },
+]
+
+// What the app enforces on Free (LICENSE_DEVICES, the speech and Live Talk gates,
+// each module's plan gate, the one-time welcome points); any paid plan lifts all of it.
+const FREE_LIMITS: { label: string; value: string }[] = [
+  { label: 'Mac device', value: '1' },
+  { label: 'Meetings / mo', value: '60 min' },
+  { label: 'Captions / mo', value: '60 min' },
+  { label: 'Live Talk / mo', value: '5 min' },
+  { label: 'Knowledge base', value: '1' },
+  { label: 'Workflow', value: '1' },
+  { label: 'Scheduled task', value: '1 active' },
+  { label: 'IM bot', value: '1 running' },
+  { label: 'Points, once', value: '5,000' },
+]
+
+const PAID_ONLY: string[] = [
+  'Remote',
+  'Avatar',
+  'Sync',
+  ...(SHOW_2_5_12_FEATURES ? ['Host conferences', 'Your other computers'] : []),
+]
+
+function licenseRows(
+  tier: LicenseTier,
+  seats: number,
+  seatPrice: string
+): CardRow[] {
+  const isTeams = tier === 'Teams'
+  const lifetime = tier !== 'Standard'
+  return [
+    { text: 'Everything in Free, without the caps', plus: true },
+    { text: 'Unlimited meetings, captions & Live Talk' },
+    { text: 'Unlimited knowledge bases, workflows, scheduled tasks & IM bots' },
+    { text: 'Cloud dictation, no points' },
+    { text: 'Remote & Avatar', desc: 'Use your Mac from your phone.' },
+    ...(SHOW_2_5_12_FEATURES
+      ? [
+          { text: 'Host conferences', desc: 'Guests join from a link.' },
+          {
+            text: 'Your other computers',
+            desc: 'Their chats, terminal and screen, from here.',
+          },
+        ]
+      : []),
+    { text: '{p0} Sync across Macs', strong: lifetime ? '100 MB' : '50 MB' },
+    isTeams
+      ? {
+          text: '{p0} Cloud points to share',
+          strong: (seats * 50000).toLocaleString('en-US'),
+          desc: '{p0} per seat.',
+          descValues: { p0: '50,000' },
+        }
+      : {
+          text: '{p0} Cloud points bonus',
+          strong: tier === 'Premium' ? '150,000' : '50,000',
+        },
+    { text: '{p0} free updates', strong: lifetime ? 'Lifelong' : '1 year' },
+    isTeams
+      ? {
+          text: '{p0} Mac per seat',
+          strong: '1',
+          desc: 'Each person signs in with their own account. More seats any time at {p0} each.',
+          descValues: { p0: seatPrice },
+        }
+      : tier === 'Premium'
+      ? { text: '{p0} Mac devices', strong: '3' }
+      : { text: '{p0} Mac device', strong: '1' },
+  ]
+}
+
+function cloudRows(tier: CloudTier): CardRow[] {
+  return [
+    {
+      text: 'Everything a license unlocks',
+      desc: 'Every cap off, Remote, Sync and more, while you subscribe.',
+      plus: true,
+    },
+    { text: '{p0} points / month', strong: tier.points, rates: true },
+    {
+      text: 'Every Cloud model & service',
+      desc: 'Chat, image, TTS and transcription.',
+    },
+    { text: 'Latest frontier models', desc: 'GPT, Claude, Gemini & more.' },
+    { text: 'No API keys needed' },
+    tier.discount
+      ? {
+          text: '{p0} on select models',
+          strong: tier.discount.price,
+          desc: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash, up to {p0} points of usage.',
+          descValues: { p0: tier.discount.cap },
+        }
+      : {
+          text: 'Standard model rates',
+          desc: 'Pro and Max pay 1/2 and 1/4 on DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash.',
+        },
+    { text: '5 Mac devices' },
+    { text: 'Updates + priority support' },
+  ]
+}
+
+function PlusIcon({ className }: { className: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      className={className}
+    >
+      <circle cx={12} cy={12} r={8.25} />
+      <path d="M12 8.5v7M8.5 12h7" />
+    </svg>
+  )
+}
+
+function ArrowIcon() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M13 7l5 5m0 0l-5 5m5-5H6" />
+    </svg>
+  )
+}
+
+function AppleIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
+    </svg>
+  )
+}
+
+// Who supplies the AI: the two Pricing dimension groups, on top of each card.
+function CardKind({ cloud = false }: { cloud?: boolean }) {
+  const { t } = useI18n()
+  return (
+    <p className={cards.kind}>
+      <svg
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.7}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {cloud ? (
+          <path d="M7 18.5a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 11a3.8 3.8 0 0 1-.7 7.5z" />
+        ) : (
+          <>
+            <circle cx={8} cy={15} r={4} />
+            <path d="m11 12 8.5-8.5M16 7l3 3M13.5 9.5l2 2" />
+          </>
+        )}
+      </svg>
+      {t(cloud ? 'We bring the AI' : 'You bring the AI')}
+    </p>
+  )
+}
+
+function TierSwitch<Tier extends string>({
+  label,
+  tabs,
+  value,
+  onChange,
+}: {
+  label: string
+  tabs: { id: Tier; tag?: string }[]
+  value: Tier
+  onChange: (tier: Tier) => void
+}) {
+  const { t } = useI18n()
+  const index = tabs.findIndex((tab) => tab.id === value)
+  return (
+    <div className={cards.seg} role="group" aria-label={t(label)}>
+      <span
+        className={cards.thumb}
+        style={{ transform: `translateX(calc(${index} * (100% + 2px)))` }}
+      />
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          type="button"
+          aria-pressed={tab.id === value}
+          onClick={() => onChange(tab.id)}
+        >
+          {t(tab.id)}
+          {tab.tag && <i>{t(tab.tag)}</i>}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function CardButton({
+  lookupKey,
+  extra,
+  children,
+}: {
+  lookupKey: string
+  extra?: Record<string, unknown>
+  children: ReactNode
+}) {
   const { t, locale } = useI18n()
-
-  const [seats, setSeats] = useState(TEAMS_MIN_SEATS)
   const [isLoading, setIsLoading] = useState(false)
+  return (
+    <button
+      type="button"
+      className={cards.cta}
+      disabled={isLoading}
+      onClick={() => startCheckout(lookupKey, setIsLoading, locale, extra)}
+    >
+      {isLoading ? (
+        <>
+          <span className={cards.spinner} />
+          {t('Going to checkout...')}
+        </>
+      ) : (
+        children
+      )}
+    </button>
+  )
+}
 
+function CardRows({ rows }: { rows: CardRow[] }) {
+  const { t } = useI18n()
+  return (
+    <ul className={cards.list}>
+      {rows.map((row) => (
+        <li key={row.text}>
+          {row.plus ? (
+            <PlusIcon className={clsx(cards.ico, cards.icoPlus)} />
+          ) : (
+            <CheckIcon className={cards.ico} />
+          )}
+          <span className={clsx(cards.line, row.plus && cards.lineMuted)}>
+            {row.strong ? (
+              <I18nText
+                source={row.text}
+                values={{ p0: <strong>{t(row.strong)}</strong> }}
+              />
+            ) : (
+              t(row.text)
+            )}
+            {row.desc && (
+              <span className={cards.desc}>
+                {t(row.desc, row.descValues)}
+              </span>
+            )}
+            {row.rates && (
+              <Link href="/cloud-pricing" className={cards.rates}>
+                {t('See model & service rates ')}
+                <span aria-hidden="true">↗</span>
+              </Link>
+            )}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function SeatStepper({
+  seats,
+  onChange,
+}: {
+  seats: number
+  onChange: (seats: number) => void
+}) {
+  const { t } = useI18n()
+  // What's being typed: 12 passes through 1 on the way, so it's clamped when the field is left.
+  const [draft, setDraft] = useState<string | null>(null)
   const clamp = (n: number) =>
     Math.min(
       TEAMS_MAX_SEATS,
@@ -1008,191 +1123,345 @@ function TeamsPlan({ now, saleBadge }: { now: number; saleBadge?: string }) {
     )
 
   return (
-    <section
-      id="pricing-teams"
-      style={{ scrollMarginTop: 96 }}
-      aria-label={t('Teams plan')}
+    <div className={cards.stepper}>
+      <button
+        type="button"
+        aria-label={t('Fewer seats')}
+        onClick={() => onChange(clamp(seats - 1))}
+        disabled={seats <= TEAMS_MIN_SEATS}
+      >
+        −
+      </button>
+      <input
+        type="number"
+        min={TEAMS_MIN_SEATS}
+        max={TEAMS_MAX_SEATS}
+        aria-label={t('Seats')}
+        value={draft ?? seats}
+        onChange={(event) => {
+          const value = event.target.value
+          setDraft(value)
+          if (Number(value) === clamp(Number(value))) onChange(Number(value))
+        }}
+        onBlur={() => {
+          if (draft !== null) onChange(clamp(Number(draft)))
+          setDraft(null)
+        }}
+      />
+      <button
+        type="button"
+        aria-label={t('More seats')}
+        onClick={() => onChange(clamp(seats + 1))}
+        disabled={seats >= TEAMS_MAX_SEATS}
+      >
+        +
+      </button>
+    </div>
+  )
+}
+
+function FreeCard() {
+  const { t } = useI18n()
+  return (
+    <article
+      className={clsx(cards.card, cards.left)}
+      aria-label={t('Free')}
       data-spotlight
-      className={`${styles.planCard} ${styles.teamsPlan}`}
     >
-      <div className={styles.teamsTop}>
-        <div className={styles.planIdentity}>
-          <div className={styles.planTitleRow}>
-            <h4>{t('Teams')}</h4>
-            {saleBadge && (
-              <span className={styles.planBadge}>{saleBadge}</span>
-            )}
-          </div>
-          <p>
-            {t(
-              'A seat for each person, on their own account. 30-day money back guarantee.'
-            )}
-          </p>
+      <CardKind />
+      <div className={cards.title}>
+        <h3>{t('Free')}</h3>
+      </div>
+      <p className={cards.tagline}>{t('Most of Enconvo, on your own keys.')}</p>
+      <div className={cards.segSlot} />
+      <div className={cards.price}>
+        <span className={cards.amount}>$0</span>
+        <span className={cards.unit}>{t('forever')}</span>
+      </div>
+      <div className={cards.sub}>
+        <span>{t('No card needed')}</span>
+      </div>
+      <CardButton lookupKey="free">
+        <AppleIcon />
+        {t('Download for Mac')}
+      </CardButton>
+      <p className={cards.note}>
+        {t('Requires macOS 14 or later and a free account.')}
+      </p>
+      <div className={cards.body}>
+        <CardRows rows={FREE_ROWS} />
+        <div className={cards.block}>
+          <p>{t('Free limits')}</p>
+          <dl className={cards.spec}>
+            {FREE_LIMITS.map((limit) => (
+              <div key={limit.label}>
+                <dt>{t(limit.label)}</dt>
+                <dd>{t(limit.value)}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
-        <div className={styles.teamsControls}>
-          <div className={styles.teamsSeats}>
-            <label htmlFor="pricing-team-seats">{t('Seats')}</label>
-            <div className={styles.seatStepper}>
-              <button
-                type="button"
-                aria-label={t('Fewer seats')}
-                onClick={() => setSeats((s) => clamp(s - 1))}
-                disabled={seats <= TEAMS_MIN_SEATS}
-              >
-                −
-              </button>
-              <input
-                id="pricing-team-seats"
-                type="number"
-                min={TEAMS_MIN_SEATS}
-                max={TEAMS_MAX_SEATS}
-                value={seats}
-                onChange={(e) => setSeats(clamp(Number(e.target.value)))}
-              />
-              <button
-                type="button"
-                aria-label={t('More seats')}
-                onClick={() => setSeats((s) => clamp(s + 1))}
-                disabled={seats >= TEAMS_MAX_SEATS}
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div
-            className={styles.teamsQuote}
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {saleBadge && (
-              <s className={styles.planWas}>
-                <span className="sr-only">{t('Original price ')}</span>
-                {usd(teamsCents(seats, now))}
-              </s>
-            )}
-            <span className={styles.planAmount}>
-              {usd(saleCents(teamsCents(seats, now), now))}
-            </span>
-            <p className={styles.planBillingNote}>
-              <I18nText
-                source={'one-time · ${p0}/seat'}
-                values={{
-                  p0: (
-                    saleCents(teamsCents(seats, now), now) /
-                    seats /
-                    100
-                  ).toFixed(2),
-                }}
-              />
-            </p>
-          </div>
-          <Button
-            onClick={() =>
-              startCheckout('teams', setIsLoading, locale, { seats })
-            }
-            variant="outline"
-            color="white"
-            className={styles.planPurchase}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                {t('Going to checkout...')}
-              </>
-            ) : (
-              t('Buy Teams License')
-            )}
-          </Button>
+        <div className={cards.block}>
+          <p>{t('Paid plans only')}</p>
+          <ul className={cards.chips}>
+            {PAID_ONLY.map((feature) => (
+              <li key={feature}>{t(feature)}</li>
+            ))}
+          </ul>
         </div>
       </div>
-      <PlanFeatures
-        features={[
-          `${seats} seats — each person signs in with their own account`,
-          `${(
-            seats * 50000
-          ).toLocaleString()} Cloud points bonus to share with your team — 50,000 per seat`,
-          `Add more seats any time at ${usd(
-            lifetimePrices(now).teams_seat.cents
-          )} each`,
-          'Lifetime free updates',
-        ]}
-      />
-    </section>
+    </article>
+  )
+}
+
+function LicenseCard({
+  tier,
+  onTier,
+  now,
+  saleBadge,
+}: {
+  tier: LicenseTier
+  onTier: (tier: LicenseTier) => void
+  now: number
+  saleBadge?: string
+}) {
+  const { t } = useI18n()
+  const [seats, setSeats] = useState(TEAMS_MIN_SEATS)
+  const prices = lifetimePrices(now)
+  const isTeams = tier === 'Teams'
+  const listCents = isTeams
+    ? teamsCents(seats, now)
+    : tier === 'Premium'
+    ? prices.premium.cents
+    : prices.standard.cents
+  const payCents = saleCents(listCents, now)
+  const price = usd(payCents)
+  // A struck price shares the line with the figure, so a long one steps down rather than wraps.
+  const amountSize = !saleBadge
+    ? undefined
+    : price.length >= 8
+    ? cards.amountXs
+    : cards.amountSm
+
+  return (
+    <article
+      id="pricing-teams"
+      style={{ scrollMarginTop: 96 }}
+      className={clsx(cards.card, cards.raised)}
+      aria-label={t('Lifetime License')}
+      data-spotlight
+    >
+      <CardKind />
+      <div className={cards.title}>
+        <h3>{t('Lifetime License')}</h3>
+        {saleBadge && <span className={cards.badge}>{saleBadge}</span>}
+      </div>
+      <p className={cards.tagline}>{t('Pay once. Yours for life.')}</p>
+      <div className={cards.segSlot}>
+        <TierSwitch
+          label="License tier"
+          tabs={LICENSE_TABS}
+          value={tier}
+          onChange={onTier}
+        />
+      </div>
+      <div className={cards.price} aria-live="polite" aria-atomic="true">
+        {saleBadge && (
+          <s className={cards.was}>
+            <span className="sr-only">{t('Original price ')}</span>
+            {usd(listCents)}
+          </s>
+        )}
+        <span className={clsx(cards.amount, amountSize)}>{price}</span>
+        <span className={cards.unit}>{t('one-time')}</span>
+      </div>
+      <div className={cards.sub}>
+        {isTeams ? (
+          <>
+            <span>
+              {t('{p0} seats · {p1} / seat', {
+                p0: seats,
+                p1: `$${(payCents / seats / 100).toFixed(2)}`,
+              })}
+            </span>
+            <SeatStepper seats={seats} onChange={setSeats} />
+          </>
+        ) : (
+          <span>{t('30-day money back guarantee.')}</span>
+        )}
+      </div>
+      <CardButton
+        lookupKey={tier.toLowerCase()}
+        extra={isTeams ? { seats } : undefined}
+      >
+        {t(LICENSE_CTA[tier])}
+        <ArrowIcon />
+      </CardButton>
+      <p className={cards.note}>
+        {t('One-time payment. Never renews.')}
+        {isTeams && ` ${t('30-day money back guarantee.')}`}
+      </p>
+      <div className={cards.body}>
+        <CardRows
+          rows={licenseRows(tier, seats, usd(prices.teams_seat.cents))}
+        />
+        <p className={cards.foot}>
+          {t('Want AI included? Add any Cloud plan on top.')}
+        </p>
+      </div>
+    </article>
   )
 }
 
 interface CloudTier {
-  name: string
-  description: string
-  badge?: string
-  featured?: boolean
+  name: CloudTierName
+  points: string
   monthly: { price: string; lookupKey: string }
-  annual: { price: string; perMonth: string; lookupKey: string }
-  features: string[]
+  annual: { price: string; was: string; perMonth: string; lookupKey: string }
+  /** The lower rate on select models, and how many points of usage get it. */
+  discount?: { price: string; cap: string }
 }
 
 // Tier data mirrors the in-app plan picker (PlansDialog / worker cloudTiers).
 const CLOUD_TIERS: CloudTier[] = [
   {
     name: 'Plus',
-    description: 'No API keys — points included.',
+    points: '500,000',
     monthly: { price: '$10', lookupKey: 'monthly' },
-    annual: { price: '$96', perMonth: '$8', lookupKey: 'yearly' },
-    features: [
-      '500,000 points / month',
-      'Every Cloud model & service — chat, image, TTS, transcription',
-      'Latest frontier models — GPT, Claude, Gemini & more',
-      'No API keys needed',
-      '5 Mac devices',
-      'Priority support',
-    ],
+    annual: { price: '$96', was: '$120', perMonth: '$8', lookupKey: 'yearly' },
   },
   {
     name: 'Pro',
-    description: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at half price.',
-    badge: 'Most popular',
-    featured: true,
+    points: '2,500,000',
     monthly: { price: '$50', lookupKey: 'pro_monthly' },
-    annual: { price: '$480', perMonth: '$40', lookupKey: 'pro_yearly' },
-    features: [
-      '2,500,000 points / month',
-      '⚡ DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at 1/2 price — up to 5M points of usage',
-      'Every Cloud model & service — chat, image, TTS, transcription',
-      'Latest frontier models — GPT, Claude, Gemini & more',
-      'No API keys needed',
-      '5 Mac devices',
-      'Priority support',
-    ],
+    annual: {
+      price: '$480',
+      was: '$600',
+      perMonth: '$40',
+      lookupKey: 'pro_yearly',
+    },
+    discount: { price: '1/2 price', cap: '5M' },
   },
   {
     name: 'Max',
-    description: 'DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at quarter price.',
+    points: '5,000,000',
     monthly: { price: '$100', lookupKey: 'max_monthly' },
-    annual: { price: '$960', perMonth: '$80', lookupKey: 'max_yearly' },
-    features: [
-      '5,000,000 points / month',
-      '⚡ DeepSeek, MiniMax M3/M3.1 Flash & GLM-5.3-Flash at 1/4 price — up to 20M points of usage',
-      'Every Cloud model & service — chat, image, TTS, transcription',
-      'Latest frontier models — GPT, Claude, Gemini & more',
-      'No API keys needed',
-      '5 Mac devices',
-      'Priority support',
-    ],
+    annual: {
+      price: '$960',
+      was: '$1,200',
+      perMonth: '$80',
+      lookupKey: 'max_yearly',
+    },
+    discount: { price: '1/4 price', cap: '20M' },
   },
 ]
+
+const CLOUD_TABS: { id: CloudTierName; tag?: string }[] = [
+  { id: 'Plus' },
+  { id: 'Pro', tag: 'Popular' },
+  { id: 'Max' },
+]
+
+function CloudCard({
+  billing,
+  onBilling,
+}: {
+  billing: 'monthly' | 'annual'
+  onBilling: (billing: 'monthly' | 'annual') => void
+}) {
+  const { t } = useI18n()
+  const [name, setName] = useState<CloudTierName>('Plus')
+  const tier = CLOUD_TIERS.find((item) => item.name === name) ?? CLOUD_TIERS[0]
+  const isAnnual = billing === 'annual'
+
+  return (
+    <article
+      className={clsx(cards.card, cards.right)}
+      aria-label={t('Cloud Plan')}
+      data-spotlight
+    >
+      <CardKind cloud />
+      <div className={cards.title}>
+        <h3>{t('Cloud Plan')}</h3>
+      </div>
+      <p className={cards.tagline}>
+        {t('No API keys. Points power every model.')}
+      </p>
+      <div className={cards.segSlot}>
+        <TierSwitch<CloudTierName>
+          label="Cloud plan tier"
+          tabs={CLOUD_TABS}
+          value={name}
+          onChange={setName}
+        />
+      </div>
+      <div className={cards.price} aria-live="polite" aria-atomic="true">
+        <span className={cards.amount}>
+          {isAnnual ? tier.annual.perMonth : tier.monthly.price}
+        </span>
+        <span className={cards.unit}>{t('/month')}</span>
+      </div>
+      <div className={cards.sub}>
+        <span>
+          {isAnnual ? (
+            <>
+              <s>
+                <span className="sr-only">{t('Original price ')}</span>
+                {tier.annual.was}
+              </s>{' '}
+              {t('billed {p0}/year', { p0: tier.annual.price })}
+            </>
+          ) : (
+            t('Billed monthly')
+          )}
+        </span>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={isAnnual}
+          aria-label={t('Annual billing, save 20%')}
+          className={cards.switch}
+          onClick={() => onBilling(isAnnual ? 'monthly' : 'annual')}
+        >
+          {t('Annual')} <b>−20%</b>
+          <span className={cards.track} />
+        </button>
+      </div>
+      <CardButton
+        lookupKey={isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey}
+      >
+        {t('Subscribe to {p0}', { p0: t(tier.name) })}
+        <ArrowIcon />
+      </CardButton>
+      <RenewalTerms
+        amount={isAnnual ? tier.annual.price : tier.monthly.price}
+        period={isAnnual ? 'year' : 'month'}
+        className={cards.note}
+      />
+      <div className={cards.body}>
+        <CardRows rows={cloudRows(tier)} />
+        <p className={cards.foot}>
+          {t('Your own keys stay free and unlimited here too.')}
+        </p>
+      </div>
+    </article>
+  )
+}
 
 /**
  * `renderedAt` is when the static page was generated. License prices follow their schedule
  * (lifetime-pricing.ts) from that instant, then from the visitor's clock once the page loads.
  */
 export function Pricing({ renderedAt }: { renderedAt: number }) {
-  const { t, locale } = useI18n()
+  const { t } = useI18n()
 
-  const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly')
+  const [billing, setBilling] = useState<'monthly' | 'annual'>('annual')
+  const [licenseTier, setLicenseTier] = useState<LicenseTier>('Standard')
   const [now, setNow] = useState(renderedAt)
-  useEffect(() => setNow(Date.now()), [])
-  const prices = lifetimePrices(now)
+  useEffect(() => {
+    setNow(Date.now())
+    if (window.location.hash === '#pricing-teams') setLicenseTier('Teams')
+  }, [])
   const sale = lifetimeSale(now)
   const saleBadge = sale ? t(sale.badge, { p0: sale.percentOff }) : undefined
 
@@ -1200,169 +1469,77 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
     <section
       id="pricing"
       aria-label={t('Pricing')}
-      className={`${styles.section} ${styles.pricingSection}`}
+      className={clsx(styles.section, styles.pricingSection, cards.section)}
     >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className={cards.aurora}
+        src={auroraBloom.src}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        draggable={false}
+      />
       <div className={`${styles.sectionContainer} mx-auto`}>
-        <div className={styles.pricingHeading} data-reveal>
-          <p className={styles.pricingEyebrow}>{t('Pricing')}</p>
-          <h2 className="font-display text-3xl tracking-tight text-content sm:text-4xl">
-            {t('Simple pricing, for everyone.')}
-          </h2>
-          <p className="mt-4 text-lg text-content-muted">
-            {t('Two ways to pay for AI — and they stack.')}
+        <div className={cards.heading} data-reveal>
+          <p className={cards.eyebrow}>{t('Pricing')}</p>
+          <h2>{t('Simple pricing, for everyone.')}</h2>
+          <p>
+            {t(
+              'Start free. Pay once and bring your own AI, or let Enconvo Cloud bring it. The two stack.'
+            )}
           </p>
         </div>
 
         <AffiliateOffer />
 
-        <div className={styles.pricingGroup}>
-          <div className={styles.pricingGroupHeading} data-reveal>
-            <span className={styles.pricingKind}>{t('One-time purchase')}</span>
-            <h3 className="font-display text-xl font-semibold text-content">
-              {t('You bring the AI')}
-            </h3>
-            <p className="mt-2 text-sm text-content-muted">
-              {t(
-                'Use your own API keys or local models — AI usage is free and unlimited on every tier.'
-              )}
-            </p>
-          </div>
-
-          <div className={styles.licenseGrid} data-reveal>
-            <Plan
-              name="Standard"
-              price={usd(saleCents(prices.standard.cents, now))}
-              wasPrice={sale ? usd(prices.standard.cents) : undefined}
-              badge={saleBadge}
-              priceNote="one-time"
-              lookupKey={'standard'}
-              description={t('30-day money back guarantee.')}
-              startText="Buy License"
-              features={[
-                'Unlimited AI with your own API key',
-                'Unlimited knowledge bases & workflows',
-                'Use your Mac from your phone (Remote)',
-                '50,000 Cloud points bonus',
-                '1 year of free updates',
-                '1 Mac device',
-              ]}
-            />
-
-            <Plan
-              name="Premium"
-              price={usd(saleCents(prices.premium.cents, now))}
-              wasPrice={sale ? usd(prices.premium.cents) : undefined}
-              badge={saleBadge}
-              priceNote="one-time"
-              lookupKey={'premium'}
-              description={t('30-day money back guarantee.')}
-              startText="Buy License"
-              features={[
-                'Everything in Standard',
-                '150,000 Cloud points bonus',
-                'Lifetime free updates',
-                '3 Mac devices',
-              ]}
-            />
-          </div>
-          <TeamsPlan now={now} saleBadge={saleBadge} />
+        <div className={cards.row} data-reveal>
+          <FreeCard />
+          <LicenseCard
+            tier={licenseTier}
+            onTier={setLicenseTier}
+            now={now}
+            saleBadge={saleBadge}
+          />
+          <CloudCard billing={billing} onBilling={setBilling} />
         </div>
 
-        <div className={`${styles.pricingGroup} ${styles.cloudGroup}`}>
-          <div className={styles.pricingGroupHeading} data-reveal>
-            <span className={styles.pricingKind}>{t('Monthly or annual')}</span>
-            <h3 className="font-display text-xl font-semibold text-content">
-              {t('Enconvo Cloud Plan')}
-            </h3>
-            <p className="mt-2 text-sm text-content-muted">
-              {t(
-                'No API keys. A monthly point allowance powers every model and service.'
-              )}
-            </p>
-          </div>
-          <div className={styles.cloudToolbar}>
-            <div
-              className={styles.billingToggle}
-              role="group"
-              aria-label={t('Cloud billing period')}
+        <div className={cards.after}>
+          <a className={cards.compare} href="#compare">
+            {t('Compare all plans')}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={1.6}
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <button
-                type="button"
-                onClick={() => setBilling('monthly')}
-                aria-pressed={billing === 'monthly'}
-              >
-                {t('Monthly')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setBilling('annual')}
-                aria-pressed={billing === 'annual'}
-              >
-                {t('Annual')}
-                <span className={styles.billingSaving}>−20%</span>
-              </button>
-            </div>
-            <Link href="/cloud-pricing" className={styles.pricingRates}>
-              {t('See model & service rates ')}
-              <span aria-hidden="true">↗</span>
-            </Link>
-          </div>
-
-          <div className={styles.cloudGrid} data-reveal>
-            {CLOUD_TIERS.map((tier) => {
-              const isAnnual = billing === 'annual'
-              return (
-                <Plan
-                  key={tier.name}
-                  name={tier.name}
-                  price={isAnnual ? tier.annual.perMonth : tier.monthly.price}
-                  priceNote={isAnnual ? '/mo' : '/month'}
-                  billingNote={
-                    isAnnual ? `billed ${tier.annual.price}/year` : undefined
-                  }
-                  allowance={tier.features[0]}
-                  lookupKey={
-                    isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey
-                  }
-                  badge={tier.badge}
-                  featured={tier.featured}
-                  description={t(tier.description)}
-                  features={tier.features.slice(1)}
-                  renewal={
-                    isAnnual
-                      ? { amount: tier.annual.price, period: 'year' }
-                      : { amount: tier.monthly.price, period: 'month' }
-                  }
-                />
-              )
-            })}
-          </div>
-        </div>
-
-        <PlanComparison billing={billing} now={now} />
-
-        <div className={styles.pricingFooter}>
-          <p className="text-sm text-content-muted">
+              <path d="M12 5v14m0 0-5-5m5 5 5-5" />
+            </svg>
+          </a>
+          <p>
             {t(
               'Licenses and Cloud plans stack — a Lifetime owner can add any Cloud plan for included points, and every plan keeps own-key usage unlimited.'
-            )}
-          </p>
-          <p className="mt-2 text-sm text-content-muted">
+            )}{' '}
             <I18nText
-              source={'Need more than 500 seats or private deployment? {p0} .'}
+              source={'Need more than 500 seats or private deployment? {p0}.'}
               values={{
                 p0: (
-                  <a
-                    href="mailto:support@enconvo.com"
-                    className="text-content-muted underline underline-offset-2 transition hover:text-content"
-                  >
-                    {t('Contact us')}
-                  </a>
+                  <a href="mailto:support@enconvo.com">{t('Contact us')}</a>
                 ),
               }}
             />
           </p>
         </div>
+
+        <PlanComparison
+          billing={billing}
+          now={now}
+          onChooseTeams={() => setLicenseTier('Teams')}
+        />
       </div>
     </section>
   )

@@ -36,10 +36,16 @@ async function load(path, mock) {
 // CSS modules: each class is its own name.
 const classes = { __esModule: true, default: new Proxy({}, { get: (_, name) => String(name) }) }
 
-async function renderPricing(billing) {
+// The card shows one Cloud tier at a time, the plan table all of them.
+async function renderPricing(billing, { cloud = 'Plus', license = 'Standard' } = {}) {
+  const chosen = new Map([
+    ['annual', billing],
+    ['Plus', cloud],
+    ['Standard', license],
+  ])
   const react = {
     ...React,
-    useState: (initial) => (initial === 'monthly' ? [billing, () => {}] : React.useState(initial)),
+    useState: (initial) => (chosen.has(initial) ? [chosen.get(initial), () => {}] : React.useState(initial)),
     useEffect: () => {},
   }
   const { Pricing } = await load('../src/components/Pricing.tsx', {
@@ -52,6 +58,8 @@ async function renderPricing(billing) {
     '@/i18n/locale': { localizePath: (path) => path },
     '@/styles/Home.module.css': classes,
     '@/styles/PlanComparison.module.css': classes,
+    '@/styles/PricingCards.module.css': classes,
+    '@/images/hero-aurora-bloom.webp': { __esModule: true, default: { src: '/bloom.webp' } },
     'next/link': ({ href, children, ...props }) => React.createElement('a', { href, ...props }, children),
     '@/components/Button': {
       Button: ({ children, variant: _variant, color: _color, ...props }) => React.createElement('button', props, children),
@@ -66,8 +74,8 @@ async function renderPricing(billing) {
 }
 
 test('monthly Cloud cards and table cells state the monthly renewal under each button', async () => {
-  const html = await renderPricing('monthly')
-  for (const amount of ['$10', '$50', '$100']) {
+  for (const [cloud, amount] of [['Plus', '$10'], ['Pro', '$50'], ['Max', '$100']]) {
+    const html = await renderPricing('monthly', { cloud })
     assert.ok(
       html.includes(
         `Renews automatically at ${amount}/month plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid month.`
@@ -81,17 +89,50 @@ test('monthly Cloud cards and table cells state the monthly renewal under each b
       `table terms for ${amount}`
     )
   }
-  // Standard, Premium and Teams are one-time purchases.
-  assert.equal(html.split('One-time payment. Never renews.').length - 1, 3)
+  // The license card, then Standard, Premium and Teams in the table: all one-time purchases.
+  const html = await renderPricing('monthly')
+  assert.equal(html.split('One-time payment. Never renews.').length - 1, 4)
 })
 
 test('annual Cloud cards state the yearly amount charged at each renewal', async () => {
-  const html = await renderPricing('annual')
-  for (const amount of ['$96', '$480', '$960']) {
+  for (const [cloud, amount] of [['Plus', '$96'], ['Pro', '$480'], ['Max', '$960']]) {
+    const html = await renderPricing('annual', { cloud })
     assert.ok(html.includes(`Renews automatically at ${amount}/year plus tax until you cancel.`), `card terms for ${amount}`)
     assert.ok(html.includes(`<p class="planCtaNote">Renews automatically at ${amount}/year plus tax.`), `table terms for ${amount}`)
+    assert.ok(!html.includes('/month plus tax'))
   }
-  assert.ok(!html.includes('/month plus tax'))
+})
+
+test('every Free limit the app enforces is on the Free card', async () => {
+  const html = await renderPricing('annual')
+  for (const [label, value] of [
+    ['Mac device', '1'],
+    ['Meetings / mo', '60 min'],
+    ['Captions / mo', '60 min'],
+    ['Live Talk / mo', '5 min'],
+    ['Knowledge base', '1'],
+    ['Workflow', '1'],
+    ['Scheduled task', '1 active'],
+    ['IM bot', '1 running'],
+    ['Points, once', '5,000'],
+  ])
+    assert.ok(html.includes(`<dt>${label}</dt><dd>${value}</dd>`), label)
+})
+
+test('features still in beta stay off the public cards until 2.5.12 ships', async () => {
+  const html = await renderPricing('annual')
+  assert.ok(!html.includes('Host conferences'))
+  assert.ok(!html.includes('Your other computers'))
+})
+
+test('the license card follows its tier, and Teams shows its seat price', async () => {
+  const premium = await renderPricing('annual', { license: 'Premium' })
+  assert.ok(premium.includes('Buy Premium'))
+  assert.ok(premium.includes('<strong>3</strong> Mac devices'))
+  const teams = await renderPricing('annual', { license: 'Teams' })
+  assert.ok(teams.includes('Buy Teams License'))
+  assert.ok(teams.includes('<strong>1</strong> Mac per seat'))
+  assert.ok(teams.includes('<strong>250,000</strong> Cloud points to share'))
 })
 
 test('Checkout terms come from the Stripe price', async () => {

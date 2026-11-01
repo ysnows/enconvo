@@ -1,6 +1,6 @@
-/* Plan comparison under the pricing cards: Free vs paid, how paid plans
-   differ, and every feature with its Free limit. Colors follow DESIGN.md. */
-.root { display: flex; flex-direction: column; gap: 88px; margin-top: 88px; padding-top: 64px; border-top: 1px solid rgba(255,255,255,.1); }
+/* Plan comparison under the pricing cards: how paid plans differ, and every
+   feature with its Free limit. Colors follow DESIGN.md. */
+.root { display: flex; flex-direction: column; gap: 88px; margin-top: 88px; padding-top: 64px; border-top: 1px solid rgba(255,255,255,.1); scroll-margin-top: 64px; }
 .block { display: flex; flex-direction: column; gap: 28px; }
 .blockHeading { display: flex; flex-direction: column; gap: 10px; }
 .blockHeading h3 { color: #f4f4f6; font-size: 28px; font-weight: 600; line-height: 1.25; }
@@ -14,20 +14,8 @@
 .tagLimit { border-color: rgba(255,197,51,.2); background: rgba(255,197,51,.08); color: #ffc533; }
 .tagPaid { border-color: rgba(87,193,255,.22); background: rgba(87,193,255,.08); color: #57c1ff; }
 
-/* 01 · What upgrading unlocks */
-.unlockGrid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
-.unlockCard { padding: 8px 0; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #0d0d0d; }
-.unlockPaid { border-color: rgba(87,193,255,.35); background: #0f1215; box-shadow: 0 0 0 4px rgba(87,193,255,.05); }
-.unlockHead { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px; padding: 18px 24px 14px; }
-.unlockHead span:first-child { color: #f4f4f6; font-size: 20px; font-weight: 600; }
-.unlockHead span:last-child { color: #9c9c9d; font-size: 13px; }
-.unlockCard li { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; padding: 10px 24px; border-top: 1px solid #1a1c1d; color: #cdcdcd; font-size: 14px; }
-.unlockPaid li { color: #f4f4f6; }
-.notIncluded { color: #6a6b6c; font-size: 13px; white-space: nowrap; }
-.paidValue { display: inline-flex; align-items: center; gap: 8px; color: #f4f4f6; font-size: 13px; font-weight: 500; white-space: nowrap; }
-.tick { width: 16px; height: 16px; color: #57c1ff; }
 
-/* 02 · How paid plans differ */
+/* How paid plans differ */
 .tableScroll { overflow-x: auto; overscroll-behavior-x: contain; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; background: #0d0d0d; scrollbar-color: #323b40 #0d0d0d; }
 .tableScroll:focus-visible { outline: 2px solid #57c1ff; outline-offset: 2px; }
 .table { width: 100%; min-width: 1000px; border-collapse: collapse; table-layout: fixed; text-align: left; }
@@ -89,8 +77,6 @@
 @media (max-width: 767px) {
   .root { gap: 64px; margin-top: 64px; padding-top: 48px; }
   .blockHeading h3 { font-size: 24px; }
-  .unlockGrid { grid-template-columns: 1fr; }
-  .unlockHead, .unlockCard li { padding-left: 16px; padding-right: 16px; }
   .featureGrid { grid-template-columns: 1fr; }
   .featureCard { padding: 18px; }
   .rowHead { position: sticky; left: 0; z-index: 1; background: #0d0d0d; }
