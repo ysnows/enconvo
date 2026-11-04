@@ -24,6 +24,7 @@ import {
   clearMarketingStorage,
 } from '@/lib/cookie-consent'
 import { useCookieConsent } from '@/lib/use-cookie-consent'
+import { appleReturnParams } from '@/lib/apple-sign-in'
 
 const privateRoutes = new Set([
   '/account',
@@ -101,7 +102,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   const handoffInAddress =
     router.pathname === '/login/apple' &&
     typeof window !== 'undefined' &&
-    new URLSearchParams(window.location.search).has('handoff')
+    appleReturnParams().has('handoff')
   const marketingAllowed = consentReady && consent?.marketing === true
   // What a category stored before it was withdrawn, or before this site asked, goes.
   useEffect(() => {

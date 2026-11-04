@@ -1,8 +1,10 @@
 // Sign in with Apple on the website (ADR 0216). The flow is the Worker's: Continue with Apple
 // opens `/auth/v1/apple/start?to=web`, Apple posts back to the Worker, and the Worker returns
-// this tab to /login/apple with a single-use handoff code or an error, and nothing else. So the
-// login page keeps its own query (the app to open, the page to return to) and language in this
-// tab's sessionStorage before it leaves, and /login/apple reads them back.
+// this tab to /login/apple with a single-use handoff code or an error in the address's fragment,
+// which no server sees, and nothing else. So the login page keeps its own query (the app to
+// open, the page to return to) and language in this tab's sessionStorage before it leaves, and
+// /login/apple reads them back. Only a tab that kept them redeems a code: one opened from a link
+// someone sent would otherwise sign its visitor in to the sender's account.
 //
 // Never logged, stored or sent to analytics: the handoff code, the tokens and the email.
 
@@ -18,6 +20,18 @@ export interface AppleSignInContext {
   locale: string
   /** When Continue with Apple was chosen, in ms since the epoch. */
   startedAt: number
+}
+
+/**
+ * The Worker's answer on /login/apple: `handoff` or `error`, from the fragment, or from the query
+ * the Worker used before it moved them to the fragment.
+ */
+export function appleReturnParams(): URLSearchParams {
+  const params = new URLSearchParams(window.location.search)
+  new URLSearchParams(window.location.hash.slice(1)).forEach((value, key) =>
+    params.set(key, value)
+  )
+  return params
 }
 
 /** Where Continue with Apple goes. The site has no analytics id to pass as `client`. */
@@ -36,7 +50,7 @@ export function saveAppleSignInContext(
       JSON.stringify({ search, locale, startedAt: now })
     )
   } catch {
-    // Storage blocked: /login/apple finishes as a plain website sign-in.
+    // Storage blocked: /login/apple can't tell this tab started the sign-in, and refuses it.
   }
 }
 

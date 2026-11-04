@@ -20,6 +20,7 @@ import {
   type AppleSignInProblem,
   appleContextQuery,
   appleLoginPath,
+  appleReturnParams,
   appleSignInProblem,
   clearAppleSignInContext,
   deleteNewAppleAccount,
@@ -38,12 +39,12 @@ type Step =
   | { name: 'new_account'; session: Session }
 
 // The handoff code, read once from the address bar and kept only here: it lives through the
-// switch to the visitor's language below and is gone once redeemed.
+// switch to the visitor's language below and is gone once redeemed or refused.
 let pendingCode: string | null = null
 
 /**
- * Where the Worker returns Sign in with Apple's web flow (ADR 0216): `?handoff=<code>`, or
- * `?error=<reason>`. The code is redeemed once for the account's session, which goes into this
+ * Where the Worker returns Sign in with Apple's web flow (ADR 0216): `#handoff=<code>`, or
+ * `#error=<reason>`. The code is redeemed once for the account's session, which goes into this
  * browser, then the sign-in ends as a Google one does, with the query the login page had before
  * it left for Apple (lib/apple-sign-in). An account Apple just made with a Hide My Email address
  * first shows a one-time notice, which can remove it again for someone who already has one.
@@ -105,7 +106,7 @@ export default function AppleSignIn() {
   useEffect(() => {
     if (!router.isReady || handledLocale.current === router.locale) return
     handledLocale.current = router.locale
-    const params = new URLSearchParams(window.location.search)
+    const params = appleReturnParams()
     const code = params.get('handoff')
     if (code) {
       pendingCode = code
@@ -143,6 +144,11 @@ export default function AppleSignIn() {
     }
     if (problem) {
       setStep({ name: 'problem', problem })
+      return
+    }
+    if (!saved) {
+      // This tab didn't choose Continue with Apple: a code from anywhere else stays unspent.
+      setStep({ name: 'problem', problem: 'expired' })
       return
     }
     void redeem(handoff, saved)

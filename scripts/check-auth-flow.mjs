@@ -95,8 +95,16 @@ const appleSource = await readFile(new URL('../src/lib/apple-sign-in.ts', import
 const apple = { exports: {} }
 new Function('require', 'module', 'exports', ts.transpileModule(appleSource, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText)(
   name => name === '@/lib/worker-api' ? { WORKER_API_ORIGIN: 'https://api.enconvo.com' } : require(name), apple, apple.exports)
-const { appleStartUrl, saveAppleSignInContext, readAppleSignInContext, clearAppleSignInContext, appleContextQuery, appleLoginPath, appleSignInProblem, redeemAppleHandoff, deleteNewAppleAccount } = apple.exports
+const { appleStartUrl, saveAppleSignInContext, readAppleSignInContext, clearAppleSignInContext, appleContextQuery, appleLoginPath, appleSignInProblem, redeemAppleHandoff, deleteNewAppleAccount, appleReturnParams } = apple.exports
 assert.equal(appleStartUrl(), 'https://api.enconvo.com/auth/v1/apple/start?to=web')
+// The Worker's answer comes in the fragment, which no server logs; the query still reads for the old return.
+for (const [search, hash, handoff, error] of [['', '#handoff=abc', 'abc', null], ['?handoff=old', '', 'old', null], ['', '#error=cancelled', null, 'cancelled'], ['?error=failed', '#handoff=new', 'new', 'failed']]) {
+  globalThis.window = { location: { search, hash } }
+  const params = appleReturnParams()
+  assert.equal(params.get('handoff'), handoff, search + hash)
+  assert.equal(params.get('error'), error, search + hash)
+}
+delete globalThis.window
 const tab = new Map()
 globalThis.sessionStorage = { getItem: k => tab.get(k) ?? null, setItem: (k, v) => tab.set(k, String(v)), removeItem: k => tab.delete(k) }
 const appSearch = '?from=app&source=companion&handoff=exchange&prompt=select_account&returnUrl=%2Faccount'
