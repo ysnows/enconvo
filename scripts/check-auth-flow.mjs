@@ -52,6 +52,8 @@ for (const name of ['LoginForm', 'RegisterForm']) {
     const html = renderToStaticMarkup(React.createElement(Form, { loginState: '', setLoginState() {}, setUser() {}, email: '', setEmail() {} }))
     // Google sign-in is offered everywhere, the iPhone and Android apps included.
     assert.equal(html.includes('Continue with Google'), true, `${name} Google availability`)
+    // The login page offers Apple above Google (ADR 0216).
+    if (name === 'LoginForm') assert.ok(html.indexOf('Continue with Apple') >= 0 && html.indexOf('Continue with Apple') < html.indexOf('Continue with Google'), 'Apple above Google')
     assert.match(html, /email/i)
     if (name === 'LoginForm' && state.query.returnUrl) {
       assert.match(html, /Affiliate sign in/)
@@ -87,4 +89,74 @@ assert.equal(landing.pathname, '/login')
 for (const [key, value] of Object.entries({ from: 'app', source: 'settings', handoff: 'exchange', language: 'ko' })) assert.equal(landing.searchParams.get(key), value)
 // A sign-up made on the website alone is not sent to the app.
 assert.equal(new URL(`${site}${authFlowHref('/login', { language: 'en' })}`).searchParams.has('from'), false)
-console.log('PASS: Google auth on iPhone and desktop, OAuth callback keeps the app return, email links continue on this site, native return navigation and token omission')
+// Sign in with Apple (lib/apple-sign-in): the login page's query waits in the tab while Apple's
+// page is open, and the handoff code is redeemed once with only itself in the request.
+const appleSource = await readFile(new URL('../src/lib/apple-sign-in.ts', import.meta.url), 'utf8')
+const apple = { exports: {} }
+new Function('require', 'module', 'exports', ts.transpileModule(appleSource, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText)(
+  name => name === '@/lib/worker-api' ? { WORKER_API_ORIGIN: 'https://api.enconvo.com' } : require(name), apple, apple.exports)
+const { appleStartUrl, saveAppleSignInContext, readAppleSignInContext, clearAppleSignInContext, appleContextQuery, appleLoginPath, appleSignInProblem, redeemAppleHandoff, deleteNewAppleAccount } = apple.exports
+assert.equal(appleStartUrl(), 'https://api.enconvo.com/auth/v1/apple/start?to=web')
+const tab = new Map()
+globalThis.sessionStorage = { getItem: k => tab.get(k) ?? null, setItem: (k, v) => tab.set(k, String(v)), removeItem: k => tab.delete(k) }
+const appSearch = '?from=app&source=companion&handoff=exchange&prompt=select_account&returnUrl=%2Faccount'
+saveAppleSignInContext(appSearch, 'ja', 1_000_000)
+const saved = readAppleSignInContext(1_000_000 + 60_000)
+assert.deepEqual(saved, { search: appSearch, locale: 'ja', startedAt: 1_000_000 })
+assert.deepEqual(appleContextQuery(saved), { from: 'app', source: 'companion', handoff: 'exchange', prompt: 'select_account', returnUrl: '/account' })
+assert.equal(appleLoginPath(saved), `/login${appSearch}`)
+assert.equal(appleLoginPath(null), '/login')
+assert.deepEqual(appleContextQuery(null), {})
+// Another visit's context, or none, restores nothing.
+assert.equal(readAppleSignInContext(1_000_000 + 31 * 60_000), null)
+clearAppleSignInContext()
+assert.equal(readAppleSignInContext(1_000_000), null)
+tab.set('enconvo:apple-sign-in', '{not json')
+assert.equal(readAppleSignInContext(), null)
+saveAppleSignInContext('', 'en', 5)
+assert.equal(appleLoginPath(readAppleSignInContext(10)), '/login')
+globalThis.sessionStorage = { getItem() { throw new Error('blocked') }, setItem() { throw new Error('blocked') }, removeItem() { throw new Error('blocked') } }
+saveAppleSignInContext(appSearch, 'en')
+assert.equal(readAppleSignInContext(), null)
+clearAppleSignInContext()
+delete globalThis.sessionStorage
+for (const [reason, problem] of [['cancelled', 'cancelled'], ['unavailable', 'unavailable'], ['signin_unavailable', 'unavailable'], ['account_blocked', 'blocked'], ['handoff_invalid', 'expired'],
+  ['failed', 'failed'], ['token_invalid', 'failed'], ['nonce_mismatch', 'failed'], ['email_unverified', 'failed'], ['account_unavailable', 'failed'], ['network_error', 'failed'], ['', 'failed']])
+  assert.equal(appleSignInProblem(reason), problem, reason)
+const code = 'A'.repeat(43)
+const requests = []
+const answer = (status, body) => async (url, init) => { requests.push({ url, init }); return { ok: status < 300, status, json: async () => body } }
+const fetchBefore = globalThis.fetch
+try {
+  globalThis.fetch = answer(200, { accessToken: 'access', refreshToken: 'refresh', created: true, hiddenEmail: true })
+  assert.deepEqual(await redeemAppleHandoff(code, true), { ok: true, session: { accessToken: 'access', refreshToken: 'refresh', created: true, hiddenEmail: true } })
+  assert.equal(requests[0].url, 'https://api.enconvo.com/auth/v1/handoff')
+  assert.equal(requests[0].init.method, 'POST')
+  assert.deepEqual(JSON.parse(requests[0].init.body), { code })
+  assert.equal('analytics' in requests[0].init.headers, false)
+  globalThis.fetch = answer(410, { error: 'this sign-in expired; sign in again', code: 'handoff_invalid' })
+  assert.deepEqual(await redeemAppleHandoff(code, false), { ok: false, reason: 'handoff_invalid' })
+  assert.equal(requests[1].init.headers.analytics, 'off')
+  globalThis.fetch = answer(200, { accessToken: 'access' })
+  assert.deepEqual(await redeemAppleHandoff(code, true), { ok: false, reason: 'failed' })
+  globalThis.fetch = async () => { throw new TypeError('offline') }
+  assert.deepEqual(await redeemAppleHandoff(code, true), { ok: false, reason: 'network_error' })
+  // "Use my existing account" removes the new account through the Worker's deletion, confirmed and signed.
+  requests.length = 0
+  globalThis.fetch = answer(200, { deleted: true })
+  assert.equal(await deleteNewAppleAccount('access'), true)
+  assert.equal(requests[0].url, 'https://api.enconvo.com/user/account/delete')
+  assert.equal(requests[0].init.method, 'POST')
+  assert.deepEqual(JSON.parse(requests[0].init.body), { confirmation: 'DELETE' })
+  assert.equal(requests[0].init.headers.Authorization, 'Bearer access')
+  assert.deepEqual(Object.keys(requests[0].init.headers).sort(), ['Authorization', 'Content-Type'])
+  globalThis.fetch = answer(200, {})
+  assert.equal(await deleteNewAppleAccount('access'), false)
+  globalThis.fetch = answer(401, { error: 'Sign in again to delete your account.' })
+  assert.equal(await deleteNewAppleAccount('access'), false)
+  globalThis.fetch = async () => { throw new TypeError('offline') }
+  assert.equal(await deleteNewAppleAccount('access'), false)
+} finally {
+  globalThis.fetch = fetchBefore
+}
+console.log('PASS: Google auth on iPhone and desktop, OAuth callback keeps the app return, email links continue on this site, native return navigation and token omission, Apple above Google with its sign-in context, single handoff and new-account removal')

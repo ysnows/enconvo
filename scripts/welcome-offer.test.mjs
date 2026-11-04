@@ -856,6 +856,7 @@ test('a password sign-in from the offer never opens the app; Google returns thro
       '@/lib/auth-flow': authFlow,
       '@/lib/welcome-offer': offer,
       '@/lib/email-preferences-client': { syncCurrentEmailPreference: async () => {} },
+      '@/lib/apple-sign-in': { appleStartUrl: () => '', saveAppleSignInContext() {} },
       '@/utils/app/native_router': {
         NativeRouter: {
           openApp: async (...args) => {

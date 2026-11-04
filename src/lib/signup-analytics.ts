@@ -16,8 +16,11 @@ export function beginGoogleSignupMeasurement() {
   try { sessionStorage.setItem(INTENT, String(memoryIntent)) } catch {}
 }
 
-/** Record an actual new Supabase account, once in this browser, without sending its id. */
-export function recordWebsiteSignup(user: SignupUser | null | undefined, method: 'email' | 'google', startedAt: number): boolean {
+/**
+ * Record an actual new Supabase account, once in this browser, without sending its id. Apple's
+ * comes from /login/apple when the Worker says the sign-in created the account.
+ */
+export function recordWebsiteSignup(user: SignupUser | null | undefined, method: 'email' | 'google' | 'apple', startedAt: number): boolean {
   // Measured only with the visitor's consent to analytics; this browser storage is analytics too.
   if (!hasConsent('analytics')) return false
   if (!user?.id || user.identities?.length === 0 || !Number.isFinite(startedAt) || startedAt <= 0) return false

@@ -2580,5 +2580,20 @@
   "Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid year.": "Cloud-abonnementen worden automatisch verlengd. Op elk moment opzegbaar via ‘Facturering beheren’; het plan loopt tot het einde van het betaalde jaar.",
   "Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid month.": "Cloud-abonnementen worden automatisch verlengd. Op elk moment opzegbaar via ‘Facturering beheren’; het plan loopt tot het einde van de betaalde maand.",
   "Choose a plan": "Kies een abonnement",
-  "All of this comes with every plan, Free included, unless it carries a mark.": "Dit zit in elk abonnement, ook in Free, tenzij het een markering heeft."
+  "All of this comes with every plan, Free included, unless it carries a mark.": "Dit zit in elk abonnement, ook in Free, tenzij het een markering heeft.",
+  "Continue with Apple": "Doorgaan met Apple",
+  "Sign in with Apple": "Inloggen met Apple",
+  "Signing in…": "Bezig met inloggen…",
+  "Back to log in": "Terug naar inloggen",
+  "Sign in with Apple isn’t available right now.": "Inloggen met Apple is nu niet beschikbaar.",
+  "This account can’t sign in. Email {p0} for help.": "Met dit account kun je niet inloggen. Mail naar {p0} als je hulp nodig hebt.",
+  "This sign-in expired. Try again.": "Deze inlogpoging is verlopen. Probeer het opnieuw.",
+  "Couldn’t sign in with Apple. Try again.": "Inloggen met Apple is niet gelukt. Probeer het opnieuw.",
+  "This is a new account": "Dit is een nieuw account",
+  "You signed in with Apple and chose Hide My Email, so Enconvo made a new account with a private address.": "Je hebt ingelogd met Apple en voor Verberg mijn e-mailadres gekozen, dus heeft Enconvo een nieuw account met een privéadres aangemaakt.",
+  "Already have an Enconvo account?": "Heb je al een Enconvo-account?",
+  "If it has points or a plan, choose Use my existing account. This new account is removed, and you log in with your existing account instead. You can link Apple to it later in Settings › Account in the Enconvo iPhone app.": "Als dat account punten of een abonnement heeft, kies dan Mijn bestaande account gebruiken. Dit nieuwe account wordt verwijderd en je logt in plaats daarvan in met je bestaande account. Later kun je Apple eraan koppelen via Instellingen › Account in de Enconvo-app voor iPhone.",
+  "Use my existing account": "Mijn bestaande account gebruiken",
+  "Removing the new account…": "Nieuw account wordt verwijderd…",
+  "We couldn’t remove the new account. Try again, or email {p0}.": "Het nieuwe account kon niet worden verwijderd. Probeer het opnieuw of mail naar {p0}."
 }

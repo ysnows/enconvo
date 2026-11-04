@@ -54,6 +54,9 @@ try {
   assert.equal(signup.recordGoogleSignup({ ...user, id: 'new-google' }), false)
   signup.beginGoogleSignupMeasurement()
   assert.equal(signup.recordGoogleSignup({ ...user, id: 'old-google', created_at: '2025-01-01T00:00:00Z' }), false)
+  // Apple's comes from /login/apple once the Worker says the sign-in made the account.
+  assert.equal(signup.recordWebsiteSignup({ ...user, id: 'new-apple' }, 'apple', started), true)
+  assert.equal(signup.recordWebsiteSignup({ ...user, id: 'new-apple' }, 'apple', started), false)
   assert.equal(referral.captureMarketingReferral(), false) // callback/private pages preserve the source
   assert.equal(referral.marketingEventParams().referral_source, 'macworthy')
   window.location = new URL('https://www.enconvo.com/')
@@ -70,11 +73,12 @@ try {
   localStorage.setItem('enconvo_marketing_referral_v1', JSON.stringify({ source: 'macworthy', placement: 'app_website', at: Date.now() - 31 * 86400000 }))
   assert.deepEqual(referral.marketingEventParams(), {})
   await Promise.all(pending)
-  assert.deepEqual(packets.map(p => p[1]), ['website_referral_landed', 'download_click', 'sign_up', 'sign_up'])
+  assert.deepEqual(packets.map(p => p[1]), ['website_referral_landed', 'download_click', 'sign_up', 'sign_up', 'sign_up'])
+  assert.deepEqual(packets.filter(p => p[1] === 'sign_up').map(p => p[2].method), ['email', 'google', 'apple'])
   for (const p of packets) {
     assert.equal(p[2].referral_source, 'macworthy')
     assert.equal(p[2].referral_campaign, 'mac-app-directory')
-    assert.doesNotMatch(JSON.stringify(p), /private@example|private-token|internal-account-id|new-google|user_id|access_token/)
+    assert.doesNotMatch(JSON.stringify(p), /private@example|private-token|internal-account-id|new-google|new-apple|user_id|access_token/)
   }
   for (const p of packets.filter(p => p[1] === 'sign_up')) {
     assert.equal(p[2].page_location, 'https://www.enconvo.com/')

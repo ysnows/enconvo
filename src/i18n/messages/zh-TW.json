@@ -2580,5 +2580,20 @@
   "Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid year.": "Cloud 方案自動續訂。可隨時在「管理帳單」中取消；方案效期至已付費年度結束。",
   "Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid month.": "Cloud 方案自動續訂。可隨時在「管理帳單」中取消；方案效期至已付費月份結束。",
   "Choose a plan": "選擇方案",
-  "All of this comes with every plan, Free included, unless it carries a mark.": "除帶標記的項目外，以下功能所有方案都有，包括免費版。"
+  "All of this comes with every plan, Free included, unless it carries a mark.": "除帶標記的項目外，以下功能所有方案都有，包括免費版。",
+  "Continue with Apple": "透過 Apple 繼續",
+  "Sign in with Apple": "使用 Apple 登入",
+  "Signing in…": "正在登入…",
+  "Back to log in": "返回登入",
+  "Sign in with Apple isn’t available right now.": "目前無法使用「使用 Apple 登入」。",
+  "This account can’t sign in. Email {p0} for help.": "此帳號無法登入。如需協助，請寄送電子郵件至 {p0}。",
+  "This sign-in expired. Try again.": "此次登入已過期，請再試一次。",
+  "Couldn’t sign in with Apple. Try again.": "無法使用 Apple 登入，請再試一次。",
+  "This is a new account": "這是新帳號",
+  "You signed in with Apple and chose Hide My Email, so Enconvo made a new account with a private address.": "你使用 Apple 登入並選擇了「隱藏我的電子郵件」，因此 Enconvo 以私密地址為你建立了新帳號。",
+  "Already have an Enconvo account?": "已經有 Enconvo 帳號了嗎？",
+  "If it has points or a plan, choose Use my existing account. This new account is removed, and you log in with your existing account instead. You can link Apple to it later in Settings › Account in the Enconvo iPhone app.": "如果那個帳號有點數或方案，請選擇「使用我現有的帳號」。這個新帳號會被刪除，你改用現有帳號登入。之後可以在 Enconvo iPhone 應用程式的「設定 › 帳號」中為它連結 Apple。",
+  "Use my existing account": "使用我現有的帳號",
+  "Removing the new account…": "正在刪除新帳號…",
+  "We couldn’t remove the new account. Try again, or email {p0}.": "無法刪除新帳號。請再試一次，或寄送電子郵件至 {p0}。"
 }

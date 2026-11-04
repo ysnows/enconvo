@@ -17,6 +17,7 @@ const publicPages = [
 ]
 const privatePages = [
   '/login',
+  '/login/apple',
   '/register',
   '/reset_password_send',
   '/affiliate/dashboard',

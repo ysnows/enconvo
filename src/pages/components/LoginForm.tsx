@@ -23,6 +23,7 @@ import {
 } from '@/lib/auth-flow'
 import { offerReturnPath } from '@/lib/welcome-offer'
 import { beginGoogleSignupMeasurement } from '@/lib/signup-analytics'
+import { appleStartUrl, saveAppleSignInContext } from '@/lib/apple-sign-in'
 
 export default function LoginForm({
   loginState,
@@ -52,6 +53,7 @@ export default function LoginForm({
   const [error, setError] = useState('')
   const [emailIsLoading, setEmailIsLoading] = React.useState(false)
   const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
+  const [appleIsLoading, setAppleIsLoading] = React.useState(false)
 
   async function signIn() {
     // check if email is valid
@@ -140,14 +142,24 @@ export default function LoginForm({
     // setContinueLogin(true)
   }
 
-  // Back from Google's page, the browser can show this page as it was left.
+  // Back from Google's or Apple's page, the browser can show this page as it was left.
   React.useEffect(() => {
     const reset = (event: PageTransitionEvent) => {
-      if (event.persisted) setGoogleIsLoading(false)
+      if (!event.persisted) return
+      setGoogleIsLoading(false)
+      setAppleIsLoading(false)
     }
     window.addEventListener('pageshow', reset)
     return () => window.removeEventListener('pageshow', reset)
   }, [])
+
+  // The Worker runs Apple's sign-in and returns to /login/apple with only a handoff code, so
+  // this page's query (the app to open, the page to return to) and language wait in the tab.
+  function signInWithApple() {
+    setAppleIsLoading(true)
+    saveAppleSignInContext(window.location.search, locale)
+    window.location.assign(appleStartUrl())
+  }
 
   async function signInWithGoogle() {
     setGoogleIsLoading(true)
@@ -217,13 +229,43 @@ export default function LoginForm({
             )}
           </div>
 
-          {/* Google Login Button */}
-          <div className="mt-8">
+          {/* Apple above Google, each in its brand's dark-background style: Apple's white button
+              with the Apple logo, Google's dark fill and outline with the four-colour G. */}
+          <div className="mt-8 flex flex-col gap-3">
+            <Button
+              onClick={signInWithApple}
+              disabled={appleIsLoading}
+              className="relative h-10 w-full rounded-xl bg-white text-[17px] font-medium leading-5 text-black transition-colors duration-200 hover:bg-[#F2F2F2]"
+            >
+              {appleIsLoading ? (
+                <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-3 grid h-5 w-5 place-items-center"
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 240 240"
+                    focusable="false"
+                    className="shrink-0"
+                  >
+                    <path
+                      fill="currentColor"
+                      transform="translate(0 240) scale(0.1 -0.1)"
+                      d="M1448 1956c-141-51-245-183-236-300 3-40 4-41 38-38 128 11 257 155 263 293 2 61-6 66-65 45zM1431 1593c-14-3-60-18-104-34-99-36-123-36-228 2-73 27-94 30-159 27-96-6-172-42-241-114-92-99-125-203-116-379 9-186 79-372 199-529 106-137 173-160 316-107 101 37 168 40 250 10 98-37 145-44 192-30 81 24 187 148 260 304 22 47 40 87 40 90 0 3-19 16-42 30-153 90-208 283-127 442 11 22 43 63 71 91 56 58 56 70-4 116-90 69-207 99-307 81z"
+                    />
+                  </svg>
+                </span>
+              )}
+              {t('Continue with Apple')}
+            </Button>
             <Button
               variant="outline"
               onClick={signInWithGoogle}
               disabled={googleIsLoading}
-              className="relative h-10 w-full rounded-xl border-[#333333] bg-[#242424] font-medium text-[#888888] shadow-sm transition-all duration-200 hover:bg-[#2C2C2C] hover:text-[#999999] hover:shadow"
+              className="relative h-10 w-full rounded-xl border-[#8E918F] bg-[#131314] font-medium text-[#E3E3E3] transition-colors duration-200 hover:bg-[#1F1F20] hover:text-[#E3E3E3]"
             >
               {googleIsLoading ? (
                 <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
@@ -232,16 +274,24 @@ export default function LoginForm({
                   className="absolute left-3 h-5 w-5"
                   aria-hidden="true"
                   focusable="false"
-                  data-prefix="fab"
-                  data-icon="google"
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 488 512"
+                  viewBox="0 0 48 48"
                 >
                   <path
-                    fill="currentColor"
-                    d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-                  ></path>
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  />
                 </svg>
               )}
               {t('Continue with Google')}

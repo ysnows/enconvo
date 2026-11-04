@@ -28,6 +28,7 @@ import { useCookieConsent } from '@/lib/use-cookie-consent'
 const privateRoutes = new Set([
   '/account',
   '/login',
+  '/login/apple',
   '/register',
   '/auth',
   '/auth/callback',
@@ -95,6 +96,12 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   }, [router.isReady, router.query.language, router.locale])
   const { ready: consentReady, consent } = useCookieConsent()
   const analyticsAllowed = consentReady && consent?.analytics === true
+  // The Worker returns Sign in with Apple to /login/apple with a handoff code in the address,
+  // which Google Analytics would report as the page's location: it loads once the page drops it.
+  const handoffInAddress =
+    router.pathname === '/login/apple' &&
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).has('handoff')
   const marketingAllowed = consentReady && consent?.marketing === true
   // What a category stored before it was withdrawn, or before this site asked, goes.
   useEffect(() => {
@@ -129,7 +136,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       )}
       {/* Google Analytics loads only once the visitor allows analytics (lib/cookie-consent).
           Advertising storage and signals stay off: the site measures visits, nothing more. */}
-      {analyticsAllowed && (
+      {analyticsAllowed && !handoffInAddress && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}

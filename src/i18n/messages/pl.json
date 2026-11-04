@@ -2580,5 +2580,20 @@
   "Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid year.": "Plany Cloud odnawiają się automatycznie. Anuluj w dowolnym momencie w sekcji „Zarządzaj płatnościami”; plan działa do końca opłaconego roku.",
   "Cloud plans renew automatically. Cancel anytime in Manage billing; the plan runs to the end of the paid month.": "Plany Cloud odnawiają się automatycznie. Anuluj w dowolnym momencie w sekcji „Zarządzaj płatnościami”; plan działa do końca opłaconego miesiąca.",
   "Choose a plan": "Wybierz plan",
-  "All of this comes with every plan, Free included, unless it carries a mark.": "Wszystko to jest w każdym planie, także w Free, chyba że ma oznaczenie."
+  "All of this comes with every plan, Free included, unless it carries a mark.": "Wszystko to jest w każdym planie, także w Free, chyba że ma oznaczenie.",
+  "Continue with Apple": "Kontynuuj z Apple",
+  "Sign in with Apple": "Zaloguj się przez Apple",
+  "Signing in…": "Logowanie…",
+  "Back to log in": "Wróć do logowania",
+  "Sign in with Apple isn’t available right now.": "Logowanie przez Apple jest teraz niedostępne.",
+  "This account can’t sign in. Email {p0} for help.": "Na to konto nie można się zalogować. Jeśli potrzebujesz pomocy, napisz na adres {p0}.",
+  "This sign-in expired. Try again.": "To logowanie wygasło. Spróbuj ponownie.",
+  "Couldn’t sign in with Apple. Try again.": "Nie udało się zalogować przez Apple. Spróbuj ponownie.",
+  "This is a new account": "To jest nowe konto",
+  "You signed in with Apple and chose Hide My Email, so Enconvo made a new account with a private address.": "Zalogowano się przez Apple z opcją Ukryj mój adres e-mail, więc Enconvo utworzyło nowe konto z prywatnym adresem.",
+  "Already have an Enconvo account?": "Masz już konto Enconvo?",
+  "If it has points or a plan, choose Use my existing account. This new account is removed, and you log in with your existing account instead. You can link Apple to it later in Settings › Account in the Enconvo iPhone app.": "Jeśli ma ono punkty lub plan, wybierz Użyj mojego istniejącego konta. To nowe konto zostanie usunięte, a zalogujesz się na swoje istniejące konto. Apple możesz później połączyć z nim w Ustawieniach › Konto w aplikacji Enconvo na iPhone'a.",
+  "Use my existing account": "Użyj mojego istniejącego konta",
+  "Removing the new account…": "Usuwanie nowego konta…",
+  "We couldn’t remove the new account. Try again, or email {p0}.": "Nie udało się usunąć nowego konta. Spróbuj ponownie lub napisz na adres {p0}."
 }
