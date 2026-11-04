@@ -12,7 +12,7 @@ export const ANDROID_APP_PLAY_URL =
 export const ANDROID_APP_APK_URL =
   'https://file.enconvo.com/android/Enconvo-Companion.apk'
 
-export const ANDROID_APP_VERSION = '1.4.1'
+export const ANDROID_APP_VERSION = '1.4.2'
 
 /** The app's minSdk is 28. */
 export const ANDROID_APP_MIN_ANDROID_VERSION = '9'
