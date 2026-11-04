@@ -241,6 +241,11 @@ export function AlwaysWithYou() {
                 </figure>
               </div>
             </div>
+            <p className={styles.mobileAvailability}>
+              {t(
+                'The iPhone app on TestFlight and the Android app on Google Play are available in the Americas, Europe, the Middle East, Japan, Korea, and Southeast Asia. The Android APK installs anywhere.'
+              )}
+            </p>
           </div>
         </div>
       </Container>

@@ -430,6 +430,7 @@
 .mobilePlatform .iphoneActions { margin-top: 20px; gap: 8px 20px; }
 .mobilePlatform .iphoneQr svg { width: 104px; height: 104px; }
 .mobilePlatform .iphoneQr figcaption { max-width: 120px; text-align: center; line-height: 1.4; }
+.mobileAvailability { margin-top: 16px; color: #9c9c9d; font-size: 13px; line-height: 20px; }
 .desktopDiagram { width: 290px; height: 180px; position: relative; border: 1px solid var(--home-stroke-strong); border-radius: 9px 9px 0 0; background: radial-gradient(ellipse at 80% 90%,rgba(95,134,149,.12),transparent 70%),#101111; box-shadow: 0 1px 0 rgba(255,255,255,.05) inset; }
 .desktopBar { height: 23px; border-bottom: 1px solid var(--home-stroke); display: flex; align-items: center; gap: 4px; padding: 0 9px; }
 .desktopBar i { width: 4px; height: 4px; border-radius: 50%; background: #6a6b6c; }

@@ -122,6 +122,11 @@ export default function AndroidPage() {
                 <p className="mt-3 text-sm text-content-muted">
                   {t('Version {version} · Android {android} or later', versions)}
                 </p>
+                <p className="mt-2 text-sm leading-6 text-content-muted">
+                  {t(
+                    'The iPhone app on TestFlight and the Android app on Google Play are available in the Americas, Europe, the Middle East, Japan, Korea, and Southeast Asia. The Android APK installs anywhere.'
+                  )}
+                </p>
               </div>
             </div>
 
