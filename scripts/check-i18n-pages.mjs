@@ -7,7 +7,6 @@ const base = process.env.I18N_CHECK_SITE || 'http://localhost:3001'
 const publicPages = [
   '/',
   '/use-cases',
-  '/apps',
   '/cloud-pricing',
   '/changelog',
   '/privacy',
@@ -64,7 +63,6 @@ for (const locale of config.locales) {
       [
         '/',
         '/use-cases',
-        '/apps',
         '/changelog',
         '/affiliate',
         '/affiliate/terms',
@@ -122,21 +120,6 @@ for (const locale of config.locales) {
       assert.equal(app.offers.price, '0')
       assert.equal(app.offers.priceCurrency, 'USD')
       assert.equal(app.operatingSystem, 'macOS 14 or later')
-    }
-    if (path === '/apps') {
-      const structured = [
-        ...html.matchAll(
-          /<script[^>]*type="application\/ld\+json"[^>]*>([^<]+)<\/script>/g
-        ),
-      ]
-        .map((m) => JSON.parse(m[1]))
-        .find((j) => j['@type'] === 'ItemList')
-      assert.deepEqual(
-        structured.itemListElement.map((entry) => entry.item.name),
-        ['Enconvo', 'NeatShot']
-      )
-      assert.equal(structured.itemListElement[0].item.inLanguage, locale)
-      assert.ok(html.includes('utm_source=enconvo.com'), target)
     }
     if (path === '/use-cases') {
       const structured = [

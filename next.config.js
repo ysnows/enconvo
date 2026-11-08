@@ -52,6 +52,12 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        // The More apps page was removed; old links land on the homepage.
+        source: '/apps',
+        destination: '/',
+        permanent: true,
+      },
+      {
         source: '/cloud-plan',
         destination: '/cloud-pricing',
         permanent: true,
