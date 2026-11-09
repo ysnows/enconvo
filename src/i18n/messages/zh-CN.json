@@ -2589,5 +2589,7 @@
   "Choose your AI model: your plan, your keys or your Mac, step by step": "一步步选择你的 AI 模型：用你的订阅、你的密钥，或你的 Mac",
   "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "可以用无需密钥的 Cloud 套餐，也可以用你已经在付费的 ChatGPT、Claude、GitHub Copilot、Antigravity 或 Grok 订阅登录，粘贴自己的 API 密钥，或者直接在你的 Mac 上运行模型。最后把选好的模型设为默认。两分钟的讲解视频教程。",
   "Get around the Chat Window, step by step": "一步步熟悉聊天窗口",
-  "Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.": "选择由哪个 Agent 回答，为单个对话切换模型或权限，添加文件，再选择你想生成的内容。然后提问、在同一个对话里继续追问，并随时找回任何一个对话。两分钟的讲解视频教程。"
+  "Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.": "选择由哪个 Agent 回答，为单个对话切换模型或权限，添加文件，再选择你想生成的内容。然后提问、在同一个对话里继续追问，并随时找回任何一个对话。两分钟的讲解视频教程。",
+  "Meet the Agents and make your own, step by step": "一步步认识 Agent，并创建你自己的 Agent",
+  "See the Agents behind every answer: Mavis, the built-in Agents made for one job each, and the coding agents you may already use. Open one to see its instructions, model, skills, knowledge, memory and voice, then make your own — a narrated walkthrough in under two minutes.": "认识每个回答背后的 Agent：默认的 Mavis、各司其职的内置 Agent，以及你可能已经在用的编程 Agent。打开一个 Agent，看看它的指令、模型、技能、知识库、记忆和语音，再创建你自己的 Agent。不到两分钟的讲解视频教程。"
 }

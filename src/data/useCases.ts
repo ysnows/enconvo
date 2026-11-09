@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'agents-step-by-step',
+    title: 'Meet the Agents and make your own, step by step',
+    description:
+      'See the Agents behind every answer: Mavis, the built-in Agents made for one job each, and the coding agents you may already use. Open one to see its instructions, model, skills, knowledge, memory and voice, then make your own — a narrated walkthrough in under two minutes.',
+    youtubeId: 'X0e_atQEQ0I',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/agents',
+  },
+  {
     slug: 'chat-window-step-by-step',
     title: 'Get around the Chat Window, step by step',
     description:
