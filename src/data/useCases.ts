@@ -13,6 +13,86 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'skills-and-plugins-step-by-step',
+    title: 'Skills, MCP and Plugins, step by step',
+    description:
+      'Give your agents new abilities: skills that teach every agent a job, MCP servers that connect outside tools and data, plugins like Notion, Slack and GitHub, and an Extension Store with more than a hundred extensions — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'eZeUgu54kQw',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/configuration/skills',
+  },
+  {
+    slug: 'memory-step-by-step',
+    title: 'Memory and the Knowledge Base, step by step',
+    description:
+      'See what your agents can draw on, how they learn from your chats with Undo for everything, tell them about yourself in About You, keep your documents in a Knowledge Base, and save the app in front of you with Quick Capture — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'zvr6DJaZuJo',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/memory',
+  },
+  {
+    slug: 'video-conference-step-by-step',
+    title: 'Meetings, recordings and voice notes, step by step',
+    description:
+      'Start or schedule a Video Conference with captions you can translate and notes that write themselves, record a meeting in any other app, transcribe a file, follow live captions, and save a voice note with one hotkey — a narrated walkthrough in about a minute and a half.',
+    youtubeId: 'X0uBfcS3h5g',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/features/video-conference',
+  },
+  {
+    slug: 'teams-and-workspaces-step-by-step',
+    title: 'Set up your account, team and Workspaces, step by step',
+    description:
+      'See your points, your lifetime licence and your Cloud plan, give your team Seats and shared points while their chats stay private, keep each client’s work in its own Workspace, and sync everything across your computers — a narrated walkthrough in about a minute and a half.',
+    youtubeId: 'FnddgYQfcTc',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/configuration/account',
+  },
+  {
+    slug: 'agent-orchestrator-step-by-step',
+    title: 'Let a team of Agents do the work, step by step',
+    description:
+      'Name Agents with @ in any chat: the lead writes a Work plan with a goal and one task for each Agent, and the Board shows every task from start to done. Then make a Project for bigger work, with coding agents that each work in their own copy of the code — a narrated walkthrough in under two minutes.',
+    youtubeId: 'i4gkxo4NJr4',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/agent-orchestrator',
+  },
+  {
+    slug: 'agents-step-by-step',
+    title: 'Meet the Agents and make your own, step by step',
+    description:
+      'See the Agents behind every answer: Mavis, the built-in Agents made for one job each, and the coding agents you may already use. Open one to see its instructions, model, skills, knowledge, memory and voice, then make your own — a narrated walkthrough in under two minutes.',
+    youtubeId: 'X0e_atQEQ0I',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/agents',
+  },
+  {
+    slug: 'chat-window-step-by-step',
+    title: 'Get around the Chat Window, step by step',
+    description:
+      'Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.',
+    youtubeId: 'qfFG0nwxc6s',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/chat',
+  },
+  {
+    slug: 'ai-models-step-by-step',
+    title: 'Choose your AI model: your plan, your keys or your Mac, step by step',
+    description:
+      'Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.',
+    youtubeId: '_mRULjM5ZKw',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/providers/overview',
+  },
+  {
     slug: 'computer-use-step-by-step',
     title: 'Let your Mac click, type and browse for you, step by step',
     description:

@@ -774,22 +774,88 @@ function ReleaseTag({ tone }: { tone: 'latest' | 'beta' }) {
   )
 }
 
-function ReleaseVideoPlayer({ video }: { video: ReleaseVideo | null }) {
+// The release video card follows the Dynamic Island: opaque near-black with a
+// hairline stroke, an aurora along the bottom edge, a small uppercase status
+// label, and one white capsule as the primary action. YouTube loads only after
+// the click, so the page stays light and the card never shows YouTube's chrome.
+function ReleaseVideoPlayer({
+  video,
+  version,
+}: {
+  video: ReleaseVideo | null
+  version?: string
+}) {
+  const { t } = useI18n()
+  const [playing, setPlaying] = useState(false)
+  const [poster, setPoster] = useState<'maxresdefault' | 'hqdefault'>(
+    'maxresdefault'
+  )
+
   if (!video) {
     return null
   }
 
+  const play = () => {
+    trackEvent('changelog_video_play', { video: video.id, version })
+    setPlaying(true)
+  }
+
   return (
-    <div className="mt-6 aspect-video overflow-hidden rounded-2xl border border-hairline bg-black">
-      <iframe
-        src={`https://www.youtube-nocookie.com/embed/${video.id}?rel=0`}
-        title={video.title}
-        className="h-full w-full"
-        loading="lazy"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      />
+    <div className="relative mt-6 overflow-hidden rounded-[22px] bg-gradient-to-b from-black to-[#0B0B10] p-[5px] shadow-[0_24px_60px_-20px_rgba(0,0,0,0.85)] ring-1 ring-inset ring-white/[0.07]">
+      <div className="relative aspect-video overflow-hidden rounded-[17px] bg-black">
+        {playing ? (
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${video.id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`}
+            title={video.title}
+            className="absolute inset-0 h-full w-full"
+            allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={play}
+            aria-label={`${t('Play')} ${video.title}`}
+            className="group absolute inset-0 block h-full w-full cursor-pointer text-left focus-visible:outline-none"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`https://i.ytimg.com/vi/${video.id}/${poster}.jpg`}
+              alt=""
+              loading="lazy"
+              onError={() => setPoster('hqdefault')}
+              className="absolute inset-0 h-full w-full object-cover opacity-40 blur-[1.5px] transition duration-700 ease-out group-hover:scale-[1.02] group-hover:opacity-55 group-hover:blur-0"
+            />
+            <span
+              aria-hidden="true"
+              className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.15),rgba(0,0,0,0.78)_75%)]"
+            />
+            <span
+              aria-hidden="true"
+              className="cl-aurora pointer-events-none absolute -bottom-16 left-1/2 h-32 w-[92%] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(87,193,255,0.55),transparent),radial-gradient(closest-side,rgba(150,110,255,0.5),transparent),radial-gradient(closest-side,rgba(255,150,80,0.38),transparent)] bg-[length:45%_100%,45%_100%,40%_100%] bg-[position:0%_50%,50%_50%,100%_50%] bg-no-repeat blur-2xl"
+            />
+            <span className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.32em] text-[#B9B5D6]">
+                {t("What's new")}
+              </span>
+              <span className="mt-3 text-[22px] font-semibold leading-tight text-white sm:text-[28px]">
+                {version ? `Enconvo ${version}` : video.title}
+              </span>
+              <span className="mt-6 inline-flex h-11 items-center gap-2.5 rounded-full bg-white pl-4 pr-5 text-[15px] font-semibold text-black shadow-[0_8px_24px_-8px_rgba(255,255,255,0.35)] transition duration-300 group-hover:scale-[1.04] group-focus-visible:ring-2 group-focus-visible:ring-white/60 group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-black">
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  className="h-3.5 w-3.5 fill-current"
+                >
+                  <path d="M4 2.6v10.8a.8.8 0 0 0 1.2.7l8.9-5.4a.8.8 0 0 0 0-1.4L5.2 1.9A.8.8 0 0 0 4 2.6Z" />
+                </svg>
+                {t('Play video')}
+              </span>
+            </span>
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -907,7 +973,7 @@ function ReleaseEntry({
                 __html: markQuery(escapeHtml(entry.headline), query),
               }}
             />
-            <ReleaseVideoPlayer video={entry.video} />
+            <ReleaseVideoPlayer video={entry.video} version={entry.version} />
             <div className="mt-[22px]">
               <ReleaseNotes entry={entry} query={query} />
             </div>
@@ -964,7 +1030,7 @@ function ReleaseEntry({
                 </button>
               )}
             </div>
-            <ReleaseVideoPlayer video={entry.video} />
+            <ReleaseVideoPlayer video={entry.video} version={entry.version} />
             <div
               id={notesId}
               className="cl-fold"
@@ -1181,6 +1247,24 @@ function ChangelogStyles() {
         }
         .cl-pill[data-ready] {
           transition: transform 0.5s var(--cl-ease), width 0.5s var(--cl-ease);
+        }
+        /* The video card's aurora breathes like the Dynamic Island's. */
+        @keyframes cl-aurora-breathe {
+          0%,
+          100% {
+            opacity: 0.7;
+          }
+          50% {
+            opacity: 1;
+          }
+        }
+        .cl-aurora {
+          animation: cl-aurora-breathe 4.8s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .cl-aurora {
+            animation: none;
+          }
         }
         /* Height animates through grid rows, so content never jumps. */
         .cl-fold {
