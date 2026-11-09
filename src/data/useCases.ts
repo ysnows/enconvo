@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'ai-models-step-by-step',
+    title: 'Choose your AI model: your plan, your keys or your Mac, step by step',
+    description:
+      'Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.',
+    youtubeId: '_mRULjM5ZKw',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/providers/overview',
+  },
+  {
     slug: 'computer-use-step-by-step',
     title: 'Let your Mac click, type and browse for you, step by step',
     description:

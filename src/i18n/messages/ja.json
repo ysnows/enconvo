@@ -2585,5 +2585,7 @@
   "If it has points or a plan, choose Use my existing account. This new account is removed, and you log in with your existing account instead. You can link Apple to it later in Settings › Account in the Enconvo iPhone app.": "そのアカウントにポイントやプランがある場合は、「既存のアカウントを使用」を選んでください。この新しいアカウントは削除され、既存のアカウントでログインし直します。Apple は後で Enconvo iPhone アプリの「設定 › アカウント」から連携できます。",
   "Use my existing account": "既存のアカウントを使用",
   "Removing the new account…": "新しいアカウントを削除しています…",
-  "We couldn’t remove the new account. Try again, or email {p0}.": "新しいアカウントを削除できませんでした。もう一度お試しいただくか、{p0} までメールでご連絡ください。"
+  "We couldn’t remove the new account. Try again, or email {p0}.": "新しいアカウントを削除できませんでした。もう一度お試しいただくか、{p0} までメールでご連絡ください。",
+  "Choose your AI model: your plan, your keys or your Mac, step by step": "AI モデルを選ぶ：手持ちのプラン、自分の API キー、または Mac 上のモデル",
+  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "キー不要の Cloud プラン、すでに契約している ChatGPT・Claude・GitHub Copilot・Antigravity・Grok のプランでのサインイン、自分の API キーの貼り付け、Mac 上で動くモデルから選べます。選んだモデルをデフォルトに設定するまで、2 分のナレーション付きチュートリアルで紹介します。"
 }

@@ -2585,5 +2585,7 @@
   "If it has points or a plan, choose Use my existing account. This new account is removed, and you log in with your existing account instead. You can link Apple to it later in Settings › Account in the Enconvo iPhone app.": "如果那个账号有点数或套餐，请选择“使用我现有的账号”。这个新账号会被删除，你改用现有账号登录。之后可以在 Enconvo iPhone 应用的“设置 › 账号”中为它关联 Apple。",
   "Use my existing account": "使用我现有的账号",
   "Removing the new account…": "正在删除新账号…",
-  "We couldn’t remove the new account. Try again, or email {p0}.": "无法删除新账号。请重试，或发送邮件至 {p0}。"
+  "We couldn’t remove the new account. Try again, or email {p0}.": "无法删除新账号。请重试，或发送邮件至 {p0}。",
+  "Choose your AI model: your plan, your keys or your Mac, step by step": "一步步选择你的 AI 模型：用你的订阅、你的密钥，或你的 Mac",
+  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "可以用无需密钥的 Cloud 套餐，也可以用你已经在付费的 ChatGPT、Claude、GitHub Copilot、Antigravity 或 Grok 订阅登录，粘贴自己的 API 密钥，或者直接在你的 Mac 上运行模型。最后把选好的模型设为默认。两分钟的讲解视频教程。"
 }

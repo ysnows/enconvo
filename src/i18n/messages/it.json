@@ -2585,5 +2585,7 @@
   "If it has points or a plan, choose Use my existing account. This new account is removed, and you log in with your existing account instead. You can link Apple to it later in Settings › Account in the Enconvo iPhone app.": "Se ha punti o un piano, scegli Usa il mio account esistente. Questo nuovo account viene rimosso e accedi invece con il tuo account esistente. Potrai collegarvi Apple in seguito da Impostazioni › Account nell'app Enconvo per iPhone.",
   "Use my existing account": "Usa il mio account esistente",
   "Removing the new account…": "Rimozione del nuovo account…",
-  "We couldn’t remove the new account. Try again, or email {p0}.": "Non siamo riusciti a rimuovere il nuovo account. Riprova o scrivi a {p0}."
+  "We couldn’t remove the new account. Try again, or email {p0}.": "Non siamo riusciti a rimuovere il nuovo account. Riprova o scrivi a {p0}.",
+  "Choose your AI model: your plan, your keys or your Mac, step by step": "Scegli il tuo modello di IA: il tuo piano, le tue chiavi o il tuo Mac, passo dopo passo",
+  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "Usa il piano Cloud senza chiavi, accedi con il piano ChatGPT, Claude, GitHub Copilot, Antigravity o Grok che paghi già, incolla la tua chiave API o esegui i modelli direttamente sul tuo Mac. Poi imposta la tua scelta come predefinita. Un tutorial commentato di due minuti."
 }
