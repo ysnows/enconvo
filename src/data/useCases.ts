@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'apis-cli-hooks-step-by-step',
+    title: 'APIs, CLI and Hooks, step by step',
+    description:
+      'For developers, everything in Enconvo is also an API: every installed extension serves HTTP endpoints on your Mac, the command line tool comes with the app, and hooks run your own scripts at set points in an agent’s work — a narrated walkthrough in under a minute.',
+    youtubeId: '52s8NEIzxDo',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/advanced/cli-local-api',
+  },
+  {
     slug: 'enconvo-on-your-mac-step-by-step',
     title: 'Set up Enconvo on your Mac, step by step',
     description:
