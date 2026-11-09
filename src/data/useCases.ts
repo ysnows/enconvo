@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'automations-step-by-step',
+    title: 'Automations and Workflows, step by step',
+    description:
+      'Let routine work run by itself: automations run an agent, a workflow or a command on a schedule, when something happens, or when you start them; workflows chain steps into a job you can run again; variables put live context into prompts; and quiet hours decide when you hear about the results — a narrated walkthrough in under a minute.',
+    youtubeId: 'XLbDK5J3fjE',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/workflows/scheduled-jobs',
+  },
+  {
     slug: 'skills-and-plugins-step-by-step',
     title: 'Skills, MCP and Plugins, step by step',
     description:
