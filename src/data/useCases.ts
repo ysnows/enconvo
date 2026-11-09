@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'teams-and-workspaces-step-by-step',
+    title: 'Set up your account, team and Workspaces, step by step',
+    description:
+      'See your points, your lifetime licence and your Cloud plan, give your team Seats and shared points while their chats stay private, keep each client’s work in its own Workspace, and sync everything across your computers — a narrated walkthrough in about a minute and a half.',
+    youtubeId: 'FnddgYQfcTc',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/configuration/account',
+  },
+  {
     slug: 'agent-orchestrator-step-by-step',
     title: 'Let a team of Agents do the work, step by step',
     description:
