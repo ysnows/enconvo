@@ -2591,5 +2591,7 @@
   "Get around the Chat Window, step by step": "一步步熟悉聊天窗口",
   "Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.": "选择由哪个 Agent 回答，为单个对话切换模型或权限，添加文件，再选择你想生成的内容。然后提问、在同一个对话里继续追问，并随时找回任何一个对话。两分钟的讲解视频教程。",
   "Meet the Agents and make your own, step by step": "一步步认识 Agent，并创建你自己的 Agent",
-  "See the Agents behind every answer: Mavis, the built-in Agents made for one job each, and the coding agents you may already use. Open one to see its instructions, model, skills, knowledge, memory and voice, then make your own — a narrated walkthrough in under two minutes.": "认识每个回答背后的 Agent：默认的 Mavis、各司其职的内置 Agent，以及你可能已经在用的编程 Agent。打开一个 Agent，看看它的指令、模型、技能、知识库、记忆和语音，再创建你自己的 Agent。不到两分钟的讲解视频教程。"
+  "See the Agents behind every answer: Mavis, the built-in Agents made for one job each, and the coding agents you may already use. Open one to see its instructions, model, skills, knowledge, memory and voice, then make your own — a narrated walkthrough in under two minutes.": "认识每个回答背后的 Agent：默认的 Mavis、各司其职的内置 Agent，以及你可能已经在用的编程 Agent。打开一个 Agent，看看它的指令、模型、技能、知识库、记忆和语音，再创建你自己的 Agent。不到两分钟的讲解视频教程。",
+  "Let a team of Agents do the work, step by step": "一步步让一组 Agent 替你完成工作",
+  "Name Agents with @ in any chat: the lead writes a Work plan with a goal and one task for each Agent, and the Board shows every task from start to done. Then make a Project for bigger work, with coding agents that each work in their own copy of the code — a narrated walkthrough in under two minutes.": "在任意对话里用 @ 点名 Agent：负责人会写出带目标的工作计划，给每个 Agent 分配一项任务，看板会显示每项任务从开始到完成的进度。更大的工作可以建一个项目，让编程 Agent 各自在自己的代码副本里工作。不到两分钟的讲解视频教程。"
 }

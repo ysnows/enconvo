@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'agent-orchestrator-step-by-step',
+    title: 'Let a team of Agents do the work, step by step',
+    description:
+      'Name Agents with @ in any chat: the lead writes a Work plan with a goal and one task for each Agent, and the Board shows every task from start to done. Then make a Project for bigger work, with coding agents that each work in their own copy of the code — a narrated walkthrough in under two minutes.',
+    youtubeId: 'i4gkxo4NJr4',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/agent-orchestrator',
+  },
+  {
     slug: 'agents-step-by-step',
     title: 'Meet the Agents and make your own, step by step',
     description:
