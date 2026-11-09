@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'memory-step-by-step',
+    title: 'Memory and the Knowledge Base, step by step',
+    description:
+      'See what your agents can draw on, how they learn from your chats with Undo for everything, tell them about yourself in About You, keep your documents in a Knowledge Base, and save the app in front of you with Quick Capture — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'zvr6DJaZuJo',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/memory',
+  },
+  {
     slug: 'video-conference-step-by-step',
     title: 'Meetings, recordings and voice notes, step by step',
     description:
