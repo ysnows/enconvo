@@ -32,6 +32,18 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        // Grok Bot's OAuth consent page: no other site may frame it, so its Approve can't be clicked unseen.
+        source: '/grokbot/:path*',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+        ],
+      },
+    ]
+  },
   async rewrites() {
     // The Plugins store is the enconvo-app Worker's (envonvo.api.workers/enconvo-app/plugins.js),
     // which answers /<locale>/plugins in that language. A locale: false source names its locale,
