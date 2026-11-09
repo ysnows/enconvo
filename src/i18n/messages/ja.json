@@ -2587,5 +2587,7 @@
   "Removing the new account…": "新しいアカウントを削除しています…",
   "We couldn’t remove the new account. Try again, or email {p0}.": "新しいアカウントを削除できませんでした。もう一度お試しいただくか、{p0} までメールでご連絡ください。",
   "Choose your AI model: your plan, your keys or your Mac, step by step": "AI モデルを選ぶ：手持ちのプラン、自分の API キー、または Mac 上のモデル",
-  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "キー不要の Cloud プラン、すでに契約している ChatGPT・Claude・GitHub Copilot・Antigravity・Grok のプランでのサインイン、自分の API キーの貼り付け、Mac 上で動くモデルから選べます。選んだモデルをデフォルトに設定するまで、2 分のナレーション付きチュートリアルで紹介します。"
+  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "キー不要の Cloud プラン、すでに契約している ChatGPT・Claude・GitHub Copilot・Antigravity・Grok のプランでのサインイン、自分の API キーの貼り付け、Mac 上で動くモデルから選べます。選んだモデルをデフォルトに設定するまで、2 分のナレーション付きチュートリアルで紹介します。",
+  "Get around the Chat Window, step by step": "チャットウィンドウの使い方をステップごとに",
+  "Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.": "回答するエージェントを選び、チャットごとにモデルや権限を切り替え、ファイルを追加し、作りたいものを選びます。質問して同じチャットで続けて聞き、どのチャットもあとから見つけられます。2 分のナレーション付きチュートリアルです。"
 }

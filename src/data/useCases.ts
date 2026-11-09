@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'chat-window-step-by-step',
+    title: 'Get around the Chat Window, step by step',
+    description:
+      'Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.',
+    youtubeId: 'qfFG0nwxc6s',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/ai/chat',
+  },
+  {
     slug: 'ai-models-step-by-step',
     title: 'Choose your AI model: your plan, your keys or your Mac, step by step',
     description:

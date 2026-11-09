@@ -2587,5 +2587,7 @@
   "Removing the new account…": "正在刪除新帳號…",
   "We couldn’t remove the new account. Try again, or email {p0}.": "無法刪除新帳號。請再試一次，或寄送電子郵件至 {p0}。",
   "Choose your AI model: your plan, your keys or your Mac, step by step": "一步步選擇你的 AI 模型：用你的訂閱、你的金鑰，或你的 Mac",
-  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "可以用不需要金鑰的 Cloud 方案，也可以用你已經在付費的 ChatGPT、Claude、GitHub Copilot、Antigravity 或 Grok 訂閱登入，貼上自己的 API 金鑰，或者直接在你的 Mac 上執行模型。最後把選好的模型設為預設。兩分鐘的講解影片教學。"
+  "Use the Cloud plan with no keys, sign in with the ChatGPT, Claude, GitHub Copilot, Antigravity or Grok plan you already pay for, paste your own API key, or run models right on your Mac. Then make your pick the default — a narrated walkthrough in two minutes.": "可以用不需要金鑰的 Cloud 方案，也可以用你已經在付費的 ChatGPT、Claude、GitHub Copilot、Antigravity 或 Grok 訂閱登入，貼上自己的 API 金鑰，或者直接在你的 Mac 上執行模型。最後把選好的模型設為預設。兩分鐘的講解影片教學。",
+  "Get around the Chat Window, step by step": "一步步熟悉聊天視窗",
+  "Choose which Agent answers, switch the model or the permissions for one chat, add files, and pick what you want to make. Then ask, follow up in the same chat, and find any chat again — a narrated walkthrough in two minutes.": "選擇由哪個 Agent 回答，為單一對話切換模型或權限，加入檔案，再選擇你想產生的內容。接著提問、在同一個對話裡繼續追問，並隨時找回任何一個對話。兩分鐘的講解影片教學。"
 }
