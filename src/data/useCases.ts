@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'skills-and-plugins-step-by-step',
+    title: 'Skills, MCP and Plugins, step by step',
+    description:
+      'Give your agents new abilities: skills that teach every agent a job, MCP servers that connect outside tools and data, plugins like Notion, Slack and GitHub, and an Extension Store with more than a hundred extensions — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'eZeUgu54kQw',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/configuration/skills',
+  },
+  {
     slug: 'memory-step-by-step',
     title: 'Memory and the Knowledge Base, step by step',
     description:
