@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'enconvo-on-your-mac-step-by-step',
+    title: 'Set up Enconvo on your Mac, step by step',
+    description:
+      'Make Enconvo fit the way you work: change every hotkey in one place, choose what SmartBar picks up from the app you’re in, add the window in front of you with Appshots, see which AI runs locally and offline, check macOS permissions, and keep your Mac awake so your iPhone can reach it — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'KLluTyxxd7s',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/configuration/keyboard-shortcuts',
+  },
+  {
     slug: 'automations-step-by-step',
     title: 'Automations and Workflows, step by step',
     description:
