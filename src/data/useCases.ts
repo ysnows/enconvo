@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'video-conference-step-by-step',
+    title: 'Meetings, recordings and voice notes, step by step',
+    description:
+      'Start or schedule a Video Conference with captions you can translate and notes that write themselves, record a meeting in any other app, transcribe a file, follow live captions, and save a voice note with one hotkey — a narrated walkthrough in about a minute and a half.',
+    youtubeId: 'X0uBfcS3h5g',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/features/video-conference',
+  },
+  {
     slug: 'teams-and-workspaces-step-by-step',
     title: 'Set up your account, team and Workspaces, step by step',
     description:
