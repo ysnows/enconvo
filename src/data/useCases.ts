@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'avatars-channels-credentials-step-by-step',
+    title: 'Avatars, IM Channels and Credentials, step by step',
+    description:
+      'Bring your agents closer: give an agent a character on your desktop with lip sync, reach it from Telegram with only the people you approve, and keep every key and sign-in in one place, where you can see which features use each one — a narrated walkthrough in just over a minute.',
+    youtubeId: 'O5rNJwqlisg',
+    category: 'Tutorials',
+    date: '2026-11-09',
+    docsUrl: 'https://docs.enconvo.ai/integrations/messaging',
+  },
+  {
     slug: 'apis-cli-hooks-step-by-step',
     title: 'APIs, CLI and Hooks, step by step',
     description:
