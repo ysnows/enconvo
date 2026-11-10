@@ -270,11 +270,12 @@ function FormulaSummary({
 function FormulaDetails({
   formula,
   usdPerPoint,
-  activeTier,
+  discount,
 }: {
   formula: BillingFormula
   usdPerPoint: number
-  activeTier: Tier
+  /** The offering's own rate for the tier shown; null when it has none. */
+  discount: number | null
 }) {
   const { t, locale } = useI18n()
   const { NUMBER, POINTS, USD, DATE_SHORT } = useMemo(
@@ -282,8 +283,6 @@ function FormulaDetails({
     [locale]
   )
 
-  const discount =
-    activeTier === 'plus' ? null : activeTier === 'pro' ? 0.5 : 0.25
   if (formula.kind === 'token') {
     return (
       <div className="overflow-hidden rounded-md border border-hairline">
@@ -389,7 +388,7 @@ function FormulaDetails({
             key={index}
             formula={part}
             usdPerPoint={usdPerPoint}
-            activeTier={activeTier}
+            discount={discount}
           />
         ))}
       </div>
@@ -537,7 +536,7 @@ function PricingRow({
               <FormulaDetails
                 formula={offering.formula}
                 usdPerPoint={catalog.pointPolicy.usdPerPoint}
-                activeTier={activeTier}
+                discount={discountForTier(activeTier, offering)}
               />
             </div>
             {offering.description && (
