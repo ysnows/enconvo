@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'dictation-drafts-and-translation-step-by-step',
+    title: 'Dictation drafts and translation, step by step',
+    description:
+      'Say what you want and Dictation writes it: an email reply drafted from a spoken instruction that even picks up details from the message, then Chinese spoken and English typed, with a Translation Style of Standard, Sound Native or Custom — a narrated walkthrough in under two and a half minutes.',
+    youtubeId: 'x4A7B9kIVYs',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/features/dictation',
+  },
+  {
     slug: 'whats-new-2-5-13-more-touches',
     title: 'What else is new in Enconvo 2.5.13',
     description:
