@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-13',
+    title: 'What’s new in Enconvo 2.5.13',
+    description:
+      'Every headline of 2.5.13 in one narrated tour: Spaces you build by asking, Workspaces that keep each job apart, Projects with a Board that follows every task to Done, App Sidebar beside any app, your other computers and SSH hosts, and Dictation that drafts and translates — about eleven minutes, with a chapter for each.',
+    youtubeId: 'viSojOLdGBU',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
     slug: 'app-sidebar-step-by-step',
     title: 'App Sidebar, step by step',
     description:
