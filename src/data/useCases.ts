@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'computers-and-ssh-hosts-step-by-step',
+    title: 'Computers and SSH Hosts, step by step',
+    description:
+      'Let the Agent work on your other machines: add a server from your SSH config, mention it in a chat, and ask about it the way you would about your Mac, with every command it ran one click away and one switch to stop all access — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'ojtTTtqTod4',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/integrations/computers-and-ssh-hosts',
+  },
+  {
     slug: 'projects-and-board-step-by-step',
     title: 'Projects and the Board, step by step',
     description:
