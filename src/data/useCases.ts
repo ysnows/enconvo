@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'workspaces-step-by-step',
+    title: 'Workspaces, step by step',
+    description:
+      'Keep each client or job apart: create a Workspace with its own chats, Memory, knowledge and sign-ins, switch from the top of the sidebar or with Control-Command and a number, and manage them all in Settings — a narrated walkthrough in about a minute.',
+    youtubeId: 'fMHIhDRufXA',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/configuration/account#workspaces',
+  },
+  {
     slug: 'spaces-step-by-step',
     title: 'Spaces, step by step',
     description:
