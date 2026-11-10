@@ -2613,5 +2613,7 @@
   "Spaces, step by step": "一步步上手 Spaces",
   "Ask the Agent for a page of your own and it builds it: a subscriptions tracker with renewal dates and a monthly total that sits in your sidebar, changes when you ask, and can live in the Dock or the menu bar — a narrated walkthrough in under a minute and a half.": "向 Agent 要一個屬於你自己的頁面，它就會幫你做出來：一個附續訂日期和每月合計的訂閱追蹤頁，放在側邊欄裡，隨你的要求修改，還能放到 Dock 或選單列。不到一分半鐘的講解影片教學。",
   "Workspaces, step by step": "一步步上手 Workspaces",
-  "Keep each client or job apart: create a Workspace with its own chats, Memory, knowledge and sign-ins, switch from the top of the sidebar or with Control-Command and a number, and manage them all in Settings — a narrated walkthrough in about a minute.": "把每個客戶、每項工作分開：建立一個擁有獨立聊天、Memory、知識和登入帳號的 Workspace，在側邊欄頂端或用 Control-Command 加數字鍵切換，並在 Settings 中統一管理。約一分鐘的講解影片教學。"
+  "Keep each client or job apart: create a Workspace with its own chats, Memory, knowledge and sign-ins, switch from the top of the sidebar or with Control-Command and a number, and manage them all in Settings — a narrated walkthrough in about a minute.": "把每個客戶、每項工作分開：建立一個擁有獨立聊天、Memory、知識和登入帳號的 Workspace，在側邊欄頂端或用 Control-Command 加數字鍵切換，並在 Settings 中統一管理。約一分鐘的講解影片教學。",
+  "Projects and the Board, step by step": "一步步上手 Projects 和 Board",
+  "Give every task a card that follows it to Done: a Project’s Chat, Board and Team & settings tabs, a new idea handed to Claude Code, one Board for every Project under Memory, and archiving a Project without losing anything — a narrated walkthrough in under two minutes.": "給每項任務一張卡片，一路跟到 Done：Project 的 Chat、Board 和 Team & settings 三個分頁，把新點子交給 Claude Code，Memory 底下彙整所有 Project 的同一個 Board，以及封存 Project 而不遺失任何內容。不到兩分鐘的講解影片教學。"
 }

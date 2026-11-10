@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'projects-and-board-step-by-step',
+    title: 'Projects and the Board, step by step',
+    description:
+      'Give every task a card that follows it to Done: a Project’s Chat, Board and Team & settings tabs, a new idea handed to Claude Code, one Board for every Project under Memory, and archiving a Project without losing anything — a narrated walkthrough in under two minutes.',
+    youtubeId: 'sDHMeGn6iX0',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/ai/projects',
+  },
+  {
     slug: 'workspaces-step-by-step',
     title: 'Workspaces, step by step',
     description:
