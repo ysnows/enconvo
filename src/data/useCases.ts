@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'app-sidebar-step-by-step',
+    title: 'App Sidebar, step by step',
+    description:
+      'Press Control-Command-E and an assistant docks beside the app you’re in, already knowing what’s there: a YouTube video’s captions and chapters, starters made for the site, times in the answer that jump the video, and smaller copies of the photos you selected in Finder — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'DDR8eET_xBA',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/features/app-sidebar',
+  },
+  {
     slug: 'dictation-drafts-and-translation-step-by-step',
     title: 'Dictation drafts and translation, step by step',
     description:
