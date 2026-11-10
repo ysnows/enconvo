@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'spaces-step-by-step',
+    title: 'Spaces, step by step',
+    description:
+      'Ask the Agent for a page of your own and it builds it: a subscriptions tracker with renewal dates and a monthly total that sits in your sidebar, changes when you ask, and can live in the Dock or the menu bar — a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'fdIh8UtRsuo',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/features/spaces',
+  },
+  {
     slug: 'avatars-channels-credentials-step-by-step',
     title: 'Avatars, IM Channels and Credentials, step by step',
     description:

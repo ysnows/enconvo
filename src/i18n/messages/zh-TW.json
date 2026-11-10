@@ -2609,5 +2609,7 @@
   "APIs, CLI and Hooks, step by step": "一步步用好 API、CLI 和 Hooks",
   "For developers, everything in Enconvo is also an API: every installed extension serves HTTP endpoints on your Mac, the command line tool comes with the app, and hooks run your own scripts at set points in an agent’s work — a narrated walkthrough in under a minute.": "對開發者來說，Enconvo 的一切也都是 API：每個已安裝的擴充功能都在你的 Mac 上提供 HTTP 介面，命令列工具隨 App 附帶，Hooks 會在 Agent 工作的特定節點執行你自己的腳本。不到一分鐘的講解影片教學。",
   "Avatars, IM Channels and Credentials, step by step": "一步步用好頭像角色、IM 頻道和憑證",
-  "Bring your agents closer: give an agent a character on your desktop with lip sync, reach it from Telegram with only the people you approve, and keep every key and sign-in in one place, where you can see which features use each one — a narrated walkthrough in just over a minute.": "讓 Agent 離你更近：給 Agent 一個會對嘴型的桌面角色，透過 Telegram 聯絡它且只允許你核准的人使用，並把所有金鑰和登入集中在一處管理，看清每個功能用的是哪一個。一分鐘多一點的講解影片教學。"
+  "Bring your agents closer: give an agent a character on your desktop with lip sync, reach it from Telegram with only the people you approve, and keep every key and sign-in in one place, where you can see which features use each one — a narrated walkthrough in just over a minute.": "讓 Agent 離你更近：給 Agent 一個會對嘴型的桌面角色，透過 Telegram 聯絡它且只允許你核准的人使用，並把所有金鑰和登入集中在一處管理，看清每個功能用的是哪一個。一分鐘多一點的講解影片教學。",
+  "Spaces, step by step": "一步步上手 Spaces",
+  "Ask the Agent for a page of your own and it builds it: a subscriptions tracker with renewal dates and a monthly total that sits in your sidebar, changes when you ask, and can live in the Dock or the menu bar — a narrated walkthrough in under a minute and a half.": "向 Agent 要一個屬於你自己的頁面，它就會幫你做出來：一個附續訂日期和每月合計的訂閱追蹤頁，放在側邊欄裡，隨你的要求修改，還能放到 Dock 或選單列。不到一分半鐘的講解影片教學。"
 }
