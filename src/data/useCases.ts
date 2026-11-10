@@ -13,6 +13,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-13-more-touches',
+    title: 'What else is new in Enconvo 2.5.13',
+    description:
+      'The smaller additions in 2.5.13: Claude Fable 5.2 in the model menu, Antigravity, Grok Build and Muse Code as Coding agents, a Link, CLI and API row on every agent, Artifacts in Desktop Sync, and new Contrast and Chat Width settings — a narrated tour in just over a minute.',
+    youtubeId: '87x1INCsdIE',
+    category: 'Tutorials',
+    date: '2026-11-11',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
     slug: 'computers-and-ssh-hosts-step-by-step',
     title: 'Computers and SSH Hosts, step by step',
     description:
