@@ -16,6 +16,7 @@ import {
   secondaryButton,
 } from '@/components/landing-styles'
 import { SiteNav } from '@/components/SiteNav'
+import { IPHONE_APP_TESTFLIGHT_URL } from '@/data/iphoneApp'
 import { SITE_URL } from '@/data/siteMetadata'
 import { trackEvent } from '@/lib/analytics'
 import { supabase } from '@/lib/supabase'
@@ -125,6 +126,49 @@ function IntelNote() {
             >
               {t('Intel Mac download')}
             </a>
+          ),
+        }}
+      />
+    </p>
+  )
+}
+
+const phoneLink =
+  'text-content underline decoration-hairline-strong underline-offset-4'
+
+/** A visitor on a phone has no use for the Mac download: where the phone apps are. */
+function PhoneApps() {
+  return (
+    <p className="mt-4 text-sm text-content-muted">
+      <I18nText
+        source={'On your phone? Get Enconvo for {p0} or {p1}.'}
+        values={{
+          p0: (
+            <a
+              href={IPHONE_APP_TESTFLIGHT_URL}
+              onClick={() =>
+                trackEvent('iphone_app_click', { placement: 'invite' })
+              }
+              target="_blank"
+              rel="noreferrer"
+              className={phoneLink}
+            >
+              iPhone
+            </a>
+          ),
+          p1: (
+            <Link
+              href="/android"
+              onClick={() =>
+                trackEvent('download_click', {
+                  platform: 'android',
+                  placement: 'invite',
+                })
+              }
+              className={phoneLink}
+            >
+              Android
+            </Link>
           ),
         }}
       />
@@ -367,6 +411,7 @@ export default function InvitePage({
                   </Link>
                 </p>
               )}
+              <PhoneApps />
             </div>
 
             <div className="overflow-hidden rounded-[10px] border border-hairline-strong bg-surface-elevated">
@@ -415,7 +460,10 @@ export default function InvitePage({
                       </span>
                     ),
                   }}
-                />
+                />{' '}
+                {t(
+                  "Signing in on an Android phone doesn't pay the reward yet: sign in on a computer or an iPhone as well to get it."
+                )}
               </p>
             </div>
           </section>
