@@ -9,6 +9,119 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.14 Changelog (2026-11-12)
+
+Thanks for all the feedback during the beta. This release brings recording summaries with templates in the language you choose, recommends a model for each kind of work, adds Temporary chat for one-off questions and an Active group that gathers the chats that need you, lets you add to a task while it runs, and makes Dictation and Live Captioning far more flexible: press Return to dictate and send, pause, mute your meeting, and put the captions where you want them. Update the iPhone app to 1.2.13 and the Android app to 1.4.10 to try the phone changes.
+
+## Highlights
+
+- **Recording summaries your way**: pick the language summaries are written in, and choose Meeting summary, Lecture notes, Interview highlights or a template you write yourself, with timelines, tables and checklists.
+- **Model recommendations**: model pickers and New Agent suggest the best fit, the lowest-cost and the best-quality model for the job, with prices.
+- **Temporary chat**: a chat for one-off questions that stays out of your history and is deleted when you leave it.
+- **Active chats on top**: the Chat Window, iPhone and Android sidebars gather the chats that are running, waiting for you, failed or have a new result.
+- **Add to a running task**: type while the agent works and Send adds your message to the task; an unrelated request goes to a subagent in the background.
+- **Dictate and send**: press Return to stop, insert and send in one go, or turn on Send after inserting; pause and resume with a key, and Dictation mutes you in Zoom, Teams and Google Meet while you talk.
+- **Live Captioning where you want it**: left, right, top or bottom of any display, a hotkey to start and stop, and a caption area you can resize.
+- **Generated agent avatars**: draw four avatars from an agent's name and description in the style you pick.
+- **Tutorials in Settings**: update videos and walkthroughs play inside Enconvo, with the new ones marked.
+- **Wrap Code**: long lines in code blocks can wrap instead of scrolling sideways.
+- **Phones for everyone**: a free account can pair the iPhone and Android apps with its Mac, and reading a chat on one device clears its notification on the others.
+
+## Recordings
+
+- Added an output language to recordings: pick the language a recording's summary, action items and template results are written in from the top of its side panel, or set one for all new recordings; the transcript and your own notes stay as they are.
+- Added summary templates to recordings: besides the Meeting summary there are Lecture notes and Interview highlights, and you can write your own in plain words, try it on a recording before saving, and switch a recording between templates while each result is kept.
+- Changed recording summaries to show more than text: the Meeting summary has figures and a timeline whose times jump to that moment, and a template's result can use cards, tables, checklists, flashcards, quizzes and charts.
+- Added Show translation to a recording's Notes tab: it adds a translation in the recording's output language under each note you typed, and your notes stay as you wrote them.
+- Added Send tasks to Action items to summary templates, so the tasks a template finds also show in the recording's Action items tab, where you can tick them off.
+- Added Talk time to the Meeting summary, showing each speaker's share of the conversation when a recording has two or more speakers.
+- Added Summary settings to the Recordings page, next to New recording, for the output language and template new recordings take and for managing your templates.
+- Recordings and Live Captioning: a long recording transcribes with Enconvo Cloud Fast again. A file over 95 MB (about an hour as the WAV a Recording saves, or a long video) was refused with HTTP 413 before the upload began; it is now re-encoded as compact speech audio first, so recordings up to the 300-minute limit go through. Reported by plkv_andrii.
+
+## Chats and Agents
+
+- Added Temporary chat for one-off questions: turn on the dashed-bubble switch on a new chat in the Chat Window, the App Sidebar or the Dynamic Island, and that chat stays out of your chat history, saves no Memories, and is deleted when you leave it. Keep chat on its banner saves it as a normal chat instead. Requested by Vit_MK.
+- Fixed Temporary chat in the Dynamic Island and the App Sidebar: turning it on now lights the switch blue and gives the composer a dashed edge with a Temporary chat tag you can close, and a chat you start there really stays out of your history and is deleted when you leave it.
+- Added an Active group at the top of the Chat Window sidebar that gathers every chat that is running, waiting for you, failed or has a result you haven't opened, with its Project and state, so none has to be looked for down the lists.
+- Changed the composer button while a task runs: once you type or attach something it turns from Stop back into Send, and a click sends the message into the running task as Return does (hold ⌘, or Ctrl on Windows and Linux, to queue it instead).
+- Changed a message you send while the agent is working: an unrelated request now goes to a subagent that works in the background while the agent carries on with its task, instead of waiting for the task to finish.
+- Changed a Project's main chat so its agent can start subagents for its own work, alongside the tasks it gives to the Project's members.
+- Design work in a Project now starts from the project's own DESIGN.md: when the agent loads its design skill, the whole file comes with it, so its colours, type and component rules shape the design from the first artboard.
+- Fixed Project chats loading only the first 32,000 characters of the project's AGENTS.md or CLAUDE.md: the agent now gets every instruction file from the repository root down to the working folder in full, so rules near the end of a long file are no longer missed.
+- Changed how an answered question shows in a chat: each answer is now a quiet capsule beside the question, several chosen options sit one per line under it with what you typed, a call that asked several questions names each, and a skipped question shows a dashed Skipped capsule, instead of everything joined on one cut-off line.
+- Added a Wrap Code setting (Settings › General › Appearance) and a wrap button beside Copy on code blocks in a reply, so long lines of code can wrap instead of scrolling sideways; it is off by default. Requested by liduchuan.
+- Changed the buttons on a code block in a reply to plain icon buttons on the block itself, without the dark box that showed behind them in the Chat Window.
+- Chat composer: an attached video shows its first frame with a play mark instead of a plain video icon, and falls back to the icon when the frame can't load.
+- Chat history is the same everywhere: the Dynamic Island's History and the Smart Bar's chat list no longer show AI Command chats (Translate, Fix Spelling and Grammar, your own AI Commands), which the Chat Window never listed, so a chat deleted there no longer lingers in the other lists. The App Sidebar's history now lists only the chats started in that app's sidebar, and the Dock badge counts the same chats as the lists. Reported by Vitaliy Malanchuk.
+- Fixed a message sent from the Smart Bar sometimes going nowhere, leaving the Smart Bar on Responding… and a chat with only a title and no messages in the main window. When a chat on the same page closed, it took the Smart Bar's send event with it; now a chat gives up only the events it still holds, and the chat still on screen takes them back. If a send still isn't picked up, the Smart Bar sends it once more, and if that fails it shows an error and puts your message back in the input.
+- Fixed some cases where a message sent from the Smart Bar, for example to Claude Code, failed with "Couldn't send the message": the Smart Bar now hands it to its own chat page more reliably, and when it still can't, your text, attachments and the message you were editing all come back to the input.
+- Added a voice button to the PopBar Ask panel: click it or press the Voice Command hotkey to speak your ask, and it is sent when you stop.
+- Changed Browser Use so the tabs an Agent opens close when its turn ends, as Computer Use puts apps back: a page the Agent hands you as the result, a tab handed to you, a tab you pinned and the tab you are looking at stay open, and your own tabs are never closed. Before, every task left its tabs open in a tab group of their own.
+
+## Claude Code
+
+- Claude Code chats: an Ultracode switch in the effort picker, shown while Claude Code says the session can use it (CLI 2.1.322 or later, with workflows on and a model that supports it). It turns on workflow orchestration for the rest of the session at whatever effort is picked, keeps it across an effort change, and follows a typed `/effort ultracode`.
+- Fixed Claude Code's Ultracode switch showing an old state after effort or model changes, a session reopening, or a failed change, and translated it in all ten interface languages.
+
+## Models
+
+- Added model recommendations to model pickers in Settings: the list now starts with the best fit, the lowest-cost and the best-quality model for that kind of work, each with a short reason and its price, and a line under the setting tells you when the chosen model costs many times more than the recommended one.
+- Added a recommended model to New Agent: it reads what the agent will do from its description and suggests a model, with a cheaper and a stronger one beside it, that you can pick in one click.
+- Changed the Enconvo Cloud Plan model list to group models by vendor in every model picker, the Smart Bar and other native windows included: Enconvo's own models come first, then Anthropic, OpenAI, Google and the rest, each under its name with a count. A vendor shows its newest four models and "Show N earlier models" opens the others; the chat's model always shows, and a search still lists every match.
+- Added a Generate tab to an agent's avatar, in Create New Agent and in the agent's settings: it draws four avatars from the agent's name and description in the style you pick (Flat, 3D, Anime, Photo, Line or Watercolor) with your image model, only when you press Generate, and you can add details or draw again before choosing one. Requested by Vit_MK.
+
+## Dictation and Live Captioning
+
+- Dictation: press Return while you dictate, holding the hotkey or after tapping it, and the dictation stops, its text goes in and is sent, in one press. Stopping with the hotkey or ✓ only inserts, as before. The setting, now Settings › Dictation › Insert › Return inserts and sends, is on by default; an app rule's Return key column still turns it on or off for one app. Fixed the Return never sending in Discord, Edge, Chrome, Slack and other Chromium or Electron apps, which ignored the key the way it was sent. Requested by plkv_andrii.
+- Fixed Return inserts and sends leaving the dictated text unsent in web apps and other slow editors: Enconvo now waits until the pasted text shows in the field before it presses Return.
+- Fixed Return inserts and sends in the Chat Window: dictating into the composer with the Dictation key and pressing Return now sends the message instead of leaving the text in the box.
+- Added a Return inserts and sends switch to the Dictation HUD card, under Draft, so you can turn it on or off while you dictate.
+- Added a Send after inserting switch in Settings › Dictation › Insert: when a dictation ends, its text is inserted and sent without pressing Return. It is off by default and works beside Return inserts and sends.
+- Dictation can pause: point at the level in the Dictation HUD and click Pause, or press ⌥P (change it in Settings › Dictation › Pause / Resume). The microphone goes off and your words stay; Resume, or the same key, goes on with the same dictation, and the Dictation hotkey or ✓ finishes it. The key works only while you dictate, and a dictation you hold a key for has no pause.
+- Changed the Dictation Pause / Resume hotkey to take more than a key combination: a single key such as Space, or one modifier key on its own that you tap, double-tap or hold (holding pauses until you let go). Set it in Settings › Dictation › Pause / Resume.
+- Dictation mutes you in your meeting while you dictate: in a Zoom, Microsoft Teams or Google Meet call, starting a dictation mutes your microphone there, and finishing or pausing it unmutes you. A call you had muted yourself stays muted. Turn it off in Settings › Dictation › Mute my meeting microphone while dictating.
+- Dictation also mutes you in an Enconvo Conference and in Zoom and Microsoft Teams calls that run in a browser tab while you dictate, and unmutes you when you finish or pause, as it does for the Zoom and Teams apps and Google Meet.
+- Fixed Dictation not muting you in a Google Meet, Zoom or Teams call that runs in Safari or in a website added to the Dock from Safari.
+- Dictation: a Live transcript switch hides the words while you dictate, so the bar keeps just its buttons and waveform and covers less of the screen. Turn it on or off in the card that opens when you hover over the bar, without stopping the dictation, or in Settings › Dictation › Listen. Notes, the wait for a microphone, and Clean up's Insert as Spoken still show. Requested by plkv_andrii.
+- Changed the Dictation window to leave out the LISTENING label while you simply dictate, so it takes less room; Paused, Clean up's progress and a failure still show their label.
+- Changed the Dictation Draft panel to say less: its header shows only Draft and, at its end, the app the draft works in; esc and the Dictation key stand alone without a word beside them; and the Dictation HUD below no longer repeats Draft. ↵ now always pastes the draft into the app it started in, bringing that app back first when another one is in front, instead of copying it.
+- Added Send selected text to Settings > Dictation > Draft, on by default: when you start a Draft with text selected that cannot be edited, such as a message or part of a web page, the model gets it as reference and the draft is new text that Return pastes into the field you go back to, instead of a rewrite that could only be copied. Selections on Safari and other web pages are now read as well.
+- Live Captioning: choose where the captions bar opens: Left Side (as before), Right Side, Top Center or Bottom Center, where captions line up at the bottom like subtitles. With more than one display, also choose its screen, or keep the one with the pointer. Pick both in the Start Live Captioning window, or right-click the captions bar to move it during a session. Requested by plkv_andrii.
+- Fixed Live Captioning not moving to another display when one was picked in the captions bar's right-click menu: the bar was pulled back to the edge of the display it was on. Reported by plkv_andrii.
+- Live Captioning: start it from the menu bar menu's Start Live Captioning, or with a hotkey you set in Settings › Shortcuts › Voice; the same hotkey stops captions that are running. Requested by plkv_andrii.
+- Live Captioning at the top or bottom of the screen now lays its controls out in a row with a wide caption area beside them, and you can resize the caption area by dragging its edges, at any position. Requested by plkv_andrii.
+
+## iPhone and Android
+
+- Changed the iPhone and Android apps so a free account can pair with its Mac, use the Mac's chats and Mac Screen from the phone, and use the Avatar, which needed an Enconvo Cloud plan or lifetime license before.
+- Added an Active group at the top of the iPhone and Android sidebars that gathers the chats waiting on you, failed, still running or holding an unread result, each with where it is and its state, and folds to one row.
+- Changed the top bar of a Mac chat in the iPhone and Android apps: the sidebar and New chat buttons now sit together on the left, Side Panel and the chat menu on the right, the title stays centered between them, and messages fade out under the bar instead of ending at a line.
+- Added read sync for notifications: once you read a finished chat on your Mac, iPhone, or Android phone, its notification disappears from your other devices, while a question that still waits for an answer stays.
+- Changed Android notifications for Mac activity, chat replies and messages so sound, vibration, the notification light and the app badge are all on by default, also on phones that already had Enconvo installed.
+- iPhone: an x.com link opened in a chat's side panel shows the post instead of a blank page. X sent the app's web view to Safari with an `x-safari-https:` redirect that the page tab quietly dropped; the tab now reports itself as Safari, as the Mac's side panel does, and opens any such redirect in place.
+- Fixed videos and files from a chat failing to play or download on the phone when the Mac has a large chat history.
+- Fixed the Android app so a message sent while a reply is running shows in the chat at once instead of after the Mac answers.
+- Fixed the first message of a new chat sent from the phone with a photo or file sometimes not showing in the chat while the reply did.
+- Fixed pictures in a Friend Chat on Android opening the system's "Open with" list of other apps: a tap now shows the picture full screen inside Enconvo, where you can pinch or double-tap to zoom, swipe down to close, save it, or share it. Open With… stays in the picture's long-press menu.
+
+## Also in this release
+
+- Added Tutorials to Settings, where update videos and step-by-step walkthroughs play inside Enconvo and the ones you haven't seen are marked New.
+- Added a card in the Chat Window sidebar that offers a version's update video the first time you use Enconvo after updating.
+- Changed What's new in the Chat Window's settings menu to open Tutorials in Settings.
+- A computer's Screen can now go real full screen: the new full screen button (or ⌃⌥F) puts the picture over the whole display, with the controls sliding in when the pointer reaches the top edge; Esc also leaves it while watching. A Fill switch next to it scales the picture to fill the view with no black bars, cropping the edges that do not fit.
+- Changed calls with a live video character so a silent call no longer uses up your daily video time: after a minute without anyone speaking her live picture rests until you talk again, after a minute and a half she asks "Still there?", and a minute later the call hangs up with a Continue button to pick it up again.
+- The Out of Cloud points card (and its Waiting and Points added states) now shows in your interface language. Before, every one of its words stayed English in all 10 languages.
+- Changed Share anonymous product analytics on the Mac to be on unless you turn it off, in the first-run guide or in Settings › General › Privacy; a Mac where you already set the switch keeps your choice.
+- Fixed the Settings sidebar sometimes opening blank, with its menu items still clickable but not drawn.
+
+## Local API
+
+- Added `agent/session/list`, a route that lists the chats running now across every agent and Project (Claude Code and Codex chats included), with each one's title, agent and Project; it checks each run, so a chat whose status still says running after a crash is left out, and `filter: "waiting"` lists the chats waiting for your answer. `agent/session/status` now checks one chat only and asks for its `sessionId`.
+- Added `agent/session/steer`, a route that adds a message to the turn another chat is running now without stopping it, as `agent/session/list` finds them; a chat that isn't running answers `not_running` and points to `agent/call`, and a run below Full access can't steer an Enconvo turn.
+
+---
+
 # Enconvo 2.5.13 Changelog (2026-11-11)
 
 Thanks for all the feedback during the beta. This release adds Spaces, pages of your own that the agent builds and keeps in your sidebar and on your phones, Workspaces for each client or job, redesigned Projects with one Board for every task, and Team Knowledge Bases. Agents can call your friends and people from your own iPhone number, answer the calls you miss, work on SSH hosts, steer their Subagents and keep going until a goal is met. Saved API keys and sign-ins are now encrypted on your Mac and stay out of the conversation, App Sidebar reads the page or app beside it, and Friend Chat gets groups and reactions. Update the iPhone app to 1.2.13 and the Android app to 1.4.7 to try the phone changes.
