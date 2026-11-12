@@ -5,6 +5,12 @@ export interface UseCase {
   description: string
   youtubeId: string
   category: string
+  /**
+   * Set on a version's update video, as major.minor.patch ("2.5.14"). The app reads it
+   * from /api/tutorials: after updating to that version it offers this video once, and
+   * Settings > Tutorials shows it first.
+   */
+  version?: string
   /** YouTube publish date, YYYY-MM-DD. Entries sort newest-first by default. */
   date: string
   /** Optional "Read the guide" link into docs.enconvo.ai */
@@ -19,6 +25,7 @@ export const useCases: UseCase[] = [
       'Every headline of 2.5.13 in one narrated tour: Spaces you build by asking, Workspaces that keep each job apart, Projects with a Board that follows every task to Done, App Sidebar beside any app, your other computers and SSH hosts, and Dictation that drafts and translates — about eleven minutes, with a chapter for each.',
     youtubeId: 'viSojOLdGBU',
     category: 'Tutorials',
+    version: '2.5.13',
     date: '2026-11-11',
     docsUrl: 'https://docs.enconvo.ai/changelog',
   },
