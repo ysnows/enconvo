@@ -542,7 +542,7 @@ const FEATURE_GROUPS: {
       {
         name: 'Avatar',
         description: 'A live character for voice chats on your phone.',
-        access: PAID,
+        access: ALL,
       },
       {
         name: 'Sync across Macs',
@@ -1028,7 +1028,6 @@ const FREE_LIMITS: { label: string; value: string }[] = [
 ]
 
 const PAID_ONLY: string[] = [
-  'Avatar',
   'Sync',
   ...(SHOW_2_5_12_FEATURES ? ['Host conferences'] : []),
 ]
@@ -1045,7 +1044,6 @@ function licenseRows(
     { text: 'Unlimited meetings, captions & Live Talk' },
     { text: 'Unlimited knowledge bases, workflows, scheduled tasks & IM bots' },
     { text: 'Cloud dictation, no points' },
-    { text: 'Avatar', desc: 'A live character for voice chats on your phone.' },
     ...(SHOW_2_5_12_FEATURES
       ? [
           { text: 'Host conferences', desc: 'Guests join from a link.' },
@@ -1086,7 +1084,7 @@ function cloudRows(tier: CloudTier): CardRow[] {
   return [
     {
       text: 'Everything a license unlocks',
-      desc: 'Every cap off, Avatar, Sync and more, while you subscribe.',
+      desc: 'Every cap off, Sync and more, while you subscribe.',
       plus: true,
     },
     { text: '{p0} points / month', strong: tier.points, rates: true },
