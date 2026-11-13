@@ -19,6 +19,17 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-15',
+    title: 'What’s new in Enconvo 2.5.15',
+    description:
+      'Everything new since 2.5.13 in one narrated tour: recording summaries in your language and template, Temporary and Active chats, parallel chats and worktrees, model recommendations and generated avatars, Dictation that sends, pauses and mutes your meeting, Live Captioning where you want it, a calculator in the Dynamic Island, and more, with a chapter for each.',
+    youtubeId: 'EmYHG4i0wPY',
+    category: 'Tutorials',
+    version: '2.5.15',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
     slug: 'dictation-send-pause-mute-step-by-step',
     title: 'Dictation that sends, pauses and mutes, step by step',
     description:
