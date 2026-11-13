@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'dictation-send-pause-mute-step-by-step',
+    title: 'Dictation that sends, pauses and mutes, step by step',
+    description:
+      'Press Return to stop, insert and send in one go, pause and resume with a key, let Dictation mute your meeting microphone while you talk, slim the bar down, and answer a message with a Draft, a narrated walkthrough in under three minutes.',
+    youtubeId: 'ZUe2Brzk5zA',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/features/dictation',
+  },
+  {
     slug: 'whats-new-2-5-15-more-touches',
     title: 'What else is new in Enconvo 2.5.15',
     description:

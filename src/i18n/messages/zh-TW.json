@@ -2662,5 +2662,7 @@
   "Smart Bar and Dynamic Island answers, step by step": "一步步上手 Smart Bar 與 Dynamic Island 即時答案",
   "Type a sum, a conversion or a time on the Dynamic Island’s Home and see the answer right under the island, then ask the Smart Bar for the weather, a flight or the time anywhere, a narrated walkthrough in under a minute and a half.": "在 Dynamic Island 的 Home 裡輸入算式、單位換算或時間，答案就顯示在島的正下方；再向 Smart Bar 詢問天氣、航班或世界任何地點的時間。不到一分半鐘的講解影片教學。",
   "What else is new in Enconvo 2.5.15": "Enconvo 2.5.15 的其他新功能",
-  "The smaller additions in 2.5.15: update videos and walkthroughs that play in Settings, code blocks that wrap long lines, Claude Code chats that skip approval prompts at Full access, and an Ultracode switch, a narrated tour in just over a minute.": "2.5.15 裡較小的新增內容：可在 Settings 中播放的更新影片和導覽教學，長行自動換行的程式碼區塊，在 Full access 下略過核准提示的 Claude Code 聊天，以及一個 Ultracode 開關。一分鐘多一點的講解影片導覽。"
+  "The smaller additions in 2.5.15: update videos and walkthroughs that play in Settings, code blocks that wrap long lines, Claude Code chats that skip approval prompts at Full access, and an Ultracode switch, a narrated tour in just over a minute.": "2.5.15 裡較小的新增內容：可在 Settings 中播放的更新影片和導覽教學，長行自動換行的程式碼區塊，在 Full access 下略過核准提示的 Claude Code 聊天，以及一個 Ultracode 開關。一分鐘多一點的講解影片導覽。",
+  "Dictation that sends, pauses and mutes, step by step": "一步步上手能傳送、暫停、靜音的聽寫",
+  "Press Return to stop, insert and send in one go, pause and resume with a key, let Dictation mute your meeting microphone while you talk, slim the bar down, and answer a message with a Draft, a narrated walkthrough in under three minutes.": "按 Return 一次完成停止、插入和傳送，用一個按鍵暫停和繼續，說話時讓聽寫把會議麥克風靜音，把聽寫列變得更精簡，還能用 Draft 回覆訊息。講解影片教學。"
 }

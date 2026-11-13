@@ -2662,5 +2662,7 @@
   "Smart Bar and Dynamic Island answers, step by step": "Smart Bar と Dynamic Island の答え：ステップごとに解説",
   "Type a sum, a conversion or a time on the Dynamic Island’s Home and see the answer right under the island, then ask the Smart Bar for the weather, a flight or the time anywhere, a narrated walkthrough in under a minute and a half.": "Dynamic Island の Home に計算式や単位換算、時刻を入力すると、アイランドのすぐ下に答えが表示されます。さらに Smart Bar に天気やフライト、世界各地の時刻を尋ねられます。1 分半足らずのナレーション付きガイドです。",
   "What else is new in Enconvo 2.5.15": "Enconvo 2.5.15 のその他の新機能",
-  "The smaller additions in 2.5.15: update videos and walkthroughs that play in Settings, code blocks that wrap long lines, Claude Code chats that skip approval prompts at Full access, and an Ultracode switch, a narrated tour in just over a minute.": "2.5.15 の細かな追加機能：Settings で再生できるアップデート動画とガイド、長い行を折り返すコードブロック、Full access では承認の確認を省く Claude Code のチャット、そして Ultracode のスイッチ。1 分ちょっとのナレーション付きツアーです。"
+  "The smaller additions in 2.5.15: update videos and walkthroughs that play in Settings, code blocks that wrap long lines, Claude Code chats that skip approval prompts at Full access, and an Ultracode switch, a narrated tour in just over a minute.": "2.5.15 の細かな追加機能：Settings で再生できるアップデート動画とガイド、長い行を折り返すコードブロック、Full access では承認の確認を省く Claude Code のチャット、そして Ultracode のスイッチ。1 分ちょっとのナレーション付きツアーです。",
+  "Dictation that sends, pauses and mutes, step by step": "送信・一時停止・ミュートができる音声入力：ステップごとに解説",
+  "Press Return to stop, insert and send in one go, pause and resume with a key, let Dictation mute your meeting microphone while you talk, slim the bar down, and answer a message with a Draft, a narrated walkthrough in under three minutes.": "Return を押せば停止・挿入・送信を一度に。キーひとつで一時停止と再開、話している間は音声入力が会議のマイクをミュートし、バーをスリムにして、Draft でメッセージに返信できます。ナレーション付きガイドです。"
 }
