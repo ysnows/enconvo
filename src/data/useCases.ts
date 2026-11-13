@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'model-recommendations-step-by-step',
+    title: 'Model recommendations and agent avatars, step by step',
+    description:
+      'See the best fit, lowest cost and best quality model for each job with prices, get a warning before a far pricier pick, browse Cloud models by vendor, and let New Agent suggest a model and draw four avatars in your style, a narrated walkthrough in under two minutes.',
+    youtubeId: '94A2bxzXoDQ',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/ai/model-selection-guide',
+  },
+  {
     slug: 'parallel-chats-and-worktrees-step-by-step',
     title: 'Parallel chats and worktrees, step by step',
     description:

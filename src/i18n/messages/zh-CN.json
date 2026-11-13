@@ -2654,5 +2654,7 @@
   "Temporary chat and Active chats, step by step": "一步步上手 Temporary chat 和 Active chats",
   "Ask a one-off question in a Temporary chat that leaves no history, find every running or waiting chat in the Active group, and add to a task while the agent works, with unrelated asks going to a subagent, a narrated walkthrough in about a minute and a half.": "在不留历史记录的 Temporary chat 里问一个一次性的问题，在 Active 分组里找到所有正在运行或等待中的聊天，并在 Agent 工作时给任务追加要求，无关的请求会交给子智能体。约一分半钟的讲解视频教程。",
   "Parallel chats and worktrees, step by step": "一步步上手并行聊天与 worktree",
-  "Let the agent open a parallel chat for a separate job, work in a Project worktree, commit and merge back to the main checkout, and move a chat into a new worktree with its uncommitted changes, a narrated walkthrough in under two minutes.": "让 Agent 为另一项工作开一个并行聊天，在 Project 的 worktree 里工作，提交并合并回主检出目录，还能把聊天连同未提交的改动一起移到新的 worktree。不到两分钟的讲解视频教程。"
+  "Let the agent open a parallel chat for a separate job, work in a Project worktree, commit and merge back to the main checkout, and move a chat into a new worktree with its uncommitted changes, a narrated walkthrough in under two minutes.": "让 Agent 为另一项工作开一个并行聊天，在 Project 的 worktree 里工作，提交并合并回主检出目录，还能把聊天连同未提交的改动一起移到新的 worktree。不到两分钟的讲解视频教程。",
+  "Model recommendations and agent avatars, step by step": "一步步上手模型推荐与智能体头像",
+  "See the best fit, lowest cost and best quality model for each job with prices, get a warning before a far pricier pick, browse Cloud models by vendor, and let New Agent suggest a model and draw four avatars in your style, a narrated walkthrough in under two minutes.": "为每项工作查看最合适、成本最低和质量最好的模型及其价格，选到贵得多的模型前会收到提醒，按厂商浏览 Cloud 模型，还能让 New Agent 推荐模型、按你的风格画出四个头像。不到两分钟的讲解视频教程。"
 }
