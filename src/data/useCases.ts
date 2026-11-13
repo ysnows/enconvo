@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'parallel-chats-and-worktrees-step-by-step',
+    title: 'Parallel chats and worktrees, step by step',
+    description:
+      'Let the agent open a parallel chat for a separate job, work in a Project worktree, commit and merge back to the main checkout, and move a chat into a new worktree with its uncommitted changes, a narrated walkthrough in under two minutes.',
+    youtubeId: 'JBcZxH2Lrqc',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/ai/projects',
+  },
+  {
     slug: 'temporary-and-active-chats-step-by-step',
     title: 'Temporary chat and Active chats, step by step',
     description:

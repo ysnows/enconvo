@@ -2652,5 +2652,7 @@
   "Recording summaries, step by step": "一步步上手錄音摘要",
   "Get a meeting summary the way you want it: figures, a timeline and Talk time, built-in templates and one you write in plain words, tasks sent to Action items, any output language and translated notes, a narrated walkthrough in about two and a half minutes.": "依你想要的方式產生會議摘要：數據、時間軸和 Talk time，內建範本以及用白話寫成的自訂範本，傳送到 Action items 的任務，任意輸出語言和翻譯後的筆記。約兩分半鐘的講解影片教學。",
   "Temporary chat and Active chats, step by step": "一步步上手 Temporary chat 和 Active chats",
-  "Ask a one-off question in a Temporary chat that leaves no history, find every running or waiting chat in the Active group, and add to a task while the agent works, with unrelated asks going to a subagent, a narrated walkthrough in about a minute and a half.": "在不留歷史紀錄的 Temporary chat 裡問一個一次性的問題，在 Active 群組裡找到所有正在執行或等待中的聊天，並在 Agent 工作時為任務追加要求，無關的請求會交給子代理。約一分半鐘的講解影片教學。"
+  "Ask a one-off question in a Temporary chat that leaves no history, find every running or waiting chat in the Active group, and add to a task while the agent works, with unrelated asks going to a subagent, a narrated walkthrough in about a minute and a half.": "在不留歷史紀錄的 Temporary chat 裡問一個一次性的問題，在 Active 群組裡找到所有正在執行或等待中的聊天，並在 Agent 工作時為任務追加要求，無關的請求會交給子代理。約一分半鐘的講解影片教學。",
+  "Parallel chats and worktrees, step by step": "一步步上手平行聊天與 worktree",
+  "Let the agent open a parallel chat for a separate job, work in a Project worktree, commit and merge back to the main checkout, and move a chat into a new worktree with its uncommitted changes, a narrated walkthrough in under two minutes.": "讓 Agent 為另一項工作開一個平行聊天，在 Project 的 worktree 裡工作，提交並合併回主要檢出目錄，還能把聊天連同未提交的變更一起移到新的 worktree。不到兩分鐘的講解影片教學。"
 }
