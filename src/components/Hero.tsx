@@ -1,4 +1,5 @@
 import { localizePath } from '@/i18n/locale'
+import Link from 'next/link'
 import { useI18n } from '@/i18n/I18nProvider'
 import { I18nText } from '@/i18n/I18nText'
 import styles from '@/styles/Home.module.css'
@@ -180,6 +181,63 @@ export function Hero() {
                                 <DownloadRowArrow />
                               </div>
                             </a>
+                          )}
+                        </Menu.Item>
+                        <div className="mx-4 my-1 border-t border-hairline" />
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              href={localizePath('/download#windows', locale)}
+                              onClick={() =>
+                                trackEvent('download_click', {
+                                  platform: 'windows',
+                                  placement: 'hero',
+                                })
+                              }
+                              className={`${
+                                active ? 'bg-surface-card' : ''
+                              } group flex w-full items-center rounded-lg px-4 py-3 text-sm font-medium text-content transition-colors`}
+                            >
+                              <div className="flex w-full items-center justify-between">
+                                <div>
+                                  <div className="text-start font-medium text-content">
+                                    {t('Windows (Beta)')}
+                                  </div>
+                                  <div className="text-xs text-content-ash">
+                                    {t('Windows 10 and 11, 64-bit')}
+                                  </div>
+                                </div>
+                                <DownloadRowArrow />
+                              </div>
+                            </Link>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              href={localizePath('/download#linux', locale)}
+                              onClick={() =>
+                                trackEvent('download_click', {
+                                  platform: 'linux',
+                                  placement: 'hero',
+                                })
+                              }
+                              className={`${
+                                active ? 'bg-surface-card' : ''
+                              } group flex w-full items-center rounded-lg px-4 py-3 text-sm font-medium text-content transition-colors`}
+                            >
+                              <div className="flex w-full items-center justify-between">
+                                <div>
+                                  <div className="text-start font-medium text-content">
+                                    {t('Linux (Beta)')}
+                                  </div>
+                                  <div className="text-xs text-content-ash">
+                                    {t('.deb, .rpm and .tar.gz, 64-bit')}
+                                  </div>
+                                </div>
+                                <DownloadRowArrow />
+                              </div>
+                            </Link>
                           )}
                         </Menu.Item>
                       </div>

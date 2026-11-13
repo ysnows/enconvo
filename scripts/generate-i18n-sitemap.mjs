@@ -6,6 +6,7 @@ const paths = [
   '/',
   '/use-cases',
   '/android',
+  '/download',
   '/cloud-pricing',
   '/changelog',
   '/privacy',
