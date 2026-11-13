@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'smart-bar-calculator-step-by-step',
+    title: 'Smart Bar and Dynamic Island answers, step by step',
+    description:
+      'Type a sum, a conversion or a time on the Dynamic Island’s Home and see the answer right under the island, then ask the Smart Bar for the weather, a flight or the time anywhere, a narrated walkthrough in under a minute and a half.',
+    youtubeId: 'Q1Z8p-hVBsE',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/features/smartbar',
+  },
+  {
     slug: 'live-captioning-and-languages-step-by-step',
     title: 'Live Captioning and new languages, step by step',
     description:
