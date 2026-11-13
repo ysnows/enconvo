@@ -34,10 +34,16 @@ const downloadUrl = (platform: Platform, format?: string) =>
   `/api/desktop-download?platform=${platform}${format ? `&format=${format}` : ''}`
 
 const card = 'rounded-[10px] border border-hairline bg-surface-card p-6'
+// One type scale for every platform card: title, requirement, then the
+// smaller version and notes lines.
+const cardTitle = 'text-xl font-semibold leading-7'
+const cardIcon = 'h-6 w-6 flex-none text-content-muted'
+const requirement = 'mt-2 text-[15px] leading-6 text-content-body'
+const meta = 'mt-3 text-[13px] leading-5 text-content-muted'
 const betaTag =
-  'rounded-full border border-hairline-strong px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.12em] text-content-muted'
+  'rounded-full border border-hairline-strong px-2 py-0.5 text-xs font-medium leading-4 text-content-muted'
 const guideLink =
-  'inline-flex items-center gap-1.5 text-sm font-medium text-content underline-offset-4 hover:underline'
+  'mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-content underline-offset-4 hover:underline'
 
 /** The newest Beta's version, "2.5.14-beta-4" shown as "2.5.14 Beta 4". */
 function useBetaVersion(platform: Platform) {
@@ -94,10 +100,10 @@ export default function DownloadPage() {
 
           <section id="mac" className={`${card} mt-12 scroll-mt-28`}>
             <div className="flex items-center gap-3">
-              <AppleLogoIcon className="h-5 w-5 text-content-muted" />
-              <h2 className="text-lg font-semibold">{t('macOS')}</h2>
+              <AppleLogoIcon className={cardIcon} />
+              <h2 className={cardTitle}>{t('macOS')}</h2>
             </div>
-            <p className="mt-2 text-sm leading-6 text-content-muted">{t('macOS 14 or later.')}</p>
+            <p className={requirement}>{t('macOS 14 or later, on Apple Silicon or Intel.')}</p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <a
                 href={MAC_ARM_URL}
@@ -105,7 +111,7 @@ export default function DownloadPage() {
                 className={`${primaryButton} w-full sm:w-auto`}
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                {t('Apple Silicon')}
+                {t('Apple Silicon (.dmg)')}
               </a>
               <a
                 href={MAC_INTEL_URL}
@@ -113,18 +119,18 @@ export default function DownloadPage() {
                 className={`${secondaryButton} w-full sm:w-auto`}
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                {t('Intel')}
+                {t('Intel (.dmg)')}
               </a>
             </div>
           </section>
 
           <section id="windows" className={`${card} mt-3 scroll-mt-28`}>
             <div className="flex items-center gap-3">
-              <WindowsLogoIcon className="h-5 w-5 text-content-muted" />
-              <h2 className="text-lg font-semibold">{t('Windows')}</h2>
+              <WindowsLogoIcon className={cardIcon} />
+              <h2 className={cardTitle}>{t('Windows')}</h2>
               <span className={betaTag}>{t('Beta')}</span>
             </div>
-            <p className="mt-2 text-sm leading-6 text-content-muted">
+            <p className={requirement}>
               {t('Windows 10 (2004) or later, or Windows 11, on 64-bit Intel or AMD.')}
             </p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
@@ -134,20 +140,20 @@ export default function DownloadPage() {
                 className={`${primaryButton} w-full sm:w-auto`}
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                {t('Download for Windows')}
+                {t('Installer (.exe)')}
               </a>
             </div>
-            <p className="mt-3 text-sm text-content-muted">
+            <p className={meta}>
               {windowsVersion
-                ? t('Version {version} · 64-bit installer (.exe)', { version: windowsVersion })
-                : t('Newest Beta · 64-bit installer (.exe)')}
+                ? t('Version {version} · 64-bit', { version: windowsVersion })
+                : t('Newest Beta · 64-bit')}
             </p>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-content-muted">
+            <p className={`${meta} mt-1 max-w-2xl`}>
               {t(
                 'If Windows SmartScreen warns you, click More info, then Run anyway. The app updates itself on the Beta channel.'
               )}
             </p>
-            <a href={WINDOWS_GUIDE_URL} target="_blank" rel="noreferrer" className={`${guideLink} mt-4`}>
+            <a href={WINDOWS_GUIDE_URL} target="_blank" rel="noreferrer" className={guideLink}>
               <BookOpen className="h-4 w-4" aria-hidden="true" />
               {t('Windows install guide')}
             </a>
@@ -155,11 +161,11 @@ export default function DownloadPage() {
 
           <section id="linux" className={`${card} mt-3 scroll-mt-28`}>
             <div className="flex items-center gap-3">
-              <LinuxLogoIcon className="h-5 w-5 text-content-muted" />
-              <h2 className="text-lg font-semibold">{t('Linux')}</h2>
+              <LinuxLogoIcon className={cardIcon} />
+              <h2 className={cardTitle}>{t('Linux')}</h2>
               <span className={betaTag}>{t('Beta')}</span>
             </div>
-            <p className="mt-2 text-sm leading-6 text-content-muted">
+            <p className={requirement}>
               {t(
                 'Ubuntu 22.04, Debian 12, RHEL 9, Amazon Linux 2023 or newer, on 64-bit Intel or AMD. Runs on a desktop or on a server you use from your browser.'
               )}
@@ -171,7 +177,7 @@ export default function DownloadPage() {
                 className={`${primaryButton} w-full sm:w-auto`}
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                {t('.deb (Debian, Ubuntu)')}
+                {t('Debian, Ubuntu (.deb)')}
               </a>
               <a
                 href={downloadUrl('linux', 'rpm')}
@@ -179,7 +185,7 @@ export default function DownloadPage() {
                 className={`${secondaryButton} w-full sm:w-auto`}
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                {t('.rpm (Fedora, RHEL)')}
+                {t('Fedora, RHEL (.rpm)')}
               </a>
               <a
                 href={downloadUrl('linux', 'tar.gz')}
@@ -187,15 +193,15 @@ export default function DownloadPage() {
                 className={`${secondaryButton} w-full sm:w-auto`}
               >
                 <Download className="h-4 w-4" aria-hidden="true" />
-                {t('.tar.gz (portable)')}
+                {t('Portable (.tar.gz)')}
               </a>
             </div>
-            <p className="mt-3 text-sm text-content-muted">
+            <p className={meta}>
               {linuxVersion
                 ? t('Version {version} · 64-bit', { version: linuxVersion })
                 : t('Newest Beta · 64-bit')}
             </p>
-            <a href={LINUX_GUIDE_URL} target="_blank" rel="noreferrer" className={`${guideLink} mt-4`}>
+            <a href={LINUX_GUIDE_URL} target="_blank" rel="noreferrer" className={guideLink}>
               <BookOpen className="h-4 w-4" aria-hidden="true" />
               {t('Linux install guide')}
             </a>
