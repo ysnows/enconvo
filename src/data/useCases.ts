@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'temporary-and-active-chats-step-by-step',
+    title: 'Temporary chat and Active chats, step by step',
+    description:
+      'Ask a one-off question in a Temporary chat that leaves no history, find every running or waiting chat in the Active group, and add to a task while the agent works, with unrelated asks going to a subagent, a narrated walkthrough in about a minute and a half.',
+    youtubeId: '2OgsFIXlMWs',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/ai/chat',
+  },
+  {
     slug: 'recording-summaries-step-by-step',
     title: 'Recording summaries, step by step',
     description:
