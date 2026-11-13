@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'recording-summaries-step-by-step',
+    title: 'Recording summaries, step by step',
+    description:
+      'Get a meeting summary the way you want it: figures, a timeline and Talk time, built-in templates and one you write in plain words, tasks sent to Action items, any output language and translated notes, a narrated walkthrough in about two and a half minutes.',
+    youtubeId: 'fkVUNP0vtLU',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/features/meeting-recording',
+  },
+  {
     slug: 'whats-new-2-5-13',
     title: 'What’s new in Enconvo 2.5.13',
     description:

@@ -2648,5 +2648,7 @@
   "Installer (.exe)": "Instalador (.exe)",
   "Debian, Ubuntu (.deb)": "Debian, Ubuntu (.deb)",
   "Fedora, RHEL (.rpm)": "Fedora, RHEL (.rpm)",
-  "Portable (.tar.gz)": "Portátil (.tar.gz)"
+  "Portable (.tar.gz)": "Portátil (.tar.gz)",
+  "Recording summaries, step by step": "Resúmenes de grabaciones, paso a paso",
+  "Get a meeting summary the way you want it: figures, a timeline and Talk time, built-in templates and one you write in plain words, tasks sent to Action items, any output language and translated notes, a narrated walkthrough in about two and a half minutes.": "Obtén el resumen de una reunión como lo quieres: cifras, una línea de tiempo y Talk time, plantillas integradas y una que escribes con tus propias palabras, tareas enviadas a Action items, cualquier idioma de salida y notas traducidas. Una guía narrada de unos dos minutos y medio."
 }

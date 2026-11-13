@@ -2648,5 +2648,7 @@
   "Installer (.exe)": "安装程序（.exe）",
   "Debian, Ubuntu (.deb)": "Debian、Ubuntu（.deb）",
   "Fedora, RHEL (.rpm)": "Fedora、RHEL（.rpm）",
-  "Portable (.tar.gz)": "免安装版（.tar.gz）"
+  "Portable (.tar.gz)": "免安装版（.tar.gz）",
+  "Recording summaries, step by step": "一步步上手录音摘要",
+  "Get a meeting summary the way you want it: figures, a timeline and Talk time, built-in templates and one you write in plain words, tasks sent to Action items, any output language and translated notes, a narrated walkthrough in about two and a half minutes.": "按你想要的方式生成会议摘要：数据、时间线和 Talk time，内置模板以及用大白话写成的自定义模板，发送到 Action items 的任务，任意输出语言和翻译后的笔记。约两分半钟的讲解视频教程。"
 }

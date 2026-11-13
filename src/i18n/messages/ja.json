@@ -2648,5 +2648,7 @@
   "Installer (.exe)": "インストーラー（.exe）",
   "Debian, Ubuntu (.deb)": "Debian・Ubuntu（.deb）",
   "Fedora, RHEL (.rpm)": "Fedora・RHEL（.rpm）",
-  "Portable (.tar.gz)": "ポータブル版（.tar.gz）"
+  "Portable (.tar.gz)": "ポータブル版（.tar.gz）",
+  "Recording summaries, step by step": "録音の要約：ステップごとに解説",
+  "Get a meeting summary the way you want it: figures, a timeline and Talk time, built-in templates and one you write in plain words, tasks sent to Action items, any output language and translated notes, a narrated walkthrough in about two and a half minutes.": "会議の要約を思いどおりの形で。数値、タイムライン、Talk time、組み込みテンプレートと普段の言葉で書く自作テンプレート、Action items に送られるタスク、好きな出力言語と翻訳されたノートまで。約 2 分半のナレーション付きガイドです。"
 }

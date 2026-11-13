@@ -2648,5 +2648,7 @@
   "Installer (.exe)": "설치 프로그램 (.exe)",
   "Debian, Ubuntu (.deb)": "Debian, Ubuntu (.deb)",
   "Fedora, RHEL (.rpm)": "Fedora, RHEL (.rpm)",
-  "Portable (.tar.gz)": "포터블 (.tar.gz)"
+  "Portable (.tar.gz)": "포터블 (.tar.gz)",
+  "Recording summaries, step by step": "녹음 요약, 단계별로",
+  "Get a meeting summary the way you want it: figures, a timeline and Talk time, built-in templates and one you write in plain words, tasks sent to Action items, any output language and translated notes, a narrated walkthrough in about two and a half minutes.": "회의 요약을 원하는 방식으로 받아 보세요. 수치, 타임라인과 Talk time, 기본 제공 템플릿과 평범한 말로 직접 쓴 템플릿, Action items로 보내지는 할 일, 원하는 출력 언어와 번역된 노트까지. 약 2분 30초 분량의 내레이션 가이드입니다."
 }
