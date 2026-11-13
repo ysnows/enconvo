@@ -83,6 +83,37 @@ export async function recordCampaignVisit(utm: CampaignUtm | null, path: string 
   return visitor
 }
 
+// A visitor who hasn't allowed marketing cookies still counts, anonymously: a page opened with
+// `utm_source` records one visit under a random id that lives only in this page's memory (never a
+// cookie or browser storage), and a download click on that page joins it. The id starts with
+// `anon-`, so reports can tell these visits apart; a reload or a later page starts no journey.
+export const ANONYMOUS_VISITOR_PREFIX = 'anon-'
+let anonymousVisitor: string | null = null
+let anonymousDownloadReported = false
+
+/** Record the anonymous visit for this page load, once. True when a visit was sent. */
+export async function recordAnonymousCampaignVisit(utm: CampaignUtm | null, path: string = location.pathname): Promise<boolean> {
+  if (!utm?.source || anonymousVisitor || readCampaignVisitor()) return false
+  const visitor = ANONYMOUS_VISITOR_PREFIX + Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('')
+  anonymousVisitor = visitor
+  const result = await workerRequest('/api/campaign/visit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      visitor,
+      source: utm.source,
+      medium: utm.medium ?? undefined,
+      campaign: utm.campaign ?? undefined,
+      content: utm.content ?? undefined,
+      term: utm.term ?? undefined,
+      path,
+      referrer: document.referrer,
+    }),
+    keepalive: true,
+  })
+  return result.ok
+}
+
 interface PendingVisit extends CampaignUtm {
   visitor: string
   path: string
@@ -185,8 +216,12 @@ export function reportCampaignPage(path: string = location.pathname) {
  * visitor and campaign. Once per tab session and visitor; it rides out the navigation the download starts.
  */
 export function reportCampaignDownload() {
-  const visitor = readCampaignVisitor()
-  if (!visitor || !markOnce(`${CAMPAIGN_COOKIE}:downloaded:${visitor}`)) return
+  const cookieVisitor = readCampaignVisitor()
+  const visitor = cookieVisitor ?? anonymousVisitor
+  if (!visitor) return
+  // The anonymous count keeps its once-only mark in memory, so it stores nothing in the browser.
+  if (cookieVisitor ? !markOnce(`${CAMPAIGN_COOKIE}:downloaded:${visitor}`) : anonymousDownloadReported) return
+  if (!cookieVisitor) anonymousDownloadReported = true
   void workerRequest('/api/campaign/download', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

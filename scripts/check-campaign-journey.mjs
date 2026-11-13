@@ -309,7 +309,7 @@ test('The cookie route sets only a valid visitor again, for 90 days, and answers
 })
 
 /** Mount the hook once with a fake React and router, on `url` (pathname + search) of route `pattern`. */
-async function mountHook(env, url, pattern) {
+async function mountHook(env, url, pattern, { anonymous = false } = {}) {
   const [pathname, search = ''] = url.split('?')
   env.location.pathname = pathname
   env.location.search = search ? `?${search}` : ''
@@ -358,7 +358,10 @@ async function mountHook(env, url, pattern) {
       }),
     }
   )
-  hook.useCampaignJourney()
+  // The hooks run only once the visitor's choice is read: the journey with marketing allowed, the
+  // anonymous count without it.
+  if (anonymous) hook.useAnonymousCampaignVisit(true)
+  else hook.useCampaignJourney(true)
   // Let the visit, the Supabase import and the session report settle.
   const settle = async () => {
     for (let i = 0; i < 20; i++) await new Promise((resolve) => setImmediate(resolve))
@@ -442,4 +445,37 @@ test('The hook records no visit on sign-in and private pages, but still reports 
   const plain = browser()
   await mountHook(plain, '/pricing')
   assert.equal(plain.calls.length, 0)
+})
+
+test('Without marketing consent, a UTM landing counts once anonymously, a download joins it, and nothing is stored', async () => {
+  const env = browser({ reply: ok({ recorded: true }) })
+  const page = await mountHook(env, '/?utm_source=X&utm_medium=paid&utm_campaign=clip-dictation', undefined, { anonymous: true })
+  const body = env.body('/api/campaign/visit')
+  assert.match(body.visitor, /^anon-[0-9a-f]{32}$/)
+  assert.deepEqual(body, { visitor: body.visitor, source: 'x', medium: 'paid', campaign: 'clip-dictation', path: '/', referrer: 'https://github.com/someone/project' })
+  // No cookie, no storage, and no cookie route.
+  assert.equal(env.jar, '')
+  assert.equal(env.localStorage.values.size, 0)
+  assert.equal(env.worker('/api/campaign/page').length, 0)
+  assert.equal(env.calls.some((call) => call.url === '/api/campaign/journey'), false)
+
+  // A second landing in the same page load records nothing more.
+  assert.equal(await env.lib.recordAnonymousCampaignVisit(env.lib.campaignUtm(new URLSearchParams('utm_source=x'))), false)
+  assert.equal(env.worker('/api/campaign/visit').length, 1)
+
+  page.click(`${WORKER}/app/download`)
+  page.click('https://www.enconvo.com/pricing')
+  assert.deepEqual(env.worker('/api/campaign/download').map((call) => JSON.parse(call.init.body)), [{ visitor: body.visitor }])
+  page.click(`${WORKER}/app/download`)
+  assert.equal(env.worker('/api/campaign/download').length, 1)
+  assert.equal(env.sessionStorage.values.size, 0)
+  assert.equal(env.localStorage.values.size, 0)
+  assert.equal(env.jar, '')
+
+  // Without a UTM link, or on a sign-in page, nothing is sent.
+  for (const url of ['/pricing', '/login?utm_source=x']) {
+    const fresh = browser()
+    await mountHook(fresh, url, undefined, { anonymous: true })
+    assert.equal(fresh.calls.length, 0, `${url} sends nothing`)
+  }
 })

@@ -14,7 +14,8 @@ import { AffiliateOfferToast } from '@/components/AffiliateOfferToast'
 import { WelcomeOffer } from '@/components/WelcomeOffer'
 import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
 import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
-import { useCampaignJourney } from '@/lib/campaign-journey-tracking'
+import { useAnonymousCampaignVisit, useCampaignJourney } from '@/lib/campaign-journey-tracking'
+import { X_PIXEL_SNIPPET, useXPixelDownloads } from '@/lib/x-pixel'
 import { useWelcomeOfferAutoClaim } from '@/lib/welcome-offer-auto-claim'
 import { useMarketingTracking } from '@/lib/marketing-tracking'
 import { CookieConsent } from '@/components/CookieConsent'
@@ -113,6 +114,8 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   useWelcomeOfferAutoClaim()
   useAffiliateJourney(marketingAllowed)
   useCampaignJourney(marketingAllowed)
+  useAnonymousCampaignVisit(consentReady && !marketingAllowed)
+  useXPixelDownloads(marketingAllowed)
   useMarketingTracking(marketingAllowed)
   return (
     <>
@@ -160,6 +163,13 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
             `}
           </Script>
         </>
+      )}
+
+      {/* The X conversion pixel loads only once the visitor allows marketing (lib/x-pixel). */}
+      {marketingAllowed && (
+        <Script id="x-pixel" strategy="afterInteractive">
+          {X_PIXEL_SNIPPET}
+        </Script>
       )}
 
       <PageCorner

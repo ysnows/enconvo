@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import Router, { useRouter } from 'next/router'
 import { isAppDownloadLink } from '@/lib/affiliate-journey'
-import { campaignUtm, readCampaignVisitor, recordCampaignVisit, reportCampaignDownload, reportCampaignPage, reportCampaignSignIn, retryPendingCampaignVisit } from '@/lib/campaign-journey'
+import { campaignUtm, readCampaignVisitor, recordAnonymousCampaignVisit, recordCampaignVisit, reportCampaignDownload, reportCampaignPage, reportCampaignSignIn, retryPendingCampaignVisit } from '@/lib/campaign-journey'
 
 // Sign-in, OAuth callback and private links are never where a campaign link lands: their visit
 // isn't recorded, though a sign-in on them still is (the app's sign-in opens `/login?from=app`).
@@ -84,5 +84,28 @@ export function useCampaignJourney(enabled: boolean) {
     }
     // `router.events` is one emitter for the app's lifetime; `Router.pathname` is the live route.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled])
+}
+
+/**
+ * The anonymous count for a browser without consent to marketing cookies (`enabled` once the
+ * choice is read and marketing isn't allowed): the first page opened with `utm_source` records
+ * one visit under an id kept only in memory, and a download click on the page joins it.
+ * Nothing is stored in the browser.
+ */
+export function useAnonymousCampaignVisit(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return
+    const { pathname, search } = window.location
+    const path = Router.pathname.includes('[') ? Router.pathname : pathname
+    const utm = NO_VISIT.test(pathname) ? null : campaignUtm(new URLSearchParams(search))
+    if (!utm) return
+    void recordAnonymousCampaignVisit(utm, path).catch(() => false)
+    const onClick = (event: MouseEvent) => {
+      const link = event.target instanceof Element ? event.target.closest('a[href]') : null
+      if (link && isAppDownloadLink(link.getAttribute('href'))) reportCampaignDownload()
+    }
+    document.addEventListener('click', onClick, true)
+    return () => document.removeEventListener('click', onClick, true)
   }, [enabled])
 }

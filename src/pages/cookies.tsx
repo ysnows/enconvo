@@ -8,7 +8,7 @@ import { ReactNode } from 'react'
 import { openCookieSettings } from '@/lib/cookie-consent'
 
 // An ISO date parses as UTC midnight, so the UTC format below shows this day in every time zone.
-const LAST_UPDATED = '2026-10-25'
+const LAST_UPDATED = '2026-11-14'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 type Row = { name: string; purpose: string; provider: string; duration: string }
@@ -112,6 +112,13 @@ const MARKETING: Row[] = [
       'Remembers the partner website that referred you (browser storage).',
     provider: 'Enconvo',
     duration: '30 days',
+  },
+  {
+    name: 'X pixel (personalization_id, _twclid)',
+    purpose:
+      'X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.',
+    provider: 'X',
+    duration: '2 years',
   },
   {
     name: 'enconvo_utm:…, enconvo_via:…',
@@ -248,6 +255,11 @@ export default function Cookies() {
           <p>
             {t(
               'Only with your consent, we remember which campaign or partner link brought you, so we can credit the partner who referred you and judge our campaigns. If you decline, a partner discount is not applied automatically; you can still enter the partner’s code at checkout.'
+            )}
+          </p>
+          <p className="mt-4">
+            {t(
+              'Without your consent, a visit from one of our campaign links is still counted once, anonymously: nothing is stored on your device, and the visit can’t be linked to any later one.'
             )}
           </p>
           <Table rows={MARKETING} />

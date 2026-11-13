@@ -12,6 +12,7 @@ import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
 import { reportCampaignDownload } from '@/lib/campaign-journey'
+import { trackXDownload } from '@/lib/x-pixel'
 import {
   lifetimePrices,
   lifetimeSale,
@@ -69,6 +70,7 @@ async function startCheckout(
       })
       reportAffiliateDownload()
       reportCampaignDownload()
+      trackXDownload()
       window.location.href = 'https://api.enconvo.com/app/download'
       return
     }

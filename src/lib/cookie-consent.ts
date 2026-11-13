@@ -6,7 +6,7 @@
 // - analytics: Google Analytics (gtag.js and its `_ga` cookies) and the browser storage that keeps
 //   its sign-up events from counting twice;
 // - marketing: the Campaign and Affiliate journeys (`enconvo_utm`, `enconvo_via` and their pending
-//   visits) and the MacWorthy referral.
+//   visits), the MacWorthy referral and the X conversion pixel (lib/x-pixel).
 //
 // Nothing in either category loads or writes before the visitor chooses. The choice is a
 // first-party cookie shared by the bare and www domains, kept for 180 days, then asked again.
@@ -32,7 +32,7 @@ const ANALYTICS_STORAGE = [
   'enconvo_signup_reported_v1',
   'enconvo_google_signup_intent_v1',
 ]
-const MARKETING_COOKIES = ['enconvo_utm', 'enconvo_via']
+const MARKETING_COOKIES = ['enconvo_utm', 'enconvo_via', '_twclid']
 const MARKETING_STORAGE_PREFIXES = ['enconvo_utm:', 'enconvo_via:']
 const MARKETING_STORAGE = ['enconvo_marketing_referral_v1']
 
