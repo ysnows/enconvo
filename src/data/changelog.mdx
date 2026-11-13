@@ -9,6 +9,85 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.15 Changelog (2026-11-13)
+
+Thanks for all the feedback during the beta. This release adds Ukrainian and Russian to the interface and sixty languages to meeting captions, puts a calculator in the Dynamic Island and weather, flight and place lookups in the Smart Bar, lets agents open parallel chats and move a chat into a worktree, makes Full access really mean full access for Claude Code and Codex, adds Gemini 4 Hydrogen, and lets you pair a phone with its own camera. Update the iPhone app to 1.2.13 and the Android app to 1.4.13 to try the phone changes.
+
+## Highlights
+
+- **Ukrainian and Russian**: two new interface languages on the Mac, iPhone and Android, and every language the speech engine supports in meeting captions and translation.
+- **Calculator in the Dynamic Island**: type a sum, a conversion or a time on Home and the answer appears under the island.
+- **Weather, flights and places in the Smart Bar**: ask "weather in London", a flight number or "time in Chernivtsi".
+- **Parallel chats**: an agent can open a new chat for a separate task that shows in your chat list like one you started.
+- **Chats move into worktrees**: move a chat into a new or existing worktree with its files, and merging brings it back.
+- **Full access means full access**: new Claude Code and Codex chats start without approval prompts when Enconvo is at Full access.
+- **Gemini 4 Hydrogen**: Google's fast new model for everyday coding and agent work.
+- **Pair with your phone's camera**: point the iPhone Camera, an Android camera or Google Lens at the pairing code and Enconvo opens to confirm.
+- **Send to on your phone**: something shared into Enconvo from another app can go to a new chat or any recent chat.
+
+## Languages
+
+- Added Ukrainian and Russian as interface languages on the Mac, iPhone and Android apps, in Settings › General › Language. Requested by Vit_MK.
+- Added every language the speech engine supports to meeting captions and translation, Ukrainian included, sixty in all and listed by name.
+
+## Smart Bar and Dynamic Island
+
+- Added the calculator to the Dynamic Island: type a sum, a conversion or a time on Home and the answer appears in a card under the island; press Return to copy it, or Command-Return to ask your agent instead. Turn it off, or turn on Weather and Flights, in Settings › Dynamic Island › Home.
+- Added weather, flight and place lookups to the Smart Bar calculator, off by default: turn on Weather and Flights in Settings › Smart Bar, then type "weather in London", "Tokyo feels like", a flight number like "BA008" or "time in Chernivtsi".
+- Added splitting a total to the Smart Bar calculator, as in "25% off $60 split by 3".
+- Added Calculator switches to Settings › Smart Bar, to turn the calculator off or its online lookups on.
+- Fixed the Smart Bar calculator not knowing the time in Kyiv, Lviv, Odesa, Kolkata, Kathmandu, Doha and other cities.
+- Fixed the Chat Window becoming unclickable and your typing landing in the Dynamic Island while the island stayed open and an agent was working in the background.
+- Fixed the Dynamic Island cutting off a message at an `@` when you press Return, so an email address and the text after it are sent whole.
+
+## Chats and Agents
+
+- Added parallel chats: when you ask an agent to open a new chat for a separate task, it opens one that shows in your chat list on the Mac, iPhone and Android like a chat you started, with a note at the top saying which chat started it, while reviews and tests for that task still run as its subagents; a chat an agent started can also be moved to your chat list from its card.
+- Added moving a chat between the main checkout and a worktree on the Mac, iPhone and Android: from the chip after its title or the chat menu on the phone, or by asking its agent, it can move into a new or existing worktree with the files it changed, and merging the worktree brings the chat back to the main checkout to go on, with a line in the conversation at each move.
+- Added a violet spinner to chats in the sidebar on the Mac, iPhone and Android whose reply has finished while subagents or background tasks they started are still running, with a blue dot inside it when there is a new reply to read.
+- Added the model picker to chats on a paired computer: pick the model, reasoning effort and speed for an agent there, and see that provider's subscription limits, the same as in your own Chat Window.
+- Fixed the background tray over the message box showing new subagents only after the agent finished writing their tasks, which could take a minute; they now show as soon as the chat's subagent card does, on the Mac and the phone.
+- Fixed an Agent set to Auto answering a question about a problem in your own app, project or setup without its tools (and saying it had none): such questions, and every question in a Project chat about its work, now run as Agent, so it looks into your code, logs and data.
+
+## Permissions
+
+- Fixed Claude Code and Codex chats still asking for approval at Full access: with Enconvo's Permissions at Full access, new Claude Code and Codex chats started on this Mac begin in Bypass permissions and Full access (where Claude Code's settings allow Bypass), a Codex chat at Full access approves its subagents' commands, edits and permission requests and trusts new hooks without asking, and Claude Code at Bypass permissions no longer asks about protected folders or its subagents' calls.
+- Fixed a Project's lead chat keeping the Permission mode its turn started in: switching the Project to Full access now takes effect on the next command of a run already going.
+- Changed Approve for me to stop asking before commands that only set PATH for themselves, or that delete what they made under the temporary folder (such as a temporary git worktree), while deleting anything else still asks.
+- Changed approval cards to say which setting made them ask, such as "Asked because this Project is on Approve for me."
+- Fixed agents and subagents in Full access being asked to approve a sync or delete into a folder the same command had just set to a fixed path, as if it could delete the whole disk.
+- Fixed Full access letting a few deletes that empty the working folder or the home folder run without asking, such as a ?* or ** glob, a folder reached through a link, or rsync --delete into a folder named by a variable that may be empty.
+
+## Models
+
+- Added Gemini 4 Hydrogen, Google's fast successor to Gemini 3.8 Flash for everyday coding and agent work: choose it in Enconvo Cloud, with your own Gemini API key (the free tier works too), or in Google Antigravity when your plan offers it. Its thinking levels are Low, Medium, High (default) and X-High, which thinks longest on hard multi-step tasks, also on iPhone and Android.
+
+## Recordings and Dictation
+
+- Added an adjustable width for the Summary panel in Recordings: drag its left edge to widen it for long summaries, double-click the edge to go back to the default, and the width is kept for every recording. Requested by plkv_andrii.
+- Fixed text in the Summary, Action items and Notes tabs of Recordings not being selectable: drag over any part of it to copy it with Command-C, the right-click menu or the selection toolbar.
+- Fixed Dictation's meeting mute for Google Meet in other languages: the microphone is now muted in Meet in any of its languages, Russian and Ukrainian included, and when Meet's button can't be read you're told once to mute yourself there. Reported by plkv_andrii.
+- Fixed the app freezing, with every Settings page stuck, while a long audio file dragged into Transcription is being converted for transcription.
+- Fixed confirm dialogs, such as deleting a recording with a long file name, spilling the title and buttons out of the dialog; long names now wrap inside it.
+
+## iPhone and Android
+
+- Added pairing with your phone's own camera: point the iPhone Camera, an Android camera or Google Lens at the pairing code in Settings › Connections and Enconvo opens and asks you to confirm the Mac; without the app, the link helps you install it and then pair, and scanning from the Enconvo app works as before.
+- Added a Send to sheet on iPhone and Android: content shared into Enconvo from another app can go to a new chat or to any recent chat, with an Always share to new chat switch in the sheet and in Settings.
+- Added your subscription limits to the model sheet on iPhone and Android when you chat with your Mac: the plan, the 5-hour and weekly limits with what is left and when they reset, and a model's own limit on its row.
+- Fixed messages sent from the iPhone and Android apps into a Mac chat, with photos or files too, showing only after a delay; they now show the moment you send and steer a reply that is still running, as Return does on the Mac.
+- Fixed the first message of a new Mac chat started on iPhone or Android sometimes getting lost, leaving the chat with its title and nothing in it: the phone now checks the Mac received it and sends it again if it didn't.
+- Changed the phone apps' Home on a Mac: your active chats show right above the composer, All opens a panel of every active chat grouped by what needs you, what is running and what has results, a Screen button in the header opens Mac Screen, and the project name no longer gets cut off.
+- Changed tapping a subagent in a Mac chat on the iPhone and Android apps to open its steps in a sheet over the chat that a swipe down closes, instead of leaving the chat for the subagent's own thread.
+- Added a fold to the Pinned group in the iPhone and Android apps' sidebars, and tapping anywhere left of the Friends and Spaces buttons now folds or opens those groups.
+- Changed the phone apps' Speed and reasoning sheet to list the reasoning efforts above the speeds.
+- Changed answering an Agent's call on Android, from the ring notification or the lock screen, to connect the call in the background without unlocking or opening the app, like a phone call, with an ongoing call notification that ends the call or opens its chat.
+- Fixed charts in chat flashing and redrawing while a reply is still being written, most visibly on iPhone and Android.
+- Fixed stat tiles cutting off or spilling a long value: the value now shrinks to fit its tile and wraps when it still doesn't, and a row of stats wraps to fewer columns on a narrow screen.
+- Fixed the suggested next message over the message box in a project's lead chat staying on screen for a moment after sending.
+
+---
+
 # Enconvo 2.5.14 Changelog (2026-11-12)
 
 Thanks for all the feedback during the beta. This release brings recording summaries with templates in the language you choose, recommends a model for each kind of work, adds Temporary chat for one-off questions and an Active group that gathers the chats that need you, lets you add to a task while it runs, and makes Dictation and Live Captioning far more flexible: press Return to dictate and send, pause, mute your meeting, and put the captions where you want them. Update the iPhone app to 1.2.13 and the Android app to 1.4.10 to try the phone changes.
