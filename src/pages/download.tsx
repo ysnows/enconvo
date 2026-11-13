@@ -11,6 +11,11 @@ import {
   secondaryButton,
 } from '@/components/landing-styles'
 import { SiteNav } from '@/components/SiteNav'
+import {
+  AppleLogoIcon,
+  LinuxLogoIcon,
+  WindowsLogoIcon,
+} from '@/components/PlatformIcons'
 import { trackEvent } from '@/lib/analytics'
 
 // Every desktop download in one place: the Mac app, and the Windows and Linux
@@ -88,7 +93,10 @@ export default function DownloadPage() {
           </section>
 
           <section id="mac" className={`${card} mt-12 scroll-mt-28`}>
-            <h2 className="text-lg font-semibold">{t('macOS')}</h2>
+            <div className="flex items-center gap-3">
+              <AppleLogoIcon className="h-5 w-5 text-content-muted" />
+              <h2 className="text-lg font-semibold">{t('macOS')}</h2>
+            </div>
             <p className="mt-2 text-sm leading-6 text-content-muted">{t('macOS 14 or later.')}</p>
             <div className="mt-5 flex flex-col gap-3 sm:flex-row">
               <a
@@ -112,6 +120,7 @@ export default function DownloadPage() {
 
           <section id="windows" className={`${card} mt-3 scroll-mt-28`}>
             <div className="flex items-center gap-3">
+              <WindowsLogoIcon className="h-5 w-5 text-content-muted" />
               <h2 className="text-lg font-semibold">{t('Windows')}</h2>
               <span className={betaTag}>{t('Beta')}</span>
             </div>
@@ -135,7 +144,7 @@ export default function DownloadPage() {
             </p>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-content-muted">
               {t(
-                'If Windows shows Windows protected your PC, click More info, then Run anyway. The app updates itself on the Beta channel.'
+                'If Windows SmartScreen warns you, click More info, then Run anyway. The app updates itself on the Beta channel.'
               )}
             </p>
             <a href={WINDOWS_GUIDE_URL} target="_blank" rel="noreferrer" className={`${guideLink} mt-4`}>
@@ -146,6 +155,7 @@ export default function DownloadPage() {
 
           <section id="linux" className={`${card} mt-3 scroll-mt-28`}>
             <div className="flex items-center gap-3">
+              <LinuxLogoIcon className="h-5 w-5 text-content-muted" />
               <h2 className="text-lg font-semibold">{t('Linux')}</h2>
               <span className={betaTag}>{t('Beta')}</span>
             </div>

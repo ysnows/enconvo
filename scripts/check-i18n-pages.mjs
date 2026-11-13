@@ -102,7 +102,7 @@ for (const locale of config.locales) {
       assert.match(html, /name="robots" content="noindex(?:, follow)?"/, target)
     if (path === '/') {
       assert.ok(
-        html.includes(messages['Download for macOS'] || 'Download for macOS')
+        html.includes(messages['Windows (Beta)'] || 'Windows (Beta)')
       )
       const structured = [
         ...html.matchAll(

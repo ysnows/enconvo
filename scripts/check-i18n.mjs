@@ -137,7 +137,7 @@ const serverTools = await loadTs('../src/i18n/server.ts', {
   './locale': localeTools,
 })
 const homepageMessages = await serverTools.loadMessages('ja', '/')
-assert.ok(homepageMessages['Download for macOS'])
+assert.ok(homepageMessages['Windows (Beta)'])
 assert.ok(
   Object.keys(homepageMessages).length < 700,
   'Only page-specific messages are shipped'

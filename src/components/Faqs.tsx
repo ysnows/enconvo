@@ -29,7 +29,7 @@ const faqs = [
     {
       question: 'Which Macs does Enconvo support?',
       answer:
-        'Enconvo requires macOS 14 or later and supports both Intel and Apple Silicon Macs. Choose the matching installer from the Download for macOS menu.',
+        'Enconvo requires macOS 14 or later and supports both Intel and Apple Silicon Macs. Choose the matching installer from the Download menu.',
     },
     {
       question: 'Does Enconvo use my data for training?',

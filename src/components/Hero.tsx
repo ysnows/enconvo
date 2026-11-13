@@ -1,5 +1,10 @@
 import { localizePath } from '@/i18n/locale'
 import Link from 'next/link'
+import {
+  AppleLogoIcon,
+  LinuxLogoIcon,
+  WindowsLogoIcon,
+} from '@/components/PlatformIcons'
 import { useI18n } from '@/i18n/I18nProvider'
 import { I18nText } from '@/i18n/I18nText'
 import styles from '@/styles/Home.module.css'
@@ -17,14 +22,6 @@ declare global {
   interface Window {
     endorsely_referral?: any
   }
-}
-
-function AppleLogoIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701" />
-    </svg>
-  )
 }
 
 function DownloadRowArrow() {
@@ -107,7 +104,7 @@ export function Hero() {
                         d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"
                       />
                     </svg>
-                    <span>{t('Download for macOS')}</span>
+                    <span>{t('Download')}</span>
                     <ChevronDownIcon className="ml-2 h-4 w-4" />
                   </Menu.Button>
 
@@ -139,7 +136,7 @@ export function Hero() {
                                     <div className="text-start font-medium text-content">
                                       {t('macOS (Apple Silicon)')}
                                     </div>
-                                    <div className="text-xs text-content-ash">
+                                    <div className="text-start text-xs text-content-ash">
                                       {t('For Macs with an Apple chip')}
                                     </div>
                                   </div>
@@ -173,7 +170,7 @@ export function Hero() {
                                     <div className="text-start font-medium text-content">
                                       {t('macOS (Intel)')}
                                     </div>
-                                    <div className="text-xs text-content-ash">
+                                    <div className="text-start text-xs text-content-ash">
                                       {t('For Intel-based Macs')}
                                     </div>
                                   </div>
@@ -199,12 +196,15 @@ export function Hero() {
                               } group flex w-full items-center rounded-lg px-4 py-3 text-sm font-medium text-content transition-colors`}
                             >
                               <div className="flex w-full items-center justify-between">
-                                <div>
-                                  <div className="text-start font-medium text-content">
-                                    {t('Windows (Beta)')}
-                                  </div>
-                                  <div className="text-xs text-content-ash">
-                                    {t('Windows 10 and 11, 64-bit')}
+                                <div className="flex items-center">
+                                  <WindowsLogoIcon className="mr-3 h-5 w-5 text-content-muted" />
+                                  <div>
+                                    <div className="text-start font-medium text-content">
+                                      {t('Windows (Beta)')}
+                                    </div>
+                                    <div className="text-start text-xs text-content-ash">
+                                      {t('For Windows 10 and 11 (64-bit)')}
+                                    </div>
                                   </div>
                                 </div>
                                 <DownloadRowArrow />
@@ -227,12 +227,15 @@ export function Hero() {
                               } group flex w-full items-center rounded-lg px-4 py-3 text-sm font-medium text-content transition-colors`}
                             >
                               <div className="flex w-full items-center justify-between">
-                                <div>
-                                  <div className="text-start font-medium text-content">
-                                    {t('Linux (Beta)')}
-                                  </div>
-                                  <div className="text-xs text-content-ash">
-                                    {t('.deb, .rpm and .tar.gz, 64-bit')}
+                                <div className="flex items-center">
+                                  <LinuxLogoIcon className="mr-3 h-5 w-5 text-content-muted" />
+                                  <div>
+                                    <div className="text-start font-medium text-content">
+                                      {t('Linux (Beta)')}
+                                    </div>
+                                    <div className="text-start text-xs text-content-ash">
+                                      {t('For Ubuntu, Debian and Fedora')}
+                                    </div>
                                   </div>
                                 </div>
                                 <DownloadRowArrow />
