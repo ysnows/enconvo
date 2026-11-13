@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'iphone-and-android-2-5-15',
+    title: 'What’s new on iPhone and Android',
+    description:
+      'Pair the iPhone and Android apps with a free account, find active chats on your phone, see messages you send from the phone in the Mac chat the moment you send them, and clear a notification everywhere by reading it once, a narrated walkthrough.',
+    youtubeId: 'aeSFFG1ctxI',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/integrations/iphone-app',
+  },
+  {
     slug: 'whats-new-2-5-15',
     title: 'What’s new in Enconvo 2.5.15',
     description:
