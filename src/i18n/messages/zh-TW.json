@@ -2660,5 +2660,7 @@
   "Live Captioning and new languages, step by step": "一步步上手 Live Captioning 與新語言",
   "Put live captions at the left, right, top or bottom of your screen, resize them, move them mid-session, start and stop them with a hotkey, translate into any language the speech engine supports, and switch Enconvo to Ukrainian or Russian, a narrated walkthrough in under two minutes.": "把即時字幕放在螢幕的左側、右側、頂部或底部，調整大小，在工作階段中途移動位置，用快捷鍵開啟和關閉，翻譯成語音引擎支援的任何語言，還能把 Enconvo 切換為烏克蘭語或俄語。不到兩分鐘的講解影片教學。",
   "Smart Bar and Dynamic Island answers, step by step": "一步步上手 Smart Bar 與 Dynamic Island 即時答案",
-  "Type a sum, a conversion or a time on the Dynamic Island’s Home and see the answer right under the island, then ask the Smart Bar for the weather, a flight or the time anywhere, a narrated walkthrough in under a minute and a half.": "在 Dynamic Island 的 Home 裡輸入算式、單位換算或時間，答案就顯示在島的正下方；再向 Smart Bar 詢問天氣、航班或世界任何地點的時間。不到一分半鐘的講解影片教學。"
+  "Type a sum, a conversion or a time on the Dynamic Island’s Home and see the answer right under the island, then ask the Smart Bar for the weather, a flight or the time anywhere, a narrated walkthrough in under a minute and a half.": "在 Dynamic Island 的 Home 裡輸入算式、單位換算或時間，答案就顯示在島的正下方；再向 Smart Bar 詢問天氣、航班或世界任何地點的時間。不到一分半鐘的講解影片教學。",
+  "What else is new in Enconvo 2.5.15": "Enconvo 2.5.15 的其他新功能",
+  "The smaller additions in 2.5.15: update videos and walkthroughs that play in Settings, code blocks that wrap long lines, Claude Code chats that skip approval prompts at Full access, and an Ultracode switch, a narrated tour in just over a minute.": "2.5.15 裡較小的新增內容：可在 Settings 中播放的更新影片和導覽教學，長行自動換行的程式碼區塊，在 Full access 下略過核准提示的 Claude Code 聊天，以及一個 Ultracode 開關。一分鐘多一點的講解影片導覽。"
 }

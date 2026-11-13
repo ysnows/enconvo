@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-15-more-touches',
+    title: 'What else is new in Enconvo 2.5.15',
+    description:
+      'The smaller additions in 2.5.15: update videos and walkthroughs that play in Settings, code blocks that wrap long lines, Claude Code chats that skip approval prompts at Full access, and an Ultracode switch, a narrated tour in just over a minute.',
+    youtubeId: 'N_irURJ-fvQ',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
     slug: 'smart-bar-calculator-step-by-step',
     title: 'Smart Bar and Dynamic Island answers, step by step',
     description:
