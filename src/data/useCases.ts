@@ -19,6 +19,16 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'live-captioning-and-languages-step-by-step',
+    title: 'Live Captioning and new languages, step by step',
+    description:
+      'Put live captions at the left, right, top or bottom of your screen, resize them, move them mid-session, start and stop them with a hotkey, translate into any language the speech engine supports, and switch Enconvo to Ukrainian or Russian, a narrated walkthrough in under two minutes.',
+    youtubeId: 'QQHTU4Ch8o0',
+    category: 'Tutorials',
+    date: '2026-11-13',
+    docsUrl: 'https://docs.enconvo.ai/features/live-captioning',
+  },
+  {
     slug: 'model-recommendations-step-by-step',
     title: 'Model recommendations and agent avatars, step by step',
     description:
