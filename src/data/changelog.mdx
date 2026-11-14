@@ -9,6 +9,141 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.16 Changelog (2026-11-15)
+
+Thanks for all the feedback during the beta. This release brings your agent into your calls, in Enconvo Conference and in Google Meet and Zoom, gives every call a meeting page in Recordings, lets Live Photo characters go live on a stream with a voice of their own, keeps a reply going on a backup model when its model can't be used, picks up work after Enconvo restarts, shows the agent's browser and app work in a Picture-in-Picture window, and puts the calls your agent answers in their own Calls section. Update the iPhone app to 1.2.13 and the Android app to 1.4.19 to try the phone changes.
+
+## Highlights
+
+- **Agents in your calls**: bring an agent into an Enconvo Conference, or send it into a Google Meet or Zoom meeting, where it answers in the chat or out loud and asks you before doing any work.
+- **A meeting page for every call**: Recordings shows each call's summary, action items with owners, what agents made and the transcript, and you can ask questions about any meeting.
+- **Live Photo characters go live**: put her on an OBS stream in one click, let her answer your Twitch, Kick or YouTube live chat, give her a cloned or ElevenLabs voice, and pick her background.
+- **Model fallback**: pick up to three backup models in Settings › AI Model, and a reply carries on with the next one when its model hits a limit, loses its key or can't be reached.
+- **Work picks up after a restart**: a chat stopped by an update, a quit or a crash goes on by itself once Enconvo is back.
+- **Picture in Picture for Browser Use and Computer Use**: watch the agent work in a tab or window you can't see, and click to take over.
+- **Calls the agent answers**: a phone notification for each one, a Calls section on Mac, iPhone and Android, and a caller can never make your agent act.
+- **One-click website publishing**: put a page online at your own name.site.enconvo.com link.
+- **Tools & Skills for each Agent**: let an agent find what it needs, or give it a fixed set.
+- **DeepSeek, Parallel and Ask AI**: DeepSeek for speech, transcription and OCR, Parallel for web search, and Ask AI in the Settings search.
+- **Remote Screen in Picture in Picture**: keep your computer's screen floating over your chats on iPhone and Android.
+
+## Agents in Calls
+
+- Added agents to Enconvo Conference: bring one in from People and it joins as a visible participant, switched off until someone turns it on or @-mentions it, then answers and does work with your tools.
+- Added a choice of how a conference agent answers, written in the chat by default or out loud, and of what it does when a guest joins: leave, stay quiet until they leave, or carry on.
+- Added Always allow on a conference agent's approval card, so someone you trust can ask it for work for the rest of the call without asking you each time.
+- Added conference agents to the iPhone app: bring one in from People with the same choices as on the web, and answer its approval cards with Always allow, Just this once or Not now.
+- Added the Stage to Enconvo Conference: a doc or whiteboard a conference agent makes during the call is shared with everyone signed in on it and opens beside the call, so the whole call edits it together while talking.
+- Added Bring my agent to my conferences in Settings › Video Conference, and a Bring switch on each conference under Coming up, so your agent joins the conferences you choose, including Enconvo conference links in your Mac's Calendar events except ones you declined.
+- Added sending your agent into a Google Meet or Zoom meeting, from a chat or the Bring switch on a calendar event, where it joins as `<agent> (Enconvo)` with camera and microphone off, reads the captions and chat, answers your requests in the meeting's chat, asks you on your Mac or iPhone before doing any work, and files the meeting's notes in Recordings.
+
+## Meetings in Recordings
+
+- Added a meeting page to each Enconvo Conference call in Recordings, with the summary, action items with who took them, what agents made on the call, what was on screen, and the transcript.
+- Added Add to Reminders to a call's action items, which puts the item in Apple Reminders with its owner and due date.
+- Added Ask this meeting to a call's page, and let your agent answer questions about your earlier calls, saying which meeting each answer came from.
+- Changed a call's notes to list each action item's owner and due date, the docs and whiteboards agents made on the call, and what agents saw on a shared screen.
+- Fixed calls in the same conference room being merged into one Recordings entry, which could lose the first call's recording or mix in the last time's notes, voices or summary; each call now keeps its own entry, notes and Ask AI answers, and a repeating conference keeps every time's entry.
+- Fixed call notes sometimes ending their summary with a sentence saying the transcript was not cut.
+
+## Live Photo Characters
+
+- Added Go live to Live Photo characters in Settings › Avatar, with a stream panel that shows her stage, captions, orientation and OBS's stream state, and a transparent stage page and captions page for an OBS Browser source.
+- Added one-click Add to OBS, which connects to OBS's WebSocket server, keeps its password with your other credentials, and creates an `Enconvo · <name>` scene with her stage and captions sized for the stream.
+- Added live stream chat for Live Photo characters: she reads a Twitch, Kick or YouTube live chat and answers aloud, through her Agent, the viewers who mention her, ask with !ask, or pay, with per-viewer and overall cooldowns, blocked words and an optional approve-first queue.
+- Added live mode to the stream panel: start her live chat there and she says each answer on her OBS stage with her lips moving, out of a call.
+- Added a Voice step to Live Photo characters: clone a voice by recording in place or uploading the person's audio or video, with ElevenLabs on Enconvo Cloud or your own API key, pick an ElevenLabs voice, or follow the call voice; Change voice on her card changes it later.
+- Added a Background setting to the Live page: choose Transparent, a color (green screen included), your own image, a blurred copy of her photo, or her original photo, and OBS gets exactly what the stage preview shows.
+- Added using your own Atmee account for Live Photo characters: with your API key, new characters are made in your account without the daily minutes or the three-character limit, and the avatars already there can be taken in.
+- Changed Live Photo calls so her voice plays only from OBS while a stage shows her, unless Also play on this Mac is on.
+- Fixed a Live Photo character's face freezing for a moment in the middle of a long answer while her voice went on.
+- Fixed recording a voice sample always ending with "The recording was not saved.", and the Live page showing no stage preview in Portrait 9:16.
+
+## Chats and Agents
+
+- Added Fallback in Settings › AI Model: pick up to three backup models, and when the model a chat uses reaches its usage limit, loses its sign-in or key, or can't be reached, the reply continues on the next backup, the chat says which model took over and why, and the original model is used again once it works.
+- Changed the Fallback panel to show the chain as it works: The model in use, then your numbered backups with Ready or Paused, and a click on a backup's model name switches it to another model of that provider.
+- Added picking up work after Enconvo restarts: when an update, a quit or a crash stops a chat in the middle of a task, the chat goes on by itself once Enconvo is back, checks what it already did before doing the rest, and brings back the subagents it had running.
+- Added a Tools & Skills section to each Agent's settings: keep Auto-discover, or switch to Only what I choose to give the agent a fixed set; you can also turn off individual built-in tools, pin skills so they are always listed, and stop suggestions from the Enconvo Store. Create New Agent gets Everyday, Coding, Research and Writing presets.
+- Added one-click website publishing: a page artifact's Publish button puts it online at your own name.site.enconvo.com link on Enconvo Cloud, with an optional password, and agents can publish a page or a site folder for you when you ask them to share it.
+- Added subagent deliverables to the main chat: what a subagent makes, such as a design or a doc, shows under its row as it is made, opens beside the chat and is handed over as a card in the answer.
+- Added a Wait For tool for agents: an agent can wait for a file, a line in a log, a process, or a port or address in one step, with no shell running, and is told when the wait is met, fails or times out.
+- Changed sending a message while an agent works: the reply it is writing and the tools it is running keep going while Enconvo checks whether your message should stop them, so a follow-up that can wait no longer throws away the step.
+- Changed Projects so Claude Code, Codex, Grok Build or Antigravity can lead a Project with members, plan their work in a Work plan and read their results, and work like any other Project.
+- Added picking fast mode and ultracode in a new Claude Code chat before its first message.
+- Fixed a sign-in, install or question card blocking the chat when you sent a message instead of answering it.
+- Fixed agents getting stuck resending a broken tool call: the agent now gets the tool's parameters after the second failure, a note to change approach after the third, and the tool is paused after the fifth.
+- Fixed an agent waiting for long work leaving a sleeping shell behind for every check, which filled the chat's background tasks with "running" entries.
+- Fixed a new Work plan starting on its own while an earlier plan from the same chat was still running.
+- Fixed Claude Code models, effort levels and fast mode taking around ten seconds to appear in a new chat, and Claude chats retrying at every step after an earlier reply's reasoning was refused.
+- Fixed agents failing to start Higgsfield video runs in a mode that needs reference media, seeing a connected app's tool settings as an unknown type, and an empty card showing under a step when such a tool turned down the request.
+- Fixed code and monospace blocks in an agent's cards showing dark text on a dark panel in the dark theme, and light text on a white block.
+- Fixed agent shell commands having every "pip" changed to "uv pip" in a folder whose Python environment has no pip of its own, and Full access asking before deleting a folder whose name is built from a command's output or a command's own scratch folder.
+
+## Picture in Picture
+
+- Added a Picture-in-Picture window for Browser Use and Computer Use on Mac: while the agent works in a tab or app window you can't see, a live view shows in the corner of the screen, turns amber with what the agent needs when it asks for you, and takes you there when you click it so you can take over, then Return to agent hands it back; choose Always, Only When I Am Needed or Off in their settings.
+- Added stacked cards when several tasks wait, with Show all saying how many there are, and live views that refresh about three times a second for tabs and stream smoothly for app windows.
+- Fixed dragging the Picture-in-Picture window making it flicker and jump, and pages with another extension's widget staying black instead of saying they have no live preview.
+
+## Calls
+
+- Added a phone notification for every call the agent answers for you with Answer my calls: who called, what they want in one sentence and whether it's urgent, breaking through Focus when it is, with Call back and Open.
+- Added a Calls section on Mac, iPhone and Android that keeps the calls the agent answered apart from your other chats, marks the ones that are urgent, want a call back or are still unread, shows when each call rang and the caller's number or contact name, and lets you call back or mark a call done.
+- Changed Answer my calls so a caller can't make your agent act: the summary is written without tools, a call's chat asks before anything that sends, pays, deletes or runs commands even with Full access, and Settings › Agent Phone shows what a caller can reach.
+- Added Ask for a passphrase for Numbers that can give tasks, and a Likely scam badge and warning on calls that look like scams.
+
+## Chat Window and Dynamic Island
+
+- Changed the Chat Window's Active chats list to show only chats that still need you, are running or have an unopened result, with an Archive button on hover.
+- Changed New chat in the Chat Window to start in the project you last picked under the message box; pick No project to go back to plain chats.
+- Added folding to the Chat Window sidebar's Pinned group, and Worktree rows now fold and unfold like the main branch row.
+- Fixed Subagent and team member chats showing as rows of their own in the sidebar while they run, and a parallel chat or an archived chat that runs again only showing once it finished.
+- Fixed Esc in the Chat Window so it stops a reply only when pressed in that chat.
+- Fixed picking another computer in the Chat Window looking frozen while its page loads.
+- Fixed the row of Agent cards on the new chat start page being out of reach with a mouse that has only a vertical wheel.
+- Fixed the Dynamic Island's Home showing one agent's icon on the Default Agent button and another agent's model beside it; the empty Home now always runs the Default Agent the button shows.
+- Fixed the Dynamic Island sometimes staying hidden after you left a full screen app until Enconvo was relaunched.
+- Fixed Enconvo sometimes quitting unexpectedly when a window that shows its Dock icon opened, such as a video conference.
+- Fixed screenshots dragged from their floating thumbnail not being added in Friend chats.
+
+## Remote Screen and Pairing
+
+- Changed pairing with another computer so the computer being paired opens its Dynamic Island on the request, with the number to compare and Allow.
+- Fixed Return on another computer's screen pasting this Mac's clipboard, dragging letting go of the mouse button at once, and the cursor lagging behind your pointer while you are in control.
+- Fixed the top edge of another computer's screen being out of reach in a small viewer window, and being unable to leave full screen while controlling it: ⌃⌘F now goes in and out.
+
+## iPhone and Android
+
+- Added Picture in Picture to Remote Screen on iPhone and Android: tap the button at the top left, or pinch in, to keep your computer's screen floating over your chats on the same session, and over other apps when you leave Enconvo.
+- Changed the iPhone and Android apps to call the paired computer "computer" instead of "Mac", and Mac Screen "Remote Screen".
+- Changed the Android composer to a single row with a camera button, quick chips for the computer, project, Compare answers and Skills, a plus panel where the keyboard was with recent photos, and Send standing alone once you type.
+- Added a choice in Settings › Avatar to show the composer's call button as the avatar or the voice bars icon.
+- Changed the Active chats card on Home to have a grabber that opens the full list when you swipe it up, and added folding to the Recent group in the sidebar.
+- Fixed the phone chat so a message you send into an existing chat shows above its reply, never shows another chat's messages after reloading, and doesn't lose the previous reply.
+- Fixed Wrap Code on a phone chat's code block springing back off right after you tapped it, and Home on Android shaking when the Active chats panel opens.
+- Fixed typing on a computer's screen from Android with keyboards that compose a whole word, such as Samsung Keyboard and SwiftKey.
+
+## Models and Providers
+
+- Added DeepSeek as a Text to Speech provider, a speech-to-text provider for Transcribe and Dictation, and an OCR provider, with your own DeepSeek API key or through Enconvo Cloud.
+- Added Parallel as a Web Search provider: add your Parallel API key in Settings › Credentials › Parallel and pick Turbo, Fast, Basic or Advanced as its Search Mode.
+- Added Cloud prices next to models and providers in Settings, and plan benefit notes such as your free minutes left this month.
+- Changed Enconvo Cloud Fast speech recognition to be free for everyone.
+
+## Settings and Account
+
+- Added Ask AI to the Settings search: ask a question in the search field, press Return, and the answer opens beside the sidebar with cards that take you to each setting and turn a switch on or off in place.
+- Added an Email and Password section to Settings › Account on Mac, iPhone and Android, so an account made with Apple's Hide My Email can add its own email and set or reset a password, and Continue with Apple on Enconvo Feedback.
+- Added a list of your free limit resets to a Claude or ChatGPT subscription card when you have more than one, to use the one you pick.
+- Changed Mail Alerts to be off until you turn it on in Automations › Important mail; Mail Alerts you turned on or set up keep working.
+- Changed Invites so invite codes can no longer be used from temporary or agent email addresses.
+- Fixed the Authentication cards on a provider's settings page overlapping their text when the Settings window is narrow.
+- Added Telegram to the calls Dictation mutes you in: in a call in the Telegram app for Mac, you're muted while you dictate and unmuted when you finish or pause.
+- Fixed Bluetooth headphones such as AirPods blasting louder than your volume for a moment after dictation or Voice Command ends.
+
+---
+
 # Enconvo 2.5.15 Changelog (2026-11-13)
 
 Thanks for all the feedback during the beta. This release adds Ukrainian and Russian to the interface and sixty languages to meeting captions, puts a calculator in the Dynamic Island and weather, flight and place lookups in the Smart Bar, lets agents open parallel chats and move a chat into a worktree, makes Full access really mean full access for Claude Code and Codex, adds Gemini 4 Hydrogen, and lets you pair a phone with its own camera. Update the iPhone app to 1.2.13 and the Android app to 1.4.13 to try the phone changes.
