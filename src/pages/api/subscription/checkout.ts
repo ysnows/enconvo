@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { authCookieOptions } from '@/lib/auth-cookie'
 import Stripe from 'stripe'
 
 // Initialize Stripe with the secret key
@@ -12,7 +13,7 @@ export default async function handler(req, res) {
 
   try {
     // Create authenticated Supabase client
-    const supabase = createServerSupabaseClient({ req, res })
+    const supabase = createServerSupabaseClient({ req, res }, { cookieOptions: authCookieOptions })
     
     // Get user session
     const {

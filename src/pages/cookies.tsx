@@ -17,7 +17,7 @@ type Row = { name: string; purpose: string; provider: string; duration: string }
 // Keep this in step with that file when a page starts storing something new.
 const NECESSARY: Row[] = [
   {
-    name: 'sb-…-auth-token',
+    name: '__Host-sb-…-auth-token',
     purpose: 'Keeps you signed in to your Enconvo account.',
     provider: 'Enconvo (Supabase)',
     duration: 'Until you sign out',

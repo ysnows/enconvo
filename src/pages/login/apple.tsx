@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import type { Session } from '@supabase/supabase-js'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
 import {

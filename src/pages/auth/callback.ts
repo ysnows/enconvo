@@ -1,6 +1,6 @@
 import { i18nStaticProps } from '@/i18n/server'
 import { getLocale } from '@/i18n/locale'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@/lib/supabase'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import {

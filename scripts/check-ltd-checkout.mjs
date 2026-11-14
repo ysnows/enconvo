@@ -386,6 +386,10 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
           },
         }),
       },
+      '@/lib/auth-cookie': load('src/lib/auth-cookie.ts', {}, {
+        NODE_ENV: 'production',
+        NEXT_PUBLIC_SUPABASE_URL: 'https://uihahglfncxadigplxnw.supabase.co',
+      }),
     },
     {
       NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co',
@@ -446,7 +450,7 @@ function request(body = {}, options = {}) {
   return {
     method: 'POST',
     body,
-    cookies: { 'sb-uihahglfncxadigplxnw-auth-token': '[]' },
+    cookies: { '__Host-sb-uihahglfncxadigplxnw-auth-token': '[]' },
     headers: {
       authorization: 'Bearer verified_token',
       origin: 'https://attacker.example',
@@ -560,7 +564,7 @@ function workerFetch(
 const withJourney = (body, cookie = `${VISITOR}.kenmoo`) =>
   request(body, {
     cookies: {
-      'sb-uihahglfncxadigplxnw-auth-token': '[]',
+      '__Host-sb-uihahglfncxadigplxnw-auth-token': '[]',
       enconvo_via: cookie,
     },
   })
@@ -608,7 +612,7 @@ test('Both checkouts name the Campaign journey visitor in Stripe metadata and re
         { lookupKey: 'standard', via: 'kenmoo' },
         {
           cookies: {
-            'sb-uihahglfncxadigplxnw-auth-token': '[]',
+            '__Host-sb-uihahglfncxadigplxnw-auth-token': '[]',
             enconvo_via: `${VISITOR}.kenmoo`,
             enconvo_utm: CAMPAIGN_VISITOR,
           },
@@ -644,7 +648,7 @@ test('Both checkouts name the Campaign journey visitor in Stripe metadata and re
     await handlerFor(stripe, route, {}, worker.fetch)(
       request(
         { lookupKey: 'standard', via: 'kenmoo' },
-        { cookies: { 'sb-uihahglfncxadigplxnw-auth-token': '[]', enconvo_utm: 'short' } }
+        { cookies: { '__Host-sb-uihahglfncxadigplxnw-auth-token': '[]', enconvo_utm: 'short' } }
       ),
       response()
     )

@@ -1,6 +1,6 @@
 import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@/lib/supabase'
 import LoginForm from './components/LoginForm'
 // import {useRouter} from "next/navigation";
 import { useEffect, useState } from 'react'

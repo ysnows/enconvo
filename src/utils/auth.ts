@@ -1,5 +1,6 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { AUTH_COOKIE } from '@/lib/auth-cookie';
 
 interface UserMetadata {
     name?: string;
@@ -116,7 +117,7 @@ export const withAuth = (handler: ApiHandler) => {
 
             if (!authToken || authToken.length === 0) {
                 try {
-                    const authTokenCookie = req.cookies['sb-uihahglfncxadigplxnw-auth-token'];
+                    const authTokenCookie = req.cookies[AUTH_COOKIE];
                     const token = JSON.parse(authTokenCookie)[0];
                     authToken = token;
                 } catch (error) {

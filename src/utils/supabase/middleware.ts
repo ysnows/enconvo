@@ -1,4 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
+import { authCookieOptions } from "@/lib/auth-cookie";
 import { type NextRequest, NextResponse } from "next/server";
 
 export const updateSession = async (request: NextRequest) => {
@@ -16,6 +17,7 @@ export const updateSession = async (request: NextRequest) => {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
+        cookieOptions: authCookieOptions,
         cookies: {
           getAll() {
             return request.cookies.getAll();

@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { Button } from '@/components/ui/button'
 import { useState, useEffect } from 'react'
 
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClientComponentClient } from '@/lib/supabase'
 
 import { Logo } from '@/components/Logo'
 import * as React from 'react'
