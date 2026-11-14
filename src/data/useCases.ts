@@ -19,6 +19,107 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-16',
+    title: 'What’s new in Enconvo 2.5.16',
+    description:
+      'Everything new in 2.5.16 in one narrated tour: agents in your calls, meeting pages, Live Photo characters going live, DeepSeek, Parallel and model fallback, Ask AI in Settings, work that picks up after a restart, Picture in Picture, the Calls section, and coding agents leading Projects, with a chapter for each.',
+    youtubeId: 'cgChveZUqw4',
+    category: 'Tutorials',
+    version: '2.5.16',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'agents-in-your-calls-step-by-step',
+    title: 'Agents in your calls, step by step',
+    description:
+      'Bring an agent into an Enconvo Conference call: choose who can ask it for work, ask it in the call’s chat, and have it write a doc that opens on the Stage for everyone to edit together.',
+    youtubeId: 'tao0f5b8Rcg',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/features/video-conference',
+  },
+  {
+    slug: 'meeting-pages-step-by-step',
+    title: 'Meeting pages, step by step',
+    description:
+      'Every call now gets its own page in Recordings, with a summary, action items you can send to Apple Reminders, what agents made on the call and the full transcript, and you can ask the meeting questions right on its page.',
+    youtubeId: '6zMsF7X68f4',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/features/meeting-recording',
+  },
+  {
+    slug: 'live-photo-go-live-step-by-step',
+    title: 'Live Photo characters go live, step by step',
+    description:
+      'Stream a Live Photo character to OBS with one click, give her a transparent, color or image background, then turn on Live mode so she answers viewers from your Twitch or Kick chat out loud.',
+    youtubeId: 'hF8YOKa4zWc',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/features/avatar',
+  },
+  {
+    slug: 'deepseek-parallel-fallback-2-5-16',
+    title: 'DeepSeek, Parallel, Model Fallback and Cloud prices',
+    description:
+      'The model updates in 2.5.16: DeepSeek for speech, transcription and OCR, Parallel as a new web search provider, Fallback to up to three backup models, and Enconvo Cloud prices shown right in Settings.',
+    youtubeId: 'v7aWtrh75_I',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/ai/model-selection-guide',
+  },
+  {
+    slug: 'ask-ai-in-settings-step-by-step',
+    title: 'Ask AI in Settings, step by step',
+    description:
+      'Type a question in the Settings search and press Return: Ask AI answers beside the sidebar with a card for each setting it names, switches you can flip on the card, and Show in Settings to jump straight there.',
+    youtubeId: '0thc36tc5IU',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/configuration/settings-reference',
+  },
+  {
+    slug: 'restart-and-wait-for-2-5-16',
+    title: 'Work that picks up after a restart, and Wait For',
+    description:
+      'A chat stopped by an update, a quit or a crash now carries on by itself once Enconvo is back, and agents can wait for a file, a log line, a process or a port in one step and hear the moment it happens.',
+    youtubeId: 'spSqylnBNaE',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'picture-in-picture-step-by-step',
+    title: 'Picture in Picture, step by step',
+    description:
+      'Watch Browser Use and Computer Use work in a live view in the corner of your screen, click it to take over and hand control back, and float Remote Screen over your chats on your phone.',
+    youtubeId: 'YnrrAPH5uMY',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/features/computer-use',
+  },
+  {
+    slug: 'calls-section-step-by-step',
+    title: 'The Calls section, step by step',
+    description:
+      'Every call your agent answers for you lands in the new Calls section with who called and what they want, marks for urgent calls and call-backs, Mark as done, and a Likely scam warning.',
+    youtubeId: '7y5y9LeYK4s',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/integrations/iphone-phone-chats',
+  },
+  {
+    slug: 'coding-agents-tools-publishing-2-5-16',
+    title: 'Coding agents lead Projects, Tools & Skills, and one-click publishing',
+    description:
+      'Make Claude Code, Codex, Grok Build or Antigravity the lead of a Project, choose the tools and skills each Agent may use, and publish a web page an agent made to its own site.enconvo.com address with one click.',
+    youtubeId: 'h_ZorcMsxdw',
+    category: 'Tutorials',
+    date: '2026-11-15',
+    docsUrl: 'https://docs.enconvo.ai/ai/projects',
+  },
+  {
     slug: 'iphone-and-android-2-5-15',
     title: 'What’s new on iPhone and Android',
     description:
