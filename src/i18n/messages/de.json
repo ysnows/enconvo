@@ -2670,5 +2670,11 @@
   "What’s new on iPhone and Android": "Neu auf iPhone und Android",
   "Pair the iPhone and Android apps with a free account, find active chats on your phone, see messages you send from the phone in the Mac chat the moment you send them, and clear a notification everywhere by reading it once, a narrated walkthrough.": "Kopple die iPhone- und Android-App mit einem kostenlosen Konto, finde aktive Chats auf deinem Handy, sieh Nachrichten, die du vom Handy sendest, sofort im Chat auf dem Mac und entferne eine Mitteilung überall, indem du sie einmal liest. Eine kommentierte Anleitung.",
   "Without your consent, a visit from one of our campaign links is still counted once, anonymously: nothing is stored on your device, and the visit can’t be linked to any later one.": "Ohne deine Einwilligung wird ein Besuch über einen unserer Kampagnenlinks trotzdem einmal anonym gezählt: Auf deinem Gerät wird nichts gespeichert, und der Besuch lässt sich mit keinem späteren verknüpfen.",
-  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "Conversion-Pixel von X: teilt X mit, welche unserer Anzeigen dich hergeführt hat und ob du die App heruntergeladen hast, damit wir unsere Anzeigen bewerten können. X kann diese Daten in den USA verarbeiten."
+  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "Conversion-Pixel von X: teilt X mit, welche unserer Anzeigen dich hergeführt hat und ob du die App heruntergeladen hast, damit wir unsere Anzeigen bewerten können. X kann diese Daten in den USA verarbeiten.",
+  "Confirm your email first: open the link in the email we sent you, then log in.": "Bestätige zuerst deine E-Mail-Adresse: Öffne den Link in der E-Mail, die wir dir geschickt haben, und melde dich dann an.",
+  "Couldn’t log in. Try again.": "Die Anmeldung hat nicht geklappt. Versuch es noch einmal.",
+  "Enter your password.": "Gib dein Passwort ein.",
+  "Incorrect email or password.": "E-Mail-Adresse oder Passwort ist falsch.",
+  "This account has been deleted or is being deleted.": "Dieses Konto wurde gelöscht oder wird gerade gelöscht.",
+  "Too many sign-in tries. Try again later.": "Zu viele Anmeldeversuche. Versuch es später noch einmal."
 }

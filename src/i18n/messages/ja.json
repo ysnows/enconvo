@@ -2670,5 +2670,11 @@
   "What’s new on iPhone and Android": "iPhone と Android の新機能",
   "Pair the iPhone and Android apps with a free account, find active chats on your phone, see messages you send from the phone in the Mac chat the moment you send them, and clear a notification everywhere by reading it once, a narrated walkthrough.": "無料アカウントで iPhone アプリと Android アプリをペアリングし、スマートフォンでアクティブなチャットを見つけ、スマートフォンから送ったメッセージを送った瞬間に Mac のチャットで確認でき、通知は一度読めばすべての端末で消えます。ナレーション付きガイドです。",
   "Without your consent, a visit from one of our campaign links is still counted once, anonymously: nothing is stored on your device, and the visit can’t be linked to any later one.": "同意がない場合でも、キャンペーンリンクからの訪問は匿名で1回だけカウントされます。お使いの端末には何も保存されず、その後の訪問と結び付けることもできません。",
-  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "X のコンバージョンピクセル：どの広告から来たか、アプリをダウンロードしたかを X に伝え、広告の効果を判断するために使います。X は米国でこの情報を処理する場合があります。"
+  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "X のコンバージョンピクセル：どの広告から来たか、アプリをダウンロードしたかを X に伝え、広告の効果を判断するために使います。X は米国でこの情報を処理する場合があります。",
+  "Confirm your email first: open the link in the email we sent you, then log in.": "先にメールアドレスを確認してください。お送りしたメールのリンクを開いてから、ログインしてください。",
+  "Couldn’t log in. Try again.": "ログインできませんでした。もう一度お試しください。",
+  "Enter your password.": "パスワードを入力してください。",
+  "Incorrect email or password.": "メールアドレスまたはパスワードが正しくありません。",
+  "This account has been deleted or is being deleted.": "このアカウントは削除済みか、削除処理中です。",
+  "Too many sign-in tries. Try again later.": "ログインの試行回数が多すぎます。しばらくしてからもう一度お試しください。"
 }

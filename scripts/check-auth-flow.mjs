@@ -41,6 +41,7 @@ async function loadForm(name) {
     '@/components/ui/input': { Input: ({type, name, placeholder}) => React.createElement('input', {type, name, placeholder}) },
     '@/lib/auth-flow': { authFlowHref, oauthCallbackUrl, affiliateReturnPath },
     '@supabase/auth-helpers-nextjs': { createClientComponentClient: () => ({ auth: {} }) },
+    '@/lib/supabase': { createClientComponentClient: () => ({ auth: {} }) },
   }
   new Function('require', 'module', 'exports', compiled)(name => mocks[name] ?? (name.startsWith('@/') ? new Proxy({}, { get: () => passthrough }) : require(name)), module, module.exports)
   return module.exports.default

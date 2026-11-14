@@ -2670,5 +2670,11 @@
   "What’s new on iPhone and Android": "iPhone 與 Android 端的新功能",
   "Pair the iPhone and Android apps with a free account, find active chats on your phone, see messages you send from the phone in the Mac chat the moment you send them, and clear a notification everywhere by reading it once, a narrated walkthrough.": "用免費帳號配對 iPhone 和 Android App，在手機上找到進行中的聊天，從手機傳出的訊息一送出就出現在 Mac 的聊天裡，通知只要讀一次，所有裝置上都會清除。講解影片教學。",
   "Without your consent, a visit from one of our campaign links is still counted once, anonymously: nothing is stored on your device, and the visit can’t be linked to any later one.": "未經你同意時，來自我們推廣連結的造訪仍會被匿名計數一次：不會在你的裝置上儲存任何內容，也無法與之後的造訪關聯。",
-  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "X 的轉換像素：告訴 X 是我們的哪則廣告帶你來的、你是否下載了應用程式，以便我們評估廣告成效。X 可能在美國處理這些資料。"
+  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "X 的轉換像素：告訴 X 是我們的哪則廣告帶你來的、你是否下載了應用程式，以便我們評估廣告成效。X 可能在美國處理這些資料。",
+  "Confirm your email first: open the link in the email we sent you, then log in.": "請先確認你的電子郵件：開啟我們寄給你的郵件中的連結，然後再登入。",
+  "Couldn’t log in. Try again.": "無法登入，請再試一次。",
+  "Enter your password.": "請輸入密碼。",
+  "Incorrect email or password.": "電子郵件或密碼不正確。",
+  "This account has been deleted or is being deleted.": "此帳號已刪除或正在刪除。",
+  "Too many sign-in tries. Try again later.": "登入嘗試次數過多，請稍後再試。"
 }

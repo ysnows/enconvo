@@ -2670,5 +2670,11 @@
   "What’s new on iPhone and Android": "iPhone과 Android의 새로운 기능",
   "Pair the iPhone and Android apps with a free account, find active chats on your phone, see messages you send from the phone in the Mac chat the moment you send them, and clear a notification everywhere by reading it once, a narrated walkthrough.": "무료 계정으로 iPhone 및 Android 앱을 페어링하고, 휴대폰에서 활성 채팅을 찾고, 휴대폰에서 보낸 메시지를 보내는 즉시 Mac 채팅에서 확인하세요. 알림은 한 번 읽으면 모든 기기에서 지워집니다. 내레이션 가이드입니다.",
   "Without your consent, a visit from one of our campaign links is still counted once, anonymously: nothing is stored on your device, and the visit can’t be linked to any later one.": "동의하지 않아도 캠페인 링크를 통한 방문은 익명으로 한 번 집계됩니다. 기기에는 아무것도 저장되지 않으며 이후 방문과 연결할 수 없습니다.",
-  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "X 전환 픽셀: 어떤 광고를 통해 방문했는지, 앱을 다운로드했는지를 X에 알려 광고 효과를 판단합니다. X는 이 정보를 미국에서 처리할 수 있습니다."
+  "X’s conversion pixel: tells X which of our ads brought you and whether you downloaded the app, so we can judge our ads. X may process this in the United States.": "X 전환 픽셀: 어떤 광고를 통해 방문했는지, 앱을 다운로드했는지를 X에 알려 광고 효과를 판단합니다. X는 이 정보를 미국에서 처리할 수 있습니다.",
+  "Confirm your email first: open the link in the email we sent you, then log in.": "먼저 이메일을 인증해 주세요. 보내 드린 이메일의 링크를 연 다음 로그인해 주세요.",
+  "Couldn’t log in. Try again.": "로그인하지 못했습니다. 다시 시도해 주세요.",
+  "Enter your password.": "비밀번호를 입력해 주세요.",
+  "Incorrect email or password.": "이메일 또는 비밀번호가 올바르지 않습니다.",
+  "This account has been deleted or is being deleted.": "이 계정은 삭제되었거나 삭제 중입니다.",
+  "Too many sign-in tries. Try again later.": "로그인 시도 횟수가 너무 많습니다. 나중에 다시 시도해 주세요."
 }

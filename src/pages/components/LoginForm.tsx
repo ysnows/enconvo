@@ -24,6 +24,11 @@ import {
 import { offerReturnPath } from '@/lib/welcome-offer'
 import { beginGoogleSignupMeasurement } from '@/lib/signup-analytics'
 import { appleStartUrl, saveAppleSignInContext } from '@/lib/apple-sign-in'
+import { hasConsent } from '@/lib/cookie-consent'
+import {
+  passwordSignInMessage,
+  signInWithPassword,
+} from '@/lib/password-sign-in'
 
 export default function LoginForm({
   loginState,
@@ -63,23 +68,28 @@ export default function LoginForm({
     }
 
     setEmailIsLoading(true)
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
+    setError('')
+    // The Worker's sign-in, which also takes an account's linked email; its tokens become this
+    // browser's session (lib/password-sign-in).
+    const result = await signInWithPassword(
+      supabase,
+      email,
+      password,
+      hasConsent('analytics')
+    )
 
-    if (error) {
-      setError(error.message)
+    if (!result.ok) {
+      if (result.problem) {
+        const { source, values } = passwordSignInMessage(result.problem)
+        setError(t(source, values))
+      } else {
+        setError(t(result.message))
+      }
       setEmailIsLoading(false)
       return
     }
 
-    setUser(data.user)
-
-    await supabase.auth.setSession({
-      access_token: data.session.access_token,
-      refresh_token: data.session.refresh_token,
-    })
+    setUser(result.user)
 
     // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
     const opened =
@@ -96,47 +106,12 @@ export default function LoginForm({
     if (typeof opened === 'object') alert(opened.error)
 
     try {
-      await syncCurrentEmailPreference(data.session.access_token)
+      await syncCurrentEmailPreference(result.session.access_token)
     } catch (syncError) {
       console.error('Unable to sync email preferences:', syncError)
     }
 
     setLoginState('success')
-
-    setEmailIsLoading(false)
-    // setContinueLogin(true)
-  }
-
-  async function signInWithEmail() {
-    if (continueLogin) {
-      // TODO: Implement email provider logic
-      // const emailAddress = getEmailProvider(email);
-      // if (emailAddress) {
-      //     window.location.href = emailAddress;
-      // } else {
-
-      // }
-      return
-    }
-    // check if email is valid
-    if (!email || !email.includes('@')) {
-      alert(t('Please enter a valid email'))
-      return
-    }
-
-    setEmailIsLoading(true)
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
-
-    if (error) {
-      setError(error.message)
-      setEmailIsLoading(false)
-      return
-    }
-    console.log(data)
-    alert('open enconvo app')
 
     setEmailIsLoading(false)
     // setContinueLogin(true)
@@ -344,7 +319,7 @@ export default function LoginForm({
                 >
                   <ExclamationTriangleIcon className="h-4 w-4" />
                   <AlertTitle>{t('Error')}</AlertTitle>
-                  <AlertDescription>{t(error)}</AlertDescription>
+                  <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
 

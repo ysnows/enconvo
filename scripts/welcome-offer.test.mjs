@@ -865,13 +865,11 @@ test('a password sign-in from the offer never opens the app; Google returns thro
           },
         },
       },
-      '@supabase/auth-helpers-nextjs': {
-        createClientComponentClient: () => ({
-          auth: {
-            signInWithPassword: async () => ({ data: { user: { id: 'u' }, session: { access_token: 'a', refresh_token: 'r' } }, error: null }),
-            setSession: async () => ({}),
-          },
-        }),
+      '@/lib/supabase': { createClientComponentClient: () => ({ auth: {} }) },
+      '@/lib/cookie-consent': { hasConsent: () => false },
+      '@/lib/password-sign-in': {
+        signInWithPassword: async () => ({ ok: true, user: { id: 'u' }, session: { access_token: 'a', refresh_token: 'r' } }),
+        passwordSignInMessage: () => ({ source: '' }),
       },
       '@/components/ui/button': { Button: passthrough },
       '@/components/ui/input': { Input: () => null },
