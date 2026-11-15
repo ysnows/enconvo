@@ -23,7 +23,7 @@ export const useCases: UseCase[] = [
     title: 'What’s new in Enconvo 2.5.16',
     description:
       'Everything new in 2.5.16 in one narrated tour: agents in your calls, meeting pages, Live Photo characters going live, DeepSeek, Parallel and model fallback, Ask AI in Settings, work that picks up after a restart, Picture in Picture, the Calls section, and coding agents leading Projects, with a chapter for each.',
-    youtubeId: 'cgChveZUqw4',
+    youtubeId: 'Wmi53pTo51c',
     category: 'Tutorials',
     version: '2.5.16',
     date: '2026-11-15',
