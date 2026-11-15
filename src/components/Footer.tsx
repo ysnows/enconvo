@@ -55,7 +55,7 @@ export function Footer() {
           <div className="mt-6 sm:mt-0">
             <p className="text-center text-sm text-content-muted">
               <I18nText
-                source={'Copyright © {p0} Enconvo. All rights reserved.'}
+                source={'Copyright © {p0} THE GREAT LIONHEART PTE. LTD. All rights reserved.'}
                 values={{ p0: new Date().getFullYear() }}
               />
             </p>
