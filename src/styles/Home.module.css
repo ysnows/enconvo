@@ -158,7 +158,7 @@
 
 .downloadMenu {
   left: 50%;
-  width: min(320px, calc(100vw - 32px));
+  width: min(400px, calc(100vw - 32px));
   transform: translateX(-50%);
   border-radius: 12px;
 }

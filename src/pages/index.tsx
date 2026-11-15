@@ -23,7 +23,13 @@ import {
 const TITLE = 'Enconvo — AI Assistant & Agent for Mac'
 const DESCRIPTION = SITE_DESCRIPTION
 
-export default function Home({ renderedAt }: { renderedAt: number }) {
+export default function Home({
+  renderedAt,
+  macVersion,
+}: {
+  renderedAt: number
+  macVersion: string | null
+}) {
   const { t, locale } = useI18n()
 
   const sectionEffectsRef = useSectionEffects()
@@ -61,7 +67,7 @@ export default function Home({ renderedAt }: { renderedAt: number }) {
         {t('Skip to content')}
       </a>
       <main id="main-content" tabIndex={-1}>
-        <Hero />
+        <Hero macVersion={macVersion ?? undefined} />
         <FeatureGrid />
         <ModelFreedom />
         <OpenPlatform />
@@ -77,6 +83,24 @@ export default function Home({ renderedAt }: { renderedAt: number }) {
 
 // Regenerated hourly so the license prices in the HTML follow their schedule.
 export const getStaticProps = withI18nProps(
-  async () => ({ props: { renderedAt: Date.now() }, revalidate: 3600 }),
+  async () => ({
+    props: { renderedAt: Date.now(), macVersion: await latestMacVersion() },
+    revalidate: 3600,
+  }),
   '/'
 )
+
+// The newest release in the changelog, which the release script keeps current.
+async function latestMacVersion(): Promise<string | null> {
+  const { readFile } = await import('node:fs/promises')
+  const { join } = await import('node:path')
+  try {
+    const changelog = await readFile(
+      join(process.cwd(), 'src/data/changelog.mdx'),
+      'utf8'
+    )
+    return changelog.match(/^# Enconvo (\d+\.\d+\.\d+) Changelog/m)?.[1] ?? null
+  } catch {
+    return null
+  }
+}
