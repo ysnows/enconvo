@@ -16,6 +16,7 @@ import { useInviteAutoRedeem } from '@/lib/invite-auto-redeem'
 import { useAffiliateJourney } from '@/lib/affiliate-journey-tracking'
 import { useAnonymousCampaignVisit, useCampaignJourney } from '@/lib/campaign-journey-tracking'
 import { X_PIXEL_SNIPPET, useXPixelDownloads } from '@/lib/x-pixel'
+import { googleAdsEnabled, useGoogleAdsDownloads } from '@/lib/google-ads'
 import { useWelcomeOfferAutoClaim } from '@/lib/welcome-offer-auto-claim'
 import { useMarketingTracking } from '@/lib/marketing-tracking'
 import { CookieConsent } from '@/components/CookieConsent'
@@ -104,6 +105,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
     typeof window !== 'undefined' &&
     appleReturnParams().has('handoff')
   const marketingAllowed = consentReady && consent?.marketing === true
+  const adsGranted = marketingAllowed && googleAdsEnabled()
   // What a category stored before it was withdrawn, or before this site asked, goes.
   useEffect(() => {
     if (!consentReady) return
@@ -116,6 +118,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   useCampaignJourney(marketingAllowed)
   useAnonymousCampaignVisit(consentReady && !marketingAllowed)
   useXPixelDownloads(marketingAllowed)
+  useGoogleAdsDownloads(marketingAllowed)
   useMarketingTracking(marketingAllowed)
   return (
     <>
@@ -138,7 +141,8 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
         </Head>
       )}
       {/* Google Analytics loads only once the visitor allows analytics (lib/cookie-consent).
-          Advertising storage and signals stay off: the site measures visits, nothing more. */}
+          Google signals stay off. Ad storage is granted only with marketing allowed, for the
+          Google Ads conversion tag (lib/google-ads), which shares this gtag. */}
       {analyticsAllowed && !handoffInAddress && (
         <>
           <Script
@@ -152,8 +156,8 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
               window['ga-disable-${GA_MEASUREMENT_ID}'] = false;
               gtag('consent', 'default', {
                 analytics_storage: 'granted',
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
+                ad_storage: '${adsGranted ? 'granted' : 'denied'}',
+                ad_user_data: '${adsGranted ? 'granted' : 'denied'}',
                 ad_personalization: 'denied'
               });
               gtag('set', 'linker', { domains: ['macworthy.com', 'enconvo.com'] });

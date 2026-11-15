@@ -6,7 +6,8 @@
 // - analytics: Google Analytics (gtag.js and its `_ga` cookies) and the browser storage that keeps
 //   its sign-up events from counting twice;
 // - marketing: the Campaign and Affiliate journeys (`enconvo_utm`, `enconvo_via` and their pending
-//   visits), the MacWorthy referral and the X conversion pixel (lib/x-pixel).
+//   visits), the MacWorthy referral, the X conversion pixel (lib/x-pixel) and the Google Ads
+//   conversion tag (lib/google-ads, its `_gcl` cookies).
 //
 // Nothing in either category loads or writes before the visitor chooses. The choice is a
 // first-party cookie shared by the bare and www domains, kept for 180 days, then asked again.
@@ -33,6 +34,7 @@ const ANALYTICS_STORAGE = [
   'enconvo_google_signup_intent_v1',
 ]
 const MARKETING_COOKIES = ['enconvo_utm', 'enconvo_via', '_twclid']
+const GOOGLE_ADS_COOKIE = /^_gcl_(?:au|aw|dc|gb|gs|ag)$/
 const MARKETING_STORAGE_PREFIXES = ['enconvo_utm:', 'enconvo_via:']
 const MARKETING_STORAGE = ['enconvo_marketing_referral_v1']
 
@@ -128,7 +130,14 @@ export function clearAnalyticsStorage() {
 export function clearMarketingStorage() {
   if (typeof window === 'undefined') return
   try {
+    window.gtag?.('consent', 'update', {
+      ad_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied',
+    })
     for (const name of MARKETING_COOKIES) expireCookie(name)
+    for (const name of cookieNames())
+      if (GOOGLE_ADS_COOKIE.test(name)) expireCookie(name)
   } catch {
     // Nothing to remove.
   }

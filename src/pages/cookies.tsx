@@ -121,6 +121,13 @@ const MARKETING: Row[] = [
     duration: '2 years',
   },
   {
+    name: 'Google Ads (_gcl_au, _gcl_aw)',
+    purpose:
+      'Google Ads’ conversion tag: tells Google which of our ads brought you and whether you downloaded the app, so we can judge our ads. Ad personalization is off. Google may process this in the United States.',
+    provider: 'Google',
+    duration: '90 days',
+  },
+  {
     name: 'enconvo_utm:…, enconvo_via:…',
     purpose:
       'Holds a campaign or partner visit until it reaches our server (browser storage).',

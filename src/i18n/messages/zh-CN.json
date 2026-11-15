@@ -2701,5 +2701,6 @@
   "On an Apple Silicon Mac?": "用的是 Apple 芯片 Mac？",
   "Get the Intel version": "下载 Intel 版",
   "Get the Apple Silicon version": "下载 Apple 芯片版",
-  "Other platforms": "其他平台"
+  "Other platforms": "其他平台",
+  "Google Ads’ conversion tag: tells Google which of our ads brought you and whether you downloaded the app, so we can judge our ads. Ad personalization is off. Google may process this in the United States.": "Google Ads 的转化代码：告诉 Google 是我们的哪条广告带你来的、你是否下载了应用，以便我们评估广告效果。广告个性化已关闭。Google 可能在美国处理这些数据。"
 }
