@@ -19,6 +19,117 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-17',
+    title: 'What’s new in Enconvo 2.5.17',
+    description:
+      'Everything new in 2.5.17 in one narrated tour: Email Today, Ask Mavis in Email, Media, Code Mode and Skills that learn, the new Chat Window sidebar, Auto web search and task models, Enhance prompt and Read Aloud, App Access and permissions, design canvases and decks drawn in parallel, and a few more touches.',
+    youtubeId: 'cEgOkSAnt7A',
+    category: 'Tutorials',
+    version: '2.5.17',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'email-today-step-by-step',
+    title: 'Email Today, step by step',
+    description:
+      'Email now opens on Today: everything that needs you today, sorted into tiers, each mail with a reason and one next step, worked through mail by mail.',
+    youtubeId: 'iP5mRE7NiRU',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'ask-mavis-in-email-step-by-step',
+    title: 'Ask Mavis in Email, step by step',
+    description:
+      'Ask about any Email conversation and its attachments with Ask Mavis or Command-J, then use the answer as a draft or carry it into chat.',
+    youtubeId: 'XaLHGAsVgUk',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'media-studio-2-5-17',
+    title: 'Media: your studio for images, video and sound',
+    description:
+      'Make and keep pictures, videos and audio in one place: saved subjects and styles, one-click edits, videos made shot by shot, and voice-overs mixed into a video.',
+    youtubeId: 'x15Rp3ONqDg',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/ai/image-generation',
+  },
+  {
+    slug: 'code-mode-and-skills-2-5-17',
+    title: 'Code Mode and Skills that learn',
+    description:
+      'An agent writes one short script that makes many tool calls at once, every workflow is a Skill in one library, and a correction teaches its Skill on the spot, with Undo.',
+    youtubeId: '8zuU97Ce_aY',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/configuration/skills',
+  },
+  {
+    slug: 'chat-window-sidebar-step-by-step',
+    title: 'The new Chat Window sidebar, step by step',
+    description:
+      'A slim icon rail you can customize, Memory inside the Knowledge Base, batch actions for many chats at once, and a draft kept for every chat.',
+    youtubeId: 'AS1Aw1bL0hQ',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/ai/chat',
+  },
+  {
+    slug: 'auto-web-search-task-models-2-5-17',
+    title: 'Auto web search and task models',
+    description:
+      'Search with your chat model’s own web search, with Enconvo Cloud search as a free fallback, and choose the models for titles, suggestions and other small jobs.',
+    youtubeId: 'oMsq79f1g2E',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/ai/web-search',
+  },
+  {
+    slug: 'enhance-prompt-read-aloud-2-5-17',
+    title: 'Enhance prompt and Read Aloud',
+    description:
+      'The wand beside the mic turns a rough request into a clearer one, with Undo and Try again, and Read Aloud plays right in the reply, highlighting each sentence.',
+    youtubeId: 'sfNwZGzGLis',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/ai/chat',
+  },
+  {
+    slug: 'app-access-permissions-2-5-17',
+    title: 'App Access and permissions when needed',
+    description:
+      'Choose which apps Computer Use may see and use, approve an app when an agent asks, and see which features need each macOS permission, asked only when used.',
+    youtubeId: 'kc8SdpOCzGM',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/features/computer-use',
+  },
+  {
+    slug: 'design-canvases-decks-parallel-2-5-17',
+    title: 'Design canvases and decks drawn in parallel',
+    description:
+      'Several artboards and slides drawn at the same time, and small edits that redraw only the part you asked about, in place on the canvas and in the deck.',
+    youtubeId: 'SHH983A5npQ',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'few-more-touches-2-5-17',
+    title: 'A few more touches in 2.5.17',
+    description:
+      'Dictation App Rules that translate per app, Fluid Speech Pro offline, Project merges for work that passes, Motion, and Vim Mode’s chip beside the mic.',
+    youtubeId: 'FaE7ugbuYtk',
+    category: 'Tutorials',
+    date: '2026-11-16',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
     slug: 'whats-new-2-5-16',
     title: 'What’s new in Enconvo 2.5.16',
     description:
