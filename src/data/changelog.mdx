@@ -9,6 +9,176 @@ import { YouTubePlayer } from '/snippets/youtube-player.mdx';
 
 ---
 
+# Enconvo 2.5.17 Changelog (2026-11-16)
+
+Thanks for all the feedback during the beta. This release turns Email into a place to get through your day, with a Today page and Ask Mavis beside every conversation, adds Media for every image, video and audio clip you make, brings Code Mode and one Skills library that learns from how you work, gives the Chat Window a calmer sidebar, searches the web with your chat model's own search, and stops background work from spending Enconvo Cloud points when you chat on your own API key. Update the iPhone app to 1.2.16 and the Android app to 1.4.22 to try the phone changes.
+
+## Highlights
+
+- **Email Today**: everything that needs you today in five tiers, each mail with a reason and one next step, worked through mail by mail.
+- **Ask Mavis in Email**: ask about the open conversation and its attachments, then use the answer as a draft or carry it into chat.
+- **Media**: every image, video and audio clip you make in one place, with saved subjects and styles, multi-shot videos, music and voice-overs, and one-click edits.
+- **Code Mode**: the agent writes one short script that makes many tool calls side by side or in order and reads back only the result.
+- **One Skills library that learns**: every saved Workflow is also a Skill, run the cheap way first, repaired from its own notes, and taught by your corrections.
+- **A new Chat Window sidebar**: a slim icon rail you can customize, a middle column that follows it, a count of chats that need you, batch actions and ⌥⌘ shortcuts.
+- **Auto web search, free on Enconvo Cloud**: search with the chat model's own web search, with Enconvo Cloud search as a free fallback for every signed-in account.
+- **Task models**: chat titles, suggestions, recordings and Live Talk run on a small model of the chat's own provider, so your own API key no longer spends Cloud points.
+- **Read Aloud right in the reply** and **Enhance prompt**, which rewrites your request into a clearer one with Undo.
+- **App Access and permissions when you need them**: choose which apps Computer Use may see, and Enconvo asks for a macOS permission only when a feature needs it.
+- **Continue on Computer**: move a phone chat, even one in progress, to a paired computer and carry on there.
+- **Design canvases and decks that update in place**, with artboards and slides drawn in parallel.
+
+## Email
+
+- Added Today to Email, the page it now opens on in place of Brief: an overview of how much needs you today with the most urgent senders and each mailbox's count, then five tiers from Urgent · must reply, Due today, Waiting on others (amber after 3 days) and Worth a look down to Later, where newsletters and notifications fold into one row you can archive all at once and undo.
+- Added a reason and one next step to every mail on Today (Draft Reply, Review Draft, Open or Nudge, plus Snooze and Archive), and opening one lets you go through that tier mail by mail with Previous, Next and a count of how many are done, moving on by itself after you send, archive or snooze.
+- Changed how Email sorts mail for Today: rules sort what they can at once (a question from outside waiting a day, replies you are waiting on, notifications and promotions), and the model reads each new mail only once, also picking up a deadline from its text for Due today.
+- Added Ask Mavis to an open Email conversation: the button (or ⌘J) opens a panel beside the mail where you ask about it and follow up, with answers that name the mails and attachments they come from, kept with the conversation for next time, and following you to the next mail you open.
+- Added Use as Draft and Continue in Chat to Ask Mavis answers: Use as Draft writes a reply into the reply field marked Draft from Mavis · not sent for you to check and send yourself, and Continue in Chat carries the questions and answers into the chat beside Email.
+- Added attachments to Ask Mavis: attach files and images by picking, dragging or pasting them, or a Screen Doodle, and Mavis answers from them with the mail.
+- Changed the Email conversation toolbar to Ask Mavis, Archive and a More menu that holds Flag, Snooze, Mark as Unread, Reply All, Forward, Move, Junk and Delete.
+- Changed each mail in a conversation to show a full header like Gmail's: the sender's name with their whole address, the full date and time it was sent, and whom it went to and was copied to, with long recipient lists folded behind a +N more you can open.
+- Changed Email's reading view to show the subject at the top of the conversation, moving into the top bar as you scroll, with a one-line Summary and icons that say what Ask Mavis, Summary, Draft a Reply and Suggest Replies do.
+- Fixed the Email reply field reading like a question to the AI: it now says `Reply to <name>…` (or "Reply to everyone…") and its button says Send, and Write a Reply is now Draft a Reply, the AI's own button.
+- Changed Email so agents can read a mailbox as soon as it is connected, including mailboxes added before; turn off Let agents read this mailbox on its Accounts page to keep agents out.
+- Changed Email's pages, from Subscriptions and Automation to Accounts, Add Mailbox, New Message and Templates, to name themselves in a top bar level with the window's buttons, and with the sidebar folded that bar holds a menu that switches folders or shows the sidebar again.
+- Fixed pictures pasted into a mail showing as an empty box in an Agentic Inbox mailbox; they now show, including in mail that arrived before this fix.
+
+## Media
+
+- Added Media to the Chat Window sidebar: one place for every image, video and audio clip you make, with folders, favorites and search, and a composer at the bottom that shows the model, aspect ratio, quality, number of images and what to avoid at a glance.
+- Added saved subjects and styles: save a few photos of a person, product or character and pick them when you generate, so they look the same in every picture and video.
+- Added start and end frames, several shots with their own prompts and lengths, and your own audio to videos in Media.
+- Added a detail view with the prompt and every setting, Reuse settings, Make a video from a picture, and one-click Upscale, Remove background, Relight, Restore old photo, Change angle, Expand canvas and Variations.
+- Added music, sound effects and voice-overs to Media, and Add audio to put them on a video.
+- Added a negative prompt, labelled Avoid, to the image and video editor's settings for models that take one.
+- Changed the new chat's Image and Video modes to show the model, settings and what to avoid as pills under the composer, with your recent images or videos and a shortcut to Media below them.
+- Changed Film to Motion, and the new chat's Make something kinds now show a short caption under each name, so Motion (animated with code) and Video (AI footage) are easy to tell apart.
+- Changed the Artifacts library to list documents, slides, designs, motions, dashboards and web pages only; images, videos and audio now live in Media.
+
+## Code Mode and Skills
+
+- Added Code Mode: the agent can write one short script that makes many tool calls side by side or in order and reads back only the result, with its settings under Settings › Agents and on the Plugins page's Built-in tab.
+- Changed Code Mode runs outside a chat to call only tools that read: built-in searches and reads, public web pages, ordinary files, and MCP tools that don't say they change anything, checked again right before each call.
+- Added one Skills library: every saved Workflow is now also a Skill with its own SKILL.md, and Settings › Skills shows your own Skills by where they came from (recorded, learned, script, written) with their steps, gotchas and full history.
+- Added running a Skill the cheap way first: its saved steps run without the main model, a step that no longer fits is repaired from the Skill's own notes and screenshots, and only when that fails does an agent do the task from SKILL.md.
+- Added Learn how-tos (Settings › Memory): when you correct how a task was done, or a step had to be repaired, the Skill learns it at once and the chat shows a Learned note with Undo; a task done a second time becomes a new Skill, and Memory Review and Memory Tidy look after Skills too.
+- Added Ask me first for learned step changes: a change to a Skill's steps waits for Apply on its note, while gotchas still go in at once.
+- Added Workflow script steps, so a Skill can keep a Code Mode script in its own scripts folder and run it as one of its steps.
+- Added turning a recording into a Skill: each recorded action becomes a checked step, with its screenshot kept for repairs, and the Skill stays a draft until a run of it works.
+
+## Chat Window
+
+- Changed the Chat Window sidebar: its places sit on a slim icon rail left of the chat list, with Chats first and an amber count of the chats that need you, then Scheduled, Knowledge Base and Plugins (Board, Artifacts, Media and the rest wait in the ··· menu), your plugins below a line, and your devices and Settings at the foot.
+- Added Customize sidebar: pick which places show on the icon rail and drag them into your order (from the ··· menu or by right-clicking an icon), drag a plugin above the line to sit among the places or back below it, pin or unpin any place or plugin, and open what the rail shows with ⌥⌘1 to ⌥⌘9.
+- Changed the Chat Window's middle column to follow the icon rail: Board, Artifacts, Knowledge Base, Scheduled, Media, Plugins and the Email plugin each show their own sections, filters and main action there, Skills and MCP servers open right in the window from Plugins, and Chats comes back where you left it.
+- Changed Memory to live inside the Knowledge Base: a Knowledge Base / Memory switch sits at the top of its column, Memory no longer shows as one of your knowledge bases, and links to it open the Knowledge Base on Memory.
+- Changed the Devices menu at the foot of the sidebar to a cleaner list that replaces the Connections entry: Manage sits beside the title, row buttons show only on the row you point at, and before anything is paired it shows a simple picture with Pair a computer and Pair a phone.
+- Changed the Chat Window's Back and Forward to remember the places you visited and the section you picked in each, with a list of them when you hold Back, and ⌘B now hides only the middle column and keeps the icon rail.
+- Added batch actions to the sidebar: after picking chats with ⌘-click, Shift-click or a row's Select, a bar marks them as read, archives them or deletes them (with a confirmation that lists them, stops the ones still running and offers Archive Instead), with E, ⌫ and ⇧⌘U as shortcuts, ⌘A to pick a whole group, and Undo for read and archive.
+- Changed rows in Active chats to work like the chat list's rows, with the same Pin and Archive hover buttons, right-click menu, double-click to rename and trackpad swipe to archive, and added Mark all as read on hover.
+- Fixed finished chats piling up in Active chats: a chat whose reply arrived while the window was closed now leaves Active once you come back to it.
+- Changed the Scheduled icon to a calendar with a clock, so it no longer looks like History, and made section titles such as Pinned, Projects and Chats smaller labels set out from the rows under them.
+- Fixed the sidebar jumping when you fold a long section near the end of the list: the section header now stays under the pointer.
+- Changed Spaces such as Email to drop the title bar above the page while the sidebar shows the Space's name and navigation.
+- Changed Create a space and New space on the Mac, iPhone and Android to open a chat with "Create a Space that " ready to finish, with dimmed suggestions after the cursor (such as tracking your subscriptions or your Claude and OpenAI API costs) that Tab or the right arrow fills in.
+- Added Enhance prompt to the message box: once you type a request, the wand beside the mic rewrites it into a clearer, fuller request on the chat's own model, using the conversation so far, and leaves [placeholders] for details only you know; Undo (or ⌘Z) puts your words back and Try again rewrites it once more.
+- Changed the message box to keep each chat's unsent text and attachments while you look at another chat, so switching back finds your draft as you left it.
+- Changed Live Screen to belong to the window you turn it on in, with its own button in the Chat Window composer and a chip that shows it is on and turns it off with a click.
+- Changed the composer to show Screen Doodle as its own button after Permissions and Live Screen, as the Dynamic Island does, instead of an item in the + menu.
+- Changed the message box's Vim Mode indicator into a mode chip beside the microphone that turns blue in Normal and Visual mode, and Normal and Visual mode now type with an English keyboard layout while Insert mode brings back the input source you were using, such as Pinyin.
+- Changed the chat input's `@` menu to close when nothing matches and to stop searching once a query matched nothing, so typing an email address or a long word no longer searches with every keystroke.
+- Added a right-click menu to the Artifacts library's cards and rows (Open, Rename, Copy link, Open the chat it was made in, Delete), and ⌘ click or ⇧ click to pick several and delete them together, with Undo.
+- Fixed the Artifacts library filling up with empty "Untitled" entries: a blank one you never write into is no longer listed and is thrown away when you close it, and any left from before go after a day.
+- Changed what a window shows when part of it can't be drawn: only the chat's messages give way to a quiet Couldn't show this chat with Reload Chat, while the chat list and the composer keep working, and a missing page now says This page isn't available with Go Back instead of a bare 404 page.
+- Fixed the first message of a new chat leaving its pictures and files in the message box after it was sent.
+- Changed a video attached in the chat input to show only its first frame, without the file name bar under it.
+
+## Web Search and Models
+
+- Added an Auto web search provider that searches with the chat model's own web search (OpenAI, Claude, Gemini, Grok, DeepSeek, Qwen, Kimi, Z.ai and OpenRouter), using the key or sign-in you connected for that model, and falls back to Enconvo Cloud or a provider you choose when the model has none or it fails.
+- Added a search route preview to Settings › Web Search › Auto, and web search steps in chat now say which search answered and why Auto fell back.
+- Changed web search on Enconvo Cloud (Enconvo Cloud and DeepSeek Enconvo Cloud) to be free for every signed-in account, and the search provider settings now mark them as free.
+- Fixed GPT replies signed in with a ChatGPT account losing the source links their web searches cited.
+- Added Task models to Settings › AI Model, to choose the model for chat titles, next-message suggestions, recording titles and summaries, recording translation, idea titles and Live Talk, or turn next-message suggestions off.
+- Changed chat titles and next-message suggestions to run on a small model of the chat's own provider (DeepSeek V4.1 Flash on Enconvo Cloud and OpenRouter, GPT-6 Luna on OpenAI, Haiku on Anthropic), so a chat on your own API key no longer spends Enconvo Cloud points on them.
+- Fixed chat titles, next-message suggestions, recording titles and summaries sending about 5,000 extra tokens with every request when OpenAI is signed in with a ChatGPT subscription, so they come back faster and use less of your plan.
+- Changed Fallback in Settings › AI Model so each backup model has its own Reasoning Effort.
+
+## Voice, Dictation and Read Aloud
+
+- Changed Read Aloud under a chat reply to read right in the conversation instead of opening a separate player window: the speaker button turns into a small player with pause, resume and stop, the sentence being read is highlighted, only one reply reads at a time, and closing the chat stops it.
+- Fixed turning on read replies aloud in the Smart Bar also reading replies aloud in the Chat Window: each window now keeps its own setting.
+- Changed Live Talk and Voice Command to talk on a fast model of the chat's own provider by default (Same as the Chat), so a call in a chat on your own API key no longer spends Enconvo Cloud points, and work handed to your Agent during a call now runs on the model picked for that chat.
+- Fixed Live Talk on the Mac not hearing you with some headsets and audio devices, where the microphone indicator kept flickering and the call ended with "The audio device changed": the call now ignores the changes its own microphone causes, still follows a device you switch to mid-call, and names a device that truly keeps restarting.
+- Added Fluid Speech Pro by FluidVoice to the speech models that run on your Mac and iPhone: it transcribes 25 European languages offline with fewer mistakes than Parakeet, live as you speak or once you finish (macOS 15 or iOS 18 and later).
+- Added a Translate language to Dictation's App Rules, so one app can translate what you say into English while Translate keeps your usual language everywhere else.
+- Changed Dictation's App Rules so a rule for Discord, Slack, Notion, Telegram, WhatsApp, ChatGPT, Claude, Linear, Figma or Teams also covers its website, with a last row that shows what every other app uses and suggestions for the apps you dictate into most.
+- Added Always use … in this app to the Dictation HUD: after switching Clean up in an app, one click keeps that choice for the app, with Undo, and switching Clean up in an app that has a rule now applies to that dictation only, with Make it the rule and Back to rule.
+- Changed dictating with the composer's microphone to follow Enconvo's own app rule for Clean up and language.
+- Fixed the Dictation HUD's Clean up chip showing the global choice instead of the one an app rule picks.
+- Fixed transcripts from the Parakeet speech models showing `<unk>` in the text, most often in Greek.
+- Changed Conference's Take notes setting (now Take notes on my calls) to start notes in every call you answer or join, not only the ones you start.
+
+## Projects and Agents
+
+- Added Lead acts while you're away to Project settings › Board: in a Project at Full access, when a task reports back and nobody is in the chat, the lead fixes, retries and merges on its own within 6 turns an hour and 100,000 points a day, and never sends, pushes, publishes, pays or deletes outside a task's worktree.
+- Added a While you were away card at the top of the Lead chat that lists what the lead did and the steps it left for you, and a pause after two failed turns in a row or at a limit, with Needs you asking whether to resume.
+- Added a merge gate to Projects: with Merge work that passes on, each task merges into the Base branch on its own once its check and a review by another vendor's Agent pass, with conflicts sent back to its member and every merge paused, never silently skipped, when the reviewer can't run.
+- Added sign-in warnings for Claude Code and Codex: their settings page, the Updates list and a Project's Board say when the sign-in ends within ten days, with Sign in again, and a task whose Coding agent is signed out now waits as Held and runs again once you sign in.
+- Fixed Board cards treating every failure the same: a setup problem shows in amber with how to fix it and isn't retried by the Lead, and an Enconvo error says it is safe to try again.
+- Fixed a Project's Lead reading a long Board task result cut short without knowing it: it now gets up to 24,000 characters with the task's Closing note kept, is told when an answer was cut, and can read the whole answer from a file.
+- Fixed Board tasks in a Project kept in iCloud with Optimize Mac Storage on failing with only "git worktree add failed": a task now checks first and its card guides you to Keep Downloaded in Finder.
+- Fixed your Agent opening a separate chat when you asked Codex, Claude Code or another of your Agents to review or test the current work: in a Project it now starts that Agent as a Subagent and brings the result back to the same chat.
+- Added a reasoning effort choice to Subagents, teammates and parallel chats, and a Work plan task can now go to any of your Agents or Coding agents as a teammate without making it a Project member.
+- Changed how your Agent picks a model for Subagents: quick lookups, reading and simple repeated work run on your provider's small model, harder reasoning gets a higher effort, and everything else stays on the model you picked.
+- Changed Subagents and teammate tasks that only make designs, docs, slides, research or reviews to work without a git worktree of their own, so starting several at once no longer copies the project for each.
+- Changed a message to a finished subagent to start it again right away, even while another subagent is changing files in the same folder.
+
+## Design Canvases, Decks and Picture in Picture
+
+- Changed design canvases so a small change such as an icon, a color or a line of text updates only that part, and only the artboards it touches redraw.
+- Changed design, deck, motion and dashboard editing so the agent changes just the part you ask about instead of rewriting the whole page or slide.
+- Added parallel drawing on design canvases and parallel slide writing for longer decks, so you watch several artboards or slides appear side by side.
+- Changed the deck panel so changed, added, removed or reordered slides update in place on the stage and in the thumbnails, keeping the slide you are on, and duplicating a slide takes you to the copy.
+- Fixed slide and design exports and the deck layout check failing on the Mac with "hasn't finished drawing the export".
+- Changed the Picture-in-Picture window when several tasks are open: a bar across the top says how many are running and holds Collapse and Close, each card shows its app icon with the task's state as a dot, and the window and its cards now move together.
+
+## Privacy and Permissions
+
+- Added App Access to Settings › Computer Use: block the apps Computer Use may never see or use, or allow only the apps you list and answer "Let Computer Use use this app?" when an agent needs another one; blocked apps are left out of screenshots, and password managers and system sign-in prompts are always blocked.
+- Changed macOS permission requests so Enconvo no longer asks at launch: it asks only when you use a feature that needs a permission, explains which feature asked, and stops asking for a feature when you tick Don't ask again.
+- Added a Used by list to Settings › Permissions that shows which features need each permission and whether each one will ask.
+- Fixed Computer Use reshuffling the desktop when it worked in a minimized window: it now restores the window from the Dock and keeps out of your way instead of adding a hidden display.
+- Fixed Approve for me not asking before an agent read a saved password or token file through some indirect paths, such as another file tool, a relative path, an escaped file:// link or a link.
+- Fixed Web Fetch so a public page can no longer redirect a request to this Mac or its local network.
+
+## iPhone and Android
+
+- Added Continue on Computer to Phone chats: a chat, even one in progress, moves to a paired computer and goes on there with that computer's agent, files and tools, and a shared chat's link asks where to continue it.
+- Added a choice on the iPhone's Dynamic Island when the Action Button starts a voice chat: Voice only, or Share Screen so Enconvo sees what you are reading, with a Share Screen button in the call controls to start or stop it mid-call, and a simpler call look in the Dynamic Island and on the Lock Screen.
+- Changed Remote Screen to show the Mac's own cursor instead of a large drawn cursor, and to show each frame as soon as it arrives, so the picture follows your finger more closely.
+- Fixed Remote Screen on iPhone staying black in the app while Picture in Picture showed the computer's screen.
+- Changed the iPhone message box to match Android: plus, the text, the microphone and the call or Send button sit on one row, plus and the microphone step aside while you type, and a Skills chip sits over the box in Mac chats.
+- Changed the Subagent sheet to open at the newest step and scroll along as new output comes in, like a chat.
+- Changed file cards in a chat to show only Open, and the Screen button at the top right of Home to the display icon alone.
+- Added videos to the Android composer's recent photos and to the iPhone's photo library in Mac chats, sent to the Mac as they are.
+- Removed Compare answers from the composers, the Video Conference button from the top of Home on iPhone, and the swipe from the right edge of a Mac chat that opened the side panel by accident.
+- Fixed the chat on Android not scrolling when you swiped on an expanded tool card, and Back on Android leaving a chat opened from the sidebar for Remote.
+- Fixed the iPhone chat's messages staying dark while the rest of the app turned light (or the other way around) after the phone switched appearance.
+- Fixed a large photo taken with the phone held upright reaching the model lying on its side.
+
+## Speed, Files and Other Fixes
+
+- Fixed a slowdown on Mac while several chats were working, where copying files in Finder and other apps waited behind agents' commands and image jobs: that work now gives way to your own apps.
+- Changed how a large image is prepared for the model, so a big screenshot or photo is ready in a fraction of a second and takes less to upload on every turn.
+- Fixed Files compressing, converting or resizing the same images and PDFs again when asked a second time: a file already done with the same settings is kept and marked Already done.
+- Fixed deleting a chat leaving the pictures and files you had attached to it on disk; they now go with the chat, unless another chat still shows them.
+- Fixed agent commands that waited for typed input nobody could give: they now end at once instead of staying in the chat's background tasks.
+- Fixed Computer Use picking files in an Open panel so it stays in the background for hidden folders, several files at once and long folders.
+- Fixed calls placed through Your iPhone on macOS 27 failing or hanging up when macOS showed its call prompt late.
+- Fixed the Twilio Connector refusing API keys from the IE1 (Ireland) and AU1 (Australia) regions.
+
 # Enconvo 2.5.16 Changelog (2026-11-15)
 
 Thanks for all the feedback during the beta. This release brings your agent into your calls, in Enconvo Conference and in Google Meet and Zoom, gives every call a meeting page in Recordings, lets Live Photo characters go live on a stream with a voice of their own, keeps a reply going on a backup model when its model can't be used, picks up work after Enconvo restarts, shows the agent's browser and app work in a Picture-in-Picture window, and puts the calls your agent answers in their own Calls section. Update the iPhone app to 1.2.13 and the Android app to 1.4.19 to try the phone changes.
