@@ -17,7 +17,7 @@ const brandImage = {
 // inherit a public marketing card. Images are static, versioned JPEGs.
 export const socialPages: Record<string, SocialPage> = {
   '/': {
-    title: 'Enconvo — The assistant your Mac was promised.',
+    title: 'Enconvo — The assistant you were promised.',
     description:
       'An AI agent that understands your screen and works in your Mac apps. Organize files, write, research, and get things done with Enconvo.',
     ...brandImage,

@@ -49,16 +49,20 @@ export function Hero({ macVersion }: { macVersion?: string }) {
             <div className={styles.heroCopy}>
               <h1 className={styles.heroTitle}>
                 <I18nText
-                  source="The assistant your {mac} was promised."
+                  source="The {assistant} you were promised."
                   values={{
-                    mac: <span className={styles.heroTitleAccent}>Mac</span>,
+                    assistant: (
+                      <span className={styles.heroTitleAccent}>
+                        {t('assistant')}
+                      </span>
+                    ),
                   }}
                 />
               </h1>
 
               <p className={styles.heroDescription}>
                 {t(
-                  'Enconvo is an AI agent that lives across your Mac — it sees your screen, works inside your apps, and actually gets things done.'
+                  'Enconvo is an AI agent that lives across your computer and phone — it sees your screen, works inside your apps, and actually gets things done.'
                 )}
               </p>
 
