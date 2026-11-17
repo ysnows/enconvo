@@ -20,7 +20,7 @@ import {
   SITE_DESCRIPTION,
 } from '@/data/siteMetadata'
 
-const TITLE = 'Enconvo — AI Assistant & Agent for Mac'
+const TITLE = 'Enconvo — AI Assistant & Agent for Your Computer and Phone'
 const DESCRIPTION = SITE_DESCRIPTION
 
 export default function Home({

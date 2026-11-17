@@ -7,13 +7,13 @@ import sharp from 'sharp'
 
 const target = new URL(process.argv[2] || 'http://localhost:3116/')
 const origin = 'https://www.enconvo.com'
-const brandImage = '/og/enconvo-speak-select-ask-v2.jpg'
+const brandImage = '/og/enconvo-speak-select-ask-v3.jpg'
 const publicPages = {
   '/': { image: brandImage, title: /Enconvo/, alt: /SmartBar/ },
-  '/use-cases': { image: '/og/enconvo-use-cases-v1.jpg', title: /Use Cases/, alt: /workflow/ },
+  '/use-cases': { image: '/og/enconvo-use-cases-v2.jpg', title: /Use Cases/, alt: /workflow/ },
   '/android': { image: brandImage, title: /Android/, alt: /SmartBar/ },
   '/cloud-pricing': { image: '/og/enconvo-cloud-pricing-v1.jpg', title: /Cloud Pricing/, alt: /Speech/ },
-  '/changelog': { image: '/og/enconvo-changelog-v1.jpg', title: /Releases/, alt: /release timeline/ },
+  '/changelog': { image: '/og/enconvo-changelog-v2.jpg', title: /Releases/, alt: /release timeline/ },
   '/privacy': { image: brandImage, title: /Privacy Policy/, alt: /SmartBar/ },
   '/terms': { image: brandImage, title: /Terms of Use/, alt: /SmartBar/ },
 }

@@ -3,7 +3,7 @@ import { heroTabs } from './heroShowcase'
 
 export const SITE_URL = 'https://www.enconvo.com'
 export const SITE_DESCRIPTION =
-  'A native AI assistant for Mac that works across your apps. Automate tasks, dictate, search your documents, and use cloud AI or local models on macOS.'
+  'A native AI assistant that works across your apps. Automate tasks, dictate, search your documents, and use cloud AI or local models.'
 
 // Describe verifiable product facts, without inventing ratings or review counts.
 export const homepageStructuredData = {
@@ -33,7 +33,7 @@ export const homepageStructuredData = {
       '@type': 'WebPage',
       '@id': `${SITE_URL}/#webpage`,
       url: `${SITE_URL}/`,
-      name: 'Enconvo — AI Assistant & Agent for Mac',
+      name: 'Enconvo — AI Assistant & Agent for Your Computer and Phone',
       description: SITE_DESCRIPTION,
       isPartOf: { '@id': `${SITE_URL}/#website` },
       mainEntity: { '@id': `${SITE_URL}/#application` },

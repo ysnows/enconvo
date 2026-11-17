@@ -87,7 +87,7 @@ export default function UseCasesPage() {
         <meta
           name="description"
           content={t(
-            'Find your next task with Enconvo. Search real video walkthroughs for writing, research, Excel, workflows, and AI agents on your Mac.'
+            'Find your next task with Enconvo. Search real video walkthroughs for writing, research, Excel, workflows, and AI agents.'
           )}
         />
         <script
@@ -104,7 +104,7 @@ export default function UseCasesPage() {
           <div className={`${styles.container} ${styles.pageHero}`}>
             <p className={styles.eyebrow}>
               <I18nText
-                source={'{p0} real tasks. One Mac assistant.'}
+                source={'{p0} real tasks. One assistant.'}
                 values={{ p0: all.length }}
               />
             </p>

@@ -63,7 +63,7 @@ export default function AndroidPage() {
         <meta
           name="description"
           content={t(
-            'Get Enconvo for Android on Google Play or as an APK, and pair it with Enconvo on your Mac to use its agents and chats from your phone.'
+            'Get Enconvo for Android on Google Play or as an APK, and pair it with Enconvo on your computer to use its agents and chats from your phone.'
           )}
         />
         <link

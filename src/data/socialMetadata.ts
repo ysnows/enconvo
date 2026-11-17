@@ -8,9 +8,9 @@ interface SocialPage {
 }
 
 const brandImage = {
-  image: '/og/enconvo-speak-select-ask-v2.jpg',
+  image: '/og/enconvo-speak-select-ask-v3.jpg',
   imageAlt:
-    'Enconvo — Speak it. Select it. Ask it. The Dynamic Island, the PopBar over selected text, and the SmartBar on a Mac.',
+    'Enconvo — Speak it. Select it. Ask it. The Dynamic Island, the PopBar over selected text, and the SmartBar.',
 }
 
 // Public pages only. Private, payment, auth, API and placeholder routes must not
@@ -19,16 +19,16 @@ export const socialPages: Record<string, SocialPage> = {
   '/': {
     title: 'Enconvo — The assistant you were promised.',
     description:
-      'An AI agent that understands your screen and works in your Mac apps. Organize files, write, research, and get things done with Enconvo.',
+      'An AI agent that understands your screen and works inside your apps, on your computer and your phone. Organize files, write, research, and get things done with Enconvo.',
     ...brandImage,
   },
   '/use-cases': {
-    title: 'Enconvo Use Cases — See what your Mac can do.',
+    title: 'Enconvo Use Cases — See what Enconvo can do.',
     description:
-      'Explore real video walkthroughs for writing, research, Excel, workflows, and AI agents on your Mac.',
-    image: '/og/enconvo-use-cases-v1.jpg',
+      'Explore real video walkthroughs for writing, research, Excel, workflows, and AI agents.',
+    image: '/og/enconvo-use-cases-v2.jpg',
     imageAlt:
-      'Enconvo — See what your Mac can do. Illustrated video previews show a spreadsheet, a website, and an automated workflow.',
+      'Enconvo — See what Enconvo can do. Illustrated video previews show a spreadsheet, a website, and an automated workflow.',
   },
   '/cloud-pricing': {
     title: 'Enconvo Cloud Pricing — Models & Services',
@@ -39,17 +39,17 @@ export const socialPages: Record<string, SocialPage> = {
       'Enconvo Cloud — One balance. Every kind of AI. A glass panel presents Chat, Images, Video, Speech, and Search.',
   },
   '/changelog': {
-    title: 'Enconvo Releases — A better Mac assistant.',
+    title: 'Enconvo Releases — A better assistant, every release.',
     description:
       'Read the latest Enconvo release notes, beta updates, new features, improvements, and fixes.',
-    image: '/og/enconvo-changelog-v1.jpg',
+    image: '/og/enconvo-changelog-v2.jpg',
     imageAlt:
-      'Enconvo — A better Mac assistant. A release timeline highlights New features, Improvements, and Fixes.',
+      'Enconvo — A better assistant, every release. A release timeline highlights New features, Improvements, and Fixes.',
   },
   '/android': {
     title: 'Enconvo for Android — Google Play and APK',
     description:
-      'Get Enconvo for Android on Google Play or as an APK, and pair it with Enconvo on your Mac to use its agents and chats from your phone.',
+      'Get Enconvo for Android on Google Play or as an APK, and pair it with Enconvo on your computer to use its agents and chats from your phone.',
     ...brandImage,
   },
   '/privacy': {
