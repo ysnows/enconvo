@@ -313,11 +313,15 @@ export function ApplicationForm({
               >
                 {t('Affiliate program terms')}
               </Link>
-              : {terms.commission_rate}
-              {t('% of what customers pay before tax, payable after the ')}
-              {terms.hold_days}
-              {t('-day refund window, paid monthly from ')}
-              {minimum}.
+              :{' '}
+              {t(
+                '{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.',
+                {
+                  p0: terms.commission_rate,
+                  p1: terms.hold_days,
+                  p2: minimum,
+                }
+              )}
             </span>
           </label>
 

@@ -2768,5 +2768,9 @@
   "You earned {p0}: {p1} made their first payment.": "你已賺取 {p0}：{p1} 完成了首次付款。",
   "You earned {p0}: {p1} people you invited made their first payment.": "你已賺取 {p0}：有 {p1} 位你邀請的人完成了首次付款。",
   "You keep the same link. Before you're approved, it earns {p0}% of a friend's first payment within {p1} days of their sign-up, in Cloud points (50,000 points = $1). Once you're approved, new referrals earn cash commissions instead, renewals included, and the points you already earned stay yours. One payment never pays both a commission and points.": "你的連結不變。在通過審核前，它會以雲端點數賺取好友在註冊後 {p1} 天內首次付款金額的 {p0}%（50,000 點數 = $1）。通過審核後，新的推薦改為賺取現金佣金，續訂也包含在內，而你已賺取的點數仍然屬於你。同一筆付款絕不會同時支付佣金與點數。",
-  "If you buy a plan or a license, the person who shared this link earns a commission. You pay nothing extra.": "若你購買方案或授權，分享此連結的人就能獲得一筆佣金。你無需額外付費。"
+  "If you buy a plan or a license, the person who shared this link earns a commission. You pay nothing extra.": "若你購買方案或授權，分享此連結的人就能獲得一筆佣金。你無需額外付費。",
+  "Nothing payable yet": "尚無應付金額",
+  "Lifetime license commissions inside the {p0}-day refund window": "在 {p0} 天退款期內的終身授權佣金",
+  "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "訂閱佣金可立即請領。終身授權佣金會在 {p0} 天退款期結束後轉為可支付，在此之前若發生退款，仍會相應扣減該金額。",
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "客戶付款金額（未稅）的 {p0}%。訂閱佣金可立即請領，終身授權佣金需等過 {p1} 天的退款期，餘額達 {p2} 後每月發放。"
 }

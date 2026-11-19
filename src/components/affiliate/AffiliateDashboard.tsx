@@ -480,7 +480,7 @@ function Balances({
       accent: true,
       note:
         b.payable <= 0
-          ? 'Nothing past the refund window yet'
+          ? 'Nothing payable yet'
           : data.review?.holds_payout
           ? 'On hold until we finish a review'
           : short > 0
@@ -498,7 +498,7 @@ function Balances({
     {
       label: 'Pending',
       value: b.pending,
-      note: `Inside the ${data.program.hold_days}-day refund window`,
+      note: `Lifetime license commissions inside the ${data.program.hold_days}-day refund window`,
     },
     {
       label: 'Paid out',
@@ -538,7 +538,7 @@ function Balances({
             {formatCents(tile.value, { ...{}, locale })}
           </div>
           <div className="mt-2 text-xs leading-5 text-content-muted">
-            {tile.note}
+            {t(tile.note)}
           </div>
           {tile.accent && short > 0 && b.payable > 0 && (
             <div
@@ -597,7 +597,7 @@ function Releases({ data }: { data: Dashboard }) {
         <p className="mt-1 text-sm leading-6 text-content-muted">
           <I18nText
             source={
-              'Pending money becomes payable when its {p0}-day refund window ends. A refund before then still lowers it.'
+              'Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.'
             }
             values={{ p0: data.program.hold_days }}
           />
