@@ -29,10 +29,7 @@ export function SocialMetadata({ pathname }: { pathname: string }) {
         ))}
       <meta
         property="og:url"
-        content={canonicalUrl(
-          pathname === '/downloads' ? '/privacy' : pathname,
-          locale
-        )}
+        content={canonicalUrl(pathname, locale)}
         key="og:url"
       />
       <meta property="og:title" content={t(page.title)} key="og:title" />

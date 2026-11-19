@@ -37,7 +37,6 @@ const privateRoutes = new Set([
   '/auth/callback',
   '/auth/confirm',
   '/confirm-age',
-  '/payment',
   '/pay_success',
   '/cloud-points',
   '/reset_password',
@@ -46,7 +45,6 @@ const privateRoutes = new Set([
 ])
 // Placeholder and deep-link pages that should not compete in search.
 const noindexRoutes = new Set([
-  '/developer',
   '/mcp/install',
   '/i/[code]',
   '/redeem',

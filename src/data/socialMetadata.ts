@@ -65,16 +65,13 @@ export const socialPages: Record<string, SocialPage> = {
 }
 
 export function getSocialMetadata(pathname: string) {
-  // /downloads currently contains the legacy privacy-policy duplicate, not an
-  // installer page; mirror its existing canonical URL without changing routing.
-  const canonicalPath = pathname === '/downloads' ? '/privacy' : pathname
-  const page = Object.hasOwn(socialPages, canonicalPath)
-    ? socialPages[canonicalPath]
+  const page = Object.hasOwn(socialPages, pathname)
+    ? socialPages[pathname]
     : undefined
   return page
     ? {
         ...page,
-        url: `${SITE_URL}${canonicalPath}`,
+        url: `${SITE_URL}${pathname}`,
         image: `${SITE_URL}${page.image}`,
       }
     : null

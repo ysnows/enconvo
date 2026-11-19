@@ -463,13 +463,6 @@
 .featureCard > span:nth-child(2) { min-width: 0; padding-right: 10px; }
 .featureArrow { position: absolute; top: 28px; right: 12px; width: 14px; height: 14px; color: #6a6b6c; opacity: 0; transform: translate(-3px,3px); transition: opacity 200ms, transform 200ms; }
 .featureCard:focus-visible .featureArrow { opacity: 1; transform: none; }
-.testimonials figure { padding: 28px; }
-.testimonials figure > svg { position: static; width: 24px; height: 18px; margin-bottom: 20px; fill: #6a6b6c; }
-.testimonials blockquote p { font-size: 15px; line-height: 1.75; }
-.testimonials figcaption { padding-top: 20px; }
-.testimonials figcaption img { width: 36px; height: 36px; filter: saturate(.5); }
-.testimonials figcaption > div:first-child > div:first-child { font-size: 14px; font-weight: 500; }
-.testimonials figcaption > div:first-child > div:last-child { font-size: 12px; }
 
 .pricingSection { scroll-margin-top: 64px; }
 .offerNote { margin: 32px 0 0; padding: 12px 16px; border: 1px solid rgba(182,214,232,.2); border-radius: 8px; background: rgba(182,214,232,.08); color: #c6dce8; font-size: 14px; line-height: 1.6; }
@@ -508,10 +501,6 @@
 .page .faqItem:hover h3 { color: #f4f4f6; }
 .faqItem p { font-size: 14px; line-height: 1.75; margin-top: 10px; }
 
-@media (min-width: 1024px) {
-  .quoteGrid > li:nth-child(2) { padding-top: 32px; }
-  .quoteGrid > li:nth-child(3) { padding-top: 64px; }
-}
 @media (hover: hover) and (pointer: fine) {
   .page [data-spotlight][data-lit] { border-color: var(--home-stroke-strong); }
   .page [data-spotlight][data-lit]::before { opacity: 1; }
@@ -596,7 +585,6 @@
   .desktopDiagram { width: 250px; }
   .sectionHeading { text-align: left; }
   .page .faqHeading h2 { font-size: 28px; }
-  .testimonials figure { padding: 24px; }
   .page .companionCard h3, .page .mobileCard h3 { font-size: 22px; }
   .mobileCard { padding: 24px; }
   .mobilePlatform { padding: 20px; }

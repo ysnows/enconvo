@@ -30,17 +30,16 @@ assert.deepEqual(slugs(filterUseCases(useCases, 'All', '  RESUME website ')), [
 assert.deepEqual(slugs(filterUseCases(useCases, 'All', 'résumé')), [
   'resume-to-personal-website',
 ])
-assert.deepEqual(slugs(filterUseCases(useCases, 'Apps & Office', 'excel')), [
-  'excel-mcp-agent',
-  'excel-sidebar-ai',
+assert.deepEqual(slugs(filterUseCases(useCases, 'AI Agent', 'browser tools')), [
+  'browser-use-agent',
 ])
-assert.deepEqual(slugs(filterUseCases(useCases, 'AI Agent', 'excel')), [])
+assert.deepEqual(slugs(filterUseCases(useCases, 'Tutorials', 'browser tools')), [])
 assert.deepEqual(
   slugs(filterUseCases(useCases, 'All', 'nonexistent walkthrough')),
   []
 )
-assert.deepEqual(slugs(filterUseCases(useCases, 'All', 'forecast Gmail')), [
-  'gmail-weather-workflow',
+assert.deepEqual(slugs(filterUseCases(useCases, 'All', 'dance weather')), [
+  'ai-companion-mac-iphone',
 ])
 assert.deepEqual(
   slugs(useCases),

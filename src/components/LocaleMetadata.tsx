@@ -8,7 +8,7 @@ import { socialPages } from '@/data/socialMetadata'
 export function LocaleMetadata() {
   const router = useRouter()
   const { locale } = useI18n()
-  const path = router.pathname === '/downloads' ? '/privacy' : router.pathname
+  const path = router.pathname
   if (
     !Object.hasOwn(socialPages, path) &&
     !['/affiliate', '/affiliate/terms'].includes(path)

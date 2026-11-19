@@ -53,7 +53,7 @@ export function AlwaysWithYou() {
           </p>
           <h2 className="font-display mt-3 text-3xl tracking-tight text-content sm:text-4xl">
             {t(
-              'Track your agents on the desktop and command your Mac from Telegram, Discord or Slack'
+              'Track your agents on the desktop and command your Mac from Telegram or Discord'
             )}
           </h2>
         </div>
@@ -97,7 +97,7 @@ export function AlwaysWithYou() {
               </h3>
               <p className="mt-3 text-sm leading-relaxed text-content-muted">
                 {t(
-                  "Away from your desk? Message your agent from Telegram, Discord, Slack, or Feishu — it runs the task on your Mac and reports back when it's done."
+                  "Away from your desk? Message your agent from Telegram or Discord — it runs the task on your Mac and reports back when it's done."
                 )}
               </p>
             </div>

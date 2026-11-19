@@ -74,7 +74,6 @@ Stripe integration includes:
 Located in `src/pages/api/`:
 - `subscription/` - Stripe payment handling
 - `user-info.js` - User data management
-- `test.ts` - Testing utilities
 
 ### Environment Variables
 

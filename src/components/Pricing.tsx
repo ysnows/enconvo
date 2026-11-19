@@ -466,7 +466,7 @@ const FEATURE_GROUPS: {
       },
       {
         name: 'IM bots',
-        description: 'Your assistant in Telegram, Discord, Slack and Lark.',
+        description: 'Your assistant in Telegram and Discord.',
         access: limit('1 running'),
       },
     ],

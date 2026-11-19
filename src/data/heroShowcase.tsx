@@ -92,20 +92,6 @@ export const heroTabs: HeroTab[] = [
         ],
     },
     {
-        id: 'knowledge-base',
-        benefitLabel: 'Your second brain',
-        productName: 'Knowledge Base',
-        tagline: 'Everything you capture becomes searchable, chattable knowledge.',
-        subScenes: [
-            {
-                id: 'launch-film',
-                label: 'Launch film',
-                caption: 'Search and chat with your documents, notes, and captured ideas.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/knowledgebase-launch-v3.mp4?v=3' },
-            },
-        ],
-    },
-    {
         id: 'app-sidebar',
         benefitLabel: 'Works beside your apps',
         productName: 'App Sidebar',

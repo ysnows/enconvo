@@ -15,7 +15,6 @@ import {
   CheckIcon,
   CounterClockwiseClockIcon,
   Cross2Icon,
-  DownloadIcon,
   LaptopIcon,
   LightningBoltIcon,
   LockClosedIcon,
@@ -82,11 +81,6 @@ const unlocks = [
     Icon: VideoIcon,
     title: 'Unlimited meeting recording',
     free: 'With live captions. Free plan: 1 session',
-  },
-  {
-    Icon: DownloadIcon,
-    title: 'Import and export your data',
-    free: 'Not on the free plan',
   },
 ]
 

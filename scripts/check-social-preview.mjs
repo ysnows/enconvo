@@ -56,7 +56,7 @@ const basePaths = sitemapPaths.map(path => {
 assert.equal(sitemapPaths.length, Object.keys(publicPages).length * locales.length)
 assert.deepEqual([...new Set(basePaths)].sort(), Object.keys(publicPages).sort(), 'Every sitemap page needs a verified share card')
 
-const aliases = { '/downloads': '/privacy', '/pricing': '/', '/cloud-plan': '/cloud-pricing' }
+const aliases = { '/pricing': '/', '/cloud-plan': '/cloud-pricing' }
 for (const agent of ['Twitterbot/1.0', 'facebookexternalhit/1.1']) {
   const checkedAssets = new Set()
   for (const path of [...Object.keys(publicPages), ...Object.keys(aliases)]) {
@@ -100,7 +100,7 @@ for (const agent of ['Twitterbot/1.0', 'facebookexternalhit/1.1']) {
     console.log(`PASS ${agent} ${path}: one SSR large-image card, correct canonical and JPEG`)
   }
 
-  for (const path of ['/account', '/login', '/register', '/auth', '/auth/callback', '/payment', '/pay_success', '/cloud-points', '/reset_password', '/reset_password_send', '/developer', '/mcp/install']) {
+  for (const path of ['/account', '/login', '/register', '/auth', '/auth/callback', '/pay_success', '/cloud-points', '/reset_password', '/reset_password_send', '/mcp/install']) {
     const { metadata, noindex } = await readPage(path, agent)
     assert(noindex, `${path}: private/placeholder pages must remain noindex`)
     assert(!metadata.some(meta => /^(og:|twitter:)/.test(meta.property || meta.name || '')), `${path}: must not inherit public share metadata`)

@@ -242,7 +242,7 @@ function LicenseRedeemed({
         )}
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-        <Link href="/downloads" className={primaryButton}>
+        <Link href="/download" className={primaryButton}>
           {t('Download Enconvo')}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
@@ -389,7 +389,7 @@ export default function RedeemCodePage(props: RedeemPageProps) {
                   {t('{points} AI points and Plus Cloud features are on your account until {date}. No card, no renewal, no charge. Unused trial points expire then; your top-ups and lifetime license stay.', { points: points.toLocaleString(locale), date: endsAt ? new Date(endsAt).toLocaleString(locale) : '' })}
                 </p>
                 <div className="mt-8 flex gap-3">
-                  <Link href="/downloads" className={primaryButton}>{t('Download Enconvo')}</Link>
+                  <Link href="/download" className={primaryButton}>{t('Download Enconvo')}</Link>
                   <Link href="/account" className={secondaryButton}>{t('Go to your account')}</Link>
                 </div>
               </div>

@@ -75,6 +75,23 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // Removed pages: /downloads was a copy of the privacy policy, /developer a
+        // "Coming soon" placeholder and /payment an unused checkout sample.
+        source: '/downloads',
+        destination: '/download',
+        permanent: true,
+      },
+      {
+        source: '/developer',
+        destination: 'https://docs.enconvo.ai',
+        permanent: true,
+      },
+      {
+        source: '/payment',
+        destination: '/',
+        permanent: true,
+      },
+      {
         // Plans live in the homepage pricing section; older links and
         // the login returnUrl still use /pricing.
         source: '/pricing',

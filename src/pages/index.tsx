@@ -8,7 +8,6 @@ import { Faqs } from '@/components/Faqs'
 import { Footer } from '@/components/Footer'
 import { Hero } from '@/components/Hero'
 import { Pricing } from '@/components/Pricing'
-import { Testimonials } from '@/components/Testimonials'
 import { AlwaysWithYou } from '@/components/home/AlwaysWithYou'
 import { FeatureGrid } from '@/components/home/FeatureGrid'
 import { ModelFreedom } from '@/components/home/ModelFreedom'
@@ -72,7 +71,6 @@ export default function Home({
         <ModelFreedom />
         <OpenPlatform />
         <AlwaysWithYou />
-        <Testimonials />
         <Pricing renderedAt={renderedAt} />
         <Faqs />
       </main>

@@ -48,7 +48,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   assert.equal(graph?.length, 4)
   const app = graph.find((item) => item['@type'] === 'SoftwareApplication')
   assert.equal(app.operatingSystem, 'macOS 14 or later')
-  assert.equal(app.featureList.length, 7)
+  assert.equal(app.featureList.length, 6)
   assert.ok(!app.aggregateRating && !app.review, 'no invented review signals')
   assert.equal(app.offers.price, '0')
   assert.ok(
@@ -66,7 +66,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   const tabs = [...html.matchAll(/id="hero-tab-([^"]+)"/g)].map((m) => m[1])
   assert.deepEqual(tabs, [
     'popbar', 'dynamic-island', 'voice', 'meeting-caption',
-    'knowledge-base', 'app-sidebar', 'ai-companion',
+    'app-sidebar', 'ai-companion',
   ])
   assert.ok(
     html.includes('<video src="https://file.enconvo.com/videos/popbar-launch-v7-20261018.mp4"') &&
@@ -86,11 +86,15 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
 for (const path of ['/login', '/register', '/reset_password_send']) {
   assert.match(await get(path), /name="robots" content="noindex, follow"/)
 }
-assert.deepEqual(
-  canonical(await get('/downloads')),
-  [`${origin}/privacy`],
-  'legacy duplicate points to the actual policy'
-)
+for (const [path, destination] of [
+  ['/downloads', '/download'],
+  ['/developer', 'https://docs.enconvo.ai/'],
+  ['/payment', '/'],
+]) {
+  const response = await fetch(new URL(path, base), { redirect: 'manual' })
+  assert.equal(response.status, 308, path)
+  assert.equal(response.headers.get('location'), destination, path)
+}
 console.log(
-  'PASS: sitemap, canonical URLs, crawler access, llms navigation, private-page noindex, legacy duplicate'
+  'PASS: sitemap, canonical URLs, crawler access, llms navigation, private-page noindex, removed-page redirects'
 )

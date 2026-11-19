@@ -412,7 +412,7 @@ export default function SharedChatPage({ share, id }: SharePageProps) {
               {t("Enconvo didn't open. Install Enconvo for Mac, then click Continue in Enconvo again.")}
             </p>
             <Link
-              href="/downloads"
+              href="/download"
               onClick={() =>
                 trackEvent('shared_chat_cta_click', { source: 'continue_fallback' }, { includePagePath: false })
               }
