@@ -2767,5 +2767,6 @@
   "Subscription commissions are payable at once. Lifetime license commissions wait out the {p0}-day refund window. Refunds take a commission back.": "訂閱佣金可立即請領。終身授權佣金需等過 {p0} 天的退款期。若發生退款，佣金將被收回。",
   "You earned {p0}: {p1} made their first payment.": "你已賺取 {p0}：{p1} 完成了首次付款。",
   "You earned {p0}: {p1} people you invited made their first payment.": "你已賺取 {p0}：有 {p1} 位你邀請的人完成了首次付款。",
-  "You keep the same link. Before you're approved, it earns {p0}% of a friend's first payment within {p1} days of their sign-up, in Cloud points (50,000 points = $1). Once you're approved, new referrals earn cash commissions instead, renewals included, and the points you already earned stay yours. One payment never pays both a commission and points.": "你的連結不變。在通過審核前，它會以雲端點數賺取好友在註冊後 {p1} 天內首次付款金額的 {p0}%（50,000 點數 = $1）。通過審核後，新的推薦改為賺取現金佣金，續訂也包含在內，而你已賺取的點數仍然屬於你。同一筆付款絕不會同時支付佣金與點數。"
+  "You keep the same link. Before you're approved, it earns {p0}% of a friend's first payment within {p1} days of their sign-up, in Cloud points (50,000 points = $1). Once you're approved, new referrals earn cash commissions instead, renewals included, and the points you already earned stay yours. One payment never pays both a commission and points.": "你的連結不變。在通過審核前，它會以雲端點數賺取好友在註冊後 {p1} 天內首次付款金額的 {p0}%（50,000 點數 = $1）。通過審核後，新的推薦改為賺取現金佣金，續訂也包含在內，而你已賺取的點數仍然屬於你。同一筆付款絕不會同時支付佣金與點數。",
+  "If you buy a plan or a license, the person who shared this link earns a commission. You pay nothing extra.": "若你購買方案或授權，分享此連結的人就能獲得一筆佣金。你無需額外付費。"
 }

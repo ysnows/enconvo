@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import type { GetServerSideProps } from 'next'
 import { ArrowRight } from 'lucide-react'
 import { Footer } from '@/components/Footer'
@@ -18,6 +19,7 @@ import {
 import { SiteNav } from '@/components/SiteNav'
 import { IPHONE_APP_TESTFLIGHT_URL } from '@/data/iphoneApp'
 import { SITE_URL } from '@/data/siteMetadata'
+import { affiliateCode } from '@/lib/affiliate-journey'
 import { trackEvent } from '@/lib/analytics'
 import { supabase } from '@/lib/supabase'
 import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
@@ -31,8 +33,16 @@ import {
   INVITER_TERMS,
   inviteCookieHeader,
   normalizeInviteCode,
+  type InviteCodeInfo,
   type RedeemResult,
 } from '@/lib/invite'
+
+/** The Affiliate code to start a journey with, when the link belongs to an approved Affiliate. */
+function affiliateLinkCode(info: InviteCodeInfo): string | null {
+  return info.valid && info.tier === 'affiliate'
+    ? affiliateCode(info.affiliate_code)
+    : null
+}
 
 // "unknown" = the Worker could not be reached while rendering; the browser asks again.
 type InviteStatus = 'valid' | 'invalid' | 'unknown'
@@ -42,6 +52,8 @@ interface InvitePageProps {
   status: InviteStatus
   rewardUsd: number | null
   rewardPoints: number | null
+  /** An approved Affiliate's code when the link is theirs; the page starts their Affiliate journey with it. */
+  affiliateVia: string | null
 }
 
 const LOOKUP_TIMEOUT_MS = 3500
@@ -59,6 +71,7 @@ export const getServerSideProps: GetServerSideProps<InvitePageProps> =
     let status: InviteStatus = code ? 'unknown' : 'invalid'
     let rewardUsd: number | null = null
     let rewardPoints: number | null = null
+    let affiliateVia: string | null = null
 
     if (code) {
       const controller = new AbortController()
@@ -69,6 +82,7 @@ export const getServerSideProps: GetServerSideProps<InvitePageProps> =
         status = result.data.valid ? 'valid' : 'invalid'
         rewardUsd = result.data.reward_usd
         rewardPoints = result.data.reward_points
+        affiliateVia = affiliateLinkCode(result.data)
       }
     }
 
@@ -77,7 +91,7 @@ export const getServerSideProps: GetServerSideProps<InvitePageProps> =
       res.setHeader('Set-Cookie', inviteCookieHeader(code))
     res.setHeader('Cache-Control', 'private, no-store')
 
-    return { props: { code, status, rewardUsd, rewardPoints } }
+    return { props: { code, status, rewardUsd, rewardPoints, affiliateVia } }
   }, '/i/[code]')
 
 function AppleLogoIcon({ className }: { className?: string }) {
@@ -197,12 +211,15 @@ export default function InvitePage({
   status: initialStatus,
   rewardUsd: initialRewardUsd,
   rewardPoints: initialRewardPoints,
+  affiliateVia: initialAffiliateVia,
 }: InvitePageProps) {
   const { t, locale } = useI18n()
+  const router = useRouter()
 
   const [status, setStatus] = useState(initialStatus)
   const [rewardUsd, setRewardUsd] = useState(initialRewardUsd)
   const [rewardPoints, setRewardPoints] = useState(initialRewardPoints)
+  const [affiliateVia, setAffiliateVia] = useState(initialAffiliateVia)
   const [signedIn, setSignedIn] = useState(false)
   const [redeemResult, setRedeemResult] = useState<RedeemResult | null>(() => {
     const outcome = getLastRedeemOutcome()
@@ -216,6 +233,7 @@ export default function InvitePage({
       if (cancelled || !result.ok) return
       setRewardUsd(result.data.reward_usd)
       setRewardPoints(result.data.reward_points)
+      setAffiliateVia(affiliateLinkCode(result.data))
       setStatus(result.data.valid ? 'valid' : 'invalid')
       if (!result.data.valid) clearInviteCookie()
     })
@@ -223,6 +241,19 @@ export default function InvitePage({
       cancelled = true
     }
   }, [code, initialStatus])
+
+  // An Affiliate's link counts as their `?via=` link too (ADR 0278): putting the code in the
+  // address lets `useAffiliateJourney` in `_app` record the visit, with the visitor's consent,
+  // so a purchase on the website is credited even without an app sign-in. A `?via=` the
+  // address already carries is left as it is.
+  useEffect(() => {
+    if (!affiliateVia || !router.isReady || router.query.via) return
+    void router.replace(
+      { pathname: router.pathname, query: { ...router.query, via: affiliateVia } },
+      undefined,
+      { shallow: true, scroll: false }
+    )
+  }, [affiliateVia, router])
 
   // Already signed in: `useInviteAutoRedeem` in `_app` redeems the cookie this
   // page set, and the page shows that outcome here instead of in the site toast.
@@ -323,10 +354,14 @@ export default function InvitePage({
     },
     {
       title: t('Your friend earns when you pay'),
-      body: t(
-        'If you buy a plan or a license within {p0} days of signing up, your friend gets {p1}% of that first payment in Cloud points. You pay nothing extra.',
-        { p0: windowDays, p1: ratePercent }
-      ),
+      body: affiliateVia
+        ? t(
+            'If you buy a plan or a license, the person who shared this link earns a commission. You pay nothing extra.'
+          )
+        : t(
+            'If you buy a plan or a license within {p0} days of signing up, your friend gets {p1}% of that first payment in Cloud points. You pay nothing extra.',
+            { p0: windowDays, p1: ratePercent }
+          ),
     },
   ]
 

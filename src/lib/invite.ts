@@ -20,6 +20,10 @@ export interface InviteCodeInfo {
     valid: boolean
     reward_points: number
     reward_usd: number
+    /** Whose link it is (ADR 0278); a Worker from before it leaves both out. */
+    tier?: 'invite' | 'affiliate' | null
+    /** An approved Affiliate's current code, which starts their Affiliate journey; null for anyone else. */
+    affiliate_code?: string | null
 }
 
 export interface InviteRedemption {
@@ -89,7 +93,23 @@ export interface InviteSummary {
 
 export type RedeemResult = WorkerResult<InviteRedemption> & { code: string }
 
-export const normalizeInviteCode = normalizeCode
+// An Affiliate's code (`ken_moo`, up to 64 characters), as the Worker's `resolveReferralCode` takes it.
+const REFERRAL_CODE = /^[a-z0-9][a-z0-9_-]{1,63}$/
+
+/**
+ * Any code an Invite link can carry (ADR 0278). An Invite code comes back in capitals without
+ * dashes, as before; any other person's code (an Affiliate code, a former one, a promotion code)
+ * comes back lowercased as written, and the Worker decides whose it is. `''` for neither.
+ */
+export function normalizeInviteCode(raw: unknown): string {
+    const invite = normalizeCode(raw)
+    if (invite || typeof raw !== 'string') return invite
+    let value = raw.trim()
+    const slash = value.lastIndexOf('/')
+    if (slash >= 0) value = value.slice(slash + 1)
+    value = value.split(/[?#]/)[0].toLowerCase()
+    return REFERRAL_CODE.test(value) ? value : ''
+}
 
 /** What the Worker pays unless its summary says otherwise (ADR 0277). */
 export const INVITER_TERMS = { ratePercent: 20, windowDays: 30, holdDays: 30 }
