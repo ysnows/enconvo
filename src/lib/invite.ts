@@ -113,14 +113,14 @@ export function normalizeInviteCode(raw: unknown): string {
 
 /**
  * The Worker route that records a signed-in visitor's latest click on an Invite link, for
- * last-click attribution across both tiers. `null` until the Worker ships it: the landing page
- * then sends nothing.
+ * last-click attribution across both tiers. It answers `{ recorded, tier? }`, and 401 without a
+ * token, so the landing page calls it only with a session.
  */
-export const INVITE_CLICK_PATH: string | null = null
+export const INVITE_CLICK_PATH = '/api/invite/click'
 
 /** Records the click, fire-and-forget; the landing page calls it only with marketing consent. */
 export async function recordInviteClick(accessToken: string, code: string): Promise<void> {
-    if (!INVITE_CLICK_PATH) return
+    if (!accessToken || !code) return
     await workerPost(INVITE_CLICK_PATH, accessToken, { code }, { keepalive: true }).catch(() => null)
 }
 

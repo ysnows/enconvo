@@ -20,7 +20,7 @@ import { SiteNav } from '@/components/SiteNav'
 import { IPHONE_APP_TESTFLIGHT_URL } from '@/data/iphoneApp'
 import { SITE_URL } from '@/data/siteMetadata'
 import { affiliateCode } from '@/lib/affiliate-journey'
-import { hasConsent } from '@/lib/cookie-consent'
+import { hasConsent, onCookieConsentChange } from '@/lib/cookie-consent'
 import { trackEvent } from '@/lib/analytics'
 import { supabase } from '@/lib/supabase'
 import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
@@ -33,7 +33,6 @@ import {
   INVITE_DEVICE_COPY,
   INVITER_TERMS,
   inviteCookieHeader,
-  INVITE_CLICK_PATH,
   normalizeInviteCode,
   recordInviteClick,
   type InviteCodeInfo,
@@ -258,24 +257,32 @@ export default function InvitePage({
     )
   }, [affiliateVia, router])
 
-  // A signed-in visitor's click on an Invite link counts for last-click attribution, as a
-  // `?via=` visit does for an Affiliate's link: only with consent to marketing cookies, and only
-  // once the Worker names its route (`INVITE_CLICK_PATH`). Nothing loads or sends before that.
+  // A signed-in visitor's click on this link counts for last-click attribution across both tiers
+  // (the Worker's `/api/invite/click`), with the same consent to marketing cookies a `?via=` visit
+  // needs: once per page view, as soon as both hold. A visitor who isn't signed in sends nothing,
+  // and a failed call changes nothing on the page.
   useEffect(() => {
-    if (!INVITE_CLICK_PATH || status !== 'valid' || affiliateVia) return
-    if (!hasConsent('marketing')) return
+    if (status !== 'valid') return
     let cancelled = false
-    void import('@/lib/supabase')
-      .then(({ supabase }) => supabase.auth.getSession())
-      .then(({ data: { session } }) => {
-        if (!cancelled && session?.access_token)
-          void recordInviteClick(session.access_token, code)
-      })
-      .catch(() => null)
+    let sent = false
+    const send = () => {
+      if (sent || cancelled || !hasConsent('marketing')) return
+      sent = true
+      void import('@/lib/supabase')
+        .then(({ supabase }) => supabase.auth.getSession())
+        .then(({ data: { session } }) => {
+          if (!cancelled && session?.access_token)
+            void recordInviteClick(session.access_token, code)
+        })
+        .catch(() => null)
+    }
+    send()
+    const unsubscribe = onCookieConsentChange(send)
     return () => {
       cancelled = true
+      unsubscribe()
     }
-  }, [code, status, affiliateVia])
+  }, [code, status])
 
   // Already signed in: `useInviteAutoRedeem` in `_app` redeems the cookie this
   // page set, and the page shows that outcome here instead of in the site toast.

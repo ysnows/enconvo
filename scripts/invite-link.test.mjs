@@ -69,7 +69,7 @@ async function invitePage(codeInfo, router) {
     '@/lib/supabase': { supabase: { auth: { getSession: async () => ({ data: { session: null } }) } } },
     '@/lib/invite-auto-redeem': { useInviteRedeemed: () => {} },
     '@/lib/affiliate-journey': journey,
-    '@/lib/cookie-consent': { hasConsent: () => true },
+    '@/lib/cookie-consent': { hasConsent: () => true, onCookieConsentChange: () => () => {} },
     '@/lib/invite': { ...invite, fetchInviteCode: async () => ({ ok: true, data: codeInfo }), getLastRedeemOutcome: () => null },
   })
 }
@@ -116,19 +116,29 @@ test("an Affiliate code from an Affiliate who isn't approved starts no journey",
   assert.equal(props.status, 'valid')
 })
 
-test('two codes that differ only by a dash stay apart, and the click route sends nothing until it exists', async () => {
+test('two codes that differ only by a dash stay apart, and a click is sent as typed only with a token', async () => {
   const invite = await inviteLib()
   assert.notEqual(invite.normalizeInviteCode('ken-moo'), invite.normalizeInviteCode('kenmoo'))
-  assert.equal(invite.INVITE_CLICK_PATH, null)
+  const workerApiModule = await loadTs('../src/lib/worker-api.ts')
+  const codes = await loadTs('../src/lib/codes.ts')
+  const live = await loadTs('../src/lib/invite.ts', { '@/lib/codes': codes, '@/lib/worker-api': workerApiModule })
   const realFetch = globalThis.fetch
-  let calls = 0
-  globalThis.fetch = async () => { calls += 1; return new Response('{}') }
+  const calls = []
+  globalThis.fetch = async (url, init) => { calls.push({ url, init }); return new Response(JSON.stringify({ code: 200, data: { recorded: true } })) }
   try {
-    await invite.recordInviteClick('token', 'AB2CDE3F')
+    await live.recordInviteClick('', '8w5x-95uu')
+    assert.equal(calls.length, 0)
+    await live.recordInviteClick('token', '8w5x-95uu')
+    globalThis.fetch = async () => { throw new Error('offline') }
+    await live.recordInviteClick('token', 'Yong531315')
   } finally {
     globalThis.fetch = realFetch
   }
-  assert.equal(calls, 0)
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].url, 'https://api.enconvo.com/api/invite/click')
+  assert.equal(calls[0].init.method, 'POST')
+  assert.equal(calls[0].init.headers.accessToken, 'token')
+  assert.deepEqual(JSON.parse(calls[0].init.body), { code: '8w5x-95uu' })
 })
 
 test('the website shares the same /i/ link as the apps', async () => {
