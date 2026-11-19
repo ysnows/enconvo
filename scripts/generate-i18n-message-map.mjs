@@ -55,7 +55,8 @@ function collect(file, visited = new Set()) {
         if (keys.has(key)) used.add(key)
       }
       if (
-        ts.isImportDeclaration(node) &&
+        (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+        node.moduleSpecifier &&
         ts.isStringLiteral(node.moduleSpecifier)
       )
         imports.add(resolveImport(file, node.moduleSpecifier.text))
