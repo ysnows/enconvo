@@ -17,6 +17,7 @@ import {
   SUPPORT_EMAIL,
   type ProgramTerms,
 } from '@/lib/affiliate-program'
+import { INVITER_TERMS } from '@/lib/invite'
 
 // The Affiliate program terms that /affiliate links to and every applicant accepts.
 // Numbers come from the Worker's program terms so the page never drifts from the ledger.
@@ -39,6 +40,8 @@ function sections(terms: ProgramTerms) {
       body: [
         'You apply with an Enconvo account on enconvo.com/affiliate. We review every application and may approve or decline it at our discretion.',
         'Once approved you get a personal link, enconvo.com/?via=yourcode, that works on any enconvo.com page. Your dashboard, balance and payouts belong to the account you applied with.',
+        `Each person has one link. Every Enconvo account already has an invite link, enconvo.com/i/yourcode, which earns ${INVITER_TERMS.ratePercent}% of an invited friend's first payment within ${INVITER_TERMS.windowDays} days of their sign-up, in Cloud points. Once you are approved, that link, your ?via= link and your promotion code all count as you and earn cash commissions under these terms instead. Cloud points you earned before approval stay yours. A single payment never earns both a commission and Cloud points.`,
+        'If we decline your application, you may apply again 60 days later.',
       ],
     },
     {
@@ -52,7 +55,7 @@ function sections(terms: ProgramTerms) {
     {
       title: 'Who counts as your referral',
       body: [
-        `A visitor becomes your referral when they open your link and then pay within ${terms.cookie_days} days on the same browser. If they open another Affiliate's link before paying, the most recent link gets the referral.`,
+        `A visitor becomes your referral when they open your link and then pay within ${terms.cookie_days} days on the same browser. If they open another person's link before paying, the last link they opened gets the referral. A promotion code entered at checkout takes precedence over any link.`,
         `Someone who signs up or signs in to Enconvo after opening your link also stays your referral for ${terms.cookie_days} days from their latest sign-up or sign-in through it, so a purchase in the app or on another device still counts, unless they come through another Affiliate's link in between. Your dashboard shows until when each sign-up can still earn you commission.`,
         "A customer who buys through your link or your promotion code stays yours: their renewals, upgrades and later purchases on enconvo.com, such as a license bought months later, earn you commission for as long as they keep paying. A later purchase through another Affiliate's link or promotion code moves the customer to that Affiliate.",
         'Tracking relies on a first-party cookie. Visits from search engines, crawlers and other automated tools are not counted, so your visitor count can be lower than a click counter of your own. Purchases we cannot connect to your link, for example by a visitor who never signed in and then clears their browser data or switches devices, are not credited automatically. If you can show us that such a customer came from you, write to us: we may, at our discretion, credit their subscription to you, and its payments from then on earn you commission. Payments made before then and one-time purchases are not credited this way.',
@@ -61,14 +64,14 @@ function sections(terms: ProgramTerms) {
     {
       title: 'Refunds and holds',
       body: [
-        `Each commission is held for ${terms.hold_days} days after the payment, which covers our refund window. After that it becomes payable.`,
+        `Commissions on subscription payments (Cloud plans and their renewals and upgrades) become payable as soon as the payment is made. Commissions on lifetime licenses and extra seats are held for ${terms.hold_days} days after the payment, which covers our refund window. After that they become payable.`,
         'If a payment is refunded, its commission is reversed in proportion to the refunded amount. If the customer disputes a payment with their bank, its commission is reversed while the dispute is open and restored if the dispute is decided in our favor. A reversal of a commission that was already paid is subtracted from your next payouts.',
       ],
     },
     {
       title: 'Payouts',
       body: [
-        `Early each month we pay every payable balance of ${minimum} or more, in US dollars, by PayPal or Wise to the account you saved in your dashboard. Smaller balances carry over to the next month.`,
+        `On the 1st of each month we pay every payable balance of ${minimum} or more, in US dollars, by PayPal or Wise to the account you saved in your dashboard. Smaller balances carry over to the next month.`,
         'You are responsible for the account details being correct, for any fees your payment provider charges you, and for declaring and paying any taxes on your earnings. We may ask for the information we need to make or report payments before paying.',
         'To protect your earnings, if you change your payout account after a payout, we may confirm the change with you before sending the next payout to the new account.',
       ],

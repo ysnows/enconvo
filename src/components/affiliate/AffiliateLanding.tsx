@@ -12,6 +12,7 @@ import {
 } from '@/lib/affiliate-program'
 import { card, fieldLabel } from './ui'
 import { lifetimePrices } from '@/lib/lifetime-pricing'
+import { INVITER_TERMS } from '@/lib/invite'
 
 // The marketing half of /affiliate: what the program pays, how it works and the FAQ.
 // Every number comes from the Worker's program terms; the example uses real list prices.
@@ -75,6 +76,12 @@ export function AffiliateHero({ terms }: { terms: ProgramTerms }) {
             {t('How payouts work')}
           </a>
         </div>
+        <p className="mt-5 max-w-xl text-sm leading-6 text-content-muted">
+          {t(
+            'Already use Enconvo? Your account has a link to share in Settings > Account > Affiliate. Without applying, it earns {p0}% of a friend\'s first payment in Cloud points; approved Affiliates earn cash.',
+            { p0: INVITER_TERMS.ratePercent }
+          )}
+        </p>
       </div>
 
       <div className={`${card} p-6`}>
@@ -131,17 +138,17 @@ export function TermsCards({ terms }: { terms: ProgramTerms }) {
     {
       big: `${terms.cookie_days} days`,
       title: 'To make up their mind',
-      body: `Someone who opens your link and buys within ${terms.cookie_days} days on that browser is yours.`,
+      body: `Someone who opens your link and buys within ${terms.cookie_days} days is yours. If they open another link before buying, the last one they opened wins.`,
     },
     {
       big: `${terms.hold_days} days`,
-      title: 'Refund window first',
-      body: `A commission becomes payable ${terms.hold_days} days after the payment. Refunds take it back.`,
+      title: 'Hold on lifetime licenses',
+      body: `Subscription commissions are payable at once. Lifetime license commissions wait out the ${terms.hold_days}-day refund window. Refunds take a commission back.`,
     },
     {
       big: 'Monthly',
       title: 'PayPal or Wise',
-      body: `Paid in USD once your payable balance reaches ${minimum}. Smaller balances carry over.`,
+      body: `Paid in USD on the 1st of each month once your payable balance reaches ${minimum}. Smaller balances carry over.`,
     },
   ]
   return (
@@ -322,7 +329,7 @@ export function HowItWorks() {
     },
     {
       title: 'Share your link',
-      body: 'Once approved you get enconvo.com/?via=yourcode, plus images and ready-made text. Use them in posts, videos, newsletters and reviews.',
+      body: 'Once approved, your link earns cash instead of Cloud points. It is one link per person: your invite link, enconvo.com/?via=yourcode and your promotion code all count as you. You also get images and ready-made text for posts, videos, newsletters and reviews.',
     },
     {
       title: 'Watch it add up',
@@ -363,11 +370,15 @@ export function AffiliateFaq({ terms }: { terms: ProgramTerms }) {
   const faqs = [
     {
       q: 'What counts as a referral?',
-      a: `Anyone who opens your link and pays on enconvo.com within ${terms.cookie_days} days, on the same browser. Licenses, extra seats, and Cloud plans and their renewals all earn a commission (Cloud points packs don't), and the customer stays yours for their later purchases. If they buy through another Affiliate's link, the newest link wins.`,
+      a: `Anyone who opens your link and pays within ${terms.cookie_days} days. Licenses, extra seats, and Cloud plans and their renewals all earn a commission (Cloud points packs don't), and the customer stays yours for their later purchases. If they open someone else's link before paying, the last link they opened wins, and a promotion code entered at checkout wins over any link.`,
     },
     {
       q: 'When do I get paid?',
-      a: `A commission becomes payable ${terms.hold_days} days after the payment. Early each month we pay every payable balance of ${minimum} or more by PayPal or Wise, in USD. Smaller balances carry over to the next month.`,
+      a: `Subscription commissions are payable at once. Lifetime license commissions become payable ${terms.hold_days} days after the payment, when the refund window has passed. On the 1st of each month we pay every payable balance of ${minimum} or more by PayPal or Wise, in USD. Smaller balances carry over to the next month.`,
+    },
+    {
+      q: 'I already share my Enconvo link. What changes when I join?',
+      a: `You keep the same link. Before you're approved, it earns ${INVITER_TERMS.ratePercent}% of a friend's first payment within ${INVITER_TERMS.windowDays} days of their sign-up, in Cloud points (50,000 points = $1). Once you're approved, new referrals earn cash commissions instead, renewals included, and the points you already earned stay yours. One payment never pays both a commission and points.`,
     },
     {
       q: 'What happens when a customer gets a refund or disputes a charge?',
@@ -384,6 +395,10 @@ export function AffiliateFaq({ terms }: { terms: ProgramTerms }) {
     {
       q: 'Do I need an Enconvo license to apply?',
       a: 'No. You need a free Enconvo account, so your dashboard and payouts have somewhere to live.',
+    },
+    {
+      q: "What if my application isn't approved?",
+      a: 'We tell you why, and you can apply again 60 days later. Your link keeps earning Cloud points in the meantime.',
     },
   ]
   return (

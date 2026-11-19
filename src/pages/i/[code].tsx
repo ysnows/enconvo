@@ -24,9 +24,11 @@ import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
 import {
   clearInviteCookie,
   fetchInviteCode,
+  formatPoints,
   formatRewardUsd,
   getLastRedeemOutcome,
   INVITE_DEVICE_COPY,
+  INVITER_TERMS,
   inviteCookieHeader,
   normalizeInviteCode,
   type RedeemResult,
@@ -39,6 +41,7 @@ interface InvitePageProps {
   code: string
   status: InviteStatus
   rewardUsd: number | null
+  rewardPoints: number | null
 }
 
 const LOOKUP_TIMEOUT_MS = 3500
@@ -55,6 +58,7 @@ export const getServerSideProps: GetServerSideProps<InvitePageProps> =
     )
     let status: InviteStatus = code ? 'unknown' : 'invalid'
     let rewardUsd: number | null = null
+    let rewardPoints: number | null = null
 
     if (code) {
       const controller = new AbortController()
@@ -64,6 +68,7 @@ export const getServerSideProps: GetServerSideProps<InvitePageProps> =
       if (result.ok) {
         status = result.data.valid ? 'valid' : 'invalid'
         rewardUsd = result.data.reward_usd
+        rewardPoints = result.data.reward_points
       }
     }
 
@@ -72,7 +77,7 @@ export const getServerSideProps: GetServerSideProps<InvitePageProps> =
       res.setHeader('Set-Cookie', inviteCookieHeader(code))
     res.setHeader('Cache-Control', 'private, no-store')
 
-    return { props: { code, status, rewardUsd } }
+    return { props: { code, status, rewardUsd, rewardPoints } }
   }, '/i/[code]')
 
 function AppleLogoIcon({ className }: { className?: string }) {
@@ -191,11 +196,13 @@ export default function InvitePage({
   code,
   status: initialStatus,
   rewardUsd: initialRewardUsd,
+  rewardPoints: initialRewardPoints,
 }: InvitePageProps) {
   const { t, locale } = useI18n()
 
   const [status, setStatus] = useState(initialStatus)
   const [rewardUsd, setRewardUsd] = useState(initialRewardUsd)
+  const [rewardPoints, setRewardPoints] = useState(initialRewardPoints)
   const [signedIn, setSignedIn] = useState(false)
   const [redeemResult, setRedeemResult] = useState<RedeemResult | null>(() => {
     const outcome = getLastRedeemOutcome()
@@ -208,6 +215,7 @@ export default function InvitePage({
     void fetchInviteCode(code).then((result) => {
       if (cancelled || !result.ok) return
       setRewardUsd(result.data.reward_usd)
+      setRewardPoints(result.data.reward_points)
       setStatus(result.data.valid ? 'valid' : 'invalid')
       if (!result.data.valid) clearInviteCookie()
     })
@@ -235,11 +243,20 @@ export default function InvitePage({
     if (outcome.ok) setSignedIn(true)
   })
 
-  const reward = rewardUsd === null ? null : formatRewardUsd(rewardUsd)
+  const points =
+    rewardPoints === null || rewardUsd === null
+      ? null
+      : { points: formatPoints(rewardPoints), usd: formatRewardUsd(rewardUsd) }
+  const { ratePercent, windowDays } = INVITER_TERMS
   const shareTitle = 'A friend invited you to Enconvo'
-  const shareDescription = reward
-    ? `Join Enconvo, the AI assistant for your Mac, and you both get ${reward} in Cloud points.`
-    : 'Join Enconvo, the AI assistant for your Mac, and you both get Cloud points.'
+  const shareDescription = points
+    ? t(
+        'Join Enconvo and get {p0} Cloud points to use on AI chat, images, video, speech and search.',
+        { p0: points.points }
+      )
+    : t(
+        'Join Enconvo and get free Cloud points to use on AI chat, images, video, speech and search.'
+      )
 
   if (status === 'invalid') {
     return (
@@ -290,16 +307,26 @@ export default function InvitePage({
 
   const steps = [
     {
-      title: 'Create your account',
-      body: 'Sign up from this page. The invite is added to your new account automatically.',
+      title: t('Create your account'),
+      body: t(
+        'Sign up from this page. The invite is added to your new account automatically.'
+      ),
     },
     {
-      title: 'Sign in to the app',
-      body: `Download Enconvo and sign in on ${INVITE_DEVICE_COPY}.`,
+      title: points
+        ? t('Get {p0} Cloud points', { p0: points.points })
+        : t('Get your Cloud points'),
+      body: t(
+        'Download Enconvo and sign in on {p0}. The points come on top of your welcome bonus and never expire.',
+        { p0: t(INVITE_DEVICE_COPY) }
+      ),
     },
     {
-      title: reward ? `You both get ${reward}` : 'You both get Cloud points',
-      body: 'The Cloud points land in both accounts, on top of your welcome bonus, and never expire.',
+      title: t('Your friend earns when you pay'),
+      body: t(
+        'If you buy a plan or a license within {p0} days of signing up, your friend gets {p1}% of that first payment in Cloud points. You pay nothing extra.',
+        { p0: windowDays, p1: ratePercent }
+      ),
     },
   ]
 
@@ -307,7 +334,7 @@ export default function InvitePage({
     <>
       <Head>
         <title>{t("You're invited to Enconvo")}</title>
-        <meta name="description" content={t(shareDescription)} />
+        <meta name="description" content={shareDescription} />
         <meta property="og:type" content="website" key="og:type" />
         <meta property="og:site_name" content="Enconvo" key="og:site_name" />
         <meta
@@ -318,7 +345,7 @@ export default function InvitePage({
         <meta property="og:title" content={t(shareTitle)} key="og:title" />
         <meta
           property="og:description"
-          content={t(shareDescription)}
+          content={shareDescription}
           key="og:description"
         />
         <meta property="og:image" content={OG_IMAGE} key="og:image" />
@@ -337,7 +364,7 @@ export default function InvitePage({
         />
         <meta
           name="twitter:description"
-          content={t(shareDescription)}
+          content={shareDescription}
           key="twitter:description"
         />
         <meta name="twitter:image" content={OG_IMAGE} key="twitter:image" />
@@ -357,22 +384,25 @@ export default function InvitePage({
                 {t('A friend invited you to Enconvo')}
               </h1>
               <p className="mt-5 max-w-xl text-lg leading-8 text-content-body">
-                {reward ? (
-                  <>
-                    {t('You both get ')}
-                    <span className="font-semibold text-content">
-                      <I18nText
-                        source={'{p0} in Cloud points'}
-                        values={{ p0: reward }}
-                      />
-                    </span>{' '}
-                    {t(
-                      'to use on AI chat, images, video, speech and search in Enconvo.'
-                    )}
-                  </>
+                {points ? (
+                  <I18nText
+                    source={
+                      'Sign up and get {p0} to use on AI chat, images, video, speech and search in Enconvo.'
+                    }
+                    values={{
+                      p0: (
+                        <span className="font-semibold text-content">
+                          {t('{p0} Cloud points ({p1})', {
+                            p0: points.points,
+                            p1: points.usd,
+                          })}
+                        </span>
+                      ),
+                    }}
+                  />
                 ) : (
                   t(
-                    'You both get Cloud points to use on AI chat, images, video, speech and search in Enconvo.'
+                    'Sign up and get free Cloud points to use on AI chat, images, video, speech and search in Enconvo.'
                   )
                 )}
               </p>
@@ -440,10 +470,10 @@ export default function InvitePage({
                       0{index + 1}
                     </span>
                     <h3 className="mt-3 text-base font-semibold text-content">
-                      {t(step.title)}
+                      {step.title}
                     </h3>
                     <p className="mt-2 text-sm leading-6 text-content-muted">
-                      {t(step.body)}
+                      {step.body}
                     </p>
                   </li>
                 ))}
@@ -463,6 +493,9 @@ export default function InvitePage({
                 />{' '}
                 {t(
                   "Signing in on an Android phone doesn't pay the reward yet: sign in on a computer or an iPhone as well to get it."
+                )}{' '}
+                {t(
+                  'Every Enconvo account has a link like this one to share: find yours under Settings > Account > Affiliate in the app, or on your account page.'
                 )}
               </p>
             </div>

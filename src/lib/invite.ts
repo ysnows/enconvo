@@ -1,4 +1,6 @@
-// Invites ("Give $5, get $5"). An Invite link (/i/<CODE>) keeps its code in a
+// Invites, the points tier of Affiliate (ADR 0277): the Invitee gets the Invite
+// reward when they first sign in to the app, and the Inviter gets a share of the
+// Invitee's first payment. An Invite link (/i/<CODE>) keeps its code in a
 // first-party cookie; the site-wide auth hook (`useInviteAutoRedeem`) redeems it
 // once a session exists. Dollar amounts always come from the Worker's `*_usd`
 // fields; this file never converts points itself.
@@ -38,12 +40,28 @@ export interface InviteReward {
     email: string
 }
 
+/** Where the Inviter's share of one Invite stands; a Worker from before ADR 0277 leaves it out. */
+export type InviterState =
+    | 'pending_payment'
+    | 'on_hold'
+    | 'earned'
+    | 'refunded'
+    | 'expired'
+    | 'credited_to_affiliate'
+    | 'revoked'
+
 export interface InviteSummary {
     code: string
     link: string
     code_disabled: boolean
     reward_points: number
     reward_usd: number
+    /** The Inviter's share of the Invitee's first payment, in percent. */
+    inviter_rate_percent?: number
+    /** Days after the Invitee's registration in which their first payment counts. */
+    inviter_window_days?: number
+    /** Days a refundable (Lifetime) payment's share waits before it is credited. */
+    inviter_hold_days?: number
     /** True totals, even when `invitees` holds only the newest rows. */
     stats: { invited: number; qualified: number; points_earned: number; usd_earned: number }
     /** The newest Invites (the Worker returns at most 100). */
@@ -55,6 +73,7 @@ export interface InviteSummary {
         reward_usd: number
         redeemed_at: string | null
         qualified_at: string | null
+        inviter_state?: InviterState
     }[]
     redemption: {
         redeemed: boolean
@@ -71,6 +90,14 @@ export interface InviteSummary {
 export type RedeemResult = WorkerResult<InviteRedemption> & { code: string }
 
 export const normalizeInviteCode = normalizeCode
+
+/** What the Worker pays unless its summary says otherwise (ADR 0277). */
+export const INVITER_TERMS = { ratePercent: 20, windowDays: 30, holdDays: 30 }
+
+/** `250000` → `250,000`. */
+export function formatPoints(points: number): string {
+    return new Intl.NumberFormat('en-US').format(points)
+}
 
 /** `5` → `$5`, `2.5` → `$2.50`. */
 export function formatRewardUsd(usd: number): string {
@@ -92,24 +119,24 @@ export function sumRewardsUsd(rewards: Pick<InviteReward, 'usd'>[]): number {
 export function inviteArrivalMessage(rewards: InviteReward[]): string {
     const total = formatRewardUsd(sumRewardsUsd(rewards))
     const inviter = rewards.filter((reward) => reward.role === 'inviter')
-    if (rewards.length === 1 && inviter.length === 1) return `You earned ${total}: ${inviter[0].email} joined Enconvo with your invite.`
+    if (rewards.length === 1 && inviter.length === 1) return `You earned ${total}: ${inviter[0].email} made their first payment.`
     if (rewards.length === 1) return `Your ${total} invite reward has arrived.`
-    if (inviter.length === rewards.length) return `You earned ${total}: ${rewards.length} friends joined Enconvo with your invite.`
+    if (inviter.length === rewards.length) return `You earned ${total}: ${rewards.length} people you invited made their first payment.`
     return `You earned ${total} in invite rewards.`
 }
 
-/** Where the invite reward is paid out: the app, on a device new to Enconvo. */
+/** Where the Invitee's reward is paid out: the app, on a device new to Enconvo. */
 export const INVITE_DEVICE_COPY = "a Mac, Windows PC, Linux PC or iPhone that's new to Enconvo"
 
 /** The one wording for an automatic Redemption's outcome (site toast and landing page). */
 export function describeRedeemOutcome(result: RedeemResult): { title: string; body: string } {
     if (result.ok) {
-        const reward = formatRewardUsd(result.data.reward_usd)
+        const reward = formatPoints(result.data.reward_points)
         return {
             title: 'Invite code redeemed',
             body: result.data.qualified
-                ? `You and your friend each got ${reward} in Cloud points.`
-                : `Sign in to the Enconvo app on ${INVITE_DEVICE_COPY}, and you both get ${reward} in Cloud points.`,
+                ? `You got ${reward} Cloud points.`
+                : `Sign in to the Enconvo app on ${INVITE_DEVICE_COPY} to get ${reward} Cloud points.`,
         }
     }
     return {

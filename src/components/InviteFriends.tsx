@@ -1,32 +1,52 @@
 import { I18nText } from '@/i18n/I18nText'
 import { useI18n } from '@/i18n/I18nProvider'
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
+import Link from 'next/link'
 import { CheckCircle2, X } from 'lucide-react'
 import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
 import {
   claimInviteRewards,
   clearInviteCookie,
+  formatPoints,
   formatRewardUsd,
   getInviteSummary,
   INVITE_DEVICE_COPY,
+  INVITER_TERMS,
   inviteArrivalMessage,
   normalizeInviteCode,
   redeemInvite,
   sumRewardsUsd,
+  type InviterState,
   type InviteReward,
   type InviteSummary,
 } from '@/lib/invite'
 
-const STATUS_LABEL = {
-  pending: 'Waiting for app sign-in',
-  qualified: 'Joined',
+// What the Inviter's share of each Invite shows; a Worker without `inviter_state`
+// falls back to the row's `status`.
+const STATE_LABEL: Record<InviterState, string> = {
+  pending_payment: 'Waiting for first payment',
+  on_hold: 'In refund window',
+  earned: 'Earned',
+  refunded: 'Refunded',
+  expired: 'No payment in time',
+  credited_to_affiliate: 'Went to another link',
   revoked: 'Revoked',
-} as const
+}
 
-const STATUS_CLASS = {
-  pending: 'text-gray-400',
-  qualified: 'text-green-400',
+const STATE_CLASS: Record<InviterState, string> = {
+  pending_payment: 'text-gray-400',
+  on_hold: 'text-yellow-300',
+  earned: 'text-green-400',
+  refunded: 'text-gray-500',
+  expired: 'text-gray-500',
+  credited_to_affiliate: 'text-gray-500',
   revoked: 'text-red-400',
+}
+
+const STATUS_STATE = {
+  pending: 'pending_payment',
+  qualified: 'earned',
+  revoked: 'revoked',
 } as const
 
 function formatDate(value: string | null) {
@@ -68,7 +88,7 @@ function withoutUnseen(summary: InviteSummary, ids: string[]): InviteSummary {
   }
 }
 
-/** Account page "Invite friends": the user's code and link, results, and code entry. */
+/** Account page "Affiliate" (points tier): the user's code and link, results, and code entry. */
 export default function InviteFriends({
   accessToken,
 }: {
@@ -176,7 +196,7 @@ export default function InviteFriends({
     <div>
       <h3 className="mb-4 flex items-center gap-2 text-xl font-semibold">
         <I18nText
-          source={'Invite friends{p0}'}
+          source={'Affiliate{p0}'}
           values={{
             p0: hasNewReward && (
               <span
@@ -212,7 +232,12 @@ export default function InviteFriends({
 
       {summary &&
         (() => {
-          const reward = formatRewardUsd(summary.reward_usd)
+          const inviteePoints = formatPoints(summary.reward_points)
+          const ratePercent =
+            summary.inviter_rate_percent ?? INVITER_TERMS.ratePercent
+          const windowDays =
+            summary.inviter_window_days ?? INVITER_TERMS.windowDays
+          const holdDays = summary.inviter_hold_days ?? INVITER_TERMS.holdDays
           const { redemption } = summary
           return (
             <div className="space-y-4">
@@ -246,19 +271,35 @@ export default function InviteFriends({
                 </div>
               )}
 
-              <p className="text-sm leading-6 text-gray-400">
-                <I18nText
-                  source={
-                    'Give {p0}, get {p1}. When a friend signs up with your link or code and signs in to the Enconvo app on {p2}, you both get {p3} in Cloud points.'
-                  }
-                  values={{
-                    p0: reward,
-                    p1: reward,
-                    p2: INVITE_DEVICE_COPY,
-                    p3: reward,
-                  }}
-                />
-              </p>
+              <div className="space-y-2 text-sm leading-6 text-gray-400">
+                <p>
+                  {t(
+                    'Share your link. A friend who signs up with it gets {p0} Cloud points when they sign in to the Enconvo app on {p1}.',
+                    { p0: inviteePoints, p1: t(INVITE_DEVICE_COPY) }
+                  )}
+                </p>
+                <p>
+                  {t(
+                    'You get {p0}% of their first payment in Cloud points, when they pay within {p1} days of signing up. A plan counts at once; a lifetime license counts after its {p2}-day refund window.',
+                    { p0: ratePercent, p1: windowDays, p2: holdDays }
+                  )}
+                </p>
+                <p>
+                  <I18nText
+                    source={'Want cash instead? {p0}'}
+                    values={{
+                      p0: (
+                        <Link
+                          href="/affiliate"
+                          className="text-blue-400 hover:text-blue-300"
+                        >
+                          {t('Apply to the Affiliate program')}
+                        </Link>
+                      ),
+                    }}
+                  />
+                </p>
+              </div>
 
               {summary.code_disabled && (
                 <div
@@ -321,7 +362,7 @@ export default function InviteFriends({
               <div className="grid grid-cols-3 gap-3">
                 {[
                   { label: 'Invited', value: String(summary.stats.invited) },
-                  { label: 'Joined', value: String(summary.stats.qualified) },
+                  { label: 'Paid', value: String(summary.stats.qualified) },
                   {
                     label: 'Earned',
                     value: formatRewardUsd(summary.stats.usd_earned),
@@ -341,26 +382,32 @@ export default function InviteFriends({
 
               {summary.invitees.length > 0 && (
                 <ul className="divide-y divide-white/10 rounded-xl border border-white/10 bg-white/[0.025]">
-                  {summary.invitees.map((invitee) => (
-                    <li
-                      key={invitee.id}
-                      className="flex items-center justify-between gap-3 px-3 py-2 text-sm"
-                    >
-                      <span className="min-w-0 truncate text-gray-200">
-                        {invitee.email}
-                      </span>
-                      <span className="flex-none text-xs">
-                        <span className={STATUS_CLASS[invitee.status]}>
-                          {STATUS_LABEL[invitee.status]}
+                  {summary.invitees.map((invitee) => {
+                    const state =
+                      invitee.inviter_state && invitee.inviter_state in STATE_LABEL
+                        ? invitee.inviter_state
+                        : STATUS_STATE[invitee.status]
+                    return (
+                      <li
+                        key={invitee.id}
+                        className="flex items-center justify-between gap-3 px-3 py-2 text-sm"
+                      >
+                        <span className="min-w-0 truncate text-gray-200">
+                          {invitee.email}
                         </span>
-                        <span className="ml-2 text-gray-500">
-                          {formatDate(
-                            invitee.qualified_at || invitee.redeemed_at
-                          )}
+                        <span className="flex-none text-xs">
+                          <span className={STATE_CLASS[state]}>
+                            {t(STATE_LABEL[state])}
+                          </span>
+                          <span className="ml-2 text-gray-500">
+                            {formatDate(
+                              invitee.qualified_at || invitee.redeemed_at
+                            )}
+                          </span>
                         </span>
-                      </span>
-                    </li>
-                  ))}
+                      </li>
+                    )
+                  })}
                 </ul>
               )}
               {summary.stats.invited > summary.invitees.length &&
@@ -386,16 +433,16 @@ export default function InviteFriends({
                       p0: redemption.inviter,
                       p1:
                         redemption.status === 'qualified' &&
-                        t('You both got {p0} in Cloud points.', {
-                          p0: formatRewardUsd(redemption.reward_usd),
+                        t('You got {p0} Cloud points.', {
+                          p0: formatPoints(redemption.reward_points),
                         }),
                       p2:
                         redemption.status === 'pending' &&
                         t(
-                          'Sign in to the Enconvo app on {p0} to get your {p1}.',
+                          'Sign in to the Enconvo app on {p0} to get your {p1} Cloud points.',
                           {
-                            p0: INVITE_DEVICE_COPY,
-                            p1: formatRewardUsd(redemption.reward_usd),
+                            p0: t(INVITE_DEVICE_COPY),
+                            p1: formatPoints(redemption.reward_points),
                           }
                         ),
                       p3:
