@@ -2,7 +2,7 @@ import { localizePath } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
 import { Check, Download, X } from 'lucide-react'
 import Link from 'next/link'
-import { affiliateLink, SITE_ORIGIN } from '@/lib/affiliate-program'
+import { referralLink, SITE_ORIGIN } from '@/lib/affiliate-program'
 import { ShareButtons } from './ShareButtons'
 import { card, CopyButton } from './ui'
 
@@ -82,7 +82,7 @@ const DONT = [
 export function AffiliateKit({ code }: { code: string }) {
   const { t, locale } = useI18n()
 
-  const link = affiliateLink(code)
+  const link = referralLink(code)
   return (
     <section className={`${card} p-6`} aria-labelledby="affiliate-kit">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">

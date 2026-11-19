@@ -469,6 +469,17 @@ export function affiliateLink(
   return url.toString()
 }
 
+/**
+ * `https://enconvo.com/i/kenmoo`, the one link a person shares, as the apps share it (ADR 0278).
+ * Its page gives the visitor the Invite reward and, for an approved Affiliate, starts their
+ * Affiliate journey; `?sub=youtube` tags that visit with a sub ID.
+ */
+export function referralLink(code: string, sub: string | null = null): string {
+  return `${SITE_ORIGIN}/i/${encodeURIComponent(code)}${
+    sub ? `?sub=${encodeURIComponent(sub)}` : ''
+  }`
+}
+
 /** `https://enconvo.com/go/kenmoo`, short enough to say out loud or print; `/go/kenmoo/podcast` adds a sub ID. */
 export function affiliateShortLink(
   code: string,

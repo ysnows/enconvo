@@ -6,7 +6,7 @@ import { ArrowRight, Loader2 } from 'lucide-react'
 import { primaryButton, secondaryButton } from '@/components/landing-styles'
 import {
   AFFILIATE_TERMS_VERSION,
-  affiliateLink,
+  referralLink,
   applyForAffiliate,
   formatCents,
   isAffiliateCode,
@@ -260,7 +260,7 @@ export function ApplicationForm({
               {error?.field === 'code'
                 ? t(error.message)
                 : validCode
-                ? t('Your link: {p0}', { p0: affiliateLink(code) })
+                ? t('Your link: {p0}', { p0: referralLink(code) })
                 : t(
                     '3 to 32 lowercase letters, digits, - or _, starting with a letter or digit. It appears in your link.'
                   )}

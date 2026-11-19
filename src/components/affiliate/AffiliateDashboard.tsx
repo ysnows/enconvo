@@ -17,6 +17,7 @@ import {
   formatUtcDay,
   LINK_PAGES,
   affiliateLinkPage,
+  referralLink,
   PAYOUT_METHOD_LABEL,
   recentlyCancelledPayout,
   savePayoutMethod,
@@ -135,7 +136,8 @@ function LinkCard({
   const pageInvalid =
     path === OTHER_PAGE && pageInput.trim() !== '' && !otherPage
   const page = path === OTHER_PAGE ? otherPage ?? '/' : path
-  const link = affiliateLink(code)
+  const link = referralLink(code)
+  const codeAt = link.lastIndexOf('/') + 1
   const built = affiliateLink(code, page, sub)
   const shortLink = affiliateShortLink(code)
   return (
@@ -148,9 +150,10 @@ function LinkCard({
               paused ? 'text-content-muted line-through' : 'text-content'
             }`}
           >
-            {/* On phones the link wraps before "?via=" so the code stays in one piece. */}
-            {link.split('?')[0]}
-            <wbr />?{link.split('?').slice(1).join('?')}
+            {/* On phones the link wraps before the code so it stays in one piece. */}
+            {link.slice(0, codeAt)}
+            <wbr />
+            {link.slice(codeAt)}
           </div>
         </div>
         {!paused && <CopyButton text={link} />}

@@ -3,7 +3,7 @@ import { useI18n } from '@/i18n/I18nProvider'
 import { useState, type FormEvent } from 'react'
 import { Loader2, Pencil } from 'lucide-react'
 import {
-  affiliateLink,
+  referralLink,
   changeAffiliateCode,
   formatDay,
   isAffiliateCode,
@@ -139,7 +139,7 @@ export function ChangeCode({
               <>
                 {t('Your link becomes')}{' '}
                 <span className="break-all font-mono text-content-body">
-                  {affiliateLink(isAffiliateCode(next) ? next : code)}
+                  {referralLink(isAffiliateCode(next) ? next : code)}
                 </span>
                 .
               </>

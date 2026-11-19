@@ -34,10 +34,10 @@ async function inviteLib() {
 
 test('an Invite link takes Invite codes as before and any Affiliate code the Worker resolves', async () => {
   const { normalizeInviteCode } = await inviteLib()
-  assert.equal(normalizeInviteCode('ab2c-de3f'), 'AB2CDE3F')
-  assert.equal(normalizeInviteCode('https://enconvo.com/i/ab2cde3f?x=1'), 'AB2CDE3F')
-  assert.equal(normalizeInviteCode('KEN-MOO'), 'KENMOO')
-  assert.equal(normalizeInviteCode('Ken_Moo'), 'ken_moo')
+  assert.equal(normalizeInviteCode(' ab2c-de3f '), 'ab2c-de3f')
+  assert.equal(normalizeInviteCode('https://enconvo.com/i/AB2CDE3F?x=1'), 'AB2CDE3F')
+  assert.equal(normalizeInviteCode('KEN-MOO'), 'KEN-MOO')
+  assert.equal(normalizeInviteCode('Ken_Moo'), 'Ken_Moo')
   assert.equal(normalizeInviteCode('a-very-long-affiliate-code-2026'), 'a-very-long-affiliate-code-2026')
   assert.equal(normalizeInviteCode('x'.repeat(64)), 'x'.repeat(64))
   assert.equal(normalizeInviteCode('x'.repeat(65)), '')
@@ -69,6 +69,7 @@ async function invitePage(codeInfo, router) {
     '@/lib/supabase': { supabase: { auth: { getSession: async () => ({ data: { session: null } }) } } },
     '@/lib/invite-auto-redeem': { useInviteRedeemed: () => {} },
     '@/lib/affiliate-journey': journey,
+    '@/lib/cookie-consent': { hasConsent: () => true },
     '@/lib/invite': { ...invite, fetchInviteCode: async () => ({ ok: true, data: codeInfo }), getLastRedeemOutcome: () => null },
   })
 }
@@ -85,10 +86,11 @@ test("an Affiliate's link greets with the sign-in gift and starts their Affiliat
   const router = { isReady: true, pathname: '/i/[code]', query: { code: 'ken_moo' }, replace: async () => true }
   const module = await invitePage({ ...base, code: '', tier: 'affiliate', affiliate_code: 'ken_moo' }, router)
   const { props, headers } = await serverProps(module, 'Ken_Moo')
-  assert.equal(props.code, 'ken_moo')
+  // The code goes to the Worker as typed; the Worker resolves its case and dashes.
+  assert.equal(props.code, 'Ken_Moo')
   assert.equal(props.status, 'valid')
   assert.equal(props.affiliateVia, 'ken_moo')
-  assert.match(headers['Set-Cookie'], /^enconvo_invite=ken_moo;/)
+  assert.match(headers['Set-Cookie'], /^enconvo_invite=Ken_Moo;/)
   const html = renderToStaticMarkup(React.createElement(module.default, props))
   assert.match(html, /250,000 Cloud points \(\$5\)/)
   assert.match(html, /the person who shared this link earns a commission/)
@@ -112,4 +114,27 @@ test("an Affiliate code from an Affiliate who isn't approved starts no journey",
   const { props } = await serverProps(module, 'ken_moo')
   assert.equal(props.affiliateVia, null)
   assert.equal(props.status, 'valid')
+})
+
+test('two codes that differ only by a dash stay apart, and the click route sends nothing until it exists', async () => {
+  const invite = await inviteLib()
+  assert.notEqual(invite.normalizeInviteCode('ken-moo'), invite.normalizeInviteCode('kenmoo'))
+  assert.equal(invite.INVITE_CLICK_PATH, null)
+  const realFetch = globalThis.fetch
+  let calls = 0
+  globalThis.fetch = async () => { calls += 1; return new Response('{}') }
+  try {
+    await invite.recordInviteClick('token', 'AB2CDE3F')
+  } finally {
+    globalThis.fetch = realFetch
+  }
+  assert.equal(calls, 0)
+})
+
+test('the website shares the same /i/ link as the apps', async () => {
+  const journey = await loadTs('../src/lib/affiliate-journey.ts', { './worker-api': workerApi })
+  const program = await loadTs('../src/lib/affiliate-program.ts', { '@/lib/worker-api': workerApi, '@/lib/affiliate-journey': journey })
+  assert.equal(program.referralLink('ken_moo'), 'https://enconvo.com/i/ken_moo')
+  assert.equal(program.referralLink('ken_moo', 'youtube'), 'https://enconvo.com/i/ken_moo?sub=youtube')
+  assert.equal(program.affiliateLink('ken_moo'), 'https://enconvo.com/?via=ken_moo')
 })

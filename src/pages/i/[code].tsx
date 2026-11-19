@@ -20,6 +20,7 @@ import { SiteNav } from '@/components/SiteNav'
 import { IPHONE_APP_TESTFLIGHT_URL } from '@/data/iphoneApp'
 import { SITE_URL } from '@/data/siteMetadata'
 import { affiliateCode } from '@/lib/affiliate-journey'
+import { hasConsent } from '@/lib/cookie-consent'
 import { trackEvent } from '@/lib/analytics'
 import { supabase } from '@/lib/supabase'
 import { useInviteRedeemed } from '@/lib/invite-auto-redeem'
@@ -32,7 +33,9 @@ import {
   INVITE_DEVICE_COPY,
   INVITER_TERMS,
   inviteCookieHeader,
+  INVITE_CLICK_PATH,
   normalizeInviteCode,
+  recordInviteClick,
   type InviteCodeInfo,
   type RedeemResult,
 } from '@/lib/invite'
@@ -254,6 +257,25 @@ export default function InvitePage({
       { shallow: true, scroll: false }
     )
   }, [affiliateVia, router])
+
+  // A signed-in visitor's click on an Invite link counts for last-click attribution, as a
+  // `?via=` visit does for an Affiliate's link: only with consent to marketing cookies, and only
+  // once the Worker names its route (`INVITE_CLICK_PATH`). Nothing loads or sends before that.
+  useEffect(() => {
+    if (!INVITE_CLICK_PATH || status !== 'valid' || affiliateVia) return
+    if (!hasConsent('marketing')) return
+    let cancelled = false
+    void import('@/lib/supabase')
+      .then(({ supabase }) => supabase.auth.getSession())
+      .then(({ data: { session } }) => {
+        if (!cancelled && session?.access_token)
+          void recordInviteClick(session.access_token, code)
+      })
+      .catch(() => null)
+    return () => {
+      cancelled = true
+    }
+  }, [code, status, affiliateVia])
 
   // Already signed in: `useInviteAutoRedeem` in `_app` redeems the cookie this
   // page set, and the page shows that outcome here instead of in the site toast.

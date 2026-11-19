@@ -4,7 +4,7 @@ import { useI18n } from '@/i18n/I18nProvider'
 import { Check } from 'lucide-react'
 import { secondaryButton } from '@/components/landing-styles'
 import {
-  affiliateLink,
+  referralLink,
   formatDay,
   SUPPORT_EMAIL,
   type AffiliateApplication,
@@ -23,7 +23,7 @@ function Details({ application }: { application: AffiliateApplication }) {
     { label: 'Website or channel', value: application.website || '—' },
     {
       label: 'Link once approved',
-      value: affiliateLink(application.code),
+      value: referralLink(application.code),
       mono: true,
     },
     { label: 'Audience', value: application.audience },

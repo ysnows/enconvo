@@ -5,7 +5,6 @@
 // once a session exists. Dollar amounts always come from the Worker's `*_usd`
 // fields; this file never converts points itself.
 
-import { normalizeCode } from '@/lib/codes'
 import { workerPost, workerRequest, type WorkerResult } from '@/lib/worker-api'
 
 export const INVITE_COOKIE = 'enconvo_invite'
@@ -93,22 +92,36 @@ export interface InviteSummary {
 
 export type RedeemResult = WorkerResult<InviteRedemption> & { code: string }
 
-// An Affiliate's code (`ken_moo`, up to 64 characters), as the Worker's `resolveReferralCode` takes it.
-const REFERRAL_CODE = /^[a-z0-9][a-z0-9_-]{1,63}$/
+// Any person's code an Invite link can carry (ADR 0278): an Invite code, an Affiliate code
+// (`ken_moo`, up to 64 characters), a former one or a promotion code.
+const REFERRAL_CODE = /^[A-Za-z0-9][A-Za-z0-9_-]{1,63}$/
 
 /**
- * Any code an Invite link can carry (ADR 0278). An Invite code comes back in capitals without
- * dashes, as before; any other person's code (an Affiliate code, a former one, a promotion code)
- * comes back lowercased as written, and the Worker decides whose it is. `''` for neither.
+ * The code an Invite link or the code field carries, as written: trimmed, the last path segment of
+ * a pasted link without its query, and spaces taken out. Dashes and letter case stay, so two codes
+ * that differ only by a dash never merge here; the Worker resolves the exact code first, then its
+ * normalized form. `''` when it can't be a code.
  */
 export function normalizeInviteCode(raw: unknown): string {
-    const invite = normalizeCode(raw)
-    if (invite || typeof raw !== 'string') return invite
+    if (typeof raw !== 'string') return ''
     let value = raw.trim()
     const slash = value.lastIndexOf('/')
     if (slash >= 0) value = value.slice(slash + 1)
-    value = value.split(/[?#]/)[0].toLowerCase()
+    value = value.split(/[?#]/)[0].replace(/\s/g, '')
     return REFERRAL_CODE.test(value) ? value : ''
+}
+
+/**
+ * The Worker route that records a signed-in visitor's latest click on an Invite link, for
+ * last-click attribution across both tiers. `null` until the Worker ships it: the landing page
+ * then sends nothing.
+ */
+export const INVITE_CLICK_PATH: string | null = null
+
+/** Records the click, fire-and-forget; the landing page calls it only with marketing consent. */
+export async function recordInviteClick(accessToken: string, code: string): Promise<void> {
+    if (!INVITE_CLICK_PATH) return
+    await workerPost(INVITE_CLICK_PATH, accessToken, { code }, { keepalive: true }).catch(() => null)
 }
 
 /** What the Worker pays unless its summary says otherwise (ADR 0277). */

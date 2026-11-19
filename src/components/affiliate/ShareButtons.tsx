@@ -3,7 +3,7 @@ import { localizePath } from '@/i18n/locale'
 import { useI18n } from '@/i18n/I18nProvider'
 import { useEffect, useState } from 'react'
 import { Mail, Share2 } from 'lucide-react'
-import { affiliateLink, affiliateShortLink } from '@/lib/affiliate-program'
+import { affiliateShortLink, referralLink } from '@/lib/affiliate-program'
 import { toolButton } from './ui'
 
 // One-click sharing in the promotion kit. Each button opens a post with the kit's short post and
@@ -65,7 +65,7 @@ export function ShareButtons({
 }) {
   const { t, locale } = useI18n()
 
-  const text = (sub: string, link = affiliateLink(code, '/', sub)) =>
+  const text = (sub: string, link = referralLink(code, sub)) =>
     `${post(link)}\n\n${disclosure}`
   // The share sheet exists only in some browsers, so it's offered after mounting to keep the first render the same as the server's.
   const [canShare, setCanShare] = useState(false)
