@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "Na razie nic do wypłaty",
   "Lifetime license commissions inside the {p0}-day refund window": "Prowizje od licencji wieczystych w ciągu {p0}-dniowego okresu na zwrot środków",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "Prowizje od subskrypcji są gotowe do wypłaty od razu. Prowizje od licencji wieczystych kwalifikują się do wypłaty po upływie {p0}-dniowego okresu na zwrot, a zwrot dokonany wcześniej nadal je pomniejsza.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0}% kwoty zapłaconej przez klientów przed opodatkowaniem. Prowizje od subskrypcji są gotowe do wypłaty od razu, a prowizje od licencji wieczystych po {p1}-dniowym okresie na zwrot – wypłacane co miesiąc, gdy saldo osiągnie {p2}."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0}% kwoty zapłaconej przez klientów przed opodatkowaniem. Prowizje od subskrypcji są gotowe do wypłaty od razu, a prowizje od licencji wieczystych po {p1}-dniowym okresie na zwrot – wypłacane co miesiąc, gdy saldo osiągnie {p2}.",
+  "Use a password of at least {p0} characters.": "Użyj hasła o długości co najmniej {p0} znaków.",
+  "Couldn’t complete the security check. Reload the page and try again.": "Nie udało się ukończyć weryfikacji bezpieczeństwa. Odśwież stronę i spróbuj ponownie.",
+  "The security check didn’t go through. Try again.": "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Rejestracja z użyciem tymczasowego adresu e-mail jest niedozwolona. Użyj stałego adresu e-mail.",
+  "This password has appeared in a data breach. Choose a different one.": "To hasło pojawiło się w wycieku danych. Wybierz inne.",
+  "Choose a stronger password.": "Wybierz silniejsze hasło."
 }

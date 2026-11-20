@@ -22,6 +22,9 @@ export type PasswordSignInProblem =
   | 'too_many_tries'
   | 'invalid_email'
   | 'password_missing'
+  // The direct Supabase sign-in needs a Turnstile token: the widget gave none, or Auth refused it.
+  | 'captcha_unavailable'
+  | 'captcha_failed'
   | 'failed'
 
 const WORKER_PROBLEMS: Record<string, PasswordSignInProblem> = {
@@ -67,6 +70,13 @@ export function passwordSignInMessage(problem: PasswordSignInProblem): {
       return { source: 'Please enter a valid email' }
     case 'password_missing':
       return { source: 'Enter your password.' }
+    case 'captcha_unavailable':
+      return {
+        source:
+          'Couldn’t complete the security check. Reload the page and try again.',
+      }
+    case 'captcha_failed':
+      return { source: 'The security check didn’t go through. Try again.' }
     default:
       return { source: 'Couldn’t log in. Try again.' }
   }
@@ -123,6 +133,7 @@ function supabaseProblem(error: {
   if (error.message === 'Invalid login credentials') return 'invalid_credentials'
   if (error.message === 'Email not confirmed') return 'email_unconfirmed'
   if (error.status === 429) return 'too_many_tries'
+  if (/captcha/i.test(error.message ?? '')) return 'captcha_failed'
   return null
 }
 
@@ -142,12 +153,17 @@ export type PasswordSignInResult =
       message: string
     }
 
-/** Signs this browser in with an email (the account's or its linked one) and password. */
+/**
+ * Signs this browser in with an email (the account's or its linked one) and password. `captchaToken` gives the
+ * Turnstile token Supabase Auth asks for; it's called only when the sign-in goes to Supabase directly (the
+ * Worker signs in without one), and a token it gave is spent.
+ */
 export async function signInWithPassword(
   supabase: AuthClient,
   email: string,
   password: string,
-  analyticsAllowed: boolean
+  analyticsAllowed: boolean,
+  captchaToken?: () => Promise<string | undefined>
 ): Promise<PasswordSignInResult> {
   const answer = await requestPasswordSignIn(email, password, analyticsAllowed)
   if (answer.kind === 'refused')
@@ -161,9 +177,16 @@ export async function signInWithPassword(
       return { ok: false, problem: 'failed', message: '' }
     return { ok: true, session: data.session, user: data.user }
   }
+  let token: string | undefined
+  try {
+    token = await captchaToken?.()
+  } catch {
+    return { ok: false, problem: 'captcha_unavailable', message: '' }
+  }
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
+    ...(token ? { options: { captchaToken: token } } : {}),
   })
   if (error || !data.session || !data.user) {
     const problem = error ? supabaseProblem(error) : 'failed'

@@ -22,6 +22,8 @@ import { Input } from '@/components/ui/input'
 import * as React from 'react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { getEmailLink } from '@/utils/app/email_link'
+import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
+import { authErrorMessage, captchaMessage } from '@/lib/auth-errors'
 
 export default function ResetPasswordStepOne() {
   const { t, locale } = useI18n()
@@ -39,6 +41,7 @@ export default function ResetPasswordStepOne() {
   const [pageState, setPageState] = useState('send')
 
   const [emailIsLoading, setEmailIsLoading] = React.useState(false)
+  const captcha = React.useRef<CaptchaHandle>(null)
 
   const openEmail = () => {
     window.open(getEmailLink(email))
@@ -52,16 +55,31 @@ export default function ResetPasswordStepOne() {
     }
 
     setEmailIsLoading(true)
+    setError('')
+
+    let captchaToken: string | undefined
+    try {
+      captchaToken = await captcha.current?.token()
+    } catch (captchaError) {
+      const { source, values } = captchaMessage(captchaError)
+      setError(t(source, values))
+      setEmailIsLoading(false)
+      return
+    }
 
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}${authFlowHref('/reset_password', {
         ...router.query,
         language: locale,
       })}`,
+      ...(captchaToken ? { captchaToken } : {}),
     })
+    // The token works once.
+    if (captchaToken) captcha.current?.reset()
 
     if (error) {
-      setError(error.message)
+      const readable = authErrorMessage(error)
+      setError(readable ? t(readable.source, readable.values) : error.message)
       setEmailIsLoading(false)
       return
     }
@@ -144,6 +162,8 @@ export default function ResetPasswordStepOne() {
                   value={email}
                   className="h-10 border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
                 />
+
+                <Turnstile ref={captcha} action="recover" />
 
                 {error && (
                   <Alert

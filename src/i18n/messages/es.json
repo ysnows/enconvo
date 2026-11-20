@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "Aún no hay nada a pagar",
   "Lifetime license commissions inside the {p0}-day refund window": "Comisiones de licencias de por vida dentro del plazo de reembolso de {p0} días",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "Las comisiones de suscripción son pagaderas de inmediato. Las de licencias de por vida pasan a ser pagaderas cuando termina su periodo de reembolso de {p0} días, y un reembolso anterior a esa fecha sigue reduciéndolas.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "El {p0}% de lo que pagan los clientes antes de impuestos. Las comisiones de suscripción son pagaderas de inmediato y las de licencias de por vida tras el periodo de reembolso de {p1} días; se pagan mensualmente cuando tu saldo alcanza {p2}."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "El {p0}% de lo que pagan los clientes antes de impuestos. Las comisiones de suscripción son pagaderas de inmediato y las de licencias de por vida tras el periodo de reembolso de {p1} días; se pagan mensualmente cuando tu saldo alcanza {p2}.",
+  "Use a password of at least {p0} characters.": "Usa una contraseña de al menos {p0} caracteres.",
+  "Couldn’t complete the security check. Reload the page and try again.": "No se pudo completar la verificación de seguridad. Recarga la página e inténtalo de nuevo.",
+  "The security check didn’t go through. Try again.": "La verificación de seguridad no se superó. Inténtalo de nuevo.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "No se permiten registros con direcciones de correo temporales. Usa una dirección de correo permanente.",
+  "This password has appeared in a data breach. Choose a different one.": "Esta contraseña ha aparecido en una filtración de datos. Elige otra.",
+  "Choose a stronger password.": "Elige una contraseña más segura."
 }

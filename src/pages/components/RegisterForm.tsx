@@ -37,6 +37,14 @@ import {
   meetsMinimumAge,
   saveRegistrationAgeConfirmation,
 } from '@/lib/age-gate'
+import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
+import {
+  MIN_PASSWORD_LENGTH,
+  authErrorMessage,
+  captchaMessage,
+  passwordTooShort,
+  type AuthMessage,
+} from '@/lib/auth-errors'
 
 export default function RegisterForm({
   loginState,
@@ -53,6 +61,9 @@ export default function RegisterForm({
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
   const [error, setError] = useState('')
+  // A readable message for an Auth refusal, with its values; it shows in place of `error`.
+  const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null)
+  const captcha = React.useRef<CaptchaHandle>(null)
   const [emailIsLoading, setEmailIsLoading] = React.useState(false)
   const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
   // Marketing email needs an opt-in the visitor gives, so the box starts unchecked.
@@ -88,9 +99,24 @@ export default function RegisterForm({
       alert(t('Please enter a valid email'))
       return
     }
+    setError('')
+    setAuthMessage(null)
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      setAuthMessage(passwordTooShort())
+      return
+    }
     if (!passesAgeCheck()) return
 
     setEmailIsLoading(true)
+
+    let captchaToken: string | undefined
+    try {
+      captchaToken = await captcha.current?.token()
+    } catch (captchaError) {
+      setAuthMessage(captchaMessage(captchaError))
+      setEmailIsLoading(false)
+      return
+    }
 
     const returnUrlParams = router?.query?.returnUrl
       ? `?returnUrl=${router.query.returnUrl}`
@@ -120,6 +146,7 @@ export default function RegisterForm({
       password: password,
       options: {
         emailRedirectTo,
+        ...(captchaToken ? { captchaToken } : {}),
         data: {
           name: name,
           product_updates_subscribed: productUpdatesSubscribed,
@@ -127,9 +154,13 @@ export default function RegisterForm({
         },
       },
     })
+    // The token works once.
+    if (captchaToken) captcha.current?.reset()
 
     if (error) {
-      setError(error.message)
+      const readable = authErrorMessage(error)
+      if (readable) setAuthMessage(readable)
+      else setError(error.message)
       setEmailIsLoading(false)
       return
     }
@@ -327,6 +358,8 @@ export default function RegisterForm({
                       type="password"
                       placeholder={t('Password')}
                       required
+                      minLength={MIN_PASSWORD_LENGTH}
+                      autoComplete="new-password"
                       onChange={(e) => setPassword(e.target.value)}
                       value={password}
                       className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
@@ -349,14 +382,20 @@ export default function RegisterForm({
                     </span>
                   </label>
 
-                  {error && (
+                  <Turnstile ref={captcha} action="signup" />
+
+                  {(authMessage || error) && (
                     <Alert
                       variant="destructive"
                       className="border-red-900/30 bg-red-900/20 text-red-400"
                     >
                       <ExclamationTriangleIcon className="h-4 w-4" />
                       <AlertTitle>{t('Error')}</AlertTitle>
-                      <AlertDescription>{t(error)}</AlertDescription>
+                      <AlertDescription>
+                        {authMessage
+                          ? t(authMessage.source, authMessage.values)
+                          : t(error)}
+                      </AlertDescription>
                     </Alert>
                   )}
 

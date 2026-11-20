@@ -18,6 +18,8 @@ import { Input } from '@/components/ui/input'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { authFlowHref, emailLinkDestination } from '@/lib/auth-flow'
 import { syncCurrentEmailPreference } from '@/lib/email-preferences-client'
+import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
+import { authErrorMessage, captchaMessage } from '@/lib/auth-errors'
 
 const OTP_TYPES: EmailOtpType[] = [
   'signup',
@@ -50,6 +52,7 @@ export default function AuthConfirm() {
   const [sending, setSending] = useState(false)
   // The token works once: Strict Mode's second effect run must not spend it again.
   const verifiedAttempt = useRef(-1)
+  const captcha = useRef<CaptchaHandle>(null)
 
   const type =
     typeof router.query.type === 'string' &&
@@ -121,14 +124,29 @@ export default function AuthConfirm() {
     }
     setSending(true)
     setError('')
+    let captchaToken: string | undefined
+    try {
+      captchaToken = await captcha.current?.token()
+    } catch (captchaError) {
+      const { source, values } = captchaMessage(captchaError)
+      setError(t(source, values))
+      setSending(false)
+      return
+    }
     const { error } = await supabase.auth.resend({
       type: 'signup',
       email,
-      options: { emailRedirectTo: `${window.location.origin}${destination}` },
+      options: {
+        emailRedirectTo: `${window.location.origin}${destination}`,
+        ...(captchaToken ? { captchaToken } : {}),
+      },
     })
+    // The token works once.
+    if (captchaToken) captcha.current?.reset()
     setSending(false)
     if (error) {
-      setError(error.message)
+      const readable = authErrorMessage(error)
+      setError(readable ? t(readable.source, readable.values) : error.message)
       return
     }
     setState('sent')
@@ -233,6 +251,7 @@ export default function AuthConfirm() {
                 value={email}
                 className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
               />
+              <Turnstile ref={captcha} action="resend" />
               {error && (
                 <Alert
                   variant="destructive"

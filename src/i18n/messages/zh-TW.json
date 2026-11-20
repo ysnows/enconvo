@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "尚無應付金額",
   "Lifetime license commissions inside the {p0}-day refund window": "在 {p0} 天退款期內的終身授權佣金",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "訂閱佣金可立即請領。終身授權佣金會在 {p0} 天退款期結束後轉為可支付，在此之前若發生退款，仍會相應扣減該金額。",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "客戶付款金額（未稅）的 {p0}%。訂閱佣金可立即請領，終身授權佣金需等過 {p1} 天的退款期，餘額達 {p2} 後每月發放。"
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "客戶付款金額（未稅）的 {p0}%。訂閱佣金可立即請領，終身授權佣金需等過 {p1} 天的退款期，餘額達 {p2} 後每月發放。",
+  "Use a password of at least {p0} characters.": "密碼至少需要 {p0} 個字元。",
+  "Couldn’t complete the security check. Reload the page and try again.": "無法完成安全驗證。請重新整理頁面後再試一次。",
+  "The security check didn’t go through. Try again.": "安全驗證未通過，請再試一次。",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "不支援使用臨時信箱註冊，請使用常用的電子郵件地址。",
+  "This password has appeared in a data breach. Choose a different one.": "這個密碼曾出現在資料外洩事件中，請換一個。",
+  "Choose a stronger password.": "請設定一個更安全的密碼。"
 }

@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "Noch nichts zahlbar",
   "Lifetime license commissions inside the {p0}-day refund window": "Provisionen für Lifetime-Lizenzen innerhalb der {p0}-tägigen Rückerstattungsfrist",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "Abo-Provisionen sind sofort auszahlbar. Provisionen für Lifetime-Lizenzen werden auszahlbar, wenn ihre {p0}-tägige Rückerstattungsfrist endet; eine Rückerstattung davor verringert sie weiterhin.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0} % dessen, was Kunden vor Steuern zahlen. Abo-Provisionen sind sofort auszahlbar, Provisionen für Lifetime-Lizenzen nach der {p1}-tägigen Rückerstattungsfrist; die Auszahlung erfolgt monatlich, sobald Ihr Guthaben {p2} erreicht."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0} % dessen, was Kunden vor Steuern zahlen. Abo-Provisionen sind sofort auszahlbar, Provisionen für Lifetime-Lizenzen nach der {p1}-tägigen Rückerstattungsfrist; die Auszahlung erfolgt monatlich, sobald Ihr Guthaben {p2} erreicht.",
+  "Use a password of at least {p0} characters.": "Verwende ein Passwort mit mindestens {p0} Zeichen.",
+  "Couldn’t complete the security check. Reload the page and try again.": "Die Sicherheitsprüfung konnte nicht abgeschlossen werden. Lade die Seite neu und versuche es noch einmal.",
+  "The security check didn’t go through. Try again.": "Die Sicherheitsprüfung ist fehlgeschlagen. Versuche es noch einmal.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Registrierungen mit temporären E-Mail-Adressen sind nicht erlaubt. Verwende eine dauerhafte E-Mail-Adresse.",
+  "This password has appeared in a data breach. Choose a different one.": "Dieses Passwort ist in einem Datenleck aufgetaucht. Wähle ein anderes.",
+  "Choose a stronger password.": "Wähle ein sichereres Passwort."
 }

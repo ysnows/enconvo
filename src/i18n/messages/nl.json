@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "Nog niets te betalen",
   "Lifetime license commissions inside the {p0}-day refund window": "Commissies op lifetime-licenties binnen de terugbetalingsperiode van {p0} dagen",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "Abonnementscommissies zijn direct uitbetaalbaar. Commissies op lifetime-licenties worden uitbetaalbaar wanneer hun terugbetalingstermijn van {p0} dagen afloopt, en een terugbetaling daarvoor verlaagt ze nog steeds.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0}% van wat klanten betalen vóór belasting. Abonnementscommissies zijn direct uitbetaalbaar en commissies op lifetime-licenties na de terugbetalingstermijn van {p1} dagen, maandelijks uitbetaald zodra je saldo {p2} bereikt."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0}% van wat klanten betalen vóór belasting. Abonnementscommissies zijn direct uitbetaalbaar en commissies op lifetime-licenties na de terugbetalingstermijn van {p1} dagen, maandelijks uitbetaald zodra je saldo {p2} bereikt.",
+  "Use a password of at least {p0} characters.": "Gebruik een wachtwoord van minstens {p0} tekens.",
+  "Couldn’t complete the security check. Reload the page and try again.": "De beveiligingscontrole kon niet worden voltooid. Laad de pagina opnieuw en probeer het nog eens.",
+  "The security check didn’t go through. Try again.": "De beveiligingscontrole is niet gelukt. Probeer het opnieuw.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Aanmelden met een tijdelijk e-mailadres is niet toegestaan. Gebruik een vast e-mailadres.",
+  "This password has appeared in a data breach. Choose a different one.": "Dit wachtwoord is in een datalek opgedoken. Kies een ander wachtwoord.",
+  "Choose a stronger password.": "Kies een sterker wachtwoord."
 }

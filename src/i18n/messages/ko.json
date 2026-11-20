@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "아직 지급 가능한 금액이 없습니다",
   "Lifetime license commissions inside the {p0}-day refund window": "{p0}일 환불 기간 내 평생 라이선스 커미션",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "구독 커미션은 즉시 지급 가능합니다. 평생 라이선스 커미션은 {p0}일의 환불 기간이 끝나면 지급 가능 상태가 되며, 그 전에 환불이 발생하면 해당 금액은 그만큼 줄어듭니다.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "세금 전 고객 결제 금액의 {p0}%입니다. 구독 커미션은 즉시, 평생 라이선스 커미션은 {p1}일의 환불 기간이 끝난 후 지급 가능하며, 잔액이 {p2}에 도달하면 매월 지급됩니다."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "세금 전 고객 결제 금액의 {p0}%입니다. 구독 커미션은 즉시, 평생 라이선스 커미션은 {p1}일의 환불 기간이 끝난 후 지급 가능하며, 잔액이 {p2}에 도달하면 매월 지급됩니다.",
+  "Use a password of at least {p0} characters.": "비밀번호는 {p0}자 이상이어야 합니다.",
+  "Couldn’t complete the security check. Reload the page and try again.": "보안 확인을 완료하지 못했습니다. 페이지를 새로고침한 후 다시 시도하세요.",
+  "The security check didn’t go through. Try again.": "보안 확인을 통과하지 못했습니다. 다시 시도하세요.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "임시 이메일 주소로는 가입할 수 없습니다. 계속 사용하는 이메일 주소를 입력하세요.",
+  "This password has appeared in a data breach. Choose a different one.": "이 비밀번호는 데이터 유출에 포함된 적이 있습니다. 다른 비밀번호를 선택하세요.",
+  "Choose a stronger password.": "더 강력한 비밀번호를 선택하세요."
 }

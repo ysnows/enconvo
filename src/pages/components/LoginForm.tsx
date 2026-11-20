@@ -29,6 +29,7 @@ import {
   passwordSignInMessage,
   signInWithPassword,
 } from '@/lib/password-sign-in'
+import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
 
 export default function LoginForm({
   loginState,
@@ -59,6 +60,7 @@ export default function LoginForm({
   const [emailIsLoading, setEmailIsLoading] = React.useState(false)
   const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
   const [appleIsLoading, setAppleIsLoading] = React.useState(false)
+  const captcha = React.useRef<CaptchaHandle>(null)
 
   async function signIn() {
     // check if email is valid
@@ -71,12 +73,19 @@ export default function LoginForm({
     setError('')
     // The Worker's sign-in, which also takes an account's linked email; its tokens become this
     // browser's session (lib/password-sign-in).
+    // Only Supabase's own sign-in, the fallback, asks for the Turnstile token; a spent one is replaced.
+    let captchaSpent = false
     const result = await signInWithPassword(
       supabase,
       email,
       password,
-      hasConsent('analytics')
+      hasConsent('analytics'),
+      async () => {
+        captchaSpent = true
+        return captcha.current?.token()
+      }
     )
+    if (captchaSpent) captcha.current?.reset()
 
     if (!result.ok) {
       if (result.problem) {
@@ -311,6 +320,8 @@ export default function LoginForm({
                   />
                 </div>
               )}
+
+              <Turnstile ref={captcha} action="login" />
 
               {error && (
                 <Alert

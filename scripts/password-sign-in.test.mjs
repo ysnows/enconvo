@@ -242,7 +242,7 @@ async function loginForm(supabase) {
   const Form = (
     await loadTs('../src/pages/components/LoginForm.tsx', {
       // Every empty field reads as filled in; each setter call is recorded.
-      react: { ...React, useState: (value) => [value === '' ? 'linked@example.test' : value, (next) => sets.push(next)], useEffect() {} },
+      react: { ...React, useState: (value) => [value === '' ? 'linked@example.test' : value, (next) => sets.push(next)], useEffect() {}, useRef: (current) => ({ current }) },
       'next/router': { useRouter: () => ({ query: {} }) },
       'next/head': { default: passthrough, __esModule: true },
       'next/link': { default: passthrough, __esModule: true },
@@ -268,6 +268,7 @@ async function loginForm(supabase) {
       '@/components/ui/input': { Input: () => null },
       '@/components/ui/alert': { Alert: passthrough, AlertDescription: passthrough, AlertTitle: passthrough },
       '@/components/Logo': { Logo: () => null },
+      '@/components/Turnstile': { Turnstile: () => null },
     })
   ).default
   const findNode = (node, match) => {

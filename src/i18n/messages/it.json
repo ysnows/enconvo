@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "Ancora nulla da pagare",
   "Lifetime license commissions inside the {p0}-day refund window": "Commissioni sulle licenze a vita entro il periodo di rimborso di {p0} giorni",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "Le commissioni sugli abbonamenti sono pagabili subito. Quelle sulle licenze a vita diventano pagabili al termine del periodo di rimborso di {p0} giorni e un rimborso prima di allora le riduce comunque.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0}% di quanto pagano i clienti al netto delle imposte. Le commissioni sugli abbonamenti sono pagabili subito, quelle sulle licenze a vita dopo il periodo di rimborso di {p1} giorni, con pagamento mensile a partire da {p2}."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0}% di quanto pagano i clienti al netto delle imposte. Le commissioni sugli abbonamenti sono pagabili subito, quelle sulle licenze a vita dopo il periodo di rimborso di {p1} giorni, con pagamento mensile a partire da {p2}.",
+  "Use a password of at least {p0} characters.": "Usa una password di almeno {p0} caratteri.",
+  "Couldn’t complete the security check. Reload the page and try again.": "Impossibile completare il controllo di sicurezza. Ricarica la pagina e riprova.",
+  "The security check didn’t go through. Try again.": "Il controllo di sicurezza non è andato a buon fine. Riprova.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Non è possibile registrarsi con indirizzi email temporanei. Usa un indirizzo email permanente.",
+  "This password has appeared in a data breach. Choose a different one.": "Questa password è comparsa in una violazione di dati. Scegline un’altra.",
+  "Choose a stronger password.": "Scegli una password più sicura."
 }

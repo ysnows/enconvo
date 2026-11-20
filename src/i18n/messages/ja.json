@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "支払い可能な金額はまだありません",
   "Lifetime license commissions inside the {p0}-day refund window": "{p0} 日間の返金期間内の買い切りライセンスのコミッション",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "サブスクリプションのコミッションはすぐに支払い可能になります。買い切りライセンスのコミッションは {p0} 日間の返金期間が終了すると支払い可能になり、それ以前に返金があった場合はその分だけ減額されます。",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "税抜きでお客様が支払う金額の {p0}%。サブスクリプションのコミッションはすぐに支払い可能になり、買い切りライセンスのコミッションは {p1} 日間の返金期間の経過後に支払い可能になります。残高が {p2} に達すると毎月お支払いします。"
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "税抜きでお客様が支払う金額の {p0}%。サブスクリプションのコミッションはすぐに支払い可能になり、買い切りライセンスのコミッションは {p1} 日間の返金期間の経過後に支払い可能になります。残高が {p2} に達すると毎月お支払いします。",
+  "Use a password of at least {p0} characters.": "パスワードは {p0} 文字以上にしてください。",
+  "Couldn’t complete the security check. Reload the page and try again.": "セキュリティチェックを完了できませんでした。ページを再読み込みして、もう一度お試しください。",
+  "The security check didn’t go through. Try again.": "セキュリティチェックを通過できませんでした。もう一度お試しください。",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "一時的なメールアドレスでは登録できません。普段お使いのメールアドレスを使用してください。",
+  "This password has appeared in a data breach. Choose a different one.": "このパスワードはデータ漏えいで流出したことがあります。別のパスワードを選んでください。",
+  "Choose a stronger password.": "より強力なパスワードを選んでください。"
 }

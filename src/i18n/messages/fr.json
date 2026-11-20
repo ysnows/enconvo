@@ -2623,5 +2623,11 @@
   "Nothing payable yet": "Rien à payer pour l’instant",
   "Lifetime license commissions inside the {p0}-day refund window": "Commissions sur les licences à vie dans le délai de remboursement de {p0} jours",
   "Subscription commissions are payable at once. Lifetime license commissions become payable when their {p0}-day refund window ends, and a refund before then still lowers them.": "Les commissions sur abonnement sont payables immédiatement. Celles sur les licences à vie deviennent payables à la fin du délai de remboursement de {p0} jours, et un remboursement avant cette date les réduit quand même.",
-  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0} % de ce que les clients paient hors taxes. Les commissions sur abonnement sont payables immédiatement et celles sur les licences à vie après le délai de remboursement de {p1} jours, versées mensuellement dès que votre solde atteint {p2}."
+  "{p0}% of what customers pay before tax. Subscription commissions are payable at once and lifetime license commissions after the {p1}-day refund window, paid monthly once your balance reaches {p2}.": "{p0} % de ce que les clients paient hors taxes. Les commissions sur abonnement sont payables immédiatement et celles sur les licences à vie après le délai de remboursement de {p1} jours, versées mensuellement dès que votre solde atteint {p2}.",
+  "Use a password of at least {p0} characters.": "Utilisez un mot de passe d’au moins {p0} caractères.",
+  "Couldn’t complete the security check. Reload the page and try again.": "Impossible de terminer la vérification de sécurité. Rechargez la page et réessayez.",
+  "The security check didn’t go through. Try again.": "La vérification de sécurité a échoué. Réessayez.",
+  "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Les inscriptions avec une adresse e-mail temporaire ne sont pas autorisées. Utilisez une adresse e-mail permanente.",
+  "This password has appeared in a data breach. Choose a different one.": "Ce mot de passe est apparu dans une fuite de données. Choisissez-en un autre.",
+  "Choose a stronger password.": "Choisissez un mot de passe plus sûr."
 }
