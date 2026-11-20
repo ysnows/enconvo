@@ -32,8 +32,9 @@ export default function AuthCallback() {
         await router.push('/login?error=auth', undefined, { locale })
       }
       if (session) {
-        // The sign-up age check (lib/age-gate). A Google sign-up started on /register
-        // answered it there; an account Google just created from /login is asked first.
+        // The sign-up age check (lib/age-gate). The consent line on /register and /login
+        // answered it before Google; when that answer didn't carry over (storage blocked, or
+        // over 15 minutes on Google's page), a new account is asked on /confirm-age.
         const answeredOnRegister = consumeRegistrationAgeConfirmation()
         if (needsAgeConfirmation(session.user)) {
           const { error: updateError } = answeredOnRegister

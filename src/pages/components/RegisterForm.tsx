@@ -376,7 +376,8 @@ export default function RegisterForm({
                     setPasswordMessage(null)
                   }}
                   value={password}
-                  className={`${inputClass} pr-10 ${passwordMessage ? inputErrorClass : ''}`}
+                  // Edge draws its own reveal button in password fields; this one has the toggle beside it.
+                  className={`${inputClass} pr-10 [&::-ms-reveal]:hidden ${passwordMessage ? inputErrorClass : ''}`}
                 />
                 <button
                   type="button"

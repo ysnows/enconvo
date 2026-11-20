@@ -2641,5 +2641,6 @@
   "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "创建账号时，我们会请你确认已达到最低年龄。我们只保存这一确认，从不保存出生日期。如果我们得知某个账号属于未达到最低年龄的人，会将其删除。如果你认为有儿童向我们提供了个人数据，请发邮件至 {p0}，我们会将其删除。",
   "Wait {p0} seconds, then try again.": "请等待 {p0} 秒后再试。",
   "Too many emails were sent recently. Try again later.": "最近发送的邮件过多，请稍后再试。",
-  "Too many tries. Wait a moment, then try again.": "尝试次数过多，请稍等片刻再试。"
+  "Too many tries. Wait a moment, then try again.": "尝试次数过多，请稍等片刻再试。",
+  "Complete the security check to continue.": "请完成安全验证以继续。"
 }

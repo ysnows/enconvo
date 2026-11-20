@@ -7,14 +7,21 @@
 // Without NEXT_PUBLIC_TURNSTILE_SITE_KEY (local builds) the widget draws nothing and `token()` gives
 // undefined, so requests go out without a token, as before.
 
-import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import { useI18n } from '@/i18n/I18nProvider'
 
 export const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
 
 const SCRIPT_URL =
   'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'
-// How long a submit waits for the check to finish before saying it couldn't.
+// How long a submit waits for the check to finish before saying it couldn't. The wait pauses while
+// the widget waits for the visitor to act.
 const TOKEN_WAIT_MS = 30_000
 
 type TurnstileApi = {
@@ -74,24 +81,47 @@ const TURNSTILE_LANGUAGES: Record<string, string> = {
   pt: 'pt-br',
 }
 
-type Waiter = { resolve(token: string): void; reject(error: CaptchaError): void }
+type Waiter = {
+  resolve(token: string): void
+  reject(error: CaptchaError): void
+  timer?: ReturnType<typeof setTimeout>
+}
 
 export const Turnstile = forwardRef<
   CaptchaHandle,
   { action: string; className?: string }
 >(function Turnstile({ action, className }, ref) {
-  const { locale } = useI18n()
+  const { t, locale } = useI18n()
   const container = useRef<HTMLDivElement>(null)
   const widget = useRef<{ api: TurnstileApi; id: string } | null>(null)
   const token = useRef<string | null>(null)
   const failure = useRef<CaptchaError | null>(null)
   const waiters = useRef<Waiter[]>([])
+  // The widget shows its checkbox and waits for the visitor.
+  const interactive = useRef(false)
+  // A submit is waiting on that checkbox: say so under it.
+  const [asking, setAsking] = useState(false)
+
+  const showAsking = () =>
+    setAsking(interactive.current && waiters.current.length > 0)
+
+  const startTimer = (waiter: Waiter) => {
+    clearTimeout(waiter.timer)
+    waiter.timer = setTimeout(() => {
+      waiters.current = waiters.current.filter((w) => w !== waiter)
+      showAsking()
+      waiter.reject(new CaptchaError('timeout'))
+    }, TOKEN_WAIT_MS)
+  }
 
   const settle = (value: string | CaptchaError) => {
     const pending = waiters.current
     waiters.current = []
-    for (const waiter of pending)
+    showAsking()
+    for (const waiter of pending) {
+      clearTimeout(waiter.timer)
       typeof value === 'string' ? waiter.resolve(value) : waiter.reject(value)
+    }
   }
 
   useEffect(() => {
@@ -115,11 +145,23 @@ export const Turnstile = forwardRef<
           'expired-callback': () => {
             token.current = null
           },
+          // A person has to tick the box: no time limit while it waits for them.
+          'before-interactive-callback': () => {
+            interactive.current = true
+            for (const waiter of waiters.current) clearTimeout(waiter.timer)
+            showAsking()
+          },
+          'after-interactive-callback': () => {
+            interactive.current = false
+            for (const waiter of waiters.current) startTimer(waiter)
+            showAsking()
+          },
           'timeout-callback': () => {
             token.current = null
           },
           'error-callback': () => {
             token.current = null
+            interactive.current = false
             failure.current = new CaptchaError('failed')
             settle(failure.current)
             // Handled here, so Turnstile doesn't throw; it retries on its own.
@@ -138,6 +180,7 @@ export const Turnstile = forwardRef<
       if (widget.current) widget.current.api.remove(widget.current.id)
       widget.current = null
       token.current = null
+      interactive.current = false
     }
   }, [action, locale])
 
@@ -152,29 +195,21 @@ export const Turnstile = forwardRef<
           const failed = failure.current
           failure.current = null
           if (!widget.current) throw failed
+          interactive.current = false
           widget.current.api.reset(widget.current.id)
         }
         return new Promise<string>((resolve, reject) => {
-          const waiter: Waiter = {
-            resolve: (value) => {
-              clearTimeout(timer)
-              resolve(value)
-            },
-            reject: (error) => {
-              clearTimeout(timer)
-              reject(error)
-            },
-          }
-          const timer = setTimeout(() => {
-            waiters.current = waiters.current.filter((w) => w !== waiter)
-            reject(new CaptchaError('timeout'))
-          }, TOKEN_WAIT_MS)
+          const waiter: Waiter = { resolve, reject }
+          if (!interactive.current) startTimer(waiter)
           waiters.current.push(waiter)
+          showAsking()
         })
       },
       reset() {
         token.current = null
         failure.current = null
+        // The check starts over; it says again if it needs the visitor.
+        interactive.current = false
         if (widget.current) widget.current.api.reset(widget.current.id)
       },
     }),
@@ -184,9 +219,19 @@ export const Turnstile = forwardRef<
   if (!TURNSTILE_SITE_KEY) return null
   // The flexible widget is at least 300px wide; centred, it can reach a little past a narrow form's padding.
   return (
-    <div
-      ref={container}
-      className={`flex justify-center empty:hidden ${className ?? ''}`}
-    />
+    <>
+      <div
+        ref={container}
+        className={`flex justify-center empty:hidden ${className ?? ''}`}
+      />
+      {asking && (
+        <p
+          role="status"
+          className="mt-2 text-center text-[12px] leading-4 text-[#AAAAAA]"
+        >
+          {t('Complete the security check to continue.')}
+        </p>
+      )}
+    </>
   )
 })

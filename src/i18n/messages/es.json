@@ -2641,5 +2641,6 @@
   "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Al crear una cuenta, te pedimos que confirmes que tienes la edad mínima. Solo conservamos esa confirmación, nunca una fecha de nacimiento. Si sabemos que una cuenta pertenece a alguien que no alcanza la edad mínima, la eliminamos. Si crees que un menor nos ha proporcionado datos personales, escribe a {p0} y los eliminaremos.",
   "Wait {p0} seconds, then try again.": "Espera {p0} segundos y vuelve a intentarlo.",
   "Too many emails were sent recently. Try again later.": "Se han enviado demasiados correos recientemente. Inténtalo de nuevo más tarde.",
-  "Too many tries. Wait a moment, then try again.": "Demasiados intentos. Espera un momento y vuelve a intentarlo."
+  "Too many tries. Wait a moment, then try again.": "Demasiados intentos. Espera un momento y vuelve a intentarlo.",
+  "Complete the security check to continue.": "Completa la verificación de seguridad para continuar."
 }
