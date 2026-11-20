@@ -11,6 +11,8 @@
 .barLink { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: #f4f4f6; font-weight: 500; }
 .barLink:hover { color: #fff; }
 .barLink svg { width: 14px; height: 14px; opacity: .8; }
+/* The bar's height in the page flow, under the fixed header (SiteNav). */
+.barSpace { height: 40px; }
 
 .pillRow { display: flex; justify-content: center; margin: 0 0 26px; }
 .pill { display: inline-flex; align-items: center; gap: 10px; min-height: 34px; padding: 0 12px 0 4px; border: 1px solid rgba(255, 197, 51, .32); border-radius: 999px; background: linear-gradient(180deg, rgba(255, 197, 51, .12), rgba(255, 197, 51, .05)); box-shadow: 0 0 0 4px rgba(255, 197, 51, .04), 0 8px 30px rgba(255, 170, 30, .12); color: #f4f4f6; font-size: 14px; font-weight: 500; line-height: 20px; transition: border-color 160ms, background 160ms; }
@@ -35,6 +37,7 @@
   .barLead { flex-direction: column; align-items: flex-start; gap: 0; }
   .barOffer, .barDot { display: none; }
   .barTime { color: #dfe3e6; }
+  .barSpace { height: 48px; }
 }
 
 @media (max-width: 639px) {

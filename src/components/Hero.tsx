@@ -6,7 +6,7 @@ import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
 import { HeroDownloadMenu } from '@/components/HeroDownloadMenu'
 import { SiteNav } from '@/components/SiteNav'
-import { SaleBar, SalePill, useLifetimeSaleNow } from '@/components/Sale'
+import { SalePill, useLifetimeSaleNow } from '@/components/Sale'
 import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroBackdrop } from '@/components/HeroBackdrop'
 import { HeroLayout } from '@/components/home/HeroLayout'
@@ -51,11 +51,8 @@ export function Hero({
     >
       <HeroLayout />
       <HeroBackdrop />
-      <SiteNav
-        banner={
-          sale ? <SaleBar sale={sale} renderedAt={renderedAt} /> : undefined
-        }
-      />
+      {/* The hero makes room for the sale bar itself (data-sale in Home.module.css). */}
+      <SiteNav renderedAt={renderedAt} reserveBar={false} />
 
       <div className={styles.heroContent}>
         <div className={styles.heroInner}>

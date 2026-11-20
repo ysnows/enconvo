@@ -8,6 +8,11 @@ const SHARE_CRAWLER = {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  env: {
+    // When the site was built. A page without its own render time judges a running sale at
+    // this instant on its first render, so the server's HTML and the browser agree (Sale.tsx).
+    SITE_BUILT_AT: String(Date.now()),
+  },
   i18n: require('./src/i18n/config.json'),
   experimental: {
     scrollRestoration: true,

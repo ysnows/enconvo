@@ -81,3 +81,14 @@
   transform: translateY(calc(-1 * var(--cookie-banner-offset, 0px)));
   transition: transform 200ms ease;
 }
+
+/* While a sale bar tops the fixed header (components/Sale), anchor jumps clear it too: every
+   page's scroll margins were set for the nav alone. Heights match .bar in Sale.module.css. */
+html:has([data-sale-bar]) {
+  scroll-padding-top: 40px;
+}
+@media (max-width: 1023px) {
+  html:has([data-sale-bar]) {
+    scroll-padding-top: 48px;
+  }
+}

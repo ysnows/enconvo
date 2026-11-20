@@ -8,6 +8,9 @@ import sale from '@/styles/Sale.module.css'
 
 const SALE_TIME_ZONE = 'America/Los_Angeles'
 
+/** When the site was built (next.config.js), for pages that don't pass their own render time. */
+export const SITE_BUILT_AT = Number(process.env.SITE_BUILT_AT) || 0
+
 /**
  * The lifetime sale running now. The first render judges it at `renderedAt` (the static page's
  * time) so the server and the browser agree; then the visitor's clock, checked each minute. It
@@ -103,6 +106,7 @@ function ArrowIcon() {
 /**
  * The strip above the site nav while a sale runs: what, how long, and a way in. It keeps its
  * own clock (a minute's precision is enough here), so the page around it never re-renders.
+ * `data-sale-bar` lets anchor jumps clear it (tailwind.css).
  */
 export function SaleBar({
   sale: current,
@@ -120,7 +124,7 @@ export function SaleBar({
     p2: left.minutes,
   })
   return (
-    <div className={sale.bar}>
+    <div className={sale.bar} data-sale-bar>
       <span className={sale.barLead}>
         <span className={sale.barName}>
           <TagIcon />

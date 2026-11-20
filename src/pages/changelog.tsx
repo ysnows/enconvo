@@ -396,8 +396,13 @@ async function readBetaReleases(): Promise<BetaRelease[]> {
 }
 
 const DOWNLOAD_URL = 'https://api.enconvo.com/app/download'
-// Fixed site nav height plus a little air, used for anchors and scroll targets.
-const NAV_OFFSET = 88
+// The fixed site header's height plus a little air, for scroll targets. The header grows by the
+// sale bar while a sale runs (SiteNav), so it is measured; anchors clear the bar through the
+// page's scroll-padding (tailwind.css) on top of their scroll-mt-[88px].
+function navOffset() {
+  const header = document.querySelector('[data-site-header]')
+  return (header?.getBoundingClientRect().bottom ?? 81) + 7
+}
 const EASE = 'ease-[cubic-bezier(0.22,1,0.36,1)]'
 
 const CHANGE_VERB =
@@ -1450,9 +1455,10 @@ export default function ChangelogPage({ releases, betas }: ChangelogPageProps) {
     const article = document.getElementById(entry.groupId ?? entry.id)
     if (closing && article) {
       const top = article.getBoundingClientRect().top
-      if (top < NAV_OFFSET) {
+      const offset = navOffset()
+      if (top < offset) {
         window.scrollTo({
-          top: window.scrollY + top - NAV_OFFSET,
+          top: window.scrollY + top - offset,
           behavior: prefersReducedMotion()
             ? ('instant' as ScrollBehavior)
             : 'smooth',
@@ -1550,7 +1556,7 @@ export default function ChangelogPage({ releases, betas }: ChangelogPageProps) {
       const top =
         controlsRef.current.getBoundingClientRect().top +
         window.scrollY -
-        NAV_OFFSET
+        navOffset()
       if (window.scrollY > top) {
         window.scrollTo({ top, behavior: 'instant' as ScrollBehavior })
       }
