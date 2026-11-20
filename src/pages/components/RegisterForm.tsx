@@ -77,12 +77,19 @@ export default function RegisterForm({
   const [googleIsLoading, setGoogleIsLoading] = useState(false)
   const [appleIsLoading, setAppleIsLoading] = useState(false)
   const captcha = React.useRef<CaptchaHandle>(null)
+  const emailInput = React.useRef<HTMLInputElement>(null)
+  const passwordInput = React.useRef<HTMLInputElement>(null)
 
+  // A problem with a field puts the caret back in it, so the keyboard and screen readers land there.
   function show(message: AuthMessage) {
     const field = authMessageField(message)
-    if (field === 'email') setEmailMessage(message)
-    else if (field === 'password') setPasswordMessage(message)
-    else setFormMessage(message)
+    if (field === 'email') {
+      setEmailMessage(message)
+      emailInput.current?.focus()
+    } else if (field === 'password') {
+      setPasswordMessage(message)
+      passwordInput.current?.focus()
+    } else setFormMessage(message)
   }
 
   async function signUp() {
@@ -94,7 +101,11 @@ export default function RegisterForm({
     const shortPassword = password.length < MIN_PASSWORD_LENGTH
     if (badEmail) setEmailMessage({ source: INVALID_EMAIL })
     if (shortPassword) setPasswordMessage(passwordTooShort())
+    if (badEmail) emailInput.current?.focus()
+    else if (shortPassword) passwordInput.current?.focus()
     if (badEmail || shortPassword) return
+    // Password managers offer to save only what was submitted from a password field.
+    setShowPassword(false)
 
     setEmailIsLoading(true)
     let captchaToken: string | undefined
@@ -133,7 +144,7 @@ export default function RegisterForm({
     }
     // An address that already has an account: Auth answers without identities and sends nothing.
     if (data.user && data.user.identities?.length === 0) {
-      setEmailMessage({ source: EMAIL_TAKEN })
+      show({ source: EMAIL_TAKEN })
       return
     }
 
@@ -319,6 +330,7 @@ export default function RegisterForm({
           >
             <div>
               <Input
+                ref={emailInput}
                 id="signup-email"
                 type="email"
                 aria-label={t('Email address')}
@@ -364,6 +376,7 @@ export default function RegisterForm({
             <div className="mt-4">
               <div className="relative">
                 <Input
+                  ref={passwordInput}
                   id="signup-password"
                   type={showPassword ? 'text' : 'password'}
                   aria-label={t('Password')}

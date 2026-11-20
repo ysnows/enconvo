@@ -48,7 +48,10 @@ export default function ConfirmAge() {
     supabase.auth.getSession().then(({ data }) => {
       const current = data.session
       if (!current) {
-        void router.replace('/login', undefined, { locale })
+        // Keeps where the sign-in was for (the app, a return page).
+        void router.replace(authFlowHref('/login', router.query), undefined, {
+          locale,
+        })
         return
       }
       setSession(current)
