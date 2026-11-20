@@ -64,9 +64,9 @@ export default function RegisterForm({
 
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  // Product email needs an opt-in the visitor gives, so the box starts unchecked.
+  // Product update emails are on by default (2026-11-21); the visitor can uncheck the box.
   const [productUpdatesSubscribed, setProductUpdatesSubscribed] =
-    useState(false)
+    useState(true)
   const [emailMessage, setEmailMessage] = useState<AuthMessage | null>(null)
   const [passwordMessage, setPasswordMessage] = useState<AuthMessage | null>(
     null
