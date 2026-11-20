@@ -9,6 +9,7 @@ import clsx from 'clsx'
 import Link from 'next/link'
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
+import { SaleCountdown, saleLastDay } from '@/components/Sale'
 import { trackEvent } from '@/lib/analytics'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
 import { reportCampaignDownload } from '@/lib/campaign-journey'
@@ -1416,6 +1417,7 @@ function LicenseCard({
     : prices.standard.cents
   const payCents = saleCents(listCents, now)
   const price = usd(payCents)
+  const onSale = Boolean(saleBadge)
   // A struck price shares the line with the figure, so a long one steps down rather than wraps.
   const amountSize = !saleBadge
     ? undefined
@@ -1427,7 +1429,7 @@ function LicenseCard({
     <article
       id="pricing-teams"
       style={{ scrollMarginTop: 96 }}
-      className={clsx(cards.card, cards.raised)}
+      className={clsx(cards.card, cards.raised, onSale && cards.gold)}
       aria-label={t('Lifetime License')}
       data-spotlight
     >
@@ -1467,7 +1469,14 @@ function LicenseCard({
             <SeatStepper seats={seats} onChange={setSeats} />
           </>
         ) : (
-          <span>{t('30-day money back guarantee.')}</span>
+          <>
+            {onSale && (
+              <span className={cards.save}>
+                {t('You save {p0}', { p0: usd(listCents - payCents) })}
+              </span>
+            )}
+            <span>{t('30-day money back guarantee.')}</span>
+          </>
         )}
       </div>
       <CardButton
@@ -1478,6 +1487,7 @@ function LicenseCard({
         <ArrowIcon />
       </CardButton>
       <p className={cards.note}>
+        {onSale && `${t('Discount applied at checkout.')} `}
         {t('One-time payment. Never renews.')}
         {isTeams && ` ${t('30-day money back guarantee.')}`}
       </p>
@@ -1623,7 +1633,7 @@ function CloudCard({
  * (lifetime-pricing.ts) from that instant, then from the visitor's clock once the page loads.
  */
 export function Pricing({ renderedAt }: { renderedAt: number }) {
-  const { t } = useI18n()
+  const { t, locale } = useI18n()
 
   const [billing, setBilling] = useState<'monthly' | 'annual'>('annual')
   const [licenseTier, setLicenseTier] = useState<LicenseTier>('Standard')
@@ -1643,7 +1653,7 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        className={cards.aurora}
+        className={clsx(cards.aurora, sale && cards.auroraGold)}
         src={auroraBloom.src}
         alt=""
         aria-hidden="true"
@@ -1652,15 +1662,32 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
         draggable={false}
       />
       <div className={`${styles.sectionContainer} mx-auto`}>
-        <div className={cards.heading} data-reveal>
-          <p className={cards.eyebrow}>{t('Pricing')}</p>
-          <h2>{t('Simple pricing, for everyone.')}</h2>
-          <p>
-            {t(
-              'Start free. Pay once and bring your own AI, or let Enconvo Cloud bring it. The two stack.'
-            )}
-          </p>
-        </div>
+        {sale ? (
+          <div className={cards.heading} data-reveal>
+            <p className={clsx(cards.eyebrow, cards.eyebrowGold)}>
+              {t('Black Friday · Ends {p0}', { p0: saleLastDay(sale, locale) })}
+            </p>
+            <h2>
+              {t('{p0}% off every Lifetime License', { p0: sale.percentOff })}
+            </h2>
+            <p>
+              {t('Pay once, keep Enconvo for life. The sale ends {p0}.', {
+                p0: saleLastDay(sale, locale),
+              })}
+            </p>
+          </div>
+        ) : (
+          <div className={cards.heading} data-reveal>
+            <p className={cards.eyebrow}>{t('Pricing')}</p>
+            <h2>{t('Simple pricing, for everyone.')}</h2>
+            <p>
+              {t(
+                'Start free. Pay once and bring your own AI, or let Enconvo Cloud bring it. The two stack.'
+              )}
+            </p>
+          </div>
+        )}
+        {sale && <SaleCountdown sale={sale} renderedAt={renderedAt} />}
 
         <AffiliateOffer />
 

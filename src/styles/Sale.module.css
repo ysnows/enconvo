@@ -1,0 +1,51 @@
+/* A lifetime sale (Black Friday): the strip above the nav, the hero pill and the pricing
+   countdown. Gold is the site's sale badge color (#ffc533), used only while a sale runs. */
+
+.bar { display: flex; align-items: center; justify-content: center; gap: 6px 18px; min-height: 40px; padding: 0 24px; box-sizing: border-box; background: linear-gradient(90deg, #0b0905, #1b1507 30%, #1b1507 70%, #0b0905); border-bottom: 1px solid rgba(255, 197, 51, .24); font-size: 13px; line-height: 18px; white-space: nowrap; }
+.barLead { display: flex; align-items: center; gap: 18px; min-width: 0; }
+.barName { display: inline-flex; align-items: center; gap: 6px; color: #ffc533; font-weight: 600; }
+.barName svg { width: 14px; height: 14px; flex: none; }
+.barOffer { color: #dfe3e6; }
+.barDot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 255, 255, .28); }
+.barTime { color: #ffc533; font-variant-numeric: tabular-nums; }
+.barLink { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; color: #f4f4f6; font-weight: 500; }
+.barLink:hover { color: #fff; }
+.barLink svg { width: 14px; height: 14px; opacity: .8; }
+
+.pillRow { display: flex; justify-content: center; margin: 0 0 26px; }
+.pill { display: inline-flex; align-items: center; gap: 10px; min-height: 34px; padding: 0 12px 0 4px; border: 1px solid rgba(255, 197, 51, .32); border-radius: 999px; background: linear-gradient(180deg, rgba(255, 197, 51, .12), rgba(255, 197, 51, .05)); box-shadow: 0 0 0 4px rgba(255, 197, 51, .04), 0 8px 30px rgba(255, 170, 30, .12); color: #f4f4f6; font-size: 14px; font-weight: 500; line-height: 20px; transition: border-color 160ms, background 160ms; }
+.pill:hover { border-color: rgba(255, 197, 51, .5); background: linear-gradient(180deg, rgba(255, 197, 51, .16), rgba(255, 197, 51, .07)); }
+.pill b { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: #ffc533; color: #1a1403; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.pill svg { width: 14px; height: 14px; flex: none; color: #c2c6c9; }
+
+.countdown { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 28px; }
+.boxes { display: flex; gap: 10px; }
+.box { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 78px; padding: 12px 0 10px; border: 1px solid rgba(255, 197, 51, .22); border-radius: 12px; background: linear-gradient(180deg, rgba(40, 32, 14, .75), rgba(16, 13, 6, .85)); box-shadow: 0 1px 0 rgba(255, 226, 150, .08) inset; }
+.box b { color: #f4f4f6; font-size: 32px; font-weight: 600; line-height: 36px; font-variant-numeric: tabular-nums; }
+.box span { color: #a8a294; font-size: 11px; line-height: 16px; }
+.boxLast b { color: #ffc533; }
+.endsAt { color: #9c9c9d; font-size: 13px; line-height: 18px; }
+
+/* Until the visitor's clock replaces the page's, which can be an hour old. */
+.barTime, .boxes { transition: opacity 240ms ease; }
+.pending { opacity: 0; }
+
+@media (max-width: 1023px) {
+  .bar { justify-content: space-between; min-height: 48px; padding: 4px 16px; }
+  .barLead { flex-direction: column; align-items: flex-start; gap: 0; }
+  .barOffer, .barDot { display: none; }
+  .barTime { color: #dfe3e6; }
+}
+
+@media (max-width: 639px) {
+  .pillRow { margin-bottom: 18px; }
+  .pill { gap: 8px; font-size: 13px; }
+  .boxes { gap: 8px; }
+  .box { width: 70px; }
+  .box b { font-size: 28px; }
+}
+
+@media (max-width: 359px) {
+  .box { width: 62px; }
+  .pill span { display: none; }
+}

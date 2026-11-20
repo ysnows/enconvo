@@ -6,6 +6,7 @@ import styles from '@/styles/Home.module.css'
 import { useEffect, useState } from 'react'
 import { HeroDownloadMenu } from '@/components/HeroDownloadMenu'
 import { SiteNav } from '@/components/SiteNav'
+import { SaleBar, SalePill, useLifetimeSaleNow } from '@/components/Sale'
 import { HeroShowcase } from '@/components/HeroShowcase'
 import { HeroBackdrop } from '@/components/HeroBackdrop'
 import { HeroLayout } from '@/components/home/HeroLayout'
@@ -18,8 +19,16 @@ declare global {
   }
 }
 
-export function Hero({ macVersion }: { macVersion?: string }) {
+export function Hero({
+  macVersion,
+  renderedAt,
+}: {
+  macVersion?: string
+  /** When the static page was generated; it decides whether the first render shows a sale. */
+  renderedAt: number
+}) {
   const { t, locale } = useI18n()
+  const sale = useLifetimeSaleNow(renderedAt)
 
   const [navElevated, setNavElevated] = useState(false)
 
@@ -38,15 +47,21 @@ export function Hero({ macVersion }: { macVersion?: string }) {
     <div
       className={`${styles.hero} relative overflow-hidden bg-canvas`}
       data-nav-elevated={navElevated}
+      data-sale={sale ? 'true' : undefined}
     >
       <HeroLayout />
       <HeroBackdrop />
-      <SiteNav />
+      <SiteNav
+        banner={
+          sale ? <SaleBar sale={sale} renderedAt={renderedAt} /> : undefined
+        }
+      />
 
       <div className={styles.heroContent}>
         <div className={styles.heroInner}>
           <div className="w-full">
             <div className={styles.heroCopy}>
+              {sale && <SalePill sale={sale} />}
               <h1 className={styles.heroTitle}>
                 <I18nText
                   source="The {assistant} you were promised."

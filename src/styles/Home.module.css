@@ -120,6 +120,21 @@
   }
 }
 
+/* A lifetime sale: the sale bar sits in the fixed header (40px, 48px below 1024px), so the hero
+   starts that much lower, and gold replaces the backdrop's and the headline's blue. */
+.hero[data-sale='true'] .heroContent { padding-top: 148px; }
+.hero[data-sale='true'] :global([data-aurora-layer]),
+.hero[data-sale='true'] :global([data-aurora-sweep]) { filter: sepia(1) saturate(2.4) hue-rotate(-8deg) brightness(1.08); }
+.hero[data-sale='true'] .heroTitleAccent { color: #ffd36b; }
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero[data-sale='true'] .heroTitleAccent {
+    background-image: linear-gradient(110deg, #e8b54a 0%, #ffe3a0 22%, #fff6dc 32%, #e8b54a 46%, #ffd46e 60%, #fff6dc 72%, #e8b54a 90%);
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero[data-sale='true'] .heroContent { padding-top: 156px; }
+}
+
 @keyframes heroTitleSheen {
   from { background-position: 100% 50%; }
   to { background-position: 0% 50%; }

@@ -2642,5 +2642,18 @@
   "Wait {p0} seconds, then try again.": "Odczekaj {p0} s, a potem spróbuj ponownie.",
   "Too many emails were sent recently. Try again later.": "Ostatnio wysłano zbyt wiele e-maili. Spróbuj ponownie później.",
   "Too many tries. Wait a moment, then try again.": "Zbyt wiele prób. Odczekaj chwilę i spróbuj ponownie.",
-  "Complete the security check to continue.": "Ukończ weryfikację bezpieczeństwa, aby kontynuować."
+  "Complete the security check to continue.": "Ukończ weryfikację bezpieczeństwa, aby kontynuować.",
+  "Black Friday": "Black Friday",
+  "{p0}% off every Lifetime License": "{p0}% zniżki na każdą Licencję dożywotnią",
+  "{p0}% off Lifetime License": "{p0}% zniżki na Licencję dożywotnią",
+  "Ends in {p0}d {p1}h {p2}m": "Kończy się za {p0} d {p1} godz. {p2} min",
+  "Get the deal": "Skorzystaj z oferty",
+  "hours": "godz.",
+  "minutes": "min",
+  "seconds": "sek.",
+  "Ends {p0}": "Kończy się {p0}",
+  "Black Friday · Ends {p0}": "Black Friday · Do {p0}",
+  "Pay once, keep Enconvo for life. The sale ends {p0}.": "Płacisz raz, Enconvo masz na zawsze. Promocja kończy się {p0}.",
+  "You save {p0}": "Oszczędzasz {p0}",
+  "Discount applied at checkout.": "Zniżka zostanie naliczona przy płatności."
 }

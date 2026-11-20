@@ -1567,7 +1567,8 @@ test('License prices step up on schedule and KENMOO2026 stays 40% off until it e
 })
 
 test('Black Friday takes 30% off for everyone but KenMoo buyers, who keep the lower price', () => {
-  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-22T23:59:59-08:00')), null)
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-19T23:59:59-08:00')), null)
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-20T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026')
   assert.equal(pricing.lifetimeSale(Date.parse('2026-11-23T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026')
   assert.equal(pricing.lifetimeSale(Date.parse('2026-12-01T00:00:00-08:00')), null)
   assert.deepEqual(scheduledCents('2026-11-23T00:00:00-08:00'), [4130, 8330, 11130])

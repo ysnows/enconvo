@@ -66,7 +66,8 @@ export const LIFETIME_SALES: LifetimeSale[] = [
     campaign: 'black-friday-2026',
     badge: 'Black Friday −{p0}%',
     percentOff: 30,
-    from: '2026-11-23T00:00:00-08:00',
+    // Started early, on 20 Nov (the user's call on 2026-11-21).
+    from: '2026-11-20T00:00:00-08:00',
     until: '2026-12-01T00:00:00-08:00',
   },
 ]

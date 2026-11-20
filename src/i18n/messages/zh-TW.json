@@ -2642,5 +2642,18 @@
   "Wait {p0} seconds, then try again.": "請等待 {p0} 秒後再試。",
   "Too many emails were sent recently. Try again later.": "最近寄出的郵件過多，請稍後再試。",
   "Too many tries. Wait a moment, then try again.": "嘗試次數過多，請稍候片刻再試。",
-  "Complete the security check to continue.": "請完成安全驗證以繼續。"
+  "Complete the security check to continue.": "請完成安全驗證以繼續。",
+  "Black Friday": "黑五特惠",
+  "{p0}% off every Lifetime License": "所有終身授權立減 {p0}%",
+  "{p0}% off Lifetime License": "終身授權立減 {p0}%",
+  "Ends in {p0}d {p1}h {p2}m": "還剩 {p0} 天 {p1} 小時 {p2} 分",
+  "Get the deal": "立即搶購",
+  "hours": "時",
+  "minutes": "分",
+  "seconds": "秒",
+  "Ends {p0}": "{p0} 結束",
+  "Black Friday · Ends {p0}": "黑五特惠 · {p0} 結束",
+  "Pay once, keep Enconvo for life. The sale ends {p0}.": "一次付費，終身使用 Enconvo。活動 {p0} 結束。",
+  "You save {p0}": "立省 {p0}",
+  "Discount applied at checkout.": "折扣在結帳時自動套用。"
 }

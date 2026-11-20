@@ -2642,5 +2642,18 @@
   "Wait {p0} seconds, then try again.": "请等待 {p0} 秒后再试。",
   "Too many emails were sent recently. Try again later.": "最近发送的邮件过多，请稍后再试。",
   "Too many tries. Wait a moment, then try again.": "尝试次数过多，请稍等片刻再试。",
-  "Complete the security check to continue.": "请完成安全验证以继续。"
+  "Complete the security check to continue.": "请完成安全验证以继续。",
+  "Black Friday": "黑五特惠",
+  "{p0}% off every Lifetime License": "所有终身许可证立减 {p0}%",
+  "{p0}% off Lifetime License": "终身许可证立减 {p0}%",
+  "Ends in {p0}d {p1}h {p2}m": "还剩 {p0} 天 {p1} 小时 {p2} 分",
+  "Get the deal": "立即抢购",
+  "hours": "时",
+  "minutes": "分",
+  "seconds": "秒",
+  "Ends {p0}": "{p0} 结束",
+  "Black Friday · Ends {p0}": "黑五特惠 · {p0} 结束",
+  "Pay once, keep Enconvo for life. The sale ends {p0}.": "一次付费，终身使用 Enconvo。活动 {p0} 结束。",
+  "You save {p0}": "立省 {p0}",
+  "Discount applied at checkout.": "折扣在结账时自动生效。"
 }

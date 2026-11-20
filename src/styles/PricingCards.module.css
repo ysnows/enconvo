@@ -65,6 +65,21 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 .note { margin: 10px 0 16px; color: #9c9c9d; font-size: 12px; line-height: 18px; text-wrap: pretty; }
 
+/* A lifetime sale (lifetimeSale in lifetime-pricing.ts): the Lifetime card and the heading turn gold. */
+.eyebrowGold { color: #ffc533; }
+.auroraGold { filter: sepia(1) saturate(2.2) hue-rotate(-8deg) brightness(1.05); }
+.raised.gold { border-color: rgba(255,197,51,.45); background: radial-gradient(90% 300px at 50% -60px, rgba(255,197,51,.22), transparent 72%), linear-gradient(170deg, rgba(255,197,51,.07), transparent 62%), #13100a; box-shadow: 0 1px 0 rgba(255,226,150,.16) inset, 0 0 0 1px rgba(0,0,0,.4), 0 36px 90px rgba(0,0,0,.62), 0 0 100px rgba(255,180,40,.08); }
+.raised.gold::after { background: linear-gradient(90deg, transparent, rgba(255,226,150,.95), transparent); }
+.gold .kind { color: #cdb98a; }
+.gold :is(.tagline, .note, .unit, .foot) { color: #a8a294; }
+.gold .thumb { border-color: rgba(255,197,51,.32); background: linear-gradient(180deg, #3b331f, #2b2517); }
+.gold .list { border-top-color: rgba(255,197,51,.16); }
+.gold .ico:not(.icoPlus) { color: #e2b54a; }
+.gold .badge { border-color: transparent; background: #ffc533; color: #1a1403; font-weight: 600; }
+.save { color: #ffc533; font-weight: 600; }
+.raised.gold .cta { background: linear-gradient(180deg, #ffd666, #ffbd2e); color: #1a1403; font-weight: 600; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 10px 30px rgba(255,190,50,.22); }
+.raised.gold .cta:hover { background: linear-gradient(180deg, #ffe08a, #ffc747); color: #1a1403; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 12px 36px rgba(255,190,50,.32); }
+
 .body { display: flex; flex-direction: column; min-width: 0; }
 .list { display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.08); }
 .list li { display: flex; align-items: flex-start; gap: 10px; min-width: 0; }
@@ -103,6 +118,8 @@
   .row { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; gap: 16px; max-width: 560px; margin: 48px auto 0; }
   .card, .left, .right, .raised { display: flex; flex-direction: column; margin: 0; padding: 28px 24px; border: 1px solid rgba(255,255,255,.1); border-radius: 16px; }
   .raised { border-color: rgba(182,214,232,.32); }
+  /* Stacked, the sale's card comes first. */
+  .raised.gold { order: -1; }
   .segSlot:empty { display: none; }
   .price { margin-top: 22px; }
   .cta { min-height: 48px; }

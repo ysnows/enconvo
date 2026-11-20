@@ -66,7 +66,7 @@ export default function Home({
         {t('Skip to content')}
       </a>
       <main id="main-content" tabIndex={-1}>
-        <Hero macVersion={macVersion ?? undefined} />
+        <Hero macVersion={macVersion ?? undefined} renderedAt={renderedAt} />
         <FeatureGrid />
         <ModelFreedom />
         <OpenPlatform />

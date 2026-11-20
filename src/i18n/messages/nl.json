@@ -2642,5 +2642,18 @@
   "Wait {p0} seconds, then try again.": "Wacht {p0} seconden en probeer het dan opnieuw.",
   "Too many emails were sent recently. Try again later.": "Er zijn recent te veel e-mails verstuurd. Probeer het later opnieuw.",
   "Too many tries. Wait a moment, then try again.": "Te veel pogingen. Wacht even en probeer het dan opnieuw.",
-  "Complete the security check to continue.": "Voltooi de beveiligingscontrole om door te gaan."
+  "Complete the security check to continue.": "Voltooi de beveiligingscontrole om door te gaan.",
+  "Black Friday": "Black Friday",
+  "{p0}% off every Lifetime License": "{p0}% korting op elke Levenslange licentie",
+  "{p0}% off Lifetime License": "{p0}% korting op de Levenslange licentie",
+  "Ends in {p0}d {p1}h {p2}m": "Eindigt over {p0} d {p1} u {p2} min",
+  "Get the deal": "Profiteer nu",
+  "hours": "uur",
+  "minutes": "minuten",
+  "seconds": "seconden",
+  "Ends {p0}": "Eindigt op {p0}",
+  "Black Friday · Ends {p0}": "Black Friday · Tot en met {p0}",
+  "Pay once, keep Enconvo for life. The sale ends {p0}.": "Eén keer betalen, Enconvo voor altijd. De actie eindigt op {p0}.",
+  "You save {p0}": "Je bespaart {p0}",
+  "Discount applied at checkout.": "De korting wordt bij het afrekenen verrekend."
 }
