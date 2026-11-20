@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 
 // An ISO date parses as UTC midnight, so the UTC format below shows this day in every time zone.
-const LAST_UPDATED = '2026-10-31'
+const LAST_UPDATED = '2026-11-20'
 const SUPPORT_EMAIL = 'support@enconvo.com'
 
 function Section({
@@ -539,7 +539,7 @@ export default function Privacy() {
           </p>
           <p>
             {t(
-              'Creating an account asks for your month and year of birth. We keep only the fact that you met the minimum age, not your date of birth. If someone below the minimum age tries to sign up, we delete the account at once. If you believe a child has given us personal data, email {p0} and we will delete it.',
+              'Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.',
               { p0: SUPPORT_EMAIL }
             )}
           </p>

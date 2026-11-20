@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "보안 확인을 통과하지 못했습니다. 다시 시도하세요.",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "임시 이메일 주소로는 가입할 수 없습니다. 계속 사용하는 이메일 주소를 입력하세요.",
   "This password has appeared in a data breach. Choose a different one.": "이 비밀번호는 데이터 유출에 포함된 적이 있습니다. 다른 비밀번호를 선택하세요.",
-  "Choose a stronger password.": "더 강력한 비밀번호를 선택하세요."
+  "Choose a stronger password.": "더 강력한 비밀번호를 선택하세요.",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "계속하면 만 {p0}세 이상임을 확인하고 {p1} 및 {p2}에 동의하는 것으로 간주됩니다.",
+  "Show password": "비밀번호 표시",
+  "Hide password": "비밀번호 숨기기",
+  "An account with this email already exists.": "이 이메일로 가입된 계정이 이미 있습니다.",
+  "Resend in {p0}": "{p0} 후 다시 보내기",
+  "Sent again. Check your spam folder too.": "다시 보냈습니다. 스팸 폴더도 확인해 주세요.",
+  "Use a different email": "다른 이메일 사용",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "계정 만들기를 마치려면 만 {p0}세 이상임을 확인하고 {p1} 및 {p2}에 동의해 주세요.",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "계정을 만들 때 최소 연령을 충족하는지 확인해 달라고 요청합니다. 당사는 그 확인만 보관하며 생년월일은 보관하지 않습니다. 계정이 최소 연령 미만인 사람의 것임을 알게 되면 해당 계정을 삭제합니다. 아동이 당사에 개인 데이터를 제공했다고 생각되면 {p0}(으)로 이메일을 보내 주세요. 해당 데이터를 삭제하겠습니다."
 }

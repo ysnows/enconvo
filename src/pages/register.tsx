@@ -6,7 +6,8 @@ import { useRouter } from 'next/router'
 import { NativeRouter } from '@/utils/app/native_router'
 import RegisterForm from '@/pages/components/RegisterForm'
 import RegisterSuccess from '@/pages/components/RegisterSuccess'
-import type { AuthChangeEvent } from '@supabase/supabase-js'
+import LoginSuccess from '@/pages/components/LoginSuccess'
+import type { AuthChangeEvent, User } from '@supabase/supabase-js'
 
 export default function Register() {
   const { locale } = useI18n()
@@ -14,8 +15,10 @@ export default function Register() {
 
   const router = useRouter()
 
+  // 'register' (the form), 'sent' (the confirmation email went out) or 'signed_in' (a session exists).
   const [registerState, setRegisterState] = useState('register')
   const [email, setEmail] = useState('')
+  const [user, setUser] = useState<User | null>(null)
   const sessionChecked = useRef(false)
 
   const supabase = createClientComponentClient()
@@ -39,7 +42,8 @@ export default function Register() {
           event === ('SIGNED_IN' as AuthChangeEvent)
         ) {
           if (router.query.from === 'app' && router.query.source === 'companion') {
-            setRegisterState('success')
+            setUser(session?.user ?? null)
+            setRegisterState('signed_in')
             await handleOpenApp()
             return
           }
@@ -90,8 +94,8 @@ export default function Register() {
     sessionChecked.current = true
     supabase.auth.getSession().then(async ({ data, error }) => {
       if (data.session) {
-        console.log('session', data)
-        setRegisterState('success')
+        setUser(data.session.user)
+        setRegisterState('signed_in')
         if (router.query['from'] === 'app') {
           // Only a session the auth service still has goes to the app.
           const {
@@ -106,8 +110,17 @@ export default function Register() {
 
   return (
     <>
-      {registerState === 'success' ? (
-        <RegisterSuccess email={email} />
+      {registerState === 'sent' ? (
+        <RegisterSuccess
+          email={email}
+          onUseDifferentEmail={() => setRegisterState('register')}
+        />
+      ) : registerState === 'signed_in' ? (
+        <LoginSuccess
+          handleOpenApp={handleOpenApp}
+          user={user}
+          fromApp={router.query.from === 'app'}
+        />
       ) : (
         <RegisterForm
           setLoginState={setRegisterState}

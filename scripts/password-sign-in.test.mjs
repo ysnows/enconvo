@@ -269,6 +269,8 @@ async function loginForm(supabase) {
       '@/components/ui/alert': { Alert: passthrough, AlertDescription: passthrough, AlertTitle: passthrough },
       '@/components/Logo': { Logo: () => null },
       '@/components/Turnstile': { Turnstile: () => null },
+      '@/components/AuthConsent': { AuthConsent: () => null },
+      '@/lib/age-gate': { saveRegistrationAgeConfirmation() {} },
     })
   ).default
   const findNode = (node, match) => {

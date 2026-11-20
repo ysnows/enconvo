@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "安全驗證未通過，請再試一次。",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "不支援使用臨時信箱註冊，請使用常用的電子郵件地址。",
   "This password has appeared in a data breach. Choose a different one.": "這個密碼曾出現在資料外洩事件中，請換一個。",
-  "Choose a stronger password.": "請設定一個更安全的密碼。"
+  "Choose a stronger password.": "請設定一個更安全的密碼。",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "繼續即表示你確認已年滿 {p0} 歲，並同意我們的{p1}和{p2}。",
+  "Show password": "顯示密碼",
+  "Hide password": "隱藏密碼",
+  "An account with this email already exists.": "這個電子郵件已經註冊過帳號。",
+  "Resend in {p0}": "{p0} 後可重新寄送",
+  "Sent again. Check your spam folder too.": "已重新寄送。也請查看垃圾郵件資料夾。",
+  "Use a different email": "改用其他電子郵件",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "若要完成建立帳號，請確認你已年滿 {p0} 歲，並同意我們的{p1}和{p2}。",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "建立帳號時，我們會請你確認已達最低年齡。我們只保存這項確認，從不保存出生日期。如果我們得知某個帳號屬於未達最低年齡的人，會將其刪除。如果你認為有兒童向我們提供了個人資料，請寄信至 {p0}，我們會將其刪除。"
 }

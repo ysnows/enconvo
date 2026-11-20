@@ -632,35 +632,43 @@ test('analytics payloads carry only the slug and enums, never page URLs or ident
 test('registering from an offer link confirms the email back on the website', async () => {
   const authFlow = await loadTs('../src/lib/auth-flow.ts')
   const offer = await loadOffer([])
+  const emailSignup = await loadTs('../src/lib/email-signup.ts', { '@/lib/auth-flow': authFlow, '@/lib/welcome-offer': offer })
+  const authErrors = await loadTs('../src/lib/auth-errors.ts', { '@/components/Turnstile': { CaptchaError: class extends Error {} } })
   let router
   let signUp
+  let reply
+  let state
   const passthrough = ({ children }) => React.createElement('div', {}, children)
   const RegisterForm = (
     await loadTs('../src/pages/components/RegisterForm.tsx', {
-      react: { ...React, useState: (value) => [value, () => {}], useEffect() {} },
+      // The one empty-string state is the password, typed in; the sign-up's outcome lands in `state`.
+      react: { ...React, useState: (value) => [value === '' ? 'correct horse battery' : value, () => {}], useEffect() {}, useRef: (value) => ({ current: value }) },
       'next/router': { useRouter: () => router },
       'next/head': { default: passthrough, __esModule: true },
       'next/link': { default: passthrough, __esModule: true },
+      'lucide-react': { Eye: () => null, EyeOff: () => null },
       '@/i18n/I18nProvider': { useI18n: () => ({ t: (s) => s, locale: 'ja' }) },
       '@/i18n/server': { i18nStaticProps: () => ({}) },
       '@/lib/auth-flow': authFlow,
-      '@/lib/welcome-offer': offer,
+      '@/lib/email-signup': emailSignup,
+      '@/lib/auth-errors': authErrors,
+      '@/lib/apple-sign-in': { appleStartUrl: () => '', saveAppleSignInContext() {} },
       '@/lib/email-preferences-client': { saveRegistrationEmailPreference() {}, syncCurrentEmailPreference: async () => {} },
       '@/lib/age-gate': await loadTs('../src/lib/age-gate.ts'),
-      '@/components/BirthMonthField': { BirthMonthField: () => null, birthMonthFrom: () => ({ month: 1, year: 1990 }) },
-      '@supabase/auth-helpers-nextjs': {
+      '@/lib/supabase': {
         createClientComponentClient: () => ({
           auth: {
             signUp: async (credentials) => {
               signUp = credentials
-              return { data: { session: null }, error: null }
+              return reply
             },
           },
         }),
       },
+      '@/components/AuthConsent': { AuthConsent: () => null },
+      '@/components/Turnstile': { Turnstile: () => null },
       '@/components/ui/button': { Button: passthrough },
       '@/components/ui/input': { Input: () => null },
-      '@/components/ui/alert': { Alert: passthrough, AlertDescription: passthrough, AlertTitle: passthrough },
       '@/components/Logo': { Logo: () => null },
     })
   ).default
@@ -670,23 +678,42 @@ test('registering from an offer link confirms the email back on the website', as
     const children = node.props?.children
     return (Array.isArray(children) ? children : [children]).map((child) => find(child, test)).find(Boolean) ?? null
   }
+  const submit = async () => {
+    state = null
+    signUp = null
+    const tree = RegisterForm({ loginState: 'register', setLoginState: (next) => (state = next), email: 'new@example.test', setEmail() {} })
+    find(tree, (node) => node.type === 'form').props.onSubmit({ preventDefault() {} })
+    await settle()
+  }
   globalThis.window = { location: { origin: 'https://www.enconvo.com' } }
+  reply = { data: { user: { id: 'u1', identities: [{}] }, session: null }, error: null }
   for (const [returnUrl, expected] of [
     ['/?offer=fake0offer0token', 'https://www.enconvo.com/auth/callback?returnUrl=%2F%3Foffer%3Dfake0offer0token&language=ja'],
     ['/?utm_source=x&offer=fake0offer0token', 'https://www.enconvo.com/auth/callback?returnUrl=%2F%3Futm_source%3Dx%26offer%3Dfake0offer0token&language=ja'],
-    ['/use-cases?offer=fake0offer0token', 'https://www.enconvo.com/login?from=app&returnUrl=%2Fuse-cases%3Foffer%3Dfake0offer0token&language=ja'],
+    ['/use-cases?offer=fake0offer0token', 'https://www.enconvo.com/login?returnUrl=%2Fuse-cases%3Foffer%3Dfake0offer0token&language=ja'],
     ['/ltd', 'https://www.enconvo.com/auth/callback?returnUrl=%2Fltd&language=ja'],
-    ['/account', 'https://www.enconvo.com/login?from=app&returnUrl=%2Faccount&language=ja'],
-    ['//evil.example/?offer=fake0offer0token', 'https://www.enconvo.com/login?from=app&returnUrl=%2F%2Fevil.example%2F%3Foffer%3Dfake0offer0token&language=ja'],
+    ['/account', 'https://www.enconvo.com/login?returnUrl=%2Faccount&language=ja'],
+    ['//evil.example/?offer=fake0offer0token', 'https://www.enconvo.com/login?returnUrl=%2F%2Fevil.example%2F%3Foffer%3Dfake0offer0token&language=ja'],
   ]) {
     router = { isReady: true, query: { returnUrl } }
-    signUp = null
-    const tree = RegisterForm({ loginState: 'register', setLoginState() {}, email: 'new@example.test', setEmail() {} })
-    const button = find(tree, (node) => node.props?.children?.includes?.('Create account'))
-    await button.props.onClick()
+    await submit()
     assert.equal(signUp.options.emailRedirectTo, expected, returnUrl)
+    // The resent email lands in the same place.
+    assert.equal(emailSignup.signupEmailRedirect('https://www.enconvo.com', router.query, 'ja'), expected, returnUrl)
+    // The consent line under the button carries the age: no birth date, no name.
     assert.equal(signUp.options.data.age_minimum, 13, returnUrl)
+    assert.equal(typeof signUp.options.data.age_confirmed_at, 'string', returnUrl)
+    assert.equal('name' in signUp.options.data, false, returnUrl)
+    assert.equal(state, 'sent', returnUrl)
   }
+  // An address that already has an account: Auth answers without identities and sends no email.
+  router = { isReady: true, query: {} }
+  reply = { data: { user: { id: 'u2', identities: [] }, session: null }, error: null }
+  await submit()
+  assert.ok(signUp, 'the sign-up went out')
+  assert.equal(state, null, 'the form stays for an address that has an account')
+  assert.equal(emailSignup.resendCountdown(42), '0:42')
+  assert.equal(emailSignup.resendCountdown(60), '1:00')
 })
 
 test('every popup step renders its copy and actions', async () => {
@@ -847,7 +874,7 @@ test('a password sign-in from the offer never opens the app; Google returns thro
   const LoginForm = (
     await loadTs('../src/pages/components/LoginForm.tsx', {
       // Every empty field reads as filled in.
-      react: { ...React, useState: (value) => [value === '' ? 'person@example.test' : value, () => {}], useEffect() {} },
+      react: { ...React, useState: (value) => [value === '' ? 'person@example.test' : value, () => {}], useEffect() {}, useRef: (current) => ({ current }) },
       'next/router': { useRouter: () => ({ query: {} }) },
       'next/head': { default: passthrough, __esModule: true },
       'next/link': { default: passthrough, __esModule: true },
@@ -875,6 +902,9 @@ test('a password sign-in from the offer never opens the app; Google returns thro
       '@/components/ui/input': { Input: () => null },
       '@/components/ui/alert': { Alert: passthrough, AlertDescription: passthrough, AlertTitle: passthrough },
       '@/components/Logo': { Logo: () => null },
+      '@/components/Turnstile': { Turnstile: () => null },
+      '@/components/AuthConsent': { AuthConsent: () => null },
+      '@/lib/age-gate': { saveRegistrationAgeConfirmation() {} },
     })
   ).default
   for (const [query, opens] of [
@@ -919,7 +949,7 @@ test('a password sign-in from the offer never opens the app; Google returns thro
           updateCurrentEmailPreference: async () => {},
         },
       }),
-      '@supabase/auth-helpers-nextjs': {
+      '@/lib/supabase': {
         createClientComponentClient: () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'a' } }, error: null }) } }),
       },
     })

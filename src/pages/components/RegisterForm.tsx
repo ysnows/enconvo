@@ -2,50 +2,56 @@ import { i18nStaticProps } from '@/i18n/server'
 import { useI18n } from '@/i18n/I18nProvider'
 import Head from 'next/head'
 import Link from 'next/link'
-
-import {
-  ReloadIcon,
-  ArrowTopRightIcon,
-  ExclamationTriangleIcon,
-} from '@radix-ui/react-icons'
+import { useRouter } from 'next/router'
+import * as React from 'react'
+import { useState } from 'react'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { Eye, EyeOff } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/router'
+import { Input } from '@/components/ui/input'
+import { Logo } from '@/components/Logo'
+import { AuthConsent } from '@/components/AuthConsent'
+import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
 import { authFlowHref, oauthCallbackUrl } from '@/lib/auth-flow'
-import { offerReturnPath } from '@/lib/welcome-offer'
+import { signupEmailRedirect } from '@/lib/email-signup'
 import {
   beginGoogleSignupMeasurement,
   recordWebsiteSignup,
 } from '@/lib/signup-analytics'
-
-import { Logo } from '@/components/Logo'
-import { useState } from 'react'
-import { Input } from '@/components/ui/input'
-import * as React from 'react'
 import { createClientComponentClient } from '@/lib/supabase'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import {
   saveRegistrationEmailPreference,
   syncCurrentEmailPreference,
 } from '@/lib/email-preferences-client'
-import { BirthMonthField, birthMonthFrom } from '@/components/BirthMonthField'
 import {
-  MINIMUM_AGE,
-  ageCheckFailedRecently,
   ageConfirmationMetadata,
-  markAgeCheckFailed,
-  meetsMinimumAge,
   saveRegistrationAgeConfirmation,
 } from '@/lib/age-gate'
-import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
+import { appleStartUrl, saveAppleSignInContext } from '@/lib/apple-sign-in'
 import {
+  EMAIL_TAKEN,
+  INVALID_EMAIL,
   MIN_PASSWORD_LENGTH,
   authErrorMessage,
+  authMessageField,
   captchaMessage,
   passwordTooShort,
   type AuthMessage,
 } from '@/lib/auth-errors'
 
+// Something before and after one @; the auth service checks the rest.
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+$/
+
+const inputClass =
+  'h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666] focus-visible:border-[#555555] focus-visible:ring-1 focus-visible:ring-[#555555]'
+const inputErrorClass = 'border-red-400/60 focus-visible:border-red-400/60'
+const helpClass = 'mt-1.5 text-[12px] leading-4'
+
+/**
+ * Email sign-up: Apple and Google, then email and password. The consent line under the button
+ * carries the age the Terms set (lib/age-gate). Each problem shows under the field it belongs to.
+ */
 export default function RegisterForm({
   loginState,
   setLoginState,
@@ -53,102 +59,65 @@ export default function RegisterForm({
   setEmail,
 }) {
   const { t, locale } = useI18n()
-
   const supabase = createClientComponentClient()
   const router = useRouter()
 
-  // const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
-  const [error, setError] = useState('')
-  // A readable message for an Auth refusal, with its values; it shows in place of `error`.
-  const [authMessage, setAuthMessage] = useState<AuthMessage | null>(null)
-  const captcha = React.useRef<CaptchaHandle>(null)
-  const [emailIsLoading, setEmailIsLoading] = React.useState(false)
-  const [googleIsLoading, setGoogleIsLoading] = React.useState(false)
-  // Marketing email needs an opt-in the visitor gives, so the box starts unchecked.
+  const [showPassword, setShowPassword] = useState(false)
+  // Product email needs an opt-in the visitor gives, so the box starts unchecked.
   const [productUpdatesSubscribed, setProductUpdatesSubscribed] =
-    React.useState(false)
-  const [birthMonth, setBirthMonth] = useState('')
-  const [birthYear, setBirthYear] = useState('')
-  const [ageBlocked, setAgeBlocked] = useState(false)
-  const [ageError, setAgeError] = useState('')
+    useState(false)
+  const [emailMessage, setEmailMessage] = useState<AuthMessage | null>(null)
+  const [passwordMessage, setPasswordMessage] = useState<AuthMessage | null>(
+    null
+  )
+  // A problem with the whole form (the security check, a rate limit): a readable message, or Auth's text.
+  const [formMessage, setFormMessage] = useState<AuthMessage | null>(null)
+  const [emailIsLoading, setEmailIsLoading] = useState(false)
+  const [googleIsLoading, setGoogleIsLoading] = useState(false)
+  const [appleIsLoading, setAppleIsLoading] = useState(false)
+  const captcha = React.useRef<CaptchaHandle>(null)
 
-  React.useEffect(() => {
-    if (ageCheckFailedRecently()) setAgeBlocked(true)
-  }, [])
-
-  /** The sign-up age check (lib/age-gate): true to go on, false after showing why not. */
-  function passesAgeCheck(): boolean {
-    const birth = birthMonthFrom(birthMonth, birthYear)
-    if (!birth) {
-      setAgeError('Please enter your date of birth.')
-      return false
-    }
-    if (!meetsMinimumAge(birth)) {
-      markAgeCheckFailed()
-      setAgeBlocked(true)
-      return false
-    }
-    return true
+  function show(message: AuthMessage) {
+    const field = authMessageField(message)
+    if (field === 'email') setEmailMessage(message)
+    else if (field === 'password') setPasswordMessage(message)
+    else setFormMessage(message)
   }
 
   async function signUp() {
-    // check if email is valid
-    if (!email || !email.includes('@')) {
-      alert(t('Please enter a valid email'))
-      return
-    }
-    setError('')
-    setAuthMessage(null)
-    if (password.length < MIN_PASSWORD_LENGTH) {
-      setAuthMessage(passwordTooShort())
-      return
-    }
-    if (!passesAgeCheck()) return
+    const address = email.trim()
+    setEmailMessage(null)
+    setPasswordMessage(null)
+    setFormMessage(null)
+    const badEmail = !EMAIL_SHAPE.test(address)
+    const shortPassword = password.length < MIN_PASSWORD_LENGTH
+    if (badEmail) setEmailMessage({ source: INVALID_EMAIL })
+    if (shortPassword) setPasswordMessage(passwordTooShort())
+    if (badEmail || shortPassword) return
 
     setEmailIsLoading(true)
-
     let captchaToken: string | undefined
     try {
       captchaToken = await captcha.current?.token()
     } catch (captchaError) {
-      setAuthMessage(captchaMessage(captchaError))
+      setFormMessage(captchaMessage(captchaError))
       setEmailIsLoading(false)
       return
     }
 
-    const returnUrlParams = router?.query?.returnUrl
-      ? `?returnUrl=${router.query.returnUrl}`
-      : ''
-    const returnUrl = Array.isArray(router.query.returnUrl)
-      ? router.query.returnUrl[0]
-      : router.query.returnUrl
-    // Web offer, Welcome offer and Affiliate signups must return to their page
-    // after email confirmation rather than opening the native app. Only a sign-up
-    // the app opened (from=app) hands the account to the app afterwards.
-    const emailRedirectTo =
-      typeof returnUrl === 'string' &&
-      (/^\/(?:ltd|affiliate)(?:[?#/]|$)/.test(returnUrl) ||
-        !!offerReturnPath(returnUrl))
-        ? `${window.location.origin}/auth/callback?${new URLSearchParams({
-            returnUrl,
-            language: locale,
-          })}`
-        : `${window.location.origin}${authFlowHref('/login', {
-            ...router.query,
-            language: locale,
-          })}`
-
     const signupStartedAt = Date.now()
     const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email: address,
+      password,
       options: {
-        emailRedirectTo,
+        emailRedirectTo: signupEmailRedirect(
+          window.location.origin,
+          router.query,
+          locale
+        ),
         ...(captchaToken ? { captchaToken } : {}),
         data: {
-          name: name,
           product_updates_subscribed: productUpdatesSubscribed,
           ...ageConfirmationMetadata(),
         },
@@ -156,51 +125,61 @@ export default function RegisterForm({
     })
     // The token works once.
     if (captchaToken) captcha.current?.reset()
+    setEmailIsLoading(false)
 
     if (error) {
-      const readable = authErrorMessage(error)
-      if (readable) setAuthMessage(readable)
-      else setError(error.message)
-      setEmailIsLoading(false)
+      show(authErrorMessage(error) ?? { source: error.message })
+      return
+    }
+    // An address that already has an account: Auth answers without identities and sends nothing.
+    if (data.user && data.user.identities?.length === 0) {
+      setEmailMessage({ source: EMAIL_TAKEN })
       return
     }
 
     recordWebsiteSignup(data.user, 'email', signupStartedAt)
-
     if (data.session) {
       try {
         await syncCurrentEmailPreference(data.session.access_token)
       } catch (syncError) {
-        console.error(
-          'Unable to sync registration email preference:',
-          syncError
-        )
+        console.error('Unable to sync registration email preference:', syncError)
       }
     }
-
-    setLoginState('success')
-
-    setEmailIsLoading(false)
-    // setContinueLogin(true)
+    if (address !== email) setEmail(address)
+    setLoginState('sent')
   }
 
-  // Back from Google's page, the browser can show this page as it was left.
+  // Back from Google's or Apple's page, the browser can show this page as it was left.
   React.useEffect(() => {
     const reset = (event: PageTransitionEvent) => {
-      if (event.persisted) setGoogleIsLoading(false)
+      if (!event.persisted) return
+      setGoogleIsLoading(false)
+      setAppleIsLoading(false)
     }
     window.addEventListener('pageshow', reset)
     return () => window.removeEventListener('pageshow', reset)
   }, [])
 
+  /** What both providers carry to their callback: the consent line and the product email choice. */
+  function carryChoices() {
+    saveRegistrationAgeConfirmation()
+    saveRegistrationEmailPreference(productUpdatesSubscribed)
+  }
+
+  // The Worker runs Apple's sign-in and returns to /login/apple, which finishes it as for /login.
+  function signInWithApple() {
+    setAppleIsLoading(true)
+    carryChoices()
+    saveAppleSignInContext(window.location.search, locale)
+    window.location.assign(appleStartUrl())
+  }
+
   async function signInWithGoogle() {
-    if (!passesAgeCheck()) return
     setGoogleIsLoading(true)
     try {
-      saveRegistrationAgeConfirmation()
-      saveRegistrationEmailPreference(productUpdatesSubscribed)
+      carryChoices()
       beginGoogleSignupMeasurement()
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           // Keeps from/source/handoff, so an app sign-up opens the app afterwards.
@@ -219,10 +198,12 @@ export default function RegisterForm({
       if (error) throw error
       // The browser is on its way to Google, so the spinner stays until the page goes.
     } catch (error) {
-      setError(error.message)
+      setFormMessage({ source: error.message })
       setGoogleIsLoading(false)
     }
   }
+
+  const passwordHint = passwordMessage ?? passwordTooShort()
 
   return (
     <>
@@ -236,216 +217,237 @@ export default function RegisterForm({
         />
       </Head>
 
-      <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A] [color-scheme:dark]">
-        <div className="w-full max-w-[320px] space-y-8 px-4">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A] py-12 [color-scheme:dark]">
+        <div className="w-full max-w-[360px] px-4">
           <div className="flex flex-col items-center space-y-6">
             <Link href="/" aria-label={t('Home')}>
               <Logo className="h-16 w-auto" />
             </Link>
-            <h2 className="text-center text-3xl font-medium tracking-tight text-white">
-              {t('Create your Enconvo account')}
-            </h2>
+            <h1 className="text-center text-3xl font-medium text-white">
+              {t('Create your account')}
+            </h1>
           </div>
 
-          {ageBlocked ? (
-            <div
-              role="alert"
-              className="rounded-[10px] border border-white/10 bg-white/[0.025] px-4 py-4 text-center"
+          {/* Apple above Google, as on the log-in page (ADR 0216). */}
+          <div className="mt-8 flex flex-col gap-3">
+            <Button
+              type="button"
+              onClick={signInWithApple}
+              disabled={appleIsLoading}
+              className="relative h-10 w-full rounded-[10px] bg-white text-[17px] font-medium leading-5 text-black transition-colors duration-200 hover:bg-[#F2F2F2]"
             >
-              <p className="text-sm font-medium text-white">
-                {t('You can’t create an Enconvo account')}
-              </p>
-              <p className="mt-2 text-[13px] leading-[18px] text-[#888888]">
-                {t(
-                  'Enconvo accounts are for people who are at least {p0} years old.',
-                  {
-                    p0: MINIMUM_AGE,
-                  }
-                )}
-              </p>
-            </div>
-          ) : (
-            <>
-              <BirthMonthField
-                month={birthMonth}
-                year={birthYear}
-                onChange={(month, year) => {
-                  setBirthMonth(month)
-                  setBirthYear(year)
-                  setAgeError('')
-                }}
-              />
-              {ageError && (
-                <p
-                  role="alert"
-                  className="-mt-6 text-[12px] leading-4 text-red-400"
+              {appleIsLoading ? (
+                <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-3 grid h-5 w-5 place-items-center"
                 >
-                  {t(ageError)}
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 240 240"
+                    focusable="false"
+                    className="shrink-0"
+                  >
+                    <path
+                      fill="currentColor"
+                      transform="translate(0 240) scale(0.1 -0.1)"
+                      d="M1448 1956c-141-51-245-183-236-300 3-40 4-41 38-38 128 11 257 155 263 293 2 61-6 66-65 45zM1431 1593c-14-3-60-18-104-34-99-36-123-36-228 2-73 27-94 30-159 27-96-6-172-42-241-114-92-99-125-203-116-379 9-186 79-372 199-529 106-137 173-160 316-107 101 37 168 40 250 10 98-37 145-44 192-30 81 24 187 148 260 304 22 47 40 87 40 90 0 3-19 16-42 30-153 90-208 283-127 442 11 22 43 63 71 91 56 58 56 70-4 116-90 69-207 99-307 81z"
+                    />
+                  </svg>
+                </span>
+              )}
+              {t('Continue with Apple')}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={signInWithGoogle}
+              disabled={googleIsLoading}
+              className="relative h-10 w-full rounded-[10px] border-[#8E918F] bg-[#131314] font-medium text-[#E3E3E3] transition-colors duration-200 hover:bg-[#1F1F20] hover:text-[#E3E3E3]"
+            >
+              {googleIsLoading ? (
+                <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
+              ) : (
+                <svg
+                  className="absolute left-3 h-5 w-5"
+                  aria-hidden="true"
+                  focusable="false"
+                  viewBox="0 0 48 48"
+                >
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                  />
+                </svg>
+              )}
+              {t('Continue with Google')}
+            </Button>
+          </div>
+
+          <div className="relative mt-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-[#333333]" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-[#1A1A1A] px-4 text-[#666666]">
+                {t('Or continue with email')}
+              </span>
+            </div>
+          </div>
+
+          <form
+            noValidate
+            className="mt-6"
+            onSubmit={(event) => {
+              event.preventDefault()
+              if (!emailIsLoading) void signUp()
+            }}
+          >
+            <div>
+              <Input
+                id="signup-email"
+                type="email"
+                aria-label={t('Email address')}
+                placeholder={t('Email address')}
+                autoComplete="email"
+                aria-invalid={!!emailMessage}
+                aria-describedby={emailMessage ? 'signup-email-help' : undefined}
+                onChange={(event) => {
+                  setEmail(event.target.value)
+                  setEmailMessage(null)
+                }}
+                value={email}
+                className={`${inputClass} ${emailMessage ? inputErrorClass : ''}`}
+              />
+              {emailMessage && (
+                <p
+                  id="signup-email-help"
+                  role="alert"
+                  className={`${helpClass} text-red-400`}
+                >
+                  {t(emailMessage.source, emailMessage.values)}
                 </p>
               )}
-
-              {/* Google Sign Up Button */}
-              <div className="mt-8">
-                <Button
-                  variant="outline"
-                  onClick={signInWithGoogle}
-                  disabled={googleIsLoading}
-                  className="relative h-10 w-full rounded-[10px] border-[#333333] bg-[#242424] font-medium text-[#D4D4D4] shadow-sm transition-all duration-200 hover:bg-[#2C2C2C] hover:text-white hover:shadow"
-                >
-                  {googleIsLoading ? (
-                    <ReloadIcon className="absolute left-3 h-5 w-5 animate-spin" />
-                  ) : (
-                    <svg
-                      className="absolute left-3 h-5 w-5"
-                      aria-hidden="true"
-                      focusable="false"
-                      data-prefix="fab"
-                      data-icon="google"
-                      role="img"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 488 512"
-                    >
-                      <path
-                        fill="currentColor"
-                        d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
-                      ></path>
-                    </svg>
-                  )}
-                  {t('Continue with Google')}
-                </Button>
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-[#333333]" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="bg-[#1A1A1A] px-4 text-[#666666]">
-                    {t('Or continue with email')}
-                  </span>
-                </div>
-              </div>
-
-              {/* Email Registration Form */}
-              <div className="mt-6 space-y-6">
-                <div className="space-y-4">
-                  <div className="space-y-1">
-                    <Input
-                      type="text"
-                      placeholder={t('Username')}
-                      required
-                      autoComplete="name"
-                      onChange={(e) => setName(e.target.value)}
-                      value={name}
-                      className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Input
-                      type="email"
-                      placeholder={t('Email address')}
-                      required
-                      autoComplete="email"
-                      onChange={(e) => setEmail(e.target.value)}
-                      value={email}
-                      className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <Input
-                      type="password"
-                      placeholder={t('Password')}
-                      required
-                      minLength={MIN_PASSWORD_LENGTH}
-                      autoComplete="new-password"
-                      onChange={(e) => setPassword(e.target.value)}
-                      value={password}
-                      className="h-10 rounded-[10px] border-[#333333] bg-[#1C1C1C] text-white placeholder:text-[#666666]"
-                    />
-                  </div>
-
-                  <label className="flex cursor-pointer items-start gap-2 rounded-[10px] border border-white/10 bg-white/[0.025] px-3 py-2 text-left">
-                    <input
-                      type="checkbox"
-                      checked={productUpdatesSubscribed}
-                      onChange={(event) =>
-                        setProductUpdatesSubscribed(event.target.checked)
-                      }
-                      className="mt-0.5 h-3.5 w-3.5 rounded border-white/20 bg-[#141A22] text-blue-600 focus:ring-1 focus:ring-blue-500/60 focus:ring-offset-0"
-                    />
-                    <span className="text-[12px] leading-4 text-[#777F8A]">
-                      {t(
-                        'Send me occasional product updates and release notes. You can unsubscribe anytime.'
-                      )}
-                    </span>
-                  </label>
-
-                  <Turnstile ref={captcha} action="signup" />
-
-                  {(authMessage || error) && (
-                    <Alert
-                      variant="destructive"
-                      className="border-red-900/30 bg-red-900/20 text-red-400"
-                    >
-                      <ExclamationTriangleIcon className="h-4 w-4" />
-                      <AlertTitle>{t('Error')}</AlertTitle>
-                      <AlertDescription>
-                        {authMessage
-                          ? t(authMessage.source, authMessage.values)
-                          : t(error)}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-
-                  <Button
-                    onClick={signUp}
-                    disabled={emailIsLoading}
-                    className="h-10 w-full rounded-[10px] bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
+              {emailMessage?.source === EMAIL_TAKEN && (
+                <p className="mt-1 flex items-center gap-2 text-[12px] leading-4 text-[#666666]">
+                  <Link
+                    href={authFlowHref('/login', router.query)}
+                    className="font-medium text-[#BBBBBB] hover:text-white"
                   >
-                    {emailIsLoading && (
-                      <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    {emailIsLoading
-                      ? t('Creating account...')
-                      : t('Create account')}
-                  </Button>
-                </div>
+                    {t('Log in')}
+                  </Link>
+                  <span aria-hidden="true">·</span>
+                  <Link
+                    href={authFlowHref('/reset_password_send', router.query)}
+                    className="font-medium text-[#BBBBBB] hover:text-white"
+                  >
+                    {t('Forgot password?')}
+                  </Link>
+                </p>
+              )}
+            </div>
+
+            <div className="mt-4">
+              <div className="relative">
+                <Input
+                  id="signup-password"
+                  type={showPassword ? 'text' : 'password'}
+                  aria-label={t('Password')}
+                  placeholder={t('Password')}
+                  autoComplete="new-password"
+                  aria-invalid={!!passwordMessage}
+                  aria-describedby="signup-password-help"
+                  onChange={(event) => {
+                    setPassword(event.target.value)
+                    setPasswordMessage(null)
+                  }}
+                  value={password}
+                  className={`${inputClass} pr-10 ${passwordMessage ? inputErrorClass : ''}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((shown) => !shown)}
+                  aria-label={t(showPassword ? 'Hide password' : 'Show password')}
+                  aria-pressed={showPassword}
+                  className="absolute right-1 top-1 grid h-8 w-8 place-items-center rounded-[8px] text-[#8A8A8A] transition-colors hover:text-[#CCCCCC] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#555555]"
+                >
+                  {showPassword ? (
+                    <EyeOff size={16} aria-hidden="true" />
+                  ) : (
+                    <Eye size={16} aria-hidden="true" />
+                  )}
+                </button>
               </div>
-            </>
-          )}
-
-          <div className="mt-6 space-y-6">
-            <div className="space-y-4 text-sm">
-              <p className="text-center text-[#666666]">
-                {t('Already have an account?')}{' '}
-                <Link
-                  href={authFlowHref('/login', router.query)}
-                  className="font-medium text-[#888888] hover:text-[#999999]"
-                >
-                  {t('Log in')}
-                </Link>
-              </p>
-
-              <p className="text-center text-xs text-[#666666]">
-                {t('By continuing, you agree to our')}{' '}
-                <Link
-                  href="/terms"
-                  className="text-[#888888] underline underline-offset-2 hover:text-[#999999]"
-                >
-                  {t('Terms of Service')}
-                </Link>{' '}
-                {t('and')}{' '}
-                <Link
-                  href="/privacy"
-                  className="text-[#888888] underline underline-offset-2 hover:text-[#999999]"
-                >
-                  {t('Privacy Policy')}
-                </Link>
+              <p
+                id="signup-password-help"
+                role={passwordMessage ? 'alert' : undefined}
+                className={`${helpClass} ${passwordMessage ? 'text-red-400' : 'text-[#666666]'}`}
+              >
+                {t(passwordHint.source, passwordHint.values)}
               </p>
             </div>
-          </div>
+
+            <label className="mt-4 flex cursor-pointer items-start gap-2 text-left">
+              <input
+                type="checkbox"
+                checked={productUpdatesSubscribed}
+                onChange={(event) =>
+                  setProductUpdatesSubscribed(event.target.checked)
+                }
+                className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded border-white/20 bg-[#141A22] text-blue-600 focus:ring-1 focus:ring-blue-500/60 focus:ring-offset-0"
+              />
+              <span className="text-[12px] leading-4 text-[#777F8A]">
+                {t(
+                  'Send me occasional product updates and release notes. You can unsubscribe anytime.'
+                )}
+              </span>
+            </label>
+
+            <Turnstile ref={captcha} action="signup" className="mt-4" />
+
+            {formMessage && (
+              <p role="alert" className="mt-4 text-[13px] leading-[18px] text-red-400">
+                {t(formMessage.source, formMessage.values)}
+              </p>
+            )}
+
+            <Button
+              type="submit"
+              disabled={emailIsLoading}
+              className="mt-4 h-10 w-full rounded-[10px] bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-colors duration-200 hover:bg-[#D4D4D4] disabled:opacity-100"
+            >
+              {emailIsLoading && (
+                <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              {emailIsLoading ? t('Creating account...') : t('Create account')}
+            </Button>
+          </form>
+
+          <AuthConsent className="mt-4" />
+
+          <p className="mt-8 text-center text-sm text-[#666666]">
+            {t('Already have an account?')}{' '}
+            <Link
+              href={authFlowHref('/login', router.query)}
+              className="font-medium text-[#888888] hover:text-[#999999]"
+            >
+              {t('Log in')}
+            </Link>
+          </p>
         </div>
       </main>
     </>

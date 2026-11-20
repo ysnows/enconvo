@@ -10,31 +10,25 @@ import type { Session } from '@supabase/supabase-js'
 import { createClientComponentClient } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/Logo'
-import { BirthMonthField, birthMonthFrom } from '@/components/BirthMonthField'
+import { I18nText } from '@/i18n/I18nText'
 import {
   MINIMUM_AGE,
-  ageCheckFailedRecently,
   ageConfirmationMetadata,
-  markAgeCheckFailed,
-  meetsMinimumAge,
   needsAgeConfirmation,
 } from '@/lib/age-gate'
+import { authFlowHref } from '@/lib/auth-flow'
 import { finishOAuthSignIn } from '@/lib/finish-oauth-sign-in'
 
-const SUPPORT_EMAIL = 'support@enconvo.com'
+const linkClass =
+  'text-[#AAAAAA] underline underline-offset-2 hover:text-[#CCCCCC]'
 
-type Status =
-  | 'loading'
-  | 'asking'
-  | 'saving'
-  | 'refusing'
-  | 'deleted'
-  | 'failed'
+type Status = 'loading' | 'asking' | 'saving' | 'leaving'
 
 /**
- * The sign-up age check for an account Google just created from /login (lib/age-gate). The
- * OAuth callback sends it here with its query. An account that passes goes on like any other
- * sign-in. One that doesn't is deleted at once and signed out of this browser.
+ * The consent the sign-up and log-in pages carry (lib/age-gate), asked once for an account Apple
+ * or Google just created when it couldn't be carried: browser storage blocked, or more than 15
+ * minutes on the provider's page. Continue gives it and goes on like any other sign-in. Cancel
+ * signs this browser out and leaves the account as it is, so a later sign-in asks again.
  */
 export default function ConfirmAge() {
   const { t } = useI18n()
@@ -47,20 +41,7 @@ export default function ConfirmAge() {
   )
   const [session, setSession] = useState<Session | null>(null)
   const [status, setStatus] = useState<Status>('loading')
-  const [month, setMonth] = useState('')
-  const [year, setYear] = useState('')
   const [error, setError] = useState('')
-
-  async function refuse(current: Session) {
-    markAgeCheckFailed()
-    setStatus('refusing')
-    const response = await fetch('/api/account/underage', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${current.access_token}` },
-    }).catch(() => null)
-    await supabase.auth.signOut({ scope: 'local' }).catch(() => null)
-    setStatus(response?.ok ? 'deleted' : 'failed')
-  }
 
   useEffect(() => {
     if (!router.isReady) return
@@ -75,26 +56,14 @@ export default function ConfirmAge() {
         void finishOAuthSignIn(supabase, current, router, locale)
         return
       }
-      if (ageCheckFailedRecently()) {
-        void refuse(current)
-        return
-      }
       setStatus('asking')
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.isReady])
 
   async function submit() {
-    const birth = birthMonthFrom(month, year)
-    if (!birth) {
-      setError('Please enter your date of birth.')
-      return
-    }
     if (!session) return
-    if (!meetsMinimumAge(birth)) {
-      await refuse(session)
-      return
-    }
+    setError('')
     setStatus('saving')
     const { data, error: updateError } = await supabase.auth.updateUser({
       data: ageConfirmationMetadata(),
@@ -115,92 +84,84 @@ export default function ConfirmAge() {
     )
   }
 
-  const refused =
-    status === 'refusing' || status === 'deleted' || status === 'failed'
+  async function cancel() {
+    setStatus('leaving')
+    // Only this browser; the account stays, and its next sign-in asks again.
+    await supabase.auth.signOut({ scope: 'local' }).catch(() => null)
+    await router.replace(authFlowHref('/login', router.query), undefined, {
+      locale,
+    })
+  }
 
   return (
     <>
       <Head>
         <title>{t('Confirm your age - Enconvo')}</title>
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
-        <div className="w-full max-w-[320px] space-y-8 px-4">
+      <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A] [color-scheme:dark]">
+        <div className="w-full max-w-[360px] px-4 text-center">
           <div className="flex flex-col items-center space-y-6">
             <Link href="/" aria-label={t('Home')}>
               <Logo className="h-16 w-auto" />
             </Link>
-            <h2 className="text-center text-3xl font-medium tracking-tight text-white">
-              {refused
-                ? t('You can’t create an Enconvo account')
-                : t('One more step')}
-            </h2>
+            <h1 className="text-3xl font-medium text-white">
+              {t('One more step')}
+            </h1>
           </div>
 
-          {refused ? (
-            <div
-              role="alert"
-              className="space-y-2 rounded-[10px] border border-white/10 bg-white/[0.025] px-4 py-4 text-center text-[13px] leading-[18px] text-[#888888]"
-            >
-              <p>
-                {t(
-                  'Enconvo accounts are for people who are at least {p0} years old.',
-                  { p0: MINIMUM_AGE }
-                )}
-              </p>
-              {status === 'refusing' && (
-                <p className="flex items-center justify-center gap-2">
-                  <ReloadIcon className="h-4 w-4 animate-spin" />
-                  {t('Deleting the account…')}
-                </p>
-              )}
-              {status === 'deleted' && (
-                <p>{t('We deleted the account that was just created.')}</p>
-              )}
-              {status === 'failed' && (
-                <p>
-                  {t(
-                    'We couldn’t finish deleting the account that was just created. Email {p0} and we will delete it.',
-                    { p0: SUPPORT_EMAIL }
-                  )}
-                </p>
-              )}
-            </div>
-          ) : status === 'loading' ? (
-            <div className="flex justify-center">
+          {status === 'loading' ? (
+            <div className="mt-8 flex justify-center">
               <ReloadIcon className="h-5 w-5 animate-spin text-[#888888]" />
             </div>
           ) : (
-            <div className="space-y-4">
-              <p className="text-center text-sm text-[#888888]">
-                {t(
-                  'Confirm your date of birth to finish creating your Enconvo account.'
-                )}
+            <>
+              <p className="mt-4 text-sm leading-6 text-[#888888]">
+                <I18nText
+                  source="To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}."
+                  values={{
+                    p0: String(MINIMUM_AGE),
+                    p1: (
+                      <Link href="/terms" className={linkClass}>
+                        {t('Terms of Service')}
+                      </Link>
+                    ),
+                    p2: (
+                      <Link href="/privacy" className={linkClass}>
+                        {t('Privacy Policy')}
+                      </Link>
+                    ),
+                  }}
+                />
               </p>
-              <BirthMonthField
-                month={month}
-                year={year}
-                onChange={(nextMonth, nextYear) => {
-                  setMonth(nextMonth)
-                  setYear(nextYear)
-                  setError('')
-                }}
-              />
               {error && (
-                <p role="alert" className="text-[12px] leading-4 text-red-400">
+                <p
+                  role="alert"
+                  className="mt-4 text-[13px] leading-[18px] text-red-400"
+                >
                   {t(error)}
                 </p>
               )}
               <Button
                 onClick={submit}
-                disabled={status === 'saving'}
-                className="h-10 w-full rounded-xl bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-all duration-200 hover:bg-[#D4D4D4]"
+                disabled={status !== 'asking'}
+                className="mt-6 h-10 w-full rounded-[10px] bg-[#E5E5E5] font-medium text-[#1A1A1A] transition-colors duration-200 hover:bg-[#D4D4D4] disabled:opacity-100"
               >
                 {status === 'saving' && (
                   <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
                 )}
                 {t('Continue')}
               </Button>
-            </div>
+              <p className="mt-4 text-sm">
+                <button
+                  type="button"
+                  onClick={cancel}
+                  disabled={status !== 'asking'}
+                  className="font-medium text-[#888888] hover:text-[#BBBBBB]"
+                >
+                  {t('Cancel')}
+                </button>
+              </p>
+            </>
           )}
         </div>
       </main>

@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "安全验证未通过，请重试。",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "不支持使用临时邮箱注册，请使用常用的邮箱地址。",
   "This password has appeared in a data breach. Choose a different one.": "这个密码曾出现在数据泄露中，请换一个。",
-  "Choose a stronger password.": "请设置一个更安全的密码。"
+  "Choose a stronger password.": "请设置一个更安全的密码。",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "继续即表示你确认已年满 {p0} 岁，并同意我们的{p1}和{p2}。",
+  "Show password": "显示密码",
+  "Hide password": "隐藏密码",
+  "An account with this email already exists.": "这个邮箱已经注册过账号。",
+  "Resend in {p0}": "{p0} 后可重新发送",
+  "Sent again. Check your spam folder too.": "已重新发送。也请看看垃圾邮件文件夹。",
+  "Use a different email": "换一个邮箱",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "要完成创建账号，请确认你已年满 {p0} 岁，并同意我们的{p1}和{p2}。",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "创建账号时，我们会请你确认已达到最低年龄。我们只保存这一确认，从不保存出生日期。如果我们得知某个账号属于未达到最低年龄的人，会将其删除。如果你认为有儿童向我们提供了个人数据，请发邮件至 {p0}，我们会将其删除。"
 }

@@ -96,6 +96,9 @@ test('Auth refusals read as messages, translated in every locale', async () => {
     [{ message: 'Password should be at least 8 characters.', status: 422 }, errors.PASSWORD_TOO_SHORT],
     [{ message: 'Password is known to be weak and easy to guess, please choose a different one.', status: 422 }, 'This password has appeared in a data breach. Choose a different one.'],
     [{ message: 'Sign-ups with temporary email addresses are not allowed. Please use a permanent email address.', status: 400 }, 'Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.'],
+    // With email confirmation off; with it on, a taken address comes back without identities instead.
+    [{ message: 'User already registered', status: 422 }, errors.EMAIL_TAKEN],
+    [{ message: 'Unable to validate email address: invalid format', status: 400 }, errors.INVALID_EMAIL],
   ]
   const sources = new Set([errors.CAPTCHA_UNAVAILABLE, 'Choose a stronger password.'])
   for (const [error, source] of cases) {
@@ -103,7 +106,11 @@ test('Auth refusals read as messages, translated in every locale', async () => {
     sources.add(source)
   }
   assert.deepEqual(errors.authErrorMessage({ message: 'Password should be at least 8 characters.' }).values, { p0: '8' })
-  assert.equal(errors.authErrorMessage({ message: 'User already registered', status: 422 }), null)
+  assert.equal(errors.authErrorMessage({ message: 'Email rate limit exceeded', status: 429 }), null)
+  // The sign-up form shows each message under the field it is about.
+  for (const source of [errors.INVALID_EMAIL, errors.EMAIL_TAKEN, errors.TEMPORARY_EMAIL]) assert.equal(errors.authMessageField({ source }), 'email', source)
+  for (const source of [errors.PASSWORD_TOO_SHORT, errors.PASSWORD_BREACHED, errors.PASSWORD_WEAK]) assert.equal(errors.authMessageField({ source }), 'password', source)
+  assert.equal(errors.authMessageField({ source: errors.CAPTCHA_REJECTED }), null)
   assert.equal(errors.captchaMessage(new CaptchaError('failed')).source, errors.CAPTCHA_UNAVAILABLE)
   assert.equal(errors.MIN_PASSWORD_LENGTH, 8)
   for (const locale of ['zh-CN', 'zh-TW', 'ja', 'ko', 'es', 'de', 'fr', 'it', 'pt', 'nl', 'pl']) {

@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "Die Sicherheitsprüfung ist fehlgeschlagen. Versuche es noch einmal.",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Registrierungen mit temporären E-Mail-Adressen sind nicht erlaubt. Verwende eine dauerhafte E-Mail-Adresse.",
   "This password has appeared in a data breach. Choose a different one.": "Dieses Passwort ist in einem Datenleck aufgetaucht. Wähle ein anderes.",
-  "Choose a stronger password.": "Wähle ein sichereres Passwort."
+  "Choose a stronger password.": "Wähle ein sichereres Passwort.",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Indem du fortfährst, bestätigst du, dass du mindestens {p0} Jahre alt bist, und stimmst unseren {p1} und unserer {p2} zu.",
+  "Show password": "Passwort anzeigen",
+  "Hide password": "Passwort ausblenden",
+  "An account with this email already exists.": "Mit dieser E-Mail-Adresse gibt es bereits ein Konto.",
+  "Resend in {p0}": "Erneut senden in {p0}",
+  "Sent again. Check your spam folder too.": "Erneut gesendet. Sieh auch im Spam-Ordner nach.",
+  "Use a different email": "Andere E-Mail-Adresse verwenden",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Um dein Konto fertig zu erstellen, bestätige, dass du mindestens {p0} Jahre alt bist, und stimme unseren {p1} und unserer {p2} zu.",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Bei der Kontoerstellung bitten wir dich zu bestätigen, dass du das Mindestalter erreicht hast. Wir speichern nur diese Bestätigung, nie ein Geburtsdatum. Wenn wir erfahren, dass ein Konto einer Person unter dem Mindestalter gehört, löschen wir es. Wenn du glaubst, dass uns ein Kind personenbezogene Daten übermittelt hat, schreib eine E-Mail an {p0}, dann löschen wir sie."
 }

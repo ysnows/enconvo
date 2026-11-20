@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "セキュリティチェックを通過できませんでした。もう一度お試しください。",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "一時的なメールアドレスでは登録できません。普段お使いのメールアドレスを使用してください。",
   "This password has appeared in a data breach. Choose a different one.": "このパスワードはデータ漏えいで流出したことがあります。別のパスワードを選んでください。",
-  "Choose a stronger password.": "より強力なパスワードを選んでください。"
+  "Choose a stronger password.": "より強力なパスワードを選んでください。",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "続行すると、{p0} 歳以上であることを確認し、{p1}と{p2}に同意したものとみなされます。",
+  "Show password": "パスワードを表示",
+  "Hide password": "パスワードを隠す",
+  "An account with this email already exists.": "このメールアドレスのアカウントはすでに存在します。",
+  "Resend in {p0}": "{p0} 後に再送信できます",
+  "Sent again. Check your spam folder too.": "再送信しました。迷惑メールフォルダもご確認ください。",
+  "Use a different email": "別のメールアドレスを使う",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "アカウントの作成を完了するには、{p0} 歳以上であることを確認し、{p1}と{p2}に同意してください。",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "アカウントの作成時には、最低年齢を満たしていることの確認をお願いしています。当社が保持するのはその確認のみで、生年月日は保持しません。アカウントが最低年齢に満たない方のものだと判明した場合は、そのアカウントを削除します。お子様が当社に個人データを提供したと思われる場合は、{p0} までメールでご連絡ください。そのデータを削除します。"
 }

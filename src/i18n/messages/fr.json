@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "La vérification de sécurité a échoué. Réessayez.",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Les inscriptions avec une adresse e-mail temporaire ne sont pas autorisées. Utilisez une adresse e-mail permanente.",
   "This password has appeared in a data breach. Choose a different one.": "Ce mot de passe est apparu dans une fuite de données. Choisissez-en un autre.",
-  "Choose a stronger password.": "Choisissez un mot de passe plus sûr."
+  "Choose a stronger password.": "Choisissez un mot de passe plus sûr.",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "En continuant, vous confirmez avoir au moins {p0} ans et acceptez nos {p1} et notre {p2}.",
+  "Show password": "Afficher le mot de passe",
+  "Hide password": "Masquer le mot de passe",
+  "An account with this email already exists.": "Un compte existe déjà avec cette adresse e-mail.",
+  "Resend in {p0}": "Renvoyer dans {p0}",
+  "Sent again. Check your spam folder too.": "E-mail renvoyé. Vérifiez aussi vos courriers indésirables.",
+  "Use a different email": "Utiliser une autre adresse e-mail",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Pour finir de créer votre compte, confirmez avoir au moins {p0} ans et acceptez nos {p1} et notre {p2}.",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Lors de la création d’un compte, nous vous demandons de confirmer que vous avez l’âge minimum. Nous ne conservons que cette confirmation, jamais de date de naissance. Si nous apprenons qu’un compte appartient à une personne n’ayant pas l’âge minimum, nous le supprimons. Si vous pensez qu’un enfant nous a transmis des données personnelles, écrivez à {p0} et nous les supprimerons."
 }

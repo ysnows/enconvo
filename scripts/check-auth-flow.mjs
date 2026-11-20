@@ -27,6 +27,10 @@ assert.equal(oauthCallbackUrl('https://www.enconvo.com', {}, 'en'), 'https://www
 const React = require('react')
 const { renderToStaticMarkup } = require('react-dom/server')
 let router = { isReady: true, query: { source: 'companion' } }
+const authErrorsSource = await readFile(new URL('../src/lib/auth-errors.ts', import.meta.url), 'utf8')
+const authErrors = { exports: {} }
+new Function('require', 'module', 'exports', ts.transpileModule(authErrorsSource, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText)(
+  name => (name === '@/components/Turnstile' ? { CaptchaError: class extends Error {} } : require(name)), authErrors, authErrors.exports)
 async function loadForm(name) {
   const source = await readFile(new URL(`../src/pages/components/${name}.tsx`, import.meta.url), 'utf8')
   const module = { exports: {} }
@@ -42,6 +46,8 @@ async function loadForm(name) {
     '@/lib/auth-flow': { authFlowHref, oauthCallbackUrl, affiliateReturnPath },
     '@supabase/auth-helpers-nextjs': { createClientComponentClient: () => ({ auth: {} }) },
     '@/lib/supabase': { createClientComponentClient: () => ({ auth: {} }) },
+    '@/components/AuthConsent': { AuthConsent: () => React.createElement('p', {}, 'consent-line') },
+    '@/lib/auth-errors': authErrors.exports,
   }
   new Function('require', 'module', 'exports', compiled)(name => mocks[name] ?? (name.startsWith('@/') ? new Proxy({}, { get: () => passthrough }) : require(name)), module, module.exports)
   return module.exports.default
@@ -53,8 +59,13 @@ for (const name of ['LoginForm', 'RegisterForm']) {
     const html = renderToStaticMarkup(React.createElement(Form, { loginState: '', setLoginState() {}, setUser() {}, email: '', setEmail() {} }))
     // Google sign-in is offered everywhere, the iPhone and Android apps included.
     assert.equal(html.includes('Continue with Google'), true, `${name} Google availability`)
-    // The login page offers Apple above Google (ADR 0216).
-    if (name === 'LoginForm') assert.ok(html.indexOf('Continue with Apple') >= 0 && html.indexOf('Continue with Apple') < html.indexOf('Continue with Google'), 'Apple above Google')
+    // Both pages offer Apple above Google (ADR 0216), with the consent line that carries the age.
+    assert.ok(html.indexOf('Continue with Apple') >= 0 && html.indexOf('Continue with Apple') < html.indexOf('Continue with Google'), `${name} Apple above Google`)
+    assert.ok(html.includes('consent-line'), `${name} consent line`)
+    if (name === 'RegisterForm') {
+      assert.equal(/username|birth/i.test(html), false, 'no username or birth date on sign-up')
+      assert.match(html, /Use a password of at least \{p0\} characters\./)
+    }
     assert.match(html, /email/i)
     if (name === 'LoginForm' && state.query.returnUrl) {
       assert.match(html, /Affiliate sign in/)

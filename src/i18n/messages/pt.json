@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "A verificação de segurança não foi aprovada. Tente novamente.",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Não é permitido criar contas com endereços de e-mail temporários. Use um endereço de e-mail permanente.",
   "This password has appeared in a data breach. Choose a different one.": "Esta senha apareceu em um vazamento de dados. Escolha outra.",
-  "Choose a stronger password.": "Escolha uma senha mais forte."
+  "Choose a stronger password.": "Escolha uma senha mais forte.",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Ao continuar, confirma que tem pelo menos {p0} anos e concorda com os nossos {p1} e a nossa {p2}.",
+  "Show password": "Mostrar senha",
+  "Hide password": "Ocultar senha",
+  "An account with this email already exists.": "Já existe uma conta com este e-mail.",
+  "Resend in {p0}": "Reenviar em {p0}",
+  "Sent again. Check your spam folder too.": "Enviado novamente. Verifique também a pasta de spam.",
+  "Use a different email": "Usar outro e-mail",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Para concluir a criação da sua conta, confirme que tem pelo menos {p0} anos e concorde com os nossos {p1} e a nossa {p2}.",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Ao criar uma conta, é-lhe pedido que confirme que tem a idade mínima. Guardamos apenas essa confirmação, nunca uma data de nascimento. Se soubermos que uma conta pertence a alguém abaixo da idade mínima, eliminamo-la. Se considerar que uma criança nos forneceu dados pessoais, envie um e-mail para {p0} e eliminá-los-emos."
 }

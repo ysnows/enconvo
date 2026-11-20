@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "La verificación de seguridad no se superó. Inténtalo de nuevo.",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "No se permiten registros con direcciones de correo temporales. Usa una dirección de correo permanente.",
   "This password has appeared in a data breach. Choose a different one.": "Esta contraseña ha aparecido en una filtración de datos. Elige otra.",
-  "Choose a stronger password.": "Elige una contraseña más segura."
+  "Choose a stronger password.": "Elige una contraseña más segura.",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Al continuar, confirmas que tienes al menos {p0} años y aceptas nuestros {p1} y nuestra {p2}.",
+  "Show password": "Mostrar contraseña",
+  "Hide password": "Ocultar contraseña",
+  "An account with this email already exists.": "Ya existe una cuenta con este correo electrónico.",
+  "Resend in {p0}": "Reenviar en {p0}",
+  "Sent again. Check your spam folder too.": "Enviado de nuevo. Revisa también la carpeta de spam.",
+  "Use a different email": "Usar otro correo electrónico",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Para terminar de crear tu cuenta, confirma que tienes al menos {p0} años y acepta nuestros {p1} y nuestra {p2}.",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Al crear una cuenta, te pedimos que confirmes que tienes la edad mínima. Solo conservamos esa confirmación, nunca una fecha de nacimiento. Si sabemos que una cuenta pertenece a alguien que no alcanza la edad mínima, la eliminamos. Si crees que un menor nos ha proporcionado datos personales, escribe a {p0} y los eliminaremos."
 }

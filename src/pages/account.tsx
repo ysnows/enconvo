@@ -12,6 +12,7 @@ import {
 } from '@/lib/email-preferences-client'
 import InviteFriends from '@/components/InviteFriends'
 import AccountPlan from '@/components/AccountPlan'
+import { displayName } from '@/lib/display-name'
 
 type EmailPreference = {
   product_updates_subscribed: boolean
@@ -226,7 +227,7 @@ export default function Account() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold">
-                  {user?.user_metadata?.name || t('User')}
+                  {displayName(user) || t('User')}
                 </h2>
               </div>
             </div>

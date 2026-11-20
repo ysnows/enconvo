@@ -30,6 +30,8 @@ import {
   signInWithPassword,
 } from '@/lib/password-sign-in'
 import { Turnstile, type CaptchaHandle } from '@/components/Turnstile'
+import { AuthConsent } from '@/components/AuthConsent'
+import { saveRegistrationAgeConfirmation } from '@/lib/age-gate'
 
 export default function LoginForm({
   loginState,
@@ -141,6 +143,8 @@ export default function LoginForm({
   // this page's query (the app to open, the page to return to) and language wait in the tab.
   function signInWithApple() {
     setAppleIsLoading(true)
+    // The consent line below covers an account Apple creates now (lib/age-gate).
+    saveRegistrationAgeConfirmation()
     saveAppleSignInContext(window.location.search, locale)
     window.location.assign(appleStartUrl())
   }
@@ -160,6 +164,8 @@ export default function LoginForm({
         locale
       )
 
+      // The consent line below covers an account Google creates now (lib/age-gate).
+      saveRegistrationAgeConfirmation()
       // Someone who chose "Use a different account" picks their Google account too.
       beginGoogleSignupMeasurement()
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -196,7 +202,7 @@ export default function LoginForm({
       </Head>
 
       <main className="flex min-h-screen flex-col items-center justify-center bg-[#1A1A1A]">
-        <div className="w-full max-w-[320px] space-y-8 px-4">
+        <div className="w-full max-w-[360px] space-y-8 px-4">
           <div className="flex flex-col items-center space-y-6">
             <Link href="/" aria-label={t('Home')}>
               <Logo className="h-16 w-auto" />
@@ -363,6 +369,8 @@ export default function LoginForm({
               </div>
             )}
           </form>
+
+          <AuthConsent />
         </div>
       </main>
     </>

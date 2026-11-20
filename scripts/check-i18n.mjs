@@ -187,7 +187,7 @@ for (const locale of locales) {
         '@/i18n/server': { i18nStaticProps: () => async () => ({ props: {} }) },
         react: { useEffect: (effect) => effects.push(effect) },
         'next/router': { useRouter: () => router },
-        '@supabase/auth-helpers-nextjs': {
+        '@/lib/supabase': {
           createClientComponentClient: () => ({
             auth: {
               getSession: async () => ({
@@ -256,7 +256,7 @@ for (const locale of locales) {
         query: { returnUrl: '/pricing?plan=standard' },
       }),
     },
-    '@supabase/auth-helpers-nextjs': {
+    '@/lib/supabase': {
       createClientComponentClient: () => ({
         auth: {
           getSession: async () => ({ data: { session: null }, error: null }),
@@ -270,6 +270,7 @@ for (const locale of locales) {
     '@/utils/app/native_router': { NativeRouter: {} },
     '@/pages/components/RegisterForm': () => null,
     '@/pages/components/RegisterSuccess': () => null,
+    '@/pages/components/LoginSuccess': () => null,
   })
   Register()
   effects.forEach((effect) => effect())

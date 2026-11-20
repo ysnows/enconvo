@@ -2629,5 +2629,14 @@
   "The security check didn’t go through. Try again.": "De beveiligingscontrole is niet gelukt. Probeer het opnieuw.",
   "Sign-ups with temporary email addresses aren’t allowed. Use a permanent email address.": "Aanmelden met een tijdelijk e-mailadres is niet toegestaan. Gebruik een vast e-mailadres.",
   "This password has appeared in a data breach. Choose a different one.": "Dit wachtwoord is in een datalek opgedoken. Kies een ander wachtwoord.",
-  "Choose a stronger password.": "Kies een sterker wachtwoord."
+  "Choose a stronger password.": "Kies een sterker wachtwoord.",
+  "By continuing, you confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Door verder te gaan, bevestig je dat je minstens {p0} jaar oud bent en ga je akkoord met onze {p1} en ons {p2}.",
+  "Show password": "Wachtwoord tonen",
+  "Hide password": "Wachtwoord verbergen",
+  "An account with this email already exists.": "Er bestaat al een account met dit e-mailadres.",
+  "Resend in {p0}": "Opnieuw versturen over {p0}",
+  "Sent again. Check your spam folder too.": "Opnieuw verstuurd. Kijk ook in je spammap.",
+  "Use a different email": "Ander e-mailadres gebruiken",
+  "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Bevestig dat je minstens {p0} jaar oud bent en ga akkoord met onze {p1} en ons {p2} om je account af te maken.",
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Bij het aanmaken van een account vragen we je te bevestigen dat je de minimumleeftijd hebt bereikt. We bewaren alleen die bevestiging, nooit een geboortedatum. Als we ontdekken dat een account van iemand onder de minimumleeftijd is, verwijderen we het. Als je denkt dat een kind ons persoonsgegevens heeft gegeven, mail dan naar {p0}, dan verwijderen we die."
 }

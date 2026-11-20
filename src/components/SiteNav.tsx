@@ -6,6 +6,7 @@ import { Dialog } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { Logo } from '@/components/Logo'
+import { displayName } from '@/lib/display-name'
 
 interface NavigationItem {
   name: string
@@ -71,7 +72,7 @@ export function SiteNav() {
             { name: 'Docs', href: 'https://docs.enconvo.ai/' },
             { name: 'Releases', href: '/changelog' },
             { name: 'Affiliate', href: '/affiliate' },
-            { name: data.session.user.user_metadata.name, href: '/account' },
+            { name: displayName(data.session.user), href: '/account' },
           ])
         }
       })
