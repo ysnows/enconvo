@@ -9,6 +9,33 @@ export function affiliateReturnPath(query: AuthQuery): string | null {
   return /^\/affiliate(?:\/dashboard)?(?:[?#]|$)/.test(path) ? path : null
 }
 
+/** A plan a signed-out buyer chose on Pricing, and whether they'll enter their own code there. */
+export interface PurchaseReturn {
+  plan: string
+  ownCode: boolean
+}
+
+/**
+ * The purchase a sign-in was started for: Pricing sends a signed-out buyer to sign in with
+ * `returnUrl=/pricing?plan=<key>[&code=own]` (components/Pricing.tsx). There is no /pricing page;
+ * once signed in, the buyer goes on to that plan's checkout (components/ResumeCheckout.tsx).
+ */
+export function purchaseReturn(query: AuthQuery): PurchaseReturn | null {
+  const path = value(query.returnUrl)
+  if (!path?.startsWith('/pricing?plan=')) return null
+  const params = new URLSearchParams(path.slice('/pricing?'.length))
+  const plan = params.get('plan')
+  if (!plan || !/^[\w-]+$/.test(plan)) return null
+  return { plan, ownCode: params.get('code') === 'own' }
+}
+
+/**
+ * Session storage: the plan this tab last left for checkout from a sign-in page. Back from Stripe
+ * through the browser's history, that page then waits for a click instead of sending the buyer
+ * straight back to Stripe. Pricing clears it when it sends a new buyer to sign in.
+ */
+export const LEFT_FOR_CHECKOUT_KEY = 'enconvo:left-for-checkout'
+
 /** Keep the native return destination across registration and password reset. */
 export function authFlowHref(path: string, query: AuthQuery) {
   const params = new URLSearchParams()

@@ -6,7 +6,12 @@ const require = createRequire(import.meta.url)
 const source = await readFile(new URL('../src/lib/auth-flow.ts', import.meta.url), 'utf8')
 const module = { exports: {} }
 new Function('module', 'exports', ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText)(module, module.exports)
-const { authFlowHref, oauthCallbackUrl, affiliateReturnPath, emailLinkDestination } = module.exports
+const { authFlowHref, oauthCallbackUrl, affiliateReturnPath, emailLinkDestination, purchaseReturn } = module.exports
+// Pricing sends a signed-out buyer to sign in with the plan to buy; signed in, they go on to its checkout.
+assert.deepEqual(purchaseReturn({ returnUrl: '/pricing?plan=standard' }), { plan: 'standard', ownCode: false })
+assert.deepEqual(purchaseReturn({ returnUrl: ['/pricing?plan=cloud_plus_yearly&code=own'] }), { plan: 'cloud_plus_yearly', ownCode: true })
+for (const returnUrl of [undefined, '/', '/pricing', '/pricing?plan=', '/pricing?plan=a%2Fb', '/account?plan=standard', '//pricing?plan=standard', 'https://evil.example/pricing?plan=standard'])
+  assert.equal(purchaseReturn({ returnUrl }), null, String(returnUrl))
 const query = { from: 'app', source: 'companion', handoff: 'a+b&c', language: 'zh-CN', returnUrl: '/account?a=b', access_token: 'secret', irrelevant: 'omit' }
 for (const path of ['/login', '/register', '/reset_password_send']) {
   const url = new URL(authFlowHref(path, query), 'https://enconvo.com')
@@ -43,7 +48,7 @@ async function loadForm(name) {
     '@/i18n/I18nProvider': { useI18n: () => ({ t: s => s, locale: 'en' }) },
     '@/i18n/server': { i18nStaticProps: () => ({}) },
     '@/components/ui/input': { Input: ({type, name, placeholder}) => React.createElement('input', {type, name, placeholder}) },
-    '@/lib/auth-flow': { authFlowHref, oauthCallbackUrl, affiliateReturnPath },
+    '@/lib/auth-flow': { authFlowHref, oauthCallbackUrl, affiliateReturnPath, purchaseReturn },
     '@supabase/auth-helpers-nextjs': { createClientComponentClient: () => ({ auth: {} }) },
     '@/lib/supabase': { createClientComponentClient: () => ({ auth: {} }) },
     '@/components/AuthConsent': { AuthConsent: () => React.createElement('p', {}, 'consent-line') },
@@ -179,4 +184,4 @@ try {
 } finally {
   globalThis.fetch = fetchBefore
 }
-console.log('PASS: Google auth on iPhone and desktop, OAuth callback keeps the app return, email links continue on this site, native return navigation and token omission, Apple above Google with its sign-in context, single handoff and new-account removal')
+console.log('PASS: purchase returns, Google auth on iPhone and desktop, OAuth callback keeps the app return, email links continue on this site, native return navigation and token omission, Apple above Google with its sign-in context, single handoff and new-account removal')

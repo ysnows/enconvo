@@ -20,6 +20,7 @@ import {
   affiliateReturnPath,
   authFlowHref,
   oauthCallbackUrl,
+  purchaseReturn,
 } from '@/lib/auth-flow'
 import { offerReturnPath } from '@/lib/welcome-offer'
 import { beginGoogleSignupMeasurement } from '@/lib/signup-analytics'
@@ -52,6 +53,9 @@ export default function LoginForm({
     typeof returnUrl === 'string' &&
     !!offerReturnPath(returnUrl) &&
     router.query.from !== 'app'
+  // A sign-in on the way to checkout goes on to Stripe (components/ResumeCheckout); the app isn't opened.
+  const purchaseLogin =
+    !!purchaseReturn(router.query) && router.query.from !== 'app'
 
   const supabase = createClientComponentClient()
 
@@ -104,7 +108,7 @@ export default function LoginForm({
 
     // Enconvo gets a session of its own; "Open Enconvo" on the next page tries again.
     const opened =
-      affiliateLogin || offerLogin
+      affiliateLogin || offerLogin || purchaseLogin
         ? 'opened'
         : await NativeRouter.openApp(
             Array.isArray(router.query.source)

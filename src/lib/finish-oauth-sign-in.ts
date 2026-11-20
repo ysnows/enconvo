@@ -51,7 +51,9 @@ export async function finishOAuthSignIn(
     ? query.returnUrl[0]
     : query.returnUrl
   // A page that sent the user to sign in (e.g. /redeem/<code>) gets them back
-  // directly; /login only fires SIGNED_IN for a sign-in made on that page.
+  // directly; /login only fires SIGNED_IN for a sign-in made on that page. A
+  // purchase (/pricing?plan=, which is no page) goes back to /login, which takes
+  // a signed-in buyer on to checkout (components/ResumeCheckout).
   if (
     !from &&
     returnUrl?.startsWith('/') &&

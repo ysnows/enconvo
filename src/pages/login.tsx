@@ -9,7 +9,8 @@ import LoginForm from './components/LoginForm'
 import LoginSuccess from '@/pages/components/LoginSuccess'
 import { LoginAccountChooser } from '@/components/LoginAccountChooser'
 import { NativeRouter } from '@/utils/app/native_router'
-import { affiliateReturnPath } from '@/lib/auth-flow'
+import { affiliateReturnPath, purchaseReturn } from '@/lib/auth-flow'
+import { ResumeCheckout, useResumeCheckout } from '@/components/ResumeCheckout'
 import {
   PageCornerActions,
   pageCornerControlClass,
@@ -36,6 +37,9 @@ export default function Login() {
   // when the tab comes back) must not move the page past the choice.
   const accountChosen = useRef(false)
   const [switching, setSwitching] = useState(false)
+  // Sent here by Pricing to buy a plan: signed in, the buyer goes on to its checkout.
+  const purchase = fromApp ? null : purchaseReturn(router.query)
+  const checkout = useResumeCheckout(purchase, loginState === 'success', locale)
 
   const showLoginForm = useCallback(() => {
     setLoginState('login')
@@ -138,50 +142,15 @@ export default function Login() {
           const returnUrl = Array.isArray(router.query.returnUrl)
             ? router.query.returnUrl[0]
             : router.query.returnUrl || '/'
-          if (
-            typeof returnUrl === 'string' &&
-            returnUrl.startsWith('/pricing?plan=')
-          ) {
-            // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
-            console.log('window.endorsely_referral', window.endorsely_referral)
-            // `code=own`: the buyer chose "Use another code instead" (Pricing.tsx).
-            const query = new URLSearchParams(returnUrl.split('?')[1])
-            const plan = query.get('plan')
-            const response = await fetch(
-              '/api/subscription/checkout_sessions',
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  lookupKey: plan,
-                  locale,
-                  endorsely_referral: window.endorsely_referral,
-                  ...(query.get('code') === 'own' ? { ownCode: true } : {}),
-                }),
-              }
-            )
-
-            if (response.status === 200) {
-              const data = await response.json()
-              window.location.href = data.url
-            }
+          // A purchase goes on to checkout from the signed-in state (useResumeCheckout).
+          if (returnUrl === '/' || purchaseReturn(router.query)) {
+            setLoginState('success')
+            setNavigation([
+              { name: 'Logout', href: '/' },
+              { name: 'Account', href: '/account' },
+            ])
           } else {
-            if (returnUrl === '/') {
-              console.log('router.query', router.query)
-              // if (router.query === 'app') {
-              setLoginState('success')
-              setNavigation([
-                { name: 'Logout', href: '/' },
-                { name: 'Account', href: '/account' },
-              ])
-              // } else {
-              //     router.push('account');
-              // }
-            } else {
-              router.push(returnUrl)
-            }
+            router.push(returnUrl)
           }
         }
       }
@@ -219,6 +188,8 @@ export default function Login() {
             onUseDifferentAccount={switchAccount}
             switching={switching}
           />
+        ) : loginState === 'success' && purchase ? (
+          <ResumeCheckout state={checkout.state} onContinue={checkout.retry} />
         ) : loginState === 'success' ? (
           <LoginSuccess
             handleOpenApp={handleOpenApp}

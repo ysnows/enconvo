@@ -8,6 +8,8 @@ import RegisterForm from '@/pages/components/RegisterForm'
 import RegisterSuccess from '@/pages/components/RegisterSuccess'
 import LoginSuccess from '@/pages/components/LoginSuccess'
 import type { AuthChangeEvent, User } from '@supabase/supabase-js'
+import { purchaseReturn } from '@/lib/auth-flow'
+import { ResumeCheckout, useResumeCheckout } from '@/components/ResumeCheckout'
 
 export default function Register() {
   const { locale } = useI18n()
@@ -20,6 +22,14 @@ export default function Register() {
   const [email, setEmail] = useState('')
   const [user, setUser] = useState<User | null>(null)
   const sessionChecked = useRef(false)
+  // Sent here by Pricing to buy a plan: signed in, the buyer goes on to its checkout.
+  const purchase =
+    router.query.from === 'app' ? null : purchaseReturn(router.query)
+  const checkout = useResumeCheckout(
+    purchase,
+    registerState === 'signed_in',
+    locale
+  )
 
   const supabase = createClientComponentClient()
 
@@ -50,34 +60,10 @@ export default function Register() {
           const returnUrl = Array.isArray(router.query.returnUrl)
             ? router.query.returnUrl[0]
             : router.query.returnUrl || '/'
-          if (
-            typeof returnUrl === 'string' &&
-            returnUrl.startsWith('/pricing?plan=')
-          ) {
-            // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
-            // `code=own`: the buyer chose "Use another code instead" (Pricing.tsx).
-            const query = new URLSearchParams(returnUrl.split('?')[1])
-            const plan = query.get('plan')
-            const response = await fetch(
-              '/api/subscription/checkout_sessions',
-              {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  lookupKey: plan,
-                  locale,
-                  endorsely_referral: window.endorsely_referral,
-                  ...(query.get('code') === 'own' ? { ownCode: true } : {}),
-                }),
-              }
-            )
-
-            if (response.status === 200) {
-              const data = await response.json()
-              window.location.href = data.url
-            }
+          if (purchaseReturn(router.query)) {
+            // Goes on to checkout from the signed-in state (useResumeCheckout).
+            setUser(session?.user ?? null)
+            setRegisterState('signed_in')
           } else {
             router.push(returnUrl)
           }
@@ -117,6 +103,8 @@ export default function Register() {
           email={email}
           onUseDifferentEmail={() => setRegisterState('register')}
         />
+      ) : registerState === 'signed_in' && purchase ? (
+        <ResumeCheckout state={checkout.state} onContinue={checkout.retry} />
       ) : registerState === 'signed_in' ? (
         <LoginSuccess
           handleOpenApp={handleOpenApp}

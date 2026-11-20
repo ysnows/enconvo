@@ -11,6 +11,7 @@ import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
 import { AffiliateOffer } from '@/components/AffiliateOffer'
 import { SaleCountdown, saleLastDay } from '@/components/Sale'
 import { trackEvent } from '@/lib/analytics'
+import { LEFT_FOR_CHECKOUT_KEY } from '@/lib/auth-flow'
 import { reportAffiliateDownload } from '@/lib/affiliate-journey'
 import { reportCampaignDownload } from '@/lib/campaign-journey'
 import { trackXDownload } from '@/lib/x-pixel'
@@ -92,6 +93,10 @@ async function startCheckout(
       const returnUrl = `/pricing?plan=${lookupKey}${
         extra?.ownCode ? '&code=own' : ''
       }`
+      // A new purchase: signed in, it goes on to checkout (components/ResumeCheckout).
+      try {
+        sessionStorage.removeItem(LEFT_FOR_CHECKOUT_KEY)
+      } catch {}
       window.location.href = localizePath(
         `/login?returnUrl=${encodeURIComponent(returnUrl)}`,
         locale
