@@ -18,6 +18,9 @@ export const TEMPORARY_EMAIL =
 export const PASSWORD_BREACHED =
   'This password has appeared in a data breach. Choose a different one.'
 export const PASSWORD_WEAK = 'Choose a stronger password.'
+export const RATE_LIMIT_WAIT = 'Wait {p0} seconds, then try again.'
+export const EMAIL_RATE_LIMIT = 'Too many emails were sent recently. Try again later.'
+export const RATE_LIMITED = 'Too many tries. Wait a moment, then try again.'
 
 /** The message source and its values, for `t(source, values)`. */
 export type AuthMessage = { source: string; values?: Record<string, string> }
@@ -42,12 +45,32 @@ export function isCaptchaRefusal(error: { message?: string } | null | undefined)
   return /captcha/i.test(error?.message ?? '')
 }
 
+/**
+ * The seconds Auth asks to wait before it sends this address another email ("For security purposes,
+ * you can only request this after 42 seconds."), or null.
+ */
+export function retryAfterSeconds(
+  error: { message?: string } | null | undefined
+): number | null {
+  const match = /request this (?:after|once every) (\d+) seconds?/i.exec(
+    error?.message ?? ''
+  )
+  return match ? Number(match[1]) : null
+}
+
 /** A readable message for an Auth error, or null to keep Auth's own text. */
 export function authErrorMessage(
   error: { message?: string; status?: number } | null | undefined
 ): AuthMessage | null {
   const message = error?.message ?? ''
   if (isCaptchaRefusal(error)) return { source: CAPTCHA_REJECTED }
+  const wait = retryAfterSeconds(error)
+  if (wait !== null)
+    return { source: RATE_LIMIT_WAIT, values: { p0: String(wait) } }
+  // The project's hourly cap on the emails Auth sends.
+  if (/email rate limit/i.test(message)) return { source: EMAIL_RATE_LIMIT }
+  if (error?.status === 429 || /rate limit/i.test(message))
+    return { source: RATE_LIMITED }
   // The sign-up hook's refusal of a disposable inbox.
   if (/temporary email/i.test(message)) return { source: TEMPORARY_EMAIL }
   // "Unable to validate email address: invalid format".

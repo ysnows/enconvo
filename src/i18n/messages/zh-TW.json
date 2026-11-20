@@ -1646,7 +1646,7 @@
   "So that a provider's safety action applies to one account instead of everyone, we send OpenAI and Anthropic a stable identifier made from your account with each request. It is a one-way hash, not your email address. We delete our record of it with your account; providers keep their own safety records under their terms.": "為了讓服務供應商的安全措施只作用於單一帳戶而不是所有人，我們會在每次請求時向 OpenAI 和 Anthropic 傳送一個由您的帳戶產生的固定識別碼。它是單向雜湊值，不是您的電子郵件地址。我們的相關記錄會隨帳戶一併刪除；服務供應商會依據其自有條款保留自己的安全記錄。",
   "We'll look at your audience and plan and decide soon. Come back to this page to see the result; once you're approved, your link and dashboard appear right here.": "我們會查看您的受眾和方案,並盡快做出決定。請回到此頁面查看結果;一旦獲得核准,您的連結和儀表板就會顯示在這裡。",
   "We've sent a confirmation email to": "我們已寄送確認郵件至",
-  "We've sent a confirmation email to {p0}. Please check your inbox and confirm your email address to start using Enconvo.": "我們已寄送一封確認郵件至 {p0}。請查看收件匣並確認你的電子郵件地址,即可開始使用 Enconvo。",
+  "We've sent a confirmation email to {p0}. Please check your inbox and confirm your email address to start using Enconvo.": "我們已寄送一封確認郵件至 {p0}。請查看收件匣並確認你的電子郵件地址，即可開始使用 Enconvo。",
   "We've sent you a reset password link. Check your inbox to reset your password.": "我們已寄送重設密碼連結給您。請查看收件匣以重設密碼。",
   "Website analytics.": "網站分析。",
   "Website or channel": "網站或頻道",
@@ -2638,5 +2638,8 @@
   "Sent again. Check your spam folder too.": "已重新寄送。也請查看垃圾郵件資料夾。",
   "Use a different email": "改用其他電子郵件",
   "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "若要完成建立帳號，請確認你已年滿 {p0} 歲，並同意我們的{p1}和{p2}。",
-  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "建立帳號時，我們會請你確認已達最低年齡。我們只保存這項確認，從不保存出生日期。如果我們得知某個帳號屬於未達最低年齡的人，會將其刪除。如果你認為有兒童向我們提供了個人資料，請寄信至 {p0}，我們會將其刪除。"
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "建立帳號時，我們會請你確認已達最低年齡。我們只保存這項確認，從不保存出生日期。如果我們得知某個帳號屬於未達最低年齡的人，會將其刪除。如果你認為有兒童向我們提供了個人資料，請寄信至 {p0}，我們會將其刪除。",
+  "Wait {p0} seconds, then try again.": "請等待 {p0} 秒後再試。",
+  "Too many emails were sent recently. Try again later.": "最近寄出的郵件過多，請稍後再試。",
+  "Too many tries. Wait a moment, then try again.": "嘗試次數過多，請稍候片刻再試。"
 }

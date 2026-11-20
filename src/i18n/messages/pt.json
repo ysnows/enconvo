@@ -2638,5 +2638,8 @@
   "Sent again. Check your spam folder too.": "Enviado novamente. Verifique também a pasta de spam.",
   "Use a different email": "Usar outro e-mail",
   "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "Para concluir a criação da sua conta, confirme que tem pelo menos {p0} anos e concorde com os nossos {p1} e a nossa {p2}.",
-  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Ao criar uma conta, é-lhe pedido que confirme que tem a idade mínima. Guardamos apenas essa confirmação, nunca uma data de nascimento. Se soubermos que uma conta pertence a alguém abaixo da idade mínima, eliminamo-la. Se considerar que uma criança nos forneceu dados pessoais, envie um e-mail para {p0} e eliminá-los-emos."
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "Ao criar uma conta, é-lhe pedido que confirme que tem a idade mínima. Guardamos apenas essa confirmação, nunca uma data de nascimento. Se soubermos que uma conta pertence a alguém abaixo da idade mínima, eliminamo-la. Se considerar que uma criança nos forneceu dados pessoais, envie um e-mail para {p0} e eliminá-los-emos.",
+  "Wait {p0} seconds, then try again.": "Aguarde {p0} segundos e tente novamente.",
+  "Too many emails were sent recently. Try again later.": "Foram enviados muitos e-mails recentemente. Tente novamente mais tarde.",
+  "Too many tries. Wait a moment, then try again.": "Muitas tentativas. Aguarde um momento e tente novamente."
 }

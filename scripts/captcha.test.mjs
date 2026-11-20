@@ -99,6 +99,11 @@ test('Auth refusals read as messages, translated in every locale', async () => {
     // With email confirmation off; with it on, a taken address comes back without identities instead.
     [{ message: 'User already registered', status: 422 }, errors.EMAIL_TAKEN],
     [{ message: 'Unable to validate email address: invalid format', status: 400 }, errors.INVALID_EMAIL],
+    // Rate limits: a wait for this address, the project's email cap, and the request limit.
+    [{ message: 'For security purposes, you can only request this after 42 seconds.', status: 429 }, errors.RATE_LIMIT_WAIT],
+    [{ message: 'email rate limit exceeded', status: 429 }, errors.EMAIL_RATE_LIMIT],
+    [{ message: 'Request rate limit reached', status: 429 }, errors.RATE_LIMITED],
+    [{ message: 'Too Many Requests', status: 429 }, errors.RATE_LIMITED],
   ]
   const sources = new Set([errors.CAPTCHA_UNAVAILABLE, 'Choose a stronger password.'])
   for (const [error, source] of cases) {
@@ -106,7 +111,10 @@ test('Auth refusals read as messages, translated in every locale', async () => {
     sources.add(source)
   }
   assert.deepEqual(errors.authErrorMessage({ message: 'Password should be at least 8 characters.' }).values, { p0: '8' })
-  assert.equal(errors.authErrorMessage({ message: 'Email rate limit exceeded', status: 429 }), null)
+  assert.deepEqual(errors.authErrorMessage({ message: 'For security purposes, you can only request this after 42 seconds.' }).values, { p0: '42' })
+  assert.equal(errors.retryAfterSeconds({ message: 'For security purposes, you can only request this once every 60 seconds' }), 60)
+  assert.equal(errors.retryAfterSeconds({ message: 'email rate limit exceeded' }), null)
+  assert.equal(errors.authErrorMessage({ message: 'Database error saving new user', status: 500 }), null)
   // The sign-up form shows each message under the field it is about.
   for (const source of [errors.INVALID_EMAIL, errors.EMAIL_TAKEN, errors.TEMPORARY_EMAIL]) assert.equal(errors.authMessageField({ source }), 'email', source)
   for (const source of [errors.PASSWORD_TOO_SHORT, errors.PASSWORD_BREACHED, errors.PASSWORD_WEAK]) assert.equal(errors.authMessageField({ source }), 'password', source)
@@ -117,5 +125,6 @@ test('Auth refusals read as messages, translated in every locale', async () => {
     const messages = JSON.parse(await readFile(new URL(`../src/i18n/messages/${locale}.json`, import.meta.url), 'utf8'))
     for (const source of sources) assert.ok(messages[source], `${locale}: ${source}`)
     assert.ok(messages[errors.PASSWORD_TOO_SHORT].includes('{p0}'), `${locale}: placeholder`)
+    assert.ok(messages[errors.RATE_LIMIT_WAIT].includes('{p0}'), `${locale}: wait placeholder`)
   }
 })

@@ -18,6 +18,7 @@ import {
 import {
   authErrorMessage,
   captchaMessage,
+  retryAfterSeconds,
   type AuthMessage,
 } from '@/lib/auth-errors'
 import { getEmailLink } from '@/utils/app/email_link'
@@ -78,6 +79,13 @@ export default function RegisterSuccess({ email, onUseDifferentEmail }) {
     if (captchaToken) captcha.current?.reset()
     setSending(false)
     if (error) {
+      // Auth counts its wait from the last email it sent: run the countdown for it instead.
+      const wait = retryAfterSeconds(error)
+      if (wait !== null) {
+        setResendAt(Date.now() + wait * 1000)
+        setNow(Date.now())
+        return
+      }
       setMessage(authErrorMessage(error) ?? { source: error.message })
       return
     }

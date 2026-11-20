@@ -2638,5 +2638,8 @@
   "Sent again. Check your spam folder too.": "再送信しました。迷惑メールフォルダもご確認ください。",
   "Use a different email": "別のメールアドレスを使う",
   "To finish creating your account, confirm you’re at least {p0} and agree to our {p1} and {p2}.": "アカウントの作成を完了するには、{p0} 歳以上であることを確認し、{p1}と{p2}に同意してください。",
-  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "アカウントの作成時には、最低年齢を満たしていることの確認をお願いしています。当社が保持するのはその確認のみで、生年月日は保持しません。アカウントが最低年齢に満たない方のものだと判明した場合は、そのアカウントを削除します。お子様が当社に個人データを提供したと思われる場合は、{p0} までメールでご連絡ください。そのデータを削除します。"
+  "Creating an account asks you to confirm that you meet the minimum age. We keep only that confirmation, never a date of birth. If we learn that an account belongs to someone below the minimum age, we delete it. If you believe a child has given us personal data, email {p0} and we will delete it.": "アカウントの作成時には、最低年齢を満たしていることの確認をお願いしています。当社が保持するのはその確認のみで、生年月日は保持しません。アカウントが最低年齢に満たない方のものだと判明した場合は、そのアカウントを削除します。お子様が当社に個人データを提供したと思われる場合は、{p0} までメールでご連絡ください。そのデータを削除します。",
+  "Wait {p0} seconds, then try again.": "{p0} 秒待ってから、もう一度お試しください。",
+  "Too many emails were sent recently. Try again later.": "最近送信されたメールが多すぎます。しばらくしてからもう一度お試しください。",
+  "Too many tries. Wait a moment, then try again.": "試行回数が多すぎます。少し待ってから、もう一度お試しください。"
 }
