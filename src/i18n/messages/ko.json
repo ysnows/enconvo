@@ -2644,8 +2644,6 @@
   "Too many tries. Wait a moment, then try again.": "시도 횟수가 너무 많습니다. 잠시 후 다시 시도하세요.",
   "Complete the security check to continue.": "계속하려면 보안 확인을 완료하세요.",
   "Black Friday": "블랙 프라이데이",
-  "{p0}% off every Lifetime License": "모든 평생 라이선스 {p0}% 할인",
-  "{p0}% off Lifetime License": "평생 라이선스 {p0}% 할인",
   "Ends in {p0}d {p1}h {p2}m": "종료까지 {p0}일 {p1}시간 {p2}분",
   "Get the deal": "혜택 받기",
   "hours": "시간",
@@ -2653,7 +2651,11 @@
   "seconds": "초",
   "Ends {p0}": "{p0} 종료",
   "Black Friday · Ends {p0}": "블랙 프라이데이 · {p0} 종료",
-  "Pay once, keep Enconvo for life. The sale ends {p0}.": "한 번 결제로 Enconvo를 평생 사용하세요. 할인은 {p0}에 종료됩니다.",
   "You save {p0}": "{p0} 절약",
-  "Discount applied at checkout.": "할인은 결제 시 적용됩니다."
+  "Discount applied at checkout.": "할인은 결제 시 적용됩니다.",
+  "{p0}% off Lifetime and Cloud": "평생 라이선스와 Cloud {p0}% 할인",
+  "Pay once and keep Enconvo for life, or take {p0}% off your first month or year of Cloud. The sale ends {p1}.": "한 번 결제로 Enconvo를 평생 사용하거나, Cloud 첫 달 또는 첫해를 {p0}% 할인받으세요. 할인은 {p1}에 종료됩니다.",
+  "First month, then {p0}/month": "첫 달 가격, 이후 {p0}/월",
+  "First year {p0}, then {p1}/year": "첫해 {p0}, 이후 {p1}/년",
+  "Use another code instead": "다른 코드 사용하기"
 }

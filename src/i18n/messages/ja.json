@@ -2644,8 +2644,6 @@
   "Too many tries. Wait a moment, then try again.": "試行回数が多すぎます。少し待ってから、もう一度お試しください。",
   "Complete the security check to continue.": "続行するには、セキュリティチェックを完了してください。",
   "Black Friday": "ブラックフライデー",
-  "{p0}% off every Lifetime License": "すべての永久ライセンスが {p0}% オフ",
-  "{p0}% off Lifetime License": "永久ライセンスが {p0}% オフ",
   "Ends in {p0}d {p1}h {p2}m": "終了まで {p0}日 {p1}時間 {p2}分",
   "Get the deal": "セールを見る",
   "hours": "時間",
@@ -2653,7 +2651,11 @@
   "seconds": "秒",
   "Ends {p0}": "{p0} に終了",
   "Black Friday · Ends {p0}": "ブラックフライデー · {p0} まで",
-  "Pay once, keep Enconvo for life. The sale ends {p0}.": "一度の支払いで、Enconvo をずっと使えます。セールは {p0} に終了します。",
   "You save {p0}": "{p0} お得",
-  "Discount applied at checkout.": "割引はチェックアウト時に適用されます。"
+  "Discount applied at checkout.": "割引はチェックアウト時に適用されます。",
+  "{p0}% off Lifetime and Cloud": "永久ライセンスと Cloud が {p0}% オフ",
+  "Pay once and keep Enconvo for life, or take {p0}% off your first month or year of Cloud. The sale ends {p1}.": "一度の支払いで Enconvo をずっと使うか、Cloud の最初の 1 か月または 1 年を {p0}% オフで。セールは {p1} に終了します。",
+  "First month, then {p0}/month": "初月の料金、以降は {p0}/月",
+  "First year {p0}, then {p1}/year": "初年度 {p0}、以降は {p1}/年",
+  "Use another code instead": "別のコードを使う"
 }

@@ -77,6 +77,10 @@
 .gold .ico:not(.icoPlus) { color: #e2b54a; }
 .gold .badge { border-color: transparent; background: #ffc533; color: #1a1403; font-weight: 600; }
 .save { color: #ffc533; font-weight: 600; }
+/* "Use another code instead", inline at the end of a plan's note. */
+.otherCode { display: inline; padding: 0; color: #c2c6c9; font: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.otherCode:hover { color: #f4f4f6; }
+.otherCode:disabled { cursor: wait; opacity: .7; }
 .raised.gold .cta { background: linear-gradient(180deg, #ffd666, #ffbd2e); color: #1a1403; font-weight: 600; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 10px 30px rgba(255,190,50,.22); }
 .raised.gold .cta:hover { background: linear-gradient(180deg, #ffe08a, #ffc747); color: #1a1403; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 12px 36px rgba(255,190,50,.32); }
 

@@ -62,13 +62,16 @@ export const LIFETIME_PRICE_STEPS: {
 // The coupon is limited to the lifetime products and stops redeeming at `until`.
 export const LIFETIME_SALES: LifetimeSale[] = [
   {
-    coupon: 'BLACKFRIDAY2026',
+    // BLACKFRIDAY2026 (lifetime only, redeemable until 1 Dec) gave way to this one when the sale
+    // grew to the first Cloud payment and a week past Cyber Monday (the user's call on 2026-11-21).
+    // Like the Worker's, it is `duration: once`: a Cloud plan gets it on its first payment only.
+    coupon: 'BLACKFRIDAY2026B',
     campaign: 'black-friday-2026',
     badge: 'Black Friday −{p0}%',
     percentOff: 30,
-    // Started early, on 20 Nov (the user's call on 2026-11-21).
+    // Started early, on 20 Nov, and ends as the Dec 8 prices take over.
     from: '2026-11-20T00:00:00-08:00',
-    until: '2026-12-01T00:00:00-08:00',
+    until: '2026-12-08T00:00:00-08:00',
   },
 ]
 

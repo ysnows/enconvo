@@ -2644,8 +2644,6 @@
   "Too many tries. Wait a moment, then try again.": "Te veel pogingen. Wacht even en probeer het dan opnieuw.",
   "Complete the security check to continue.": "Voltooi de beveiligingscontrole om door te gaan.",
   "Black Friday": "Black Friday",
-  "{p0}% off every Lifetime License": "{p0}% korting op elke Levenslange licentie",
-  "{p0}% off Lifetime License": "{p0}% korting op de Levenslange licentie",
   "Ends in {p0}d {p1}h {p2}m": "Eindigt over {p0} d {p1} u {p2} min",
   "Get the deal": "Profiteer nu",
   "hours": "uur",
@@ -2653,7 +2651,11 @@
   "seconds": "seconden",
   "Ends {p0}": "Eindigt op {p0}",
   "Black Friday · Ends {p0}": "Black Friday · Tot en met {p0}",
-  "Pay once, keep Enconvo for life. The sale ends {p0}.": "Eén keer betalen, Enconvo voor altijd. De actie eindigt op {p0}.",
   "You save {p0}": "Je bespaart {p0}",
-  "Discount applied at checkout.": "De korting wordt bij het afrekenen verrekend."
+  "Discount applied at checkout.": "De korting wordt bij het afrekenen verrekend.",
+  "{p0}% off Lifetime and Cloud": "{p0}% korting op Levenslang en Cloud",
+  "Pay once and keep Enconvo for life, or take {p0}% off your first month or year of Cloud. The sale ends {p1}.": "Eén keer betalen en Enconvo voor altijd, of {p0}% korting op je eerste maand of jaar Cloud. De actie eindigt op {p1}.",
+  "First month, then {p0}/month": "Eerste maand, daarna {p0}/maand",
+  "First year {p0}, then {p1}/year": "Eerste jaar {p0}, daarna {p1}/jaar",
+  "Use another code instead": "Een andere code gebruiken"
 }

@@ -15,6 +15,16 @@ export const PRICE_IDS: Record<string, string> = {
     '3000000_points': 'price_1Qx9QYP5mwiRKlICzdVj9Nx3',
 }
 
+// A Cloud plan's first payment, in cents, for weighing a running sale against an Affiliate code.
+export const SUBSCRIPTION_CENTS: Record<string, number> = {
+    monthly: 1000,
+    yearly: 9600,
+    pro_monthly: 5000,
+    pro_yearly: 48000,
+    max_monthly: 10000,
+    max_yearly: 96000,
+}
+
 /**
  * The Stripe price a Checkout for `lookupKey` charges at `now`. Teams lifetime license
  * (ADR 0036): the base covers 5 seats; extra seats ride the seat add-on price with

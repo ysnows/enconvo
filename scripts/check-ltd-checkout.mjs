@@ -56,7 +56,7 @@ function load(relative, dependencies = {}, env = {}) {
     URL,
     URLSearchParams,
     Intl,
-    console: { log() {} },
+    console: { log() {}, warn() {} },
   }
   vm.runInNewContext(output, context, { filename: relative })
   return exports
@@ -420,6 +420,7 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
       '@/lib/affiliate-discount': discount,
       '@/lib/stripe-prices': prices,
       '@/lib/lifetime-pricing': pricing,
+      '@/lib/renewal-terms': load('src/lib/renewal-terms.ts', {}, { globals: { Promise } }),
     },
     { NODE_ENV: 'production', STRIPE_SECRET_KEY: 'test_key', ...env }
   ).default
@@ -1533,7 +1534,7 @@ test('Billing portal returns to the selected language and invalid language input
 // ---- Lifetime price schedule (lifetime-pricing.ts): price steps, the Black Friday sale,
 // and the KenMoo offer's end, each at midnight in Los Angeles.
 const BLACK_FRIDAY_COUPON = {
-  id: 'BLACKFRIDAY2026',
+  id: 'BLACKFRIDAY2026B',
   valid: true,
   percent_off: 30,
   duration: 'once',
@@ -1566,14 +1567,16 @@ test('License prices step up on schedule and KENMOO2026 stays 40% off until it e
   assert.equal(new Set(ids).size, ids.length)
 })
 
-test('Black Friday takes 30% off for everyone but KenMoo buyers, who keep the lower price', () => {
+test('Black Friday takes 30% off from 20 Nov to 7 Dec for everyone but KenMoo buyers, who keep the lower price', () => {
   assert.equal(pricing.lifetimeSale(Date.parse('2026-11-19T23:59:59-08:00')), null)
-  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-20T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026')
-  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-23T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026')
-  assert.equal(pricing.lifetimeSale(Date.parse('2026-12-01T00:00:00-08:00')), null)
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-20T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026B')
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-11-23T00:00:00-08:00')).coupon, 'BLACKFRIDAY2026B')
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-12-07T23:59:59-08:00')).coupon, 'BLACKFRIDAY2026B')
+  assert.equal(pricing.lifetimeSale(Date.parse('2026-12-08T00:00:00-08:00')), null)
   assert.deepEqual(scheduledCents('2026-11-23T00:00:00-08:00'), [4130, 8330, 11130])
   assert.deepEqual(scheduledCents('2026-11-23T00:00:00-08:00', 'kenmoo'), [3540, 7140, 9540])
-  assert.deepEqual(scheduledCents('2026-12-01T00:00:00-08:00'), [5900, 11900, 15900])
+  assert.deepEqual(scheduledCents('2026-12-07T23:59:59-08:00'), [4130, 8330, 11130])
+  assert.deepEqual(scheduledCents('2026-12-08T00:00:00-08:00'), [6900, 14900, 17900])
   for (const sale of pricing.LIFETIME_SALES) assert(sale.percentOff < data.LTD_OFFER.discountPercent)
 })
 
@@ -1586,7 +1589,7 @@ test('Offer checkout charges the scheduled price and applies a running sale only
       assert.equal(res.statusCode, 200)
       assert.deepEqual(calls.price, [plan.priceId])
       assert.deepEqual(calls.sessions[0].line_items, [{ price: plan.priceId, quantity: 1 }])
-      assert.deepEqual(calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026' }])
+      assert.deepEqual(calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026B' }])
       assert.equal(calls.sessions[0].metadata.campaign, 'black-friday-2026')
 
       // KenMoo buyers keep their own code during the sale.
@@ -1609,7 +1612,7 @@ test('Offer checkout charges the scheduled price and applies a running sale only
       assert.equal(calls.sessions.length, 0)
     }
   })
-  await at('2026-12-01T00:00:00-08:00', async () => {
+  await at('2026-12-08T00:00:00-08:00', async () => {
     const plan = data.getLtdPlan('standard')
     const { stripe, calls } = fakeStripe(plan)
     await handlerFor(stripe)(request({ lookupKey: 'standard' }), response())
@@ -1629,9 +1632,24 @@ test('Regular checkout follows the schedule, seats included, and the larger of s
       { price: prices.teams.id, quantity: 1 },
       { price: prices.teams_seat.id, quantity: 2 },
     ])
-    assert.deepEqual(calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026' }])
+    assert.deepEqual(calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026B' }])
     assert.equal(calls.sessions[0].allow_promotion_codes, undefined)
 
+    // A Cloud plan's first payment is on sale too.
+    const monthly = fakeStripe()
+    await handlerFor(monthly.stripe, 'checkout_sessions')(request({ lookupKey: 'monthly' }), response())
+    assert.deepEqual(monthly.calls.sessions[0].discounts, [{ coupon: 'BLACKFRIDAY2026B' }])
+    assert.equal(monthly.calls.sessions[0].allow_promotion_codes, undefined)
+
+    // "Use another code instead": no applied discount, and the code box.
+    for (const lookupKey of ['teams', 'yearly']) {
+      const own = fakeStripe()
+      await handlerFor(own.stripe, 'checkout_sessions')(request({ lookupKey, seats: 7, ownCode: true }), response())
+      assert.equal(own.calls.sessions[0].discounts, undefined)
+      assert.equal(own.calls.sessions[0].allow_promotion_codes, true)
+    }
+  })
+  await at('2026-12-08T00:00:00-08:00', async () => {
     const monthly = fakeStripe()
     await handlerFor(monthly.stripe, 'checkout_sessions')(request({ lookupKey: 'monthly' }), response())
     assert.equal(monthly.calls.sessions[0].discounts, undefined)
@@ -1647,14 +1665,22 @@ test('Regular checkout follows the schedule, seats included, and the larger of s
   const now = Date.parse('2026-11-23T00:00:00-08:00')
   const lines = [{ price: pricing.lifetimePrices(now).standard.id, quantity: 1 }] // $59, the sale takes $17.70
   const affiliate = (off) => ({ discounts: [{ promotion_code: 'promo_affiliate' }], off })
-  const sale = [{ coupon: 'BLACKFRIDAY2026' }]
+  const sale = [{ coupon: 'BLACKFRIDAY2026B' }]
   assert.deepEqual(clone(checkoutDiscount('standard', lines, affiliate(2360), now)), [{ promotion_code: 'promo_affiliate' }])
   assert.deepEqual(clone(checkoutDiscount('standard', lines, affiliate(1770), now)), [{ promotion_code: 'promo_affiliate' }])
   assert.deepEqual(clone(checkoutDiscount('standard', lines, affiliate(590), now)), sale)
   assert.deepEqual(clone(checkoutDiscount('standard', lines, null, now)), sale)
-  assert.deepEqual(clone(checkoutDiscount('monthly', lines, affiliate(100), now)), [{ promotion_code: 'promo_affiliate' }])
-  assert.equal(checkoutDiscount('monthly', lines, null, now), null)
-  assert.equal(checkoutDiscount('standard', lines, null, Date.parse('2026-12-01T00:00:00-08:00')), null)
+  // A Cloud plan: the sale takes 30% off the first payment ($96 a year: $28.80), and an
+  // Affiliate code that keeps taking off renewals wins whatever its first-payment amount.
+  const yearly = [{ price: stripePrices.PRICE_IDS.yearly, quantity: 1 }]
+  assert.deepEqual(clone(checkoutDiscount('yearly', yearly, null, now)), sale)
+  assert.deepEqual(clone(checkoutDiscount('max_monthly', yearly, null, now)), sale)
+  assert.deepEqual(clone(checkoutDiscount('yearly', yearly, affiliate(960), now)), sale)
+  assert.deepEqual(clone(checkoutDiscount('yearly', yearly, affiliate(2880), now)), [{ promotion_code: 'promo_affiliate' }])
+  assert.deepEqual(clone(checkoutDiscount('yearly', yearly, { ...affiliate(960), recurring: true }, now)), [{ promotion_code: 'promo_affiliate' }])
+  assert.equal(checkoutDiscount('250000_points', lines, null, now), null)
+  assert.equal(checkoutDiscount('yearly', yearly, null, Date.parse('2026-12-08T00:00:00-08:00')), null)
+  assert.equal(checkoutDiscount('standard', lines, null, Date.parse('2026-12-08T00:00:00-08:00')), null)
 })
 
 test('The offer page shows the scheduled prices, and a sale to visitors without the KenMoo code', async () => {

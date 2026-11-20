@@ -2644,8 +2644,6 @@
   "Too many tries. Wait a moment, then try again.": "Troppi tentativi. Attendi un momento, poi riprova.",
   "Complete the security check to continue.": "Completa il controllo di sicurezza per continuare.",
   "Black Friday": "Black Friday",
-  "{p0}% off every Lifetime License": "{p0}% di sconto su ogni Licenza a vita",
-  "{p0}% off Lifetime License": "{p0}% di sconto sulla Licenza a vita",
   "Ends in {p0}d {p1}h {p2}m": "Termina tra {p0} g {p1} h {p2} min",
   "Get the deal": "Approfitta dell’offerta",
   "hours": "ore",
@@ -2653,7 +2651,11 @@
   "seconds": "secondi",
   "Ends {p0}": "Termina il {p0}",
   "Black Friday · Ends {p0}": "Black Friday · Fino al {p0}",
-  "Pay once, keep Enconvo for life. The sale ends {p0}.": "Paghi una volta e Enconvo è tuo per sempre. L’offerta termina il {p0}.",
   "You save {p0}": "Risparmi {p0}",
-  "Discount applied at checkout.": "Lo sconto viene applicato al pagamento."
+  "Discount applied at checkout.": "Lo sconto viene applicato al pagamento.",
+  "{p0}% off Lifetime and Cloud": "{p0}% di sconto su Licenza a vita e Cloud",
+  "Pay once and keep Enconvo for life, or take {p0}% off your first month or year of Cloud. The sale ends {p1}.": "Paghi una volta e Enconvo è tuo per sempre, oppure hai il {p0}% di sconto sul primo mese o sul primo anno di Cloud. L’offerta termina il {p1}.",
+  "First month, then {p0}/month": "Primo mese, poi {p0}/mese",
+  "First year {p0}, then {p1}/year": "Primo anno {p0}, poi {p1}/anno",
+  "Use another code instead": "Usa un altro codice"
 }

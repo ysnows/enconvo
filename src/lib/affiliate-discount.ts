@@ -1,7 +1,7 @@
 import type Stripe from 'stripe'
 import type { AffiliateOffer } from './affiliate-offer'
 import { isLifetimeKey, lifetimeSale, lifetimeSubtotal } from './lifetime-pricing'
-import { checkoutPriceId } from './stripe-prices'
+import { checkoutPriceId, SUBSCRIPTION_CENTS } from './stripe-prices'
 
 // An Affiliate's promotion code, applied for the visitor its link brought (ADR 0090): the
 // Worker names the code of the Affiliate behind the visitor's latest recorded visit, and the
@@ -30,6 +30,8 @@ type Discounts = Stripe.Checkout.SessionCreateParams.Discount[]
 export interface AffiliateDiscountQuote {
     discounts: Discounts
     off: number
+    /** The code keeps taking off a subscription's renewals (its coupon isn't `duration: once`). */
+    recurring?: boolean
 }
 
 /** The Checkout discount for the Affiliate's `code`, or null to keep the promotion code box. */
@@ -64,7 +66,8 @@ export async function affiliateDiscountQuote(
             0
         )
         const off = coupon.percent_off ? Math.round((eligible * coupon.percent_off) / 100) : Math.min(coupon.amount_off ?? 0, eligible)
-        return { discounts: [{ promotion_code: promotion.id }], off }
+        const recurring = coupon.duration === 'forever' || coupon.duration === 'repeating'
+        return { discounts: [{ promotion_code: promotion.id }], off, ...(recurring ? { recurring } : {}) }
     } catch (error) {
         console.warn('Affiliate promotion code left out:', (error as Error).message)
         return null
@@ -73,8 +76,10 @@ export async function affiliateDiscountQuote(
 
 /**
  * The discount a Checkout opens with, or null to keep the code box. During a lifetime sale
- * (lifetime-pricing.ts) a lifetime license gets the sale's coupon, unless the Affiliate's code
- * takes at least as much off: KENMOO2026's 40% stays the lowest price.
+ * (lifetime-pricing.ts) a lifetime license, and a Cloud plan's first payment, get the sale's
+ * coupon, unless the Affiliate's code takes at least as much off: KENMOO2026's 40% stays the
+ * lowest price. An Affiliate code that keeps taking off a Cloud plan's renewals always wins,
+ * since the sale takes off the first payment only. Mirrors the Worker's checkoutDiscount.
  */
 export function checkoutDiscount(
     lookupKey: string,
@@ -82,9 +87,13 @@ export function checkoutDiscount(
     affiliate: AffiliateDiscountQuote | null,
     now = Date.now()
 ): Discounts | null {
-    const sale = isLifetimeKey(lookupKey) ? lifetimeSale(now) : null
+    const lifetime = isLifetimeKey(lookupKey)
+    const cloud = Object.hasOwn(SUBSCRIPTION_CENTS, lookupKey)
+    const sale = lifetime || cloud ? lifetimeSale(now) : null
     if (!sale) return affiliate?.discounts ?? null
-    const saleOff = Math.round((lifetimeSubtotal(lineItems) * sale.percentOff) / 100)
+    if (cloud && affiliate?.recurring) return affiliate.discounts
+    const subtotal = lifetime ? lifetimeSubtotal(lineItems) : SUBSCRIPTION_CENTS[lookupKey] * (lineItems[0]?.quantity ?? 1)
+    const saleOff = Math.round((subtotal * sale.percentOff) / 100)
     return affiliate && affiliate.off >= saleOff ? affiliate.discounts : [{ coupon: sale.coupon }]
 }
 

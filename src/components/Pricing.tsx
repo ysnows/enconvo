@@ -85,10 +85,13 @@ async function startCheckout(
       plan: lookupKey,
       placement,
       signed_in: Boolean(session),
+      ...(extra?.ownCode ? { own_code: true } : {}),
     })
 
     if (!session) {
-      const returnUrl = `/pricing?plan=${lookupKey}`
+      const returnUrl = `/pricing?plan=${lookupKey}${
+        extra?.ownCode ? '&code=own' : ''
+      }`
       window.location.href = localizePath(
         `/login?returnUrl=${encodeURIComponent(returnUrl)}`,
         locale
@@ -158,7 +161,8 @@ function RenewalTerms({
   period,
   compact = false,
   className,
-}: Renewal & { compact?: boolean; className: string }) {
+  after,
+}: Renewal & { compact?: boolean; className: string; after?: ReactNode }) {
   const { t } = useI18n()
   const values = { p0: amount }
   const text = compact
@@ -174,7 +178,12 @@ function RenewalTerms({
         'Renews automatically at {p0}/month plus tax until you cancel. Cancel anytime under Manage billing in your account; the plan stays active until the end of the paid month.',
         values
       )
-  return <p className={className}>{text}</p>
+  return (
+    <p className={className}>
+      {text}
+      {after}
+    </p>
+  )
 }
 
 // ---- Plan comparison: how the seven plans differ, and every feature with its Free
@@ -1249,6 +1258,40 @@ function CardButton({
   )
 }
 
+/**
+ * "Use another code instead", under a plan's button while a sale applies its coupon: Checkout
+ * then opens without it and with the code box (Stripe takes an applied code or the box, never
+ * both). It sits inside the note's line so the cards' shared rows stay aligned.
+ */
+function OtherCodeButton({
+  lookupKey,
+  extra,
+}: {
+  lookupKey: string
+  extra?: Record<string, unknown>
+}) {
+  const { t, locale } = useI18n()
+  const [isLoading, setIsLoading] = useState(false)
+  return (
+    <>
+      {' '}
+      <button
+        type="button"
+        className={cards.otherCode}
+        disabled={isLoading}
+        onClick={() =>
+          startCheckout(lookupKey, setIsLoading, locale, {
+            ...extra,
+            ownCode: true,
+          })
+        }
+      >
+        {isLoading ? t('Going to checkout...') : t('Use another code instead')}
+      </button>
+    </>
+  )
+}
+
 function CardRows({ rows }: { rows: CardRow[] }) {
   const { t } = useI18n()
   return (
@@ -1490,6 +1533,12 @@ function LicenseCard({
         {onSale && `${t('Discount applied at checkout.')} `}
         {t('One-time payment. Never renews.')}
         {isTeams && ` ${t('30-day money back guarantee.')}`}
+        {onSale && (
+          <OtherCodeButton
+            lookupKey={tier.toLowerCase()}
+            extra={isTeams ? { seats } : undefined}
+          />
+        )}
       </p>
       <div className={cards.body}>
         <CardRows
@@ -1546,6 +1595,11 @@ const CLOUD_TIERS: CloudTier[] = [
   },
 ]
 
+/** "$1,200" in cents. */
+function dollarCents(price: string): number {
+  return Math.round(Number(price.replace(/[$,]/g, '')) * 100)
+}
+
 const CLOUD_TABS: { id: CloudTierName; tag?: string }[] = [
   { id: 'Plus' },
   { id: 'Pro', tag: 'Popular' },
@@ -1555,14 +1609,22 @@ const CLOUD_TABS: { id: CloudTierName; tag?: string }[] = [
 function CloudCard({
   billing,
   onBilling,
+  sale,
 }: {
   billing: 'monthly' | 'annual'
   onBilling: (billing: 'monthly' | 'annual') => void
+  /** A running sale takes `percentOff` off the first payment (the first month or year) only. */
+  sale?: { badge: string; percentOff: number }
 }) {
   const { t } = useI18n()
   const [name, setName] = useState<CloudTierName>('Plus')
   const tier = CLOUD_TIERS.find((item) => item.name === name) ?? CLOUD_TIERS[0]
   const isAnnual = billing === 'annual'
+  const lookupKey = isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey
+  const listPrice = isAnnual ? tier.annual.price : tier.monthly.price
+  const firstCents = sale
+    ? Math.round((dollarCents(listPrice) * (100 - sale.percentOff)) / 100)
+    : 0
 
   return (
     <article
@@ -1573,6 +1635,7 @@ function CloudCard({
       <CardKind cloud />
       <div className={cards.title}>
         <h3>{t('Cloud Plan')}</h3>
+        {sale && <span className={cards.badge}>{sale.badge}</span>}
       </div>
       <p className={cards.tagline}>
         {t('No API keys. Points power every model.')}
@@ -1586,14 +1649,35 @@ function CloudCard({
         />
       </div>
       <div className={cards.price} aria-live="polite" aria-atomic="true">
-        <span className={cards.amount}>
-          {isAnnual ? tier.annual.perMonth : tier.monthly.price}
+        {sale && (
+          <s className={cards.was}>
+            <span className="sr-only">{t('Original price ')}</span>
+            {isAnnual ? tier.annual.perMonth : tier.monthly.price}
+          </s>
+        )}
+        <span className={clsx(cards.amount, sale && cards.amountSm)}>
+          {sale
+            ? usd(isAnnual ? Math.round(firstCents / 12) : firstCents)
+            : isAnnual
+            ? tier.annual.perMonth
+            : tier.monthly.price}
         </span>
         <span className={cards.unit}>{t('/month')}</span>
       </div>
       <div className={cards.sub}>
         <span>
-          {isAnnual ? (
+          {sale ? (
+            <span className={cards.save}>
+              {isAnnual
+                ? t('First year {p0}, then {p1}/year', {
+                    p0: usd(firstCents),
+                    p1: tier.annual.price,
+                  })
+                : t('First month, then {p0}/month', {
+                    p0: tier.monthly.price,
+                  })}
+            </span>
+          ) : isAnnual ? (
             <>
               <s>
                 <span className="sr-only">{t('Original price ')}</span>
@@ -1607,16 +1691,15 @@ function CloudCard({
         </span>
         <BillingSwitch billing={billing} onBilling={onBilling} />
       </div>
-      <CardButton
-        lookupKey={isAnnual ? tier.annual.lookupKey : tier.monthly.lookupKey}
-      >
+      <CardButton lookupKey={lookupKey}>
         {t('Subscribe to {p0}', { p0: t(tier.name) })}
         <ArrowIcon />
       </CardButton>
       <RenewalTerms
-        amount={isAnnual ? tier.annual.price : tier.monthly.price}
+        amount={listPrice}
         period={isAnnual ? 'year' : 'month'}
         className={cards.note}
+        after={sale && <OtherCodeButton lookupKey={lookupKey} />}
       />
       <div className={cards.body}>
         <CardRows rows={cloudRows(tier)} />
@@ -1667,13 +1750,12 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
             <p className={clsx(cards.eyebrow, cards.eyebrowGold)}>
               {t('Black Friday · Ends {p0}', { p0: saleLastDay(sale, locale) })}
             </p>
-            <h2>
-              {t('{p0}% off every Lifetime License', { p0: sale.percentOff })}
-            </h2>
+            <h2>{t('{p0}% off Lifetime and Cloud', { p0: sale.percentOff })}</h2>
             <p>
-              {t('Pay once, keep Enconvo for life. The sale ends {p0}.', {
-                p0: saleLastDay(sale, locale),
-              })}
+              {t(
+                'Pay once and keep Enconvo for life, or take {p0}% off your first month or year of Cloud. The sale ends {p1}.',
+                { p0: sale.percentOff, p1: saleLastDay(sale, locale) }
+              )}
             </p>
           </div>
         ) : (
@@ -1699,7 +1781,15 @@ export function Pricing({ renderedAt }: { renderedAt: number }) {
             now={now}
             saleBadge={saleBadge}
           />
-          <CloudCard billing={billing} onBilling={setBilling} />
+          <CloudCard
+            billing={billing}
+            onBilling={setBilling}
+            sale={
+              sale && saleBadge
+                ? { badge: saleBadge, percentOff: sale.percentOff }
+                : undefined
+            }
+          />
         </div>
 
         <div className={cards.after}>

@@ -127,7 +127,7 @@ export function SaleBar({
           {t('Black Friday')}
         </span>
         <span className={sale.barOffer}>
-          {t('{p0}% off every Lifetime License', { p0: current.percentOff })}
+          {t('{p0}% off Lifetime and Cloud', { p0: current.percentOff })}
         </span>
         <span className={sale.barDot} aria-hidden="true" />
         <span className={clsx(sale.barTime, !live && sale.pending)}>
@@ -168,7 +168,7 @@ export function SalePill({ sale: current }: { sale: LifetimeSale }) {
       >
         <b>{t('Black Friday')}</b>
         <span>
-          {t('{p0}% off Lifetime License', { p0: current.percentOff })}
+          {t('{p0}% off Lifetime and Cloud', { p0: current.percentOff })}
         </span>
         <ArrowIcon />
       </a>

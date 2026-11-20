@@ -32,6 +32,10 @@ async function handler(req, res) {
   }
 
   const { lookupKey, seats, quantity } = req.body
+  // "Use another code instead": no applied discount, so Checkout shows the code box. Stripe
+  // takes an applied code or the box, never both, so a buyer who wants another code than the
+  // one we'd apply (a running sale's, an Affiliate's) asks for the box.
+  const ownCode = req.body.ownCode === true
   const email = req.user.email
 
   let mode: 'payment' | 'subscription' = 'payment'
@@ -140,15 +144,19 @@ async function handler(req, res) {
     // A visitor an Affiliate's link brought gets that Affiliate's promotion code applied, and
     // a lifetime license gets a running sale's coupon when that takes more off; everyone else
     // can type a code. Stripe takes one or the other, never both.
-    const affiliate = await affiliateDiscountQuote(
-      stripe,
-      await affiliatePromotionCode(req.accessToken, journey),
-      line_items,
-      now
-    )
+    const affiliate = ownCode
+      ? null
+      : await affiliateDiscountQuote(
+          stripe,
+          await affiliatePromotionCode(req.accessToken, journey),
+          line_items,
+          now
+        )
     const terms = await renewalTerms
     if (terms) session_data.custom_text = { submit: { message: terms } }
-    const discounts = checkoutDiscount(lookupKey, line_items, affiliate, now)
+    const discounts = ownCode
+      ? null
+      : checkoutDiscount(lookupKey, line_items, affiliate, now)
     let session: Stripe.Checkout.Session
     try {
       session = await stripe.checkout.sessions.create(

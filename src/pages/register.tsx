@@ -55,7 +55,9 @@ export default function Register() {
             returnUrl.startsWith('/pricing?plan=')
           ) {
             // 如果是从定价页面跳转来的，解析出 plan 参数并触发支付
-            const plan = returnUrl.split('plan=')[1]
+            // `code=own`: the buyer chose "Use another code instead" (Pricing.tsx).
+            const query = new URLSearchParams(returnUrl.split('?')[1])
+            const plan = query.get('plan')
             const response = await fetch(
               '/api/subscription/checkout_sessions',
               {
@@ -67,6 +69,7 @@ export default function Register() {
                   lookupKey: plan,
                   locale,
                   endorsely_referral: window.endorsely_referral,
+                  ...(query.get('code') === 'own' ? { ownCode: true } : {}),
                 }),
               }
             )
