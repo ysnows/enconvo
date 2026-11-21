@@ -40,6 +40,18 @@ const nextConfig = {
   async headers() {
     return [
       {
+        // The email unsubscribe page: no other site may frame its button, its address (which
+        // carries the link's token until the page drops it) goes to no other site, and search
+        // engines leave it out.
+        source: '/unsubscribe',
+        headers: [
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Content-Security-Policy', value: "frame-ancestors 'none'" },
+          { key: 'Referrer-Policy', value: 'no-referrer' },
+          { key: 'X-Robots-Tag', value: 'noindex' },
+        ],
+      },
+      {
         // Grok Bot's OAuth consent page: no other site may frame it, so its Approve can't be clicked unseen.
         source: '/grokbot/:path*',
         headers: [

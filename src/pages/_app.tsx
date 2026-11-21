@@ -27,6 +27,7 @@ import {
 } from '@/lib/cookie-consent'
 import { useCookieConsent } from '@/lib/use-cookie-consent'
 import { appleReturnParams } from '@/lib/apple-sign-in'
+import { readLinkAddress } from '@/lib/unsubscribe'
 
 const privateRoutes = new Set([
   '/account',
@@ -51,6 +52,7 @@ const noindexRoutes = new Set([
   '/redeem/[code]',
   '/device',
   '/share/[id]',
+  '/unsubscribe',
 ])
 
 // Pages the app opens for sign-in or a hand-off don't ask about cookies: nothing optional runs on
@@ -59,6 +61,7 @@ const cookieBannerHiddenRoutes = new Set([
   ...Array.from(privateRoutes),
   '/device',
   '/share/[id]',
+  '/unsubscribe',
 ])
 
 const navigationRoutes = new Set([
@@ -76,7 +79,11 @@ const navigationRoutes = new Set([
   '/redeem/[code]',
   '/device',
   '/share/[id]',
+  '/unsubscribe',
 ])
+
+// The unsubscribe page is a page of its own: no language picker, no offers, no ad pixel.
+const UNSUBSCRIBE_ROUTE = '/unsubscribe'
 
 const AppContent = ({ Component, pageProps, router }: AppProps) => {
   useEffect(() => {
@@ -102,8 +109,14 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
     router.pathname === '/login/apple' &&
     typeof window !== 'undefined' &&
     appleReturnParams().has('handoff')
+  // An email's Unsubscribe link carries its token in the address until the page takes it out.
+  const unsubscribePage = router.pathname === UNSUBSCRIBE_ROUTE
+  const linkTokenInAddress =
+    unsubscribePage &&
+    typeof window !== 'undefined' &&
+    readLinkAddress(window.location).token !== null
   const marketingAllowed = consentReady && consent?.marketing === true
-  const adsGranted = marketingAllowed && googleAdsEnabled()
+  const adsGranted = marketingAllowed && !unsubscribePage && googleAdsEnabled()
   // What a category stored before it was withdrawn, or before this site asked, goes.
   useEffect(() => {
     if (!consentReady) return
@@ -115,8 +128,9 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   useAffiliateJourney(marketingAllowed)
   useCampaignJourney(marketingAllowed)
   useAnonymousCampaignVisit(consentReady && !marketingAllowed)
-  useXPixelDownloads(marketingAllowed)
-  useGoogleAdsDownloads(marketingAllowed)
+  // Neither ad tag runs on the unsubscribe page.
+  useXPixelDownloads(marketingAllowed && !unsubscribePage)
+  useGoogleAdsDownloads(marketingAllowed && !unsubscribePage)
   useMarketingTracking(marketingAllowed)
   return (
     <>
@@ -141,7 +155,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       {/* Google Analytics loads only once the visitor allows analytics (lib/cookie-consent).
           Google signals stay off. Ad storage is granted only with marketing allowed, for the
           Google Ads conversion tag (lib/google-ads), which shares this gtag. */}
-      {analyticsAllowed && !handoffInAddress && (
+      {analyticsAllowed && !handoffInAddress && !linkTokenInAddress && (
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
@@ -168,7 +182,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       )}
 
       {/* The X conversion pixel loads only once the visitor allows marketing (lib/x-pixel). */}
-      {marketingAllowed && (
+      {marketingAllowed && !unsubscribePage && (
         <Script id="x-pixel" strategy="afterInteractive">
           {X_PIXEL_SNIPPET}
         </Script>
@@ -182,9 +196,13 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
       >
         <Component {...pageProps} />
       </PageCorner>
-      <InviteToast />
-      <AffiliateOfferToast />
-      <WelcomeOffer />
+      {!unsubscribePage && (
+        <>
+          <InviteToast />
+          <AffiliateOfferToast />
+          <WelcomeOffer />
+        </>
+      )}
       <CookieConsent
         ready={consentReady}
         consent={consent}

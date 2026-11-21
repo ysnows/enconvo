@@ -1,0 +1,435 @@
+/* The unsubscribe page (/unsubscribe): the product email's paper and ink, light only. Values are
+   the letter palette in enconvo-scripts/product-email/template.mjs (L). */
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #f4f3ef;
+  color: #3d3a35;
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
+    system-ui, sans-serif;
+  font-feature-settings: normal;
+  font-size: 16px;
+  line-height: 26px;
+  letter-spacing: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 56px;
+  -webkit-font-smoothing: antialiased;
+}
+.page * {
+  box-sizing: border-box;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 24px;
+  text-decoration: none;
+  color: #1c1b19;
+  font-weight: 600;
+  font-size: 19px;
+  line-height: 32px;
+  border-radius: 8px;
+}
+.brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: block;
+}
+.card {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border: 1px solid #ebe8e1;
+  border-radius: 20px;
+  padding: 44px 44px 40px;
+}
+.mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid #dcd7cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 20px;
+  color: #1c1b19;
+}
+.kicker {
+  margin: 0 0 12px;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11px;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #77736b;
+}
+.h1 {
+  margin: 0;
+  font-family: ui-serif, 'New York', 'Iowan Old Style', Georgia,
+    'Times New Roman', serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 40px;
+  color: #1c1b19;
+}
+.h1:focus {
+  outline: none;
+}
+.p {
+  margin: 14px 0 0;
+  font-size: 16px;
+  line-height: 26px;
+  color: #3d3a35;
+  /* A long address wraps instead of widening the card. */
+  overflow-wrap: anywhere;
+}
+.p strong,
+.addr {
+  font-weight: 600;
+  color: #1c1b19;
+}
+.small {
+  margin: 14px 0 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: #6b675f;
+}
+.actions {
+  margin: 28px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.actionsTight {
+  margin-top: 20px;
+}
+.btn {
+  appearance: none;
+  border: 1px solid #1c1b19;
+  background: #1c1b19;
+  color: #fff;
+  border-radius: 999px;
+  min-height: 46px;
+  padding: 0 28px;
+  font: 600 15px/18px -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    'Segoe UI', system-ui, sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.btn:hover {
+  background: #3d3a35;
+  border-color: #3d3a35;
+}
+.btn:focus {
+  outline: none;
+}
+.btn:focus-visible,
+.a:focus-visible,
+.brand:focus-visible,
+.foot a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1c1b19;
+}
+.btn.busy,
+.btn.busy:hover {
+  background: #77736b;
+  border-color: #77736b;
+  cursor: default;
+}
+.btn.quiet {
+  background: #fff;
+  color: #1c1b19;
+}
+.btn.quiet:hover {
+  background: #f6f4ef;
+  border-color: #1c1b19;
+}
+.btn.off,
+.btn.off:hover {
+  background: #fff;
+  color: #a39e94;
+  border-color: #dcd7cc;
+  cursor: default;
+}
+.spin {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  display: inline-block;
+  animation: unsubscribe-spin 0.8s linear infinite;
+}
+.btn.off .spin {
+  border-color: #dcd7cc;
+  border-top-color: #77736b;
+}
+@keyframes unsubscribe-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation-duration: 2.4s;
+  }
+  .btn {
+    transition: none;
+  }
+}
+.aside {
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b675f;
+  margin: 0;
+}
+.a {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: #1c1b19;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.a:disabled {
+  color: #6b675f;
+  cursor: default;
+}
+.err {
+  margin: 20px 0 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #a3271b;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.err svg {
+  flex: none;
+  margin-top: 3px;
+}
+.rule {
+  height: 1px;
+  background: #ebe8e1;
+  margin: 32px 0 28px;
+}
+.ft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #1c1b19;
+}
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border: 1px solid #e2ded5;
+  border-radius: 6px;
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-weight: 400;
+  font-size: 10.5px;
+  line-height: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #6b675f;
+}
+.fs {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 22px;
+  color: #6b675f;
+}
+.reasons {
+  margin: 16px 0 0;
+  padding: 0;
+  border: 1px solid #e2ded5;
+  border-radius: 14px;
+  overflow: hidden;
+  min-width: 0;
+}
+.reason {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 16px;
+  font-size: 15px;
+  line-height: 22px;
+  color: #3d3a35;
+  border-top: 1px solid #ebe8e1;
+  cursor: pointer;
+}
+.reason:first-child {
+  border-top: 0;
+}
+.reason input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  pointer-events: none;
+}
+.radio {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1.5px solid #a39e94;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reason:hover {
+  background: #faf9f6;
+}
+.reason:hover .radio {
+  border-color: #77736b;
+}
+.reason:has(input:focus-visible) {
+  box-shadow: inset 0 0 0 2px #1c1b19;
+}
+.reason.on,
+.reason.on:hover {
+  background: #f6f4ef;
+  color: #1c1b19;
+}
+.reason.on .radio {
+  border-color: #1c1b19;
+}
+.reason.on .radio::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #1c1b19;
+}
+.lab {
+  display: block;
+  margin: 20px 0 8px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #3d3a35;
+}
+.page textarea.ta {
+  display: block;
+  width: 100%;
+  min-height: 84px;
+  margin: 0;
+  border: 1px solid #dcd7cc;
+  border-radius: 12px;
+  padding: 11px 14px;
+  font: 400 15px/22px -apple-system, BlinkMacSystemFont, 'SF Pro Text',
+    'Segoe UI', system-ui, sans-serif;
+  color: #1c1b19;
+  background: #fff;
+  box-shadow: none;
+  /* Grows with the note where the browser can; otherwise it scrolls. */
+  resize: none;
+  field-sizing: content;
+  max-height: 260px;
+}
+.page textarea.ta::placeholder {
+  color: #77736b;
+  opacity: 1;
+}
+.page textarea.ta:focus {
+  outline: none;
+  border-color: #1c1b19;
+  box-shadow: 0 0 0 3px rgba(28, 27, 25, 0.1);
+}
+.limit {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  line-height: 19px;
+  color: #a3271b;
+}
+.fine {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 19px;
+  color: #6b675f;
+}
+.thanks {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 0;
+  font-size: 15px;
+  line-height: 24px;
+  color: #3d3a35;
+}
+.thanks svg {
+  flex: none;
+  margin-top: 4px;
+  color: #1c1b19;
+}
+.thanks strong {
+  font-weight: 600;
+  color: #1c1b19;
+}
+.foot {
+  max-width: 520px;
+  margin: 24px 0 0;
+  text-align: center;
+  font-size: 12px;
+  line-height: 19px;
+  color: #6b675f;
+}
+.foot a {
+  color: #6b675f;
+  text-decoration: underline;
+  border-radius: 3px;
+}
+.hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* A phone: the card runs nearly edge to edge and every button is full width. */
+@media (max-width: 600px) {
+  .page {
+    padding: 28px 12px 36px;
+  }
+  .card {
+    padding: 32px 22px 28px;
+  }
+  .h1 {
+    font-size: 27px;
+    line-height: 34px;
+  }
+  .btn {
+    width: 100%;
+  }
+  .aside {
+    width: 100%;
+    text-align: center;
+  }
+}

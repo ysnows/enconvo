@@ -13,7 +13,13 @@
 import { readFile } from 'node:fs/promises'
 
 const UNSUBSCRIBE_TAG = '{{{RESEND_UNSUBSCRIBE_URL}}}'
-const SIGNED_UNSUBSCRIBE = 'https://api.enconvo.com/api/email-preferences/unsubscribe?'
+// A composed email with its link already filled in: the unsubscribe page with the reader's
+// token (Send test to me), or a signed link from before the page.
+const SIGNED_UNSUBSCRIBE = [
+  'https://www.enconvo.com/unsubscribe#t=',
+  'https://api.enconvo.com/api/email-preferences/unsubscribe?',
+]
+const hasSignedLink = (body) => SIGNED_UNSUBSCRIBE.some((link) => body.includes(link))
 const COMPANY = 'THE GREAT LIONHEART PTE. LTD.'
 
 async function postalAddress() {
@@ -32,7 +38,7 @@ const normalize = (text) =>
 export function problems({ html, text }, address) {
   const found = []
   const body = normalize(html || '')
-  if (!body.includes(UNSUBSCRIBE_TAG) && !body.includes(SIGNED_UNSUBSCRIBE))
+  if (!body.includes(UNSUBSCRIBE_TAG) && !hasSignedLink(body))
     found.push(`no unsubscribe link (${UNSUBSCRIBE_TAG})`)
   if (!body.includes(COMPANY)) found.push(`no company name (${COMPANY})`)
   if (!address)
@@ -43,7 +49,7 @@ export function problems({ html, text }, address) {
     found.push('the {{company_postal_address}} placeholder was not replaced')
   if (text) {
     const plain = normalize(text)
-    if (!plain.includes(UNSUBSCRIBE_TAG) && !plain.includes(SIGNED_UNSUBSCRIBE))
+    if (!plain.includes(UNSUBSCRIBE_TAG) && !hasSignedLink(plain))
       found.push('plain-text part has no unsubscribe link')
   }
   return found
