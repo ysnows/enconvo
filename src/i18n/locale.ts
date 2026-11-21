@@ -29,6 +29,21 @@ export const localeNames: Record<Locale, string> = {
   nl: 'Nederlands',
   pl: 'Polski',
 }
+/** What the language picker shows for the page's language: a code for Latin scripts, a short native name otherwise. */
+export const localeShortNames: Record<Locale, string> = {
+  en: 'EN',
+  'zh-CN': '中文',
+  'zh-TW': '繁體',
+  ja: '日本語',
+  ko: '한국어',
+  es: 'ES',
+  de: 'DE',
+  fr: 'FR',
+  it: 'IT',
+  pt: 'PT',
+  nl: 'NL',
+  pl: 'PL',
+}
 export const openGraphLocales: Record<Locale, string> = {
   en: 'en_US',
   'zh-CN': 'zh_CN',

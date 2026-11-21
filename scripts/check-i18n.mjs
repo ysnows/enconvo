@@ -225,28 +225,17 @@ console.log(
   `PASS: OAuth return routing preserves all ${locales.length} languages, website return paths and native handoff parameters`
 )
 
-// Signing up from pricing must carry the UI language into checkout too.
+// Signing up from pricing must carry the UI language into checkout too: register.tsx hands the
+// plan and the page language to useResumeCheckout, which opens checkout once signed in.
 const originalFetch = globalThis.fetch
+const authFlow = await loadTs('../src/lib/auth-flow.ts')
 for (const locale of locales) {
-  const effects = []
-  let signedIn
-  let checkout
-  globalThis.window = {
-    location: { href: '' },
-    endorsely_referral: 'test-referral',
-  }
-  globalThis.fetch = async (path, options) => {
-    checkout = { path, body: JSON.parse(options.body) }
-    return {
-      status: 200,
-      json: async () => ({ url: 'https://checkout.example/session' }),
-    }
-  }
+  let resumed
   const { default: Register } = await loadTs('../src/pages/register.tsx', {
     '@/i18n/server': { i18nStaticProps: () => async () => ({ props: {} }) },
     '@/i18n/I18nProvider': { useI18n: () => ({ locale }) },
     react: {
-      useEffect: (effect) => effects.push(effect),
+      useEffect() {},
       useRef: () => ({ current: false }),
       useState: (value) => [value, () => {}],
     },
@@ -256,16 +245,14 @@ for (const locale of locales) {
         query: { returnUrl: '/pricing?plan=standard' },
       }),
     },
-    '@/lib/supabase': {
-      createClientComponentClient: () => ({
-        auth: {
-          getSession: async () => ({ data: { session: null }, error: null }),
-          onAuthStateChange: (handler) => {
-            signedIn = handler
-            return { data: { subscription: { unsubscribe() {} } } }
-          },
-        },
-      }),
+    '@/lib/supabase': { createClientComponentClient: () => ({ auth: {} }) },
+    '@/lib/auth-flow': authFlow,
+    '@/components/ResumeCheckout': {
+      ResumeCheckout: () => null,
+      useResumeCheckout: (...args) => {
+        resumed = args
+        return { state: 'going', retry() {} }
+      },
     },
     '@/utils/app/native_router': { NativeRouter: {} },
     '@/pages/components/RegisterForm': () => null,
@@ -273,32 +260,93 @@ for (const locale of locales) {
     '@/pages/components/LoginSuccess': () => null,
   })
   Register()
+  assert.deepEqual(resumed[0], { plan: 'standard', ownCode: false })
+  assert.equal(resumed[2], locale)
+
+  const effects = []
+  let checkout
+  let assigned
+  globalThis.window = {
+    location: { assign: (url) => (assigned = url) },
+    endorsely_referral: 'test-referral',
+    addEventListener() {},
+    removeEventListener() {},
+  }
+  globalThis.sessionStorage = {
+    getItem: () => null,
+    setItem() {},
+    removeItem() {},
+  }
+  globalThis.fetch = async (path, options) => {
+    checkout = { path, body: JSON.parse(options.body) }
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ url: 'https://checkout.example/session' }),
+    }
+  }
+  const { useResumeCheckout } = await loadTs(
+    '../src/components/ResumeCheckout.tsx',
+    {
+      react: {
+        useCallback: (callback) => callback,
+        useEffect: (effect) => effects.push(effect),
+        useRef: () => ({ current: false }),
+        useState: (value) => [value, () => {}],
+      },
+      'next/head': () => null,
+      'next/link': () => null,
+      'lucide-react': { Loader2: () => null },
+      '@/components/Logo': { Logo: () => null },
+      '@/components/ui/button': { Button: () => null },
+      '@/i18n/I18nProvider': { useI18n: () => ({ t: (source) => source }) },
+      '@/lib/auth-flow': authFlow,
+    }
+  )
+  useResumeCheckout(resumed[0], true, locale)
   effects.forEach((effect) => effect())
-  await signedIn('SIGNED_IN', {})
+  await new Promise((resolve) => setImmediate(resolve))
   assert.equal(checkout.path, '/api/subscription/checkout_sessions')
   assert.deepEqual(checkout.body, {
     lookupKey: 'standard',
     locale,
     endorsely_referral: 'test-referral',
   })
-  assert.equal(window.location.href, 'https://checkout.example/session')
+  assert.equal(assigned, 'https://checkout.example/session')
 }
 globalThis.fetch = originalFetch
 delete globalThis.window
+delete globalThis.sessionStorage
 console.log(
   `PASS: pricing sign-up preserves checkout language in all ${locales.length} languages`
 )
 
 // A language choice on an auth return must update its hint without losing
 // native handoff, return paths or the fragment; ordinary queries stay intact.
-function findSelect(element) {
-  if (!element || typeof element !== 'object') return null
-  if (element.type === 'select') return element
-  const children = element.props?.children
-  return (Array.isArray(children) ? children : [children])
-    .map(findSelect)
-    .find(Boolean)
-}
+const pickerEvents = []
+const pickerModule = await loadTs('../src/components/LanguageSwitcher.tsx', {
+  react: {
+    Fragment: Symbol('Fragment'),
+    useEffect() {},
+    useState: (value) => [value, () => {}],
+  },
+  'next/router': { useRouter: () => ({}) },
+  '@headlessui/react': { Menu: {}, Transition: {} },
+  'lucide-react': { Check: () => null },
+  '@/i18n/I18nProvider': {
+    useI18n: () => ({ locale: 'en', t: (source) => source }),
+  },
+  '@/i18n/locale': { ...localeTools, rememberLocale() {} },
+  '@/lib/analytics': { trackEvent: (...args) => pickerEvents.push(args) },
+})
+// The picker shows a short label for every language, never the globe.
+for (const language of locales)
+  assert.ok(
+    localeTools.localeShortNames[language],
+    `short label for ${language}`
+  )
+assert.equal(localeTools.localeShortNames.en, 'EN')
+assert.equal(localeTools.localeShortNames['zh-CN'], '中文')
 for (const language of locales) {
   const calls = []
   const router = {
@@ -316,28 +364,20 @@ for (const language of locales) {
       return true
     },
   }
-  const events = []
-  const { LanguageSwitcher } = await loadTs(
-    '../src/components/LanguageSwitcher.tsx',
-    {
-      react: { useState: (value) => [value, () => {}] },
-      'next/router': { useRouter: () => router },
-      'lucide-react': { Globe: () => null },
-      '@/i18n/I18nProvider': {
-        useI18n: () => ({ locale: 'en', t: (source) => source }),
-      },
-      '@/i18n/locale': { ...localeTools, rememberLocale() {} },
-      '@/lib/analytics': { trackEvent: (...args) => events.push(args) },
-    }
+  pickerEvents.length = 0
+  const changed = await pickerModule.switchLanguage(
+    router,
+    'en',
+    language,
+    'navigation'
   )
-  const select = findSelect(LanguageSwitcher({}))
-  select.props.onChange({ target: { value: language } })
-  await new Promise((resolve) => setImmediate(resolve))
   if (language === 'en') {
+    assert.equal(changed, false)
     assert.equal(calls.length, 0)
-    assert.equal(events.length, 0)
+    assert.equal(pickerEvents.length, 0)
     continue
   }
+  assert.equal(changed, true)
   assert.equal(calls.length, 1)
   assert.deepEqual(calls[0][0], {
     pathname: '/login',
@@ -348,13 +388,13 @@ for (const language of locales) {
     `/login?language=${language}&from=app&handoff=mac&returnUrl=%2Fredeem%2Ftest%3Fvia%3Dpartner#details`
   )
   assert.equal(calls[0][2].locale, language)
-  assert.equal(events.length, 1)
-  assert.equal(events[0][1].language, language)
+  assert.equal(pickerEvents.length, 1)
+  assert.equal(pickerEvents[0][0], 'website_language_changed')
+  assert.equal(pickerEvents[0][1].language, language)
   router.query = { preview: 'languages' }
   router.asPath = '/login?preview=languages#details'
   calls.length = 0
-  select.props.onChange({ target: { value: language } })
-  await new Promise((resolve) => setImmediate(resolve))
+  await pickerModule.switchLanguage(router, 'en', language, 'navigation')
   assert.equal(calls[0][1], router.asPath)
   assert.deepEqual(calls[0][0].query, router.query)
 }

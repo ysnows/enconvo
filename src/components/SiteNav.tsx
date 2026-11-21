@@ -97,12 +97,11 @@ export function SiteNav({
         className="fixed left-0 right-0 top-0 z-50 border-b border-hairline bg-nav-surface/90 backdrop-blur-md"
       >
         {sale && <SaleBar sale={sale} renderedAt={renderedAt} />}
-        {/* The nav's own box, so the language switcher centers on the nav row, not on the banner too.
-            Every page gets the home page's nav: a centered 1240px row, 64px tall; the right padding
-            between 1280 and 1599px keeps the links clear of the language switcher. */}
+        {/* Every page gets the home page's nav: a centered 1240px row, 64px tall, with the language
+            picker at the end of the row (after Discord and X), or beside the menu button on phones. */}
         <div className="relative">
           <nav
-            className="mx-auto flex min-h-[64px] max-w-[1240px] items-center justify-between px-6 py-3 xl:pr-[180px] min-[1600px]:pr-6"
+            className="mx-auto flex min-h-[64px] max-w-[1240px] items-center justify-between px-6 py-3"
             aria-label={t('Global')}
           >
             <div className="flex items-center xl:flex-1">
@@ -118,6 +117,7 @@ export function SiteNav({
               </Link>
             </div>
             <div className="flex items-center gap-3 xl:hidden">
+              <LanguageSwitcher look="touch" />
               <button
                 type="button"
                 className="-m-2.5 inline-flex items-center justify-center rounded-lg p-2.5 text-content-muted"
@@ -126,7 +126,6 @@ export function SiteNav({
                 <span className="sr-only">{t('Open main menu')}</span>
                 <Bars3Icon className="h-6 w-6" aria-hidden="true" />
               </button>
-              <LanguageSwitcher />
             </div>
 
             <div className="hidden items-center xl:flex xl:gap-x-5">
@@ -156,10 +155,10 @@ export function SiteNav({
                     <item.icon className="h-5 w-5" aria-hidden="true" />
                   </a>
                 ))}
+                <div className="pl-1">
+                  <LanguageSwitcher />
+                </div>
               </div>
-            </div>
-            <div className="absolute right-6 top-1/2 hidden -translate-y-1/2 xl:block">
-              <LanguageSwitcher />
             </div>
           </nav>
         </div>
