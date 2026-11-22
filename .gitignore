@@ -29,6 +29,17 @@ yarn-error.log*
 
 # local env files
 .env*.local
+# Any other env file can hold secrets. .env.production is committed on purpose: it holds only the
+# public values the production build inlines.
+.env
+.env.*
+!.env.production
+!.env.example
+
+# Job copies an rsync left here: in zsh, `$H:enconvo-remote-jobs/x` reads `:e` as a modifier, so the
+# destination became a local folder named after the IP's last number (70nconvo-remote-jobs/).
+/*nconvo-remote-jobs/
+/*nconvo-remote-build/
 
 # vercel
 .vercel
