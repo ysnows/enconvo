@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { AUTH_COOKIE } from '@/lib/auth-cookie';
+import { isForeignOrigin } from '@/lib/request-origin';
 
 interface UserMetadata {
     name?: string;
@@ -116,6 +117,11 @@ export const withAuth = (handler: ApiHandler) => {
             let authToken = req.headers.authorization;
 
             if (!authToken || authToken.length === 0) {
+                // The cookie rides along on requests other pages send, so only enconvo.com's own
+                // pages may sign in with it.
+                if (isForeignOrigin(req)) {
+                    throw new AuthError('Cross-site request refused', 403);
+                }
                 try {
                     const authTokenCookie = req.cookies[AUTH_COOKIE];
                     const token = JSON.parse(authTokenCookie)[0];

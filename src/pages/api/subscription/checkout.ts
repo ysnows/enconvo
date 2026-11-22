@@ -1,5 +1,6 @@
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { authCookieOptions } from '@/lib/auth-cookie'
+import { isForeignOrigin } from '@/lib/request-origin'
 import Stripe from 'stripe'
 
 // Initialize Stripe with the secret key
@@ -9,6 +10,10 @@ export default async function handler(req, res) {
   // Only allow POST method
   if (req.method !== 'POST') {
     return res.status(405).json({ code: 405, message: 'Method not allowed' })
+  }
+  // The visitor is signed in from the cookie, which rides along on requests other pages send.
+  if (isForeignOrigin(req)) {
+    return res.status(403).json({ code: 403, message: 'Cross-site request refused' })
   }
 
   try {
