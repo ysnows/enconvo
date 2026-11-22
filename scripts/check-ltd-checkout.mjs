@@ -390,6 +390,7 @@ function handlerFor(stripe, route = 'ltd_checkout', env = {}, fetch) {
         NODE_ENV: 'production',
         NEXT_PUBLIC_SUPABASE_URL: 'https://uihahglfncxadigplxnw.supabase.co',
       }),
+      '@/lib/request-origin': load('src/lib/request-origin.ts'),
     },
     {
       NEXT_PUBLIC_SUPABASE_URL: 'https://example.supabase.co',

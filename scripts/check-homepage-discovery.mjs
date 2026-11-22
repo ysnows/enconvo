@@ -27,7 +27,8 @@ for (const location of locations) {
   const html = await get(new URL(location).pathname)
   assert.deepEqual(canonical(html), [location], `canonical: ${location}`)
   assert.ok(!/<meta[^>]*name="robots"[^>]*content="[^"]*noindex/.test(html))
-  assert.ok(/<title>[^<]+<\/title>/.test(html))
+  // Next 15 marks head tags it manages with data-next-head.
+  assert.ok(/<title\b[^>]*>[^<]+<\/title>/.test(html))
 }
 const robots = await get('/robots.txt')
 assert.match(robots, /User-agent: \*\s+Allow: \/\s+Disallow: \/api\//)
