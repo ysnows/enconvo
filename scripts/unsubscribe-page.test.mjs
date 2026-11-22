@@ -43,18 +43,20 @@ async function withFetch(answer, run) {
 }
 
 test('reads the token after #t=, or ?t= from a client that drops the fragment', () => {
-  assert.deepEqual(lib.readLinkAddress({ search: '', hash: '#t=u1.abc-DEF_123' }), { token: 'u1.abc-DEF_123', invalid: false })
-  assert.deepEqual(lib.readLinkAddress({ search: '?t=u1.query', hash: '' }), { token: 'u1.query', invalid: false })
-  assert.deepEqual(lib.readLinkAddress({ search: '?t=u1.query', hash: '#t=u1.fragment' }), { token: 'u1.fragment', invalid: false })
+  const read = (search, hash = '') => lib.readLinkAddress({ search, hash })
+  assert.deepEqual(read('', '#t=u1.abc-DEF_123'), { token: 'u1.abc-DEF_123', campaign: null, invalid: false, carried: true })
+  assert.deepEqual(read('?t=u1.query'), { token: 'u1.query', campaign: null, invalid: false, carried: true })
+  assert.deepEqual(read('?t=u1.query', '#t=u1.fragment'), { token: 'u1.fragment', campaign: null, invalid: false, carried: true })
 })
 
 test('a page opened without a link, or with one the Worker refused, has no token', () => {
-  assert.deepEqual(lib.readLinkAddress({ search: '', hash: '' }), { token: null, invalid: false })
-  assert.deepEqual(lib.readLinkAddress({ search: '?link=invalid', hash: '' }), { token: null, invalid: true })
-  assert.deepEqual(lib.readLinkAddress({ search: '?utm_source=email', hash: '#pricing' }), { token: null, invalid: false })
-  // Something that can't be one of our tokens never reaches the Worker.
-  assert.deepEqual(lib.readLinkAddress({ search: '', hash: '#t=<script>' }), { token: null, invalid: true })
-  assert.deepEqual(lib.readLinkAddress({ search: '', hash: `#t=${'a'.repeat(1025)}` }), { token: null, invalid: true })
+  const read = (search, hash = '') => lib.readLinkAddress({ search, hash })
+  assert.deepEqual(read(''), { token: null, campaign: null, invalid: false, carried: false })
+  assert.deepEqual(read('?link=invalid'), { token: null, campaign: null, invalid: true, carried: false })
+  assert.deepEqual(read('?utm_source=email', '#pricing'), { token: null, campaign: null, invalid: false, carried: false })
+  // Something that can't be one of our tokens never reaches the Worker, and is cleared from the address.
+  assert.deepEqual(read('', '#t=<script>'), { token: null, campaign: null, invalid: true, carried: true })
+  assert.deepEqual(read('', `#t=${'a'.repeat(1025)}`), { token: null, campaign: null, invalid: true, carried: true })
 })
 
 test('feedback can be sent with a reason or a note, up to 500 characters', () => {
@@ -99,5 +101,25 @@ test("a refusal carries the Worker's reason, and no answer at all reads as a net
   })
   await withFetch(new TypeError('offline'), async () => {
     assert.deepEqual(await lib.callUnsubscribeLink('unsubscribe', { token: 'x' }), { ok: false, status: 0, error: 'network_error' })
+  })
+})
+
+test("a Broadcast's link names its issue before the token, and says so when Resend left the token out", () => {
+  const read = (search) => lib.readLinkAddress({ search, hash: '' })
+  assert.deepEqual(read('?c=2026-11-whats-new&t=u1.abc'), { token: 'u1.abc', campaign: '2026-11-whats-new', invalid: false, carried: true })
+  // The merge tag came through unfilled, or filled with nothing: the reader came from an email,
+  // so this is a broken link, not a page opened without one.
+  assert.deepEqual(read('?c=2026-11-whats-new&t=%7B%7B%7Bcontact.unsubscribe_token%7D%7D%7D'), { token: null, campaign: '2026-11-whats-new', invalid: true, carried: true })
+  assert.deepEqual(read('?c=2026-11-whats-new&t={{{unsubscribe_token}}}'), { token: null, campaign: '2026-11-whats-new', invalid: true, carried: true })
+  assert.deepEqual(read('?c=2026-11-whats-new&t='), { token: null, campaign: '2026-11-whats-new', invalid: true, carried: true })
+  assert.deepEqual(read('?c=2026-11-whats-new'), { token: null, campaign: '2026-11-whats-new', invalid: true, carried: false })
+  // An issue name that isn't a slug is dropped, and the token still works.
+  assert.deepEqual(read('?c=%3Cscript%3E&t=u1.abc'), { token: 'u1.abc', campaign: null, invalid: false, carried: true })
+})
+
+test('feedback carries the issue the link named', async () => {
+  await withFetch(Response.json({ saved: true }), async (calls) => {
+    await lib.callUnsubscribeLink('feedback', { token: 'u1.abc', reason: 'other', note: '', campaign: '2026-11-whats-new' })
+    assert.deepEqual(JSON.parse(calls[0].init.body), { token: 'u1.abc', reason: 'other', note: '', campaign: '2026-11-whats-new' })
   })
 })

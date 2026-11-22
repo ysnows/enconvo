@@ -22,6 +22,8 @@ import styles from '@/styles/Unsubscribe.module.css'
 
 /** The link's token, kept for a reload of this tab once it has left the address bar. */
 const TOKEN_STORE = 'enconvo_unsubscribe_link'
+/** The issue the email's link named, kept beside it. */
+const CAMPAIGN_STORE = 'enconvo_unsubscribe_campaign'
 
 type View =
   | 'loading'
@@ -105,6 +107,7 @@ export default function UnsubscribePage() {
   const [reason, setReason] = useState<UnsubscribeReason | null>(null)
   const [note, setNote] = useState('')
   const token = useRef<string | null>(null)
+  const campaign = useRef<string | null>(null)
   const started = useRef(false)
   const heading = useRef<HTMLHeadingElement>(null)
 
@@ -142,20 +145,30 @@ export default function UnsubscribePage() {
     started.current = true
     const address = readLinkAddress(window.location)
     let stored: string | null = null
+    let storedCampaign: string | null = null
     try {
-      if (address.token) window.sessionStorage.setItem(TOKEN_STORE, address.token)
-      else if (address.invalid) window.sessionStorage.removeItem(TOKEN_STORE)
-      else stored = window.sessionStorage.getItem(TOKEN_STORE)
+      if (address.token) {
+        window.sessionStorage.setItem(TOKEN_STORE, address.token)
+        if (address.campaign) window.sessionStorage.setItem(CAMPAIGN_STORE, address.campaign)
+        else window.sessionStorage.removeItem(CAMPAIGN_STORE)
+      } else if (address.invalid) {
+        window.sessionStorage.removeItem(TOKEN_STORE)
+        window.sessionStorage.removeItem(CAMPAIGN_STORE)
+      } else {
+        stored = window.sessionStorage.getItem(TOKEN_STORE)
+        storedCampaign = window.sessionStorage.getItem(CAMPAIGN_STORE)
+      }
     } catch {
       // Private browsing without storage: the page works until it is reloaded.
     }
-    if (address.token) {
-      // The token leaves the address bar, the history entry and anything that reports the
-      // page's location, before analytics may load (_app).
+    if (address.carried) {
+      // The token, or whatever stood in its place, leaves the address bar, the history entry and
+      // anything that reports the page's location, before analytics may load (_app).
       window.history.replaceState(window.history.state, '', window.location.pathname)
       void router.replace(router.pathname, undefined, { shallow: true })
     }
     token.current = address.token || stored
+    campaign.current = address.token ? address.campaign : storedCampaign
     if (token.current) void load()
     else {
       const next = address.invalid ? 'broken' : 'no_link'
@@ -214,6 +227,7 @@ export default function UnsubscribePage() {
       token: token.current,
       reason,
       note: note.trim(),
+      ...(campaign.current ? { campaign: campaign.current } : {}),
     })
     if (!result.ok) {
       setFeedback('form')
@@ -509,7 +523,7 @@ export default function UnsubscribePage() {
         )}
         <p className={styles.p}>
           {view === 'broken'
-            ? 'It may be incomplete or too old. Open the Unsubscribe link in a newer Enconvo email, or turn product updates off in '
+            ? 'It may be incomplete or too old. Use the one-click unsubscribe link in the same email or in a newer one, or turn product updates off in '
             : 'Open the Unsubscribe link at the bottom of an Enconvo product email and it brings you here for your address, with no sign-in. Or turn product updates off in '}
           {accountLink}.
         </p>

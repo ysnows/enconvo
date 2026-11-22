@@ -34,7 +34,13 @@ export type LinkResult<T> =
 
 export async function callUnsubscribeLink<T = LinkState>(
   action: LinkAction,
-  body: { token: string; reason?: UnsubscribeReason | null; note?: string }
+  body: {
+    token: string
+    reason?: UnsubscribeReason | null
+    note?: string
+    /** The issue the email's link named, when the token itself names none. */
+    campaign?: string
+  }
 ): Promise<LinkResult<T>> {
   let response: Response
   try {
@@ -63,20 +69,35 @@ export async function callUnsubscribeLink<T = LinkState>(
   }
 }
 
+const TOKEN_SHAPE = /^[A-Za-z0-9._-]{1,1024}$/
+const CAMPAIGN_SHAPE = /^[a-z0-9][a-z0-9_-]{0,63}$/
+
 /**
- * What the address bar says about the link: its token (after `#t=`, or `?t=` from a mail client
- * that drops the part after `#`), or that the Worker found the link broken (`?link=invalid`).
+ * What the address bar says about the link:
+ * - `token`: after `?t=` (a Broadcast's and a test email's link) or `#t=` (the Worker's redirect
+ *   of an older link);
+ * - `campaign`: the issue the email named beside it (`?c=`), which goes along with feedback;
+ * - `invalid`: the link can't be used: the Worker found it broken (`?link=invalid`), the token
+ *   isn't one of ours, or an email's link came without one (a Broadcast whose token Resend
+ *   didn't fill in);
+ * - `carried`: the address held something in the token's place, so it is cleared either way.
  */
 export function readLinkAddress(location: { search: string; hash: string }): {
   token: string | null
+  campaign: string | null
   invalid: boolean
+  carried: boolean
 } {
   const query = new URLSearchParams(location.search)
   const fragment = new URLSearchParams(location.hash.replace(/^#/, ''))
-  const token = fragment.get('t') || query.get('t')
+  const raw = fragment.get('t') || query.get('t')
+  const token = raw && TOKEN_SHAPE.test(raw) ? raw : null
+  const named = query.get('c')
   return {
-    token: token && /^[A-Za-z0-9._-]{1,1024}$/.test(token) ? token : null,
-    invalid: query.has('link') || (!!token && !/^[A-Za-z0-9._-]{1,1024}$/.test(token)),
+    token,
+    campaign: named && CAMPAIGN_SHAPE.test(named) ? named : null,
+    invalid: query.has('link') || (!!raw && !token) || (!token && query.has('c')),
+    carried: fragment.has('t') || query.has('t'),
   }
 }
 

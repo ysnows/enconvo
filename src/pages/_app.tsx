@@ -114,7 +114,7 @@ const AppContent = ({ Component, pageProps, router }: AppProps) => {
   const linkTokenInAddress =
     unsubscribePage &&
     typeof window !== 'undefined' &&
-    readLinkAddress(window.location).token !== null
+    readLinkAddress(window.location).carried
   const marketingAllowed = consentReady && consent?.marketing === true
   const adsGranted = marketingAllowed && !unsubscribePage && googleAdsEnabled()
   // What a category stored before it was withdrawn, or before this site asked, goes.
