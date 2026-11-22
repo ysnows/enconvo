@@ -100,8 +100,8 @@ export const heroTabs: HeroTab[] = [
             {
                 id: 'launch-film',
                 label: 'Launch film',
-                caption: 'Finder, Calendar, Notes, and Excel — one sidebar does the work in every app.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch.mp4', poster: appSidebarPoster.src },
+                caption: 'YouTube, Finder, Notes, and Numbers — one sidebar does the work in every app.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch-v66.mp4', poster: appSidebarPoster.src },
             },
         ],
     },
