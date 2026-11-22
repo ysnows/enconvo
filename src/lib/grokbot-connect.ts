@@ -4,6 +4,22 @@
 
 import { workerRequest } from '@/lib/worker-api'
 
+/**
+ * What the consent page says approving hands over. Anyone can start a connector sign-in and send its link to
+ * someone else, and approving gives whoever started it the account's Mac, so the page says so in plain words.
+ */
+export const GROKBOT_CONSENT = {
+    lead: 'Approving gives it control of your Mac through Enconvo. It can:',
+    abilities: [
+        'Add replies and new messages to your Grok Bot chats',
+        'Show notifications on your Mac',
+        'Have your agents carry out requests on your Mac, with every tool they can use. You approve each request on the Mac unless you always allow Grok Bot.',
+    ],
+    warningTitle: 'This gives control of your Mac',
+    warningBody:
+        "Continue only if you started connecting Grok Bot yourself, just now. Whoever started it gets this control, so if someone sent you this link, deny it. You can disconnect Grok Bot at any time in Grok Bot's settings in Enconvo.",
+} as const
+
 export interface GrokBotConnectRequest {
     /** Grok Bot's own callback, or a loopback address: an app on this computer. */
     client: 'grok_bot' | 'local_app'

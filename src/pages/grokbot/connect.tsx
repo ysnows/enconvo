@@ -12,6 +12,7 @@ import { SiteNav } from '@/components/SiteNav'
 import { supabase } from '@/lib/supabase'
 import {
   answerGrokBotRequest,
+  GROKBOT_CONSENT,
   inspectGrokBotRequest,
   type GrokBotConnectRequest,
 } from '@/lib/grokbot-connect'
@@ -206,11 +207,6 @@ export default function GrokBotConnectPage() {
       </>
     )
   } else {
-    const abilities = [
-      'Add replies and new messages to your Grok Bot chats',
-      'Show notifications on your Mac',
-      'List your agents, and send them requests you approve on your Mac',
-    ]
     content = (
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.8fr)] lg:items-start lg:gap-16">
         <div>
@@ -223,10 +219,10 @@ export default function GrokBotConnectPage() {
               : t('An app on this computer ({host}) wants to connect to Enconvo', { host: details.redirect_host })}
           </h1>
           <p className="mt-5 max-w-xl text-base leading-7 text-content-body">
-            {t('Approving lets it use Enconvo on your Mac to:')}
+            {t(GROKBOT_CONSENT.lead)}
           </p>
           <ul className="mt-4 max-w-xl space-y-2 text-base leading-7 text-content-body">
-            {abilities.map((ability) => (
+            {GROKBOT_CONSENT.abilities.map((ability) => (
               <li key={ability} className="flex items-start gap-3">
                 <Check className="mt-1.5 h-4 w-4 flex-none text-signal-green" aria-hidden="true" />
                 <span>{t(ability)}</span>
@@ -234,10 +230,8 @@ export default function GrokBotConnectPage() {
             ))}
           </ul>
 
-          <Notice tone="warning" title={t('Only approve a connection you started')}>
-            {t(
-              "If someone sent you this link, deny it. You can disconnect Grok Bot at any time in Grok Bot's settings in Enconvo."
-            )}
+          <Notice tone="warning" title={t(GROKBOT_CONSENT.warningTitle)}>
+            {t(GROKBOT_CONSENT.warningBody)}
           </Notice>
           {error && (
             <Notice tone="error" title={t("Couldn't answer the request")}>
