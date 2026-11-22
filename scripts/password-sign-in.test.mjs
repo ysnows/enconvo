@@ -310,7 +310,7 @@ test('a linked email signs in on /login and hands a session of its own to the Ma
       assert.deepEqual(supabase.calls.map(([name]) => name), ['setSession'])
       assert.equal(supabase.session.access_token, 'worker-access')
       assert.deepEqual(run.users, [{ id: 'user-1', email: 'hidden@privaterelay.appleid.com' }])
-      assert.deepEqual(run.opened, [['openApp', 'settings', undefined], ['email-preferences', 'worker-access']])
+      assert.deepEqual(run.opened, [['openApp', 'settings', undefined, undefined], ['email-preferences', 'worker-access']])
       assert.equal(window.location.href, 'enconvo://login?access_token=app-access&refresh_token=app-refresh&source=settings')
       assert.deepEqual(run.states, ['success'])
       assert.deepEqual(fetch.requests.map(({ url }) => new URL(url).pathname), ['/auth/v1/password/signin', '/api/app_session'])
@@ -324,6 +324,28 @@ test('a linked email signs in on /login and hands a session of its own to the Ma
       assert.deepEqual(fetch.requests.map(({ url }) => new URL(url).pathname), ['/auth/v1/password/signin'])
     } finally {
       fetch.restore()
+    }
+
+    // An app that keeps a PKCE verifier (Android) sends its challenge: it gets a one-time code
+    // for it, never tokens in the link.
+    const challenge = 'E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM'
+    window.location.href = ''
+    const pkce = stubFetch({
+      '/auth/v1/password/signin': { body: { accessToken: 'worker-access', refreshToken: 'worker-refresh' } },
+      '/api/native_handoff/create': (url, init) => {
+        assert.equal(init.headers.Authorization, 'Bearer worker-access')
+        assert.deepEqual(JSON.parse(init.body), { code_challenge: challenge, code_challenge_method: 'S256' })
+        return { body: { code: 'one-time-code' } }
+      },
+    })
+    try {
+      const run = await (await loginForm(supabaseClient()))({ from: 'app', source: 'settings', code_challenge: challenge, code_challenge_method: 'S256' })
+      assert.deepEqual(run.opened[0], ['openApp', 'settings', undefined, { challenge, method: 'S256' }])
+      assert.equal(window.location.href, 'enconvo://login?code=one-time-code&source=settings')
+      assert.deepEqual(run.states, ['success'])
+      assert.deepEqual(pkce.requests.map(({ url }) => new URL(url).pathname), ['/auth/v1/password/signin', '/api/native_handoff/create'])
+    } finally {
+      pkce.restore()
     }
 
     // A refusal shows its message and goes nowhere.

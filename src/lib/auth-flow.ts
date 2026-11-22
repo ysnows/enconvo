@@ -36,10 +36,29 @@ export function purchaseReturn(query: AuthQuery): PurchaseReturn | null {
  */
 export const LEFT_FOR_CHECKOUT_KEY = 'enconvo:left-for-checkout'
 
+/**
+ * An app's sign-in that keeps a PKCE verifier (Android's) sends its challenge: the page then hands
+ * the app a one-time code (NativeRouter.openApp), never tokens, which any app could read off an
+ * `enconvo://` link. Carried with the other native parameters through every sign-in path.
+ */
+const CHALLENGE_KEYS = ['code_challenge', 'code_challenge_method']
+
+export interface NativeCodeChallenge {
+  challenge: string
+  method: string
+}
+
+/** The app's PKCE challenge in `query`, as sent; undefined when there is none (iOS, the Mac, older Android builds). */
+export function nativeCodeChallenge(query: AuthQuery): NativeCodeChallenge | undefined {
+  const challenge = value(query.code_challenge)
+  if (!challenge) return undefined
+  return { challenge, method: value(query.code_challenge_method) ?? '' }
+}
+
 /** Keep the native return destination across registration and password reset. */
 export function authFlowHref(path: string, query: AuthQuery) {
   const params = new URLSearchParams()
-  for (const key of ['from', 'source', 'handoff', 'returnUrl', 'language']) {
+  for (const key of ['from', 'source', 'handoff', ...CHALLENGE_KEYS, 'returnUrl', 'language']) {
     const entry = value(query[key])
     if (entry) params.set(key, entry)
   }
@@ -58,7 +77,7 @@ export function oauthCallbackUrl(
   // A bare path isn't a valid OAuth redirect, so the callback carries a local returnUrl on.
   const returnUrl = value(query.returnUrl)
   if (returnUrl?.startsWith('/')) url.searchParams.set('returnUrl', returnUrl)
-  for (const key of ['from', 'source', 'handoff']) {
+  for (const key of ['from', 'source', 'handoff', ...CHALLENGE_KEYS]) {
     const entry = value(query[key])
     if (entry) url.searchParams.set(key, entry)
   }

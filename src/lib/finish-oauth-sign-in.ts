@@ -68,6 +68,12 @@ export async function finishOAuthSignIn(
   if (from) params.set('from', from)
   if (source) params.set('source', source)
   if (handoff) params.set('handoff', handoff)
+  // The app's PKCE challenge, so /login hands it a one-time code instead of tokens.
+  for (const key of ['code_challenge', 'code_challenge_method']) {
+    const raw = query[key]
+    const entry = Array.isArray(raw) ? raw[0] : raw
+    if (entry) params.set(key, entry)
+  }
   if (returnUrl?.startsWith('/')) params.set('returnUrl', returnUrl)
   const qs = params.toString()
   await router.push(qs ? `/login?${qs}` : '/login', undefined, { locale })

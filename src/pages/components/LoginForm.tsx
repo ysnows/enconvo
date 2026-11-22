@@ -19,6 +19,7 @@ import { syncCurrentEmailPreference } from '@/lib/email-preferences-client'
 import {
   affiliateReturnPath,
   authFlowHref,
+  nativeCodeChallenge,
   oauthCallbackUrl,
   purchaseReturn,
 } from '@/lib/auth-flow'
@@ -116,7 +117,8 @@ export default function LoginForm({
               : router.query.source,
             Array.isArray(router.query.handoff)
               ? router.query.handoff[0]
-              : router.query.handoff
+              : router.query.handoff,
+            nativeCodeChallenge(router.query)
           )
     if (typeof opened === 'object') alert(opened.error)
 

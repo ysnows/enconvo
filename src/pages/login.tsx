@@ -9,7 +9,7 @@ import LoginForm from './components/LoginForm'
 import LoginSuccess from '@/pages/components/LoginSuccess'
 import { LoginAccountChooser } from '@/components/LoginAccountChooser'
 import { NativeRouter } from '@/utils/app/native_router'
-import { affiliateReturnPath, purchaseReturn } from '@/lib/auth-flow'
+import { affiliateReturnPath, nativeCodeChallenge, purchaseReturn } from '@/lib/auth-flow'
 import { ResumeCheckout, useResumeCheckout } from '@/components/ResumeCheckout'
 import {
   PageCornerActions,
@@ -53,7 +53,8 @@ export default function Login() {
         : router.query.source,
       Array.isArray(router.query.handoff)
         ? router.query.handoff[0]
-        : router.query.handoff
+        : router.query.handoff,
+      nativeCodeChallenge(router.query)
     )
     if (result === 'signed_out') {
       // The browser's session ended elsewhere: sign in again on this page,
@@ -62,7 +63,7 @@ export default function Login() {
     } else if (result !== 'opened') {
       alert(result.error)
     }
-  }, [router.query.source, router.query.handoff, showLoginForm])
+  }, [router.query.source, router.query.handoff, router.query.code_challenge, router.query.code_challenge_method, showLoginForm])
   const handleLogout = () => {
     // Only this browser: Enconvo and other devices stay signed in.
     supabase.auth.signOut({ scope: 'local' }).then(showLoginForm)

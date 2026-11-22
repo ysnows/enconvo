@@ -8,7 +8,7 @@ import RegisterForm from '@/pages/components/RegisterForm'
 import RegisterSuccess from '@/pages/components/RegisterSuccess'
 import LoginSuccess from '@/pages/components/LoginSuccess'
 import type { AuthChangeEvent, User } from '@supabase/supabase-js'
-import { purchaseReturn } from '@/lib/auth-flow'
+import { nativeCodeChallenge, purchaseReturn } from '@/lib/auth-flow'
 import { ResumeCheckout, useResumeCheckout } from '@/components/ResumeCheckout'
 
 export default function Register() {
@@ -38,7 +38,7 @@ export default function Register() {
       ? router.query.handoff[0]
       : router.query.handoff
     const source = Array.isArray(router.query.source) ? router.query.source[0] : router.query.source
-    const result = await NativeRouter.openApp(source, handoff)
+    const result = await NativeRouter.openApp(source, handoff, nativeCodeChallenge(router.query))
     // The browser's session ended elsewhere: show the form again.
     if (result === 'signed_out') setRegisterState('register')
     else if (result !== 'opened') alert(result.error)

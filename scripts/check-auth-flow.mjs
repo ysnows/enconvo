@@ -6,7 +6,7 @@ const require = createRequire(import.meta.url)
 const source = await readFile(new URL('../src/lib/auth-flow.ts', import.meta.url), 'utf8')
 const module = { exports: {} }
 new Function('module', 'exports', ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText)(module, module.exports)
-const { authFlowHref, oauthCallbackUrl, affiliateReturnPath, emailLinkDestination, purchaseReturn } = module.exports
+const { authFlowHref, oauthCallbackUrl, affiliateReturnPath, emailLinkDestination, purchaseReturn, nativeCodeChallenge } = module.exports
 // Pricing sends a signed-out buyer to sign in with the plan to buy; signed in, they go on to its checkout.
 assert.deepEqual(purchaseReturn({ returnUrl: '/pricing?plan=standard' }), { plan: 'standard', ownCode: false })
 assert.deepEqual(purchaseReturn({ returnUrl: ['/pricing?plan=cloud_plus_yearly&code=own'] }), { plan: 'cloud_plus_yearly', ownCode: true })
@@ -48,7 +48,7 @@ async function loadForm(name) {
     '@/i18n/I18nProvider': { useI18n: () => ({ t: s => s, locale: 'en' }) },
     '@/i18n/server': { i18nStaticProps: () => ({}) },
     '@/components/ui/input': { Input: ({type, name, placeholder}) => React.createElement('input', {type, name, placeholder}) },
-    '@/lib/auth-flow': { authFlowHref, oauthCallbackUrl, affiliateReturnPath, purchaseReturn },
+    '@/lib/auth-flow': { authFlowHref, oauthCallbackUrl, affiliateReturnPath, purchaseReturn, nativeCodeChallenge },
     '@supabase/auth-helpers-nextjs': { createClientComponentClient: () => ({ auth: {} }) },
     '@/lib/supabase': { createClientComponentClient: () => ({ auth: {} }) },
     '@/components/AuthConsent': { AuthConsent: () => React.createElement('p', {}, 'consent-line') },
