@@ -13,6 +13,8 @@ nohup.out
 # next.js
 /.next/
 /out/
+# Next writes it on every build and dev run, and Next 15's copy names .next/types, so it isn't committed.
+/next-env.d.ts
 
 # production
 /build
