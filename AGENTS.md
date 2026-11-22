@@ -30,7 +30,9 @@ This project supports both npm and pnpm (pnpm-lock.yaml present).
 ## Architecture
 
 ### Tech Stack
-- **Framework**: Next.js 13.3.0 with React 18
+- **Framework**: Next.js 15.5 (pages router) with React 18. Keep `@types/node` in
+  devDependencies: without it `next build` stops in CI, or installs it mid-build and
+  fails prerendering with "NextRouter was not mounted"
 - **Styling**: Tailwind CSS with Headless UI components
 - **Authentication**: Supabase Auth
 - **Payments**: Stripe integration
