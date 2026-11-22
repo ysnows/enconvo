@@ -1,0 +1,128 @@
+{
+ "posts": [
+  {
+   "id": "d-1572665119635275848",
+   "source": "discord",
+   "name": "Brad",
+   "place": "#general",
+   "date": "2026-11-18",
+   "text": "I recommend. Best harness I have ever used.",
+   "url": "https://discord.com/channels/1105536386330800178/1105536386330800181/1572665119635275848",
+   "avatar": "/love/discord-default-2.webp",
+   "big": true
+  },
+  {
+   "id": "d-1557653333018153052",
+   "source": "discord",
+   "name": "shun",
+   "place": "#general",
+   "date": "2026-10-08",
+   "text": "You’re doing a fantastic job with Enconvo. I’ve been a subscriber since the early versions, and it’s been great to see how much the product has evolved and keeps getting better. For me, Enconvo is the best personal AI assistant out there. I’ll keep recommending it to more friends",
+   "url": "https://discord.com/channels/1105536386330800178/1105536386330800181/1557653333018153052",
+   "avatar": "/love/discord-1173669279321821206.webp",
+   "hl": "Enconvo is the best personal AI assistant out there",
+   "trail": true
+  },
+  {
+   "id": "r-oi9usve",
+   "source": "reddit",
+   "name": "u/intermagic66",
+   "place": "r/raycastapp",
+   "date": "2026-04-25",
+   "text": "Try enconvo.ai, really great, I use it for years. Unbelievable festure set and it isn‘t expensive.",
+   "url": "https://www.reddit.com/r/raycastapp/comments/1sv66wr/im_waiting_for_the_new_raycast_just_to_cancel_my/oi9usve/",
+   "avatar": "/love/reddit-intermagic66.webp",
+   "hl": "Unbelievable festure set"
+  },
+  {
+   "id": "r-post-1r0hgup",
+   "source": "reddit",
+   "name": "u/Albertkinng",
+   "place": "r/enconvo",
+   "date": "2026-02-09",
+   "text": "I can’t understand why this app is not the main topic everywhere?! This is the truly AI app tool you only need. I’m not kidding. This is as powerful you want it to be and as easy and simple you needed to be.",
+   "url": "https://www.reddit.com/r/enconvo/comments/1r0hgup/new_user_and_super_impressed_with_this_tool/",
+   "avatar": "/love/reddit-albertkinng.webp",
+   "hl": "This is the truly AI app tool you only need"
+  },
+  {
+   "id": "d-1572946131217023168",
+   "source": "discord",
+   "name": "1eyejoe",
+   "place": "#general",
+   "date": "2026-11-19",
+   "text": "Computer use really is the most powerful of any harness I've used",
+   "url": "https://discord.com/channels/1105536386330800178/1105536386330800181/1572946131217023168",
+   "avatar": "/love/discord-387723351893999618.webp",
+   "big": true
+  },
+  {
+   "id": "d-1564153125663809546",
+   "source": "discord",
+   "name": "Hoàng Văn Tuấn",
+   "place": "#discussions",
+   "date": "2026-10-26",
+   "text": "I just realized the latest beta has these features (Clipboard history and file search). I’ve been using Raycast alongside it for clipboard history and file search, but I may be able to uninstall Raycast now. Enconvo is amazing ❤️",
+   "url": "https://discord.com/channels/1105536386330800178/1105536557861048360/1564153125663809546",
+   "avatar": "/love/discord-418279329403895818.webp",
+   "hl": "I may be able to uninstall Raycast now"
+  },
+  {
+   "id": "d-1569372806083510444",
+   "source": "discord",
+   "name": "FunTrade",
+   "place": "#general",
+   "date": "2026-11-09",
+   "text": "I would like to say I am super impressed and got rid o all my IDEs and started using Enconvo for my Development!!",
+   "url": "https://discord.com/channels/1105536386330800178/1105536386330800181/1569372806083510444",
+   "avatar": "/love/discord-237844867710058496.webp",
+   "hl": "got rid o all my IDEs"
+  },
+  {
+   "id": "r-mcj0g0e",
+   "source": "reddit",
+   "name": "u/Beneficial_Beat_7860",
+   "place": "r/macapps",
+   "date": "2025-02-13",
+   "text": "I have used almost everything out there and have bought at least 6-7 of them and have finally settled for enconvo",
+   "url": "https://www.reddit.com/r/macapps/comments/1ijzz37/introducing_enconvo_the_ai_toolagent_launcher_for/mcj0g0e/",
+   "avatar": "/love/reddit-default-5.webp",
+   "hl": "finally settled for enconvo",
+   "trail": true
+  },
+  {
+   "id": "d-1564889180830572565",
+   "source": "discord",
+   "name": "siven111",
+   "place": "#discussions",
+   "date": "2026-10-28",
+   "text": "Enconvo is like David Bowie 😍 Bowie reinvented himself to something totally new on every new album. Same with Enconvo - with every update (or upgrade?) @Kane brings new features which makes Enconvo a new and better tool 🙂",
+   "url": "https://discord.com/channels/1105536386330800178/1105536557861048360/1564889180830572565",
+   "avatar": "/love/discord-default-1.webp",
+   "hl": "Enconvo is like David Bowie"
+  }
+ ],
+ "phone": [
+  "d-1572665119635275848",
+  "d-1557653333018153052",
+  "r-post-1r0hgup",
+  "d-1564153125663809546"
+ ],
+ "total": 152,
+ "sources": [
+  "discord",
+  "reddit"
+ ],
+ "hero": {
+  "quote": "Best harness I have ever used.",
+  "name": "Brad",
+  "source": "discord",
+  "faces": [
+   "/love/discord-387723351893999618.webp",
+   "/love/discord-1173669279321821206.webp",
+   "/love/discord-418279329403895818.webp",
+   "/love/discord-237844867710058496.webp",
+   "/love/discord-546247019589533706.webp"
+  ]
+ }
+}

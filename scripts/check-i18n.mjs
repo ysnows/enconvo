@@ -139,7 +139,7 @@ const serverTools = await loadTs('../src/i18n/server.ts', {
 const homepageMessages = await serverTools.loadMessages('ja', '/')
 assert.ok(homepageMessages['Windows (Beta)'])
 assert.ok(
-  Object.keys(homepageMessages).length < 700,
+  Object.keys(homepageMessages).length < 800,
   'Only page-specific messages are shipped'
 )
 assert.deepEqual(await serverTools.loadMessages('invalid', '/'), {})

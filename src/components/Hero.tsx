@@ -12,6 +12,8 @@ import { HeroBackdrop } from '@/components/HeroBackdrop'
 import { HeroLayout } from '@/components/home/HeroLayout'
 import { trackEvent } from '@/lib/analytics'
 import { MOBILE_APP_SECTION_ID } from '@/data/iphoneApp'
+import { sourceNames, type LoveSource } from '@/data/love'
+import loveHome from '@/data/loveHome.json'
 
 declare global {
   interface Window {
@@ -115,6 +117,53 @@ export function Hero({
               <p className={styles.requirements}>
                 {t('Free to start · macOS 14+ · Intel & Apple Silicon')}
               </p>
+              {/* One post from the "What people say" section, which the link scrolls to. */}
+              <a
+                href="#love"
+                onClick={() =>
+                  trackEvent('love_cta_click', {
+                    target: 'section',
+                    placement: 'hero',
+                  })
+                }
+                className={styles.heroProof}
+              >
+                <span className={styles.heroProofFaces} aria-hidden="true">
+                  {loveHome.hero.faces.map((face) => (
+                    <img
+                      key={face}
+                      src={face}
+                      alt=""
+                      width={24}
+                      height={24}
+                      decoding="async"
+                    />
+                  ))}
+                </span>
+                <span className={styles.heroProofQuote} lang="en">
+                  “{loveHome.hero.quote}”
+                </span>
+                <span className={styles.heroProofBy}>
+                  {t('{p0}, on {p1}', {
+                    p0: loveHome.hero.name,
+                    p1: sourceNames[loveHome.hero.source as LoveSource],
+                  })}
+                </span>
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 5v14" />
+                  <path d="m19 12-7 7-7-7" />
+                </svg>
+              </a>
             </div>
 
             <HeroShowcase />

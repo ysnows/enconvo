@@ -30,6 +30,12 @@ export const socialPages: Record<string, SocialPage> = {
     imageAlt:
       'Enconvo — See what Enconvo can do. Illustrated video previews show a spreadsheet, a website, and an automated workflow.',
   },
+  '/love': {
+    title: 'What People Say About Enconvo',
+    description:
+      "Posts about Enconvo in people's own words, each linked to where it was written.",
+    ...brandImage,
+  },
   '/cloud-pricing': {
     title: 'Enconvo Cloud Pricing — Models & Services',
     description:

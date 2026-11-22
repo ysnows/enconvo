@@ -177,6 +177,14 @@
 .requirements { margin-top: 12px; font-size: 12px; line-height: 18px; color: #9c9c9d; }
 .browseButton { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 18px; border: 1px solid var(--home-stroke-strong); border-radius: 10px; color: #f4f4f6; font-size: 14px; font-weight: 500; background: rgba(255,255,255,.035); transition: background-color 160ms; }
 .browseButton:hover { background: rgba(255,255,255,.08); }
+.heroProof { display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 10px; min-height: 44px; margin-top: 20px; padding: 6px 14px 6px 10px; border: 1px solid var(--home-stroke); border-radius: 22px; background: rgba(255,255,255,.035); color: #cdcdcd; font-size: 13px; line-height: 18px; transition: border-color 160ms, background-color 160ms; }
+.heroProof:hover { border-color: var(--home-stroke-strong); background: rgba(255,255,255,.06); }
+.heroProofFaces { display: flex; align-items: center; }
+.heroProofFaces img { width: 24px; height: 24px; border: 2px solid #0b0d10; border-radius: 50%; background: #1d2021; object-fit: cover; }
+.heroProofFaces img + img { margin-left: -8px; }
+.heroProofQuote { color: #f4f4f6; font-weight: 600; }
+.heroProofBy { color: #9c9c9d; }
+.heroProof svg { flex: none; }
 .skipLink { position: fixed; top: 12px; left: 12px; z-index: 60; padding: 12px 16px; border-radius: 10px; background: #f8fafc; color: #0b0f14; transform: translateY(-160%); }
 .skipLink:focus { transform: translateY(0); }
 
@@ -572,6 +580,8 @@
   .heroTitle { font-size: 34px; line-height: 1.15; }
   .heroDescription { font-size: 16px; line-height: 1.65; margin-top: 16px; }
   .heroActions { margin-top: 20px; }
+  .heroProof { margin-top: 16px; padding: 8px 14px; border-radius: 16px; }
+  .heroProofFaces, .heroProof svg { display: none; }
   .showcase { margin-top: 24px; }
   .tabScroller { margin-inline: -4px; }
   .tab { padding-inline: 12px; }

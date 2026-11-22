@@ -10,6 +10,7 @@ import { Hero } from '@/components/Hero'
 import { Pricing } from '@/components/Pricing'
 import { AlwaysWithYou } from '@/components/home/AlwaysWithYou'
 import { FeatureGrid } from '@/components/home/FeatureGrid'
+import { Love } from '@/components/home/Love'
 import { ModelFreedom } from '@/components/home/ModelFreedom'
 import { OpenPlatform } from '@/components/home/OpenPlatform'
 import { useSectionEffects } from '@/components/home/useSectionEffects'
@@ -71,6 +72,7 @@ export default function Home({
         <ModelFreedom />
         <OpenPlatform />
         <AlwaysWithYou />
+        <Love />
         <Pricing renderedAt={renderedAt} />
         <Faqs />
       </main>
