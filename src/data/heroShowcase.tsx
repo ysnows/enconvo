@@ -36,6 +36,20 @@ export interface HeroTab {
 
 export const heroTabs: HeroTab[] = [
     {
+        id: 'app-sidebar',
+        benefitLabel: 'Works beside your apps',
+        productName: 'App Sidebar',
+        tagline: 'Dock an AI agent next to any app — it sees the app and works inside it.',
+        subScenes: [
+            {
+                id: 'launch-film',
+                label: 'Launch film',
+                caption: 'YouTube, Finder, Notes, and Numbers — one sidebar does the work in every app.',
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch-v67.mp4', poster: appSidebarPoster.src },
+            },
+        ],
+    },
+    {
         id: 'popbar',
         benefitLabel: 'Fix any text instantly',
         productName: 'PopBar',
@@ -88,20 +102,6 @@ export const heroTabs: HeroTab[] = [
                 label: 'Launch film',
                 caption: 'Caption any app, translate as people speak, and turn meetings into clear notes.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/meeting-caption-launch-v21-web.mp4' },
-            },
-        ],
-    },
-    {
-        id: 'app-sidebar',
-        benefitLabel: 'Works beside your apps',
-        productName: 'App Sidebar',
-        tagline: 'Dock an AI agent next to any app — it sees the app and works inside it.',
-        subScenes: [
-            {
-                id: 'launch-film',
-                label: 'Launch film',
-                caption: 'YouTube, Finder, Notes, and Numbers — one sidebar does the work in every app.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/app-sidebar-launch-v67.mp4', poster: appSidebarPoster.src },
             },
         ],
     },
