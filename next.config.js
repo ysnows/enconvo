@@ -92,6 +92,12 @@ const nextConfig = {
         permanent: true,
       },
       {
+        // What people say is a section of the homepage. /love was a page of its own for a day.
+        source: '/:page(love|testimonials)',
+        destination: '/#testimonials',
+        permanent: false,
+      },
+      {
         // Removed pages: /downloads was a copy of the privacy policy, /developer a
         // "Coming soon" placeholder and /payment an unused checkout sample.
         source: '/downloads',

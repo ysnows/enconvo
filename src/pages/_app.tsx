@@ -67,7 +67,6 @@ const cookieBannerHiddenRoutes = new Set([
 const navigationRoutes = new Set([
   '/',
   '/use-cases',
-  '/love',
   '/android',
   '/changelog',
   '/affiliate',

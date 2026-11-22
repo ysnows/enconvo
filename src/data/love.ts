@@ -1,7 +1,7 @@
-// What people wrote about Enconvo in public, with a link to each original post.
-// love.json (every post, for /love) and loveHome.json (the homepage's picks) are
-// generated together from the collected posts; edit neither by hand. A post is
-// shown in the person's own words: never translate, reword or correct it.
+// What people wrote about Enconvo in public: a few picked posts on the homepage. The cards
+// show each post and don't link to it. loveHome.json is generated from the collected
+// posts; don't edit it by hand. A post is shown in the person's own words: never
+// translate, reword or correct it.
 export type LoveSource = 'discord' | 'reddit' | 'facebook'
 
 export interface LovePost {
@@ -13,7 +13,6 @@ export interface LovePost {
   /** The UTC day it was posted, YYYY-MM-DD. */
   date: string
   text: string
-  url: string
   /** The person's own avatar, or the platform's default one when they set none. */
   avatar: string
   /** A phrase of the text to bring out. */

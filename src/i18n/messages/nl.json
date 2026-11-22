@@ -2660,20 +2660,8 @@
   "Use another code instead": "Een andere code gebruiken",
   "From the community": "Uit de community",
   "Loved by the people who use it every day": "Geliefd bij de mensen die het elke dag gebruiken",
-  "Real posts from {p0}. Open any one to read it where it was written.": "Echte berichten van {p0}. Open er een om het te lezen waar het is geschreven.",
-  "Read all {p0} posts": "Lees alle {p0} berichten",
+  "Real posts from {p0}.": "Echte berichten van {p0}.",
   "Join the Discord": "Word lid van de Discord",
-  "This opens in Discord": "Dit opent in Discord",
-  "You need to be in the Enconvo server to see the message.": "Je moet lid zijn van de Enconvo-server om het bericht te zien.",
-  "Open message": "Bericht openen",
-  "Open in {p0}": "Openen in {p0}",
   "{p0}, on {p1}": "{p0}, op {p1}",
-  "What people say about Enconvo": "Wat mensen over Enconvo zeggen",
-  "Posts from {p0}, in people's own words. Open any one to read it where it was written.": "Berichten van {p0}, in de woorden van de schrijvers zelf. Open er een om het te lezen waar het is geschreven.",
-  "Show {p0} more": "Nog {p0} tonen",
-  "Using Enconvo? Tell us how it's going.": "Gebruik je Enconvo? Vertel ons hoe het gaat.",
-  "Post in #general. If a post of yours is here and you would rather it was not, tell us and we will take it down.": "Post in #general. Staat hier een bericht van jou en heb je dat liever niet, laat het ons weten en we halen het weg.",
-  "Skip to posts": "Ga naar berichten",
-  "Read what people write about Enconvo in their own words, with a link to every original post.": "Lees wat mensen in hun eigen woorden over Enconvo schrijven, met een link naar elk oorspronkelijk bericht.",
-  "Join the server first": "Word eerst lid van de server"
+  "Testimonials": "Ervaringen"
 }

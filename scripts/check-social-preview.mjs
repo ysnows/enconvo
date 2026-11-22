@@ -11,7 +11,6 @@ const brandImage = '/og/enconvo-speak-select-ask-v3.jpg'
 const publicPages = {
   '/': { image: brandImage, title: /Enconvo/, alt: /SmartBar/ },
   '/use-cases': { image: '/og/enconvo-use-cases-v2.jpg', title: /Use Cases/, alt: /workflow/ },
-  '/love': { image: brandImage, title: /What People Say/, alt: /SmartBar/ },
   '/android': { image: brandImage, title: /Android/, alt: /SmartBar/ },
   '/cloud-pricing': { image: '/og/enconvo-cloud-pricing-v1.jpg', title: /Cloud Pricing/, alt: /Speech/ },
   '/changelog': { image: '/og/enconvo-changelog-v2.jpg', title: /Releases/, alt: /release timeline/ },

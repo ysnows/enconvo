@@ -119,7 +119,7 @@ export function Hero({
               </p>
               {/* One post from the "What people say" section, which the link scrolls to. */}
               <a
-                href="#love"
+                href="#testimonials"
                 onClick={() =>
                   trackEvent('love_cta_click', {
                     target: 'section',

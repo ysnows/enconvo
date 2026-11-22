@@ -2660,20 +2660,8 @@
   "Use another code instead": "改用其他兑换码",
   "From the community": "来自社区",
   "Loved by the people who use it every day": "深受每天使用它的人喜爱",
-  "Real posts from {p0}. Open any one to read it where it was written.": "来自 {p0} 的真实帖子。点开任意一条，就能去原处阅读。",
-  "Read all {p0} posts": "查看全部 {p0} 条帖子",
+  "Real posts from {p0}.": "来自 {p0} 的真实帖子。",
   "Join the Discord": "加入 Discord",
-  "This opens in Discord": "这会在 Discord 中打开",
-  "You need to be in the Enconvo server to see the message.": "需要先加入 Enconvo 服务器，才能看到这条消息。",
-  "Open message": "打开消息",
-  "Open in {p0}": "在 {p0} 中打开",
   "{p0}, on {p1}": "{p0}，来自 {p1}",
-  "What people say about Enconvo": "大家怎么评价 Enconvo",
-  "Posts from {p0}, in people's own words. Open any one to read it where it was written.": "来自 {p0} 的帖子，都是用户的原话。点开任意一条，就能去原处阅读。",
-  "Show {p0} more": "再显示 {p0} 条",
-  "Using Enconvo? Tell us how it's going.": "在用 Enconvo？告诉我们用得怎么样。",
-  "Post in #general. If a post of yours is here and you would rather it was not, tell us and we will take it down.": "欢迎发到 #general。如果这里有你的帖子而你不希望展示，告诉我们，我们会撤下。",
-  "Skip to posts": "跳到帖子",
-  "Read what people write about Enconvo in their own words, with a link to every original post.": "看看大家用自己的话怎么评价 Enconvo，每条都附有原帖链接。",
-  "Join the server first": "先加入服务器"
+  "Testimonials": "用户评价"
 }

@@ -1,14 +1,6 @@
-import { useMemo, useState, type MouseEvent } from 'react'
-import { Dialog } from '@headlessui/react'
-import { ArrowUpRight, X } from 'lucide-react'
+import { useMemo } from 'react'
 import { useI18n } from '@/i18n/I18nProvider'
-import { trackEvent } from '@/lib/analytics'
-import {
-  DISCORD_INVITE,
-  sourceNames,
-  type LovePost,
-  type LoveSource,
-} from '@/data/love'
+import { sourceNames, type LovePost, type LoveSource } from '@/data/love'
 import styles from '@/styles/Love.module.css'
 
 const GLYPHS: Record<LoveSource, string> = {
@@ -23,31 +15,24 @@ const GLYPHS: Record<LoveSource, string> = {
 export function SourceGlyph({
   source,
   className,
+  label,
 }: {
   source: LoveSource
   className?: string
+  /** Names the platform when the mark stands alone, with no text beside it. */
+  label?: string
 }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      role={label ? 'img' : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
+    >
       <path d={GLYPHS[source]} />
     </svg>
   )
-}
-
-// A Discord message opens only for members of the server, so the first click
-// says so and offers the invite. The browser remembers that it was shown.
-const NOTICE_KEY = 'enconvo_love_discord_notice'
-function noticeSeen() {
-  try {
-    return window.localStorage.getItem(NOTICE_KEY) === '1'
-  } catch {
-    return false
-  }
-}
-function rememberNotice() {
-  try {
-    window.localStorage.setItem(NOTICE_KEY, '1')
-  } catch {}
 }
 
 function Quote({ post }: { post: LovePost }) {
@@ -72,159 +57,53 @@ function Quote({ post }: { post: LovePost }) {
   )
 }
 
+/** The posts, each in the person's own words with their name, picture, place and day. */
 export function LoveCards({
   posts,
-  placement,
-  phoneIds,
   className = '',
 }: {
   posts: LovePost[]
-  /** Where the cards are, for analytics. */
-  placement: 'home' | 'page'
-  /** When given, a phone shows only these posts. */
-  phoneIds?: string[]
   className?: string
 }) {
-  const { t, locale } = useI18n()
-  const [pending, setPending] = useState<LovePost | null>(null)
-  const [joined, setJoined] = useState(false)
+  const { locale } = useI18n()
   const dates = useMemo(
     () => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }),
     [locale]
   )
 
-  function open(event: MouseEvent<HTMLAnchorElement>, post: LovePost) {
-    trackEvent('love_post_click', {
-      source: post.source,
-      post_id: post.id,
-      placement,
-    })
-    if (
-      post.source !== 'discord' ||
-      event.button !== 0 ||
-      event.metaKey ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey ||
-      noticeSeen()
-    )
-      return
-    event.preventDefault()
-    setJoined(false)
-    setPending(post)
-  }
-
   return (
-    <>
-      <div className={`${styles.wall} ${className}`} data-reveal>
-        {posts.map((post) => (
-          <a
-            key={post.id}
-            href={post.url}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(event) => open(event, post)}
-            className={`${styles.card} ${
-              phoneIds && !phoneIds.includes(post.id) ? styles.notOnPhone : ''
-            }`}
-            data-spotlight
-          >
-            <Quote post={post} />
-            <span className={styles.byline}>
-              <img
-                src={post.avatar}
-                alt=""
-                width={32}
-                height={32}
-                loading="lazy"
-                decoding="async"
-                className={styles.avatar}
-              />
-              <span className={styles.who}>
-                <span className={styles.name}>{post.name}</span>
-                <span className={styles.meta}>
-                  {post.place}
-                  {' · '}
-                  <time dateTime={post.date} suppressHydrationWarning>
-                    {dates.format(new Date(`${post.date}T00:00:00Z`))}
-                  </time>
-                </span>
-              </span>
-              <SourceGlyph source={post.source} className={styles.glyph} />
-              <span className={styles.openLabel}>
-                {t('Open in {p0}', { p0: sourceNames[post.source] })}
-                <ArrowUpRight size={14} aria-hidden="true" />
+    <div className={`${styles.wall} ${className}`} data-reveal>
+      {posts.map((post) => (
+        <figure key={post.id} className={styles.card}>
+          <Quote post={post} />
+          <figcaption className={styles.byline}>
+            <img
+              src={post.avatar}
+              alt=""
+              width={32}
+              height={32}
+              loading="lazy"
+              decoding="async"
+              className={styles.avatar}
+            />
+            <span className={styles.who}>
+              <span className={styles.name}>{post.name}</span>
+              <span className={styles.meta}>
+                {post.place}
+                {' · '}
+                <time dateTime={post.date} suppressHydrationWarning>
+                  {dates.format(new Date(`${post.date}T00:00:00Z`))}
+                </time>
               </span>
             </span>
-          </a>
-        ))}
-      </div>
-
-      <Dialog
-        open={Boolean(pending)}
-        onClose={() => setPending(null)}
-        className={styles.dialog}
-      >
-        <div className={styles.backdrop} aria-hidden="true" />
-        <div className={styles.dialogPosition}>
-          {pending && (
-            <Dialog.Panel className={styles.notice}>
-              <div className={styles.noticeTitle}>
-                <SourceGlyph source="discord" className={styles.noticeGlyph} />
-                <Dialog.Title>{t('This opens in Discord')}</Dialog.Title>
-              </div>
-              <Dialog.Description className={styles.noticeBody}>
-                {t('You need to be in the Enconvo server to see the message.')}
-              </Dialog.Description>
-              <div className={styles.noticeActions}>
-                <a
-                  href={pending.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={styles.primaryButton}
-                  onClick={() => {
-                    rememberNotice()
-                    trackEvent('love_discord_notice', {
-                      action: 'open_message',
-                      placement,
-                    })
-                    setPending(null)
-                  }}
-                >
-                  {t('Open message')}
-                  <ArrowUpRight size={16} aria-hidden="true" />
-                </a>
-                {!joined && (
-                  <a
-                    href={DISCORD_INVITE}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={styles.secondaryButton}
-                    onClick={() => {
-                      rememberNotice()
-                      trackEvent('love_discord_notice', {
-                        action: 'join_server',
-                        placement,
-                      })
-                      setJoined(true)
-                    }}
-                  >
-                    {t('Join the server first')}
-                  </a>
-                )}
-              </div>
-              <button
-                type="button"
-                className={styles.noticeClose}
-                onClick={() => setPending(null)}
-                aria-label={t('Close')}
-              >
-                <X size={18} aria-hidden="true" />
-              </button>
-            </Dialog.Panel>
-          )}
-        </div>
-      </Dialog>
-    </>
+            <SourceGlyph
+              source={post.source}
+              className={styles.glyph}
+              label={sourceNames[post.source]}
+            />
+          </figcaption>
+        </figure>
+      ))}
+    </div>
   )
 }

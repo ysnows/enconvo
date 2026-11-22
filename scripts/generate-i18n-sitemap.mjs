@@ -5,7 +5,6 @@ const { locales, defaultLocale } = JSON.parse(
 const paths = [
   '/',
   '/use-cases',
-  '/love',
   '/android',
   '/download',
   '/cloud-pricing',

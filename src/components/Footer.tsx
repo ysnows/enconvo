@@ -34,6 +34,12 @@ export function Footer() {
                 {t('Plugins')}
               </NavLink>
               <NavLink
+                href="/#testimonials"
+                className="text-content-muted hover:text-content"
+              >
+                {t('Testimonials')}
+              </NavLink>
+              <NavLink
                 href="/#pricing"
                 className="text-content-muted hover:text-content"
               >

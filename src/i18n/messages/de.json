@@ -2660,20 +2660,8 @@
   "Use another code instead": "Anderen Code verwenden",
   "From the community": "Aus der Community",
   "Loved by the people who use it every day": "Geliebt von denen, die es jeden Tag nutzen",
-  "Real posts from {p0}. Open any one to read it where it was written.": "Echte Beiträge von {p0}. Öffne einen beliebigen und lies ihn dort, wo er geschrieben wurde.",
-  "Read all {p0} posts": "Alle {p0} Beiträge lesen",
+  "Real posts from {p0}.": "Echte Beiträge von {p0}.",
   "Join the Discord": "Dem Discord beitreten",
-  "This opens in Discord": "Das öffnet sich in Discord",
-  "You need to be in the Enconvo server to see the message.": "Du musst auf dem Enconvo-Server sein, um die Nachricht zu sehen.",
-  "Open message": "Nachricht öffnen",
-  "Open in {p0}": "In {p0} öffnen",
   "{p0}, on {p1}": "{p0}, auf {p1}",
-  "What people say about Enconvo": "Was Menschen über Enconvo sagen",
-  "Posts from {p0}, in people's own words. Open any one to read it where it was written.": "Beiträge von {p0}, in den Worten ihrer Verfasser. Öffne einen beliebigen und lies ihn dort, wo er geschrieben wurde.",
-  "Show {p0} more": "{p0} weitere anzeigen",
-  "Using Enconvo? Tell us how it's going.": "Du nutzt Enconvo? Erzähl uns, wie es läuft.",
-  "Post in #general. If a post of yours is here and you would rather it was not, tell us and we will take it down.": "Schreib in #general. Wenn hier ein Beitrag von dir steht und du das lieber nicht möchtest, sag uns Bescheid, und wir nehmen ihn herunter.",
-  "Skip to posts": "Zu den Beiträgen springen",
-  "Read what people write about Enconvo in their own words, with a link to every original post.": "Lies, was Menschen in ihren eigenen Worten über Enconvo schreiben, mit einem Link zu jedem Originalbeitrag.",
-  "Join the server first": "Zuerst dem Server beitreten"
+  "Testimonials": "Nutzerstimmen"
 }

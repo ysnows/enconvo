@@ -2660,20 +2660,8 @@
   "Use another code instead": "다른 코드 사용하기",
   "From the community": "커뮤니티의 목소리",
   "Loved by the people who use it every day": "매일 쓰는 사람들이 사랑합니다",
-  "Real posts from {p0}. Open any one to read it where it was written.": "{p0}에 올라온 실제 게시물입니다. 아무 글이나 열면 작성된 곳에서 읽을 수 있습니다.",
-  "Read all {p0} posts": "게시물 {p0}개 모두 보기",
+  "Real posts from {p0}.": "{p0}에 올라온 실제 게시물입니다.",
   "Join the Discord": "Discord 참여하기",
-  "This opens in Discord": "Discord에서 열립니다",
-  "You need to be in the Enconvo server to see the message.": "메시지를 보려면 Enconvo 서버에 참여해 있어야 합니다.",
-  "Open message": "메시지 열기",
-  "Open in {p0}": "{p0}에서 열기",
   "{p0}, on {p1}": "{p0}, {p1}에서",
-  "What people say about Enconvo": "사람들이 말하는 Enconvo",
-  "Posts from {p0}, in people's own words. Open any one to read it where it was written.": "{p0}에 올라온 게시물을 쓴 그대로 옮겼습니다. 아무 글이나 열면 작성된 곳에서 읽을 수 있습니다.",
-  "Show {p0} more": "{p0}개 더 보기",
-  "Using Enconvo? Tell us how it's going.": "Enconvo를 쓰고 계신가요? 어떤지 들려주세요.",
-  "Post in #general. If a post of yours is here and you would rather it was not, tell us and we will take it down.": "#general에 글을 남겨 주세요. 여기에 내 게시물이 있는 것을 원하지 않으면 알려 주세요. 내리겠습니다.",
-  "Skip to posts": "게시물로 건너뛰기",
-  "Read what people write about Enconvo in their own words, with a link to every original post.": "사람들이 Enconvo에 대해 직접 쓴 글을 원문 링크와 함께 읽어 보세요.",
-  "Join the server first": "먼저 서버에 참여하기"
+  "Testimonials": "사용자 후기"
 }
