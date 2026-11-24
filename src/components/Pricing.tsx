@@ -678,21 +678,40 @@ function DiffValue({ cell }: { cell: DiffCell }) {
   )
 }
 
-function planPrice(plan: PlanColumn, isAnnual: boolean, now: number) {
-  if (plan.name === 'Free') return '$0'
+/** A plan's price at `now`, and while a sale runs, the price it replaces (`was`), as the cards show them. */
+function planPrice(
+  plan: PlanColumn,
+  isAnnual: boolean,
+  now: number
+): { price: string; was?: string } {
+  if (plan.name === 'Free') return { price: '$0' }
+  const sale = lifetimeSale(now)
   const tier = CLOUD_TIERS.find((item) => item.name === plan.name)
-  if (tier) return isAnnual ? tier.annual.perMonth : tier.monthly.price
-  const prices = lifetimePrices(now)
-  return usd(
-    saleCents(
-      plan.name === 'Teams'
-        ? teamsCents(TEAMS_BASE_SEATS, now)
-        : plan.name === 'Premium'
-        ? prices.premium.cents
-        : prices.standard.cents,
-      now
+  if (tier) {
+    const list = isAnnual ? tier.annual.perMonth : tier.monthly.price
+    if (!sale) return { price: list }
+    // The sale comes off the first month or year only, shown per month like the Cloud card.
+    const firstCents = Math.round(
+      (dollarCents(isAnnual ? tier.annual.price : tier.monthly.price) *
+        (100 - sale.percentOff)) /
+        100
     )
-  )
+    return {
+      price: usd(isAnnual ? Math.round(firstCents / 12) : firstCents),
+      was: list,
+    }
+  }
+  const prices = lifetimePrices(now)
+  const listCents =
+    plan.name === 'Teams'
+      ? teamsCents(TEAMS_BASE_SEATS, now)
+      : plan.name === 'Premium'
+      ? prices.premium.cents
+      : prices.standard.cents
+  const payCents = saleCents(listCents, now)
+  return payCents === listCents
+    ? { price: usd(listCents) }
+    : { price: usd(payCents), was: usd(listCents) }
 }
 
 function planUnit(plan: PlanColumn, isAnnual: boolean) {
@@ -717,6 +736,7 @@ function PlanComparison({
   const [group, setGroup] = useState<PlanGroup>('You bring the AI')
   const isAnnual = billing === 'annual'
   const prices = lifetimePrices(now)
+  const sale = lifetimeSale(now)
   const shown = PLAN_COLUMNS.filter((plan) => plan.group === group).length
 
   return (
@@ -724,7 +744,14 @@ function PlanComparison({
       <section className={compare.block} aria-labelledby="compare-plans">
         <div className={compare.heading}>
           <div>
-            <h3 id="compare-plans">{t('How the plans differ')}</h3>
+            <h3 id="compare-plans">
+              {t('How the plans differ')}
+              {sale && (
+                <span className={compare.saleBadge}>
+                  {t(sale.badge, { p0: sale.percentOff })}
+                </span>
+              )}
+            </h3>
             <p>
               {t(
                 'Every paid plan unlocks the same features. They differ in who brings the AI and how much comes with it.'
@@ -775,7 +802,7 @@ function PlanComparison({
               </div>
               {PLAN_COLUMNS.map((plan) => {
                 const tier = CLOUD_TIERS.find((c) => c.name === plan.name)
-                const price = planPrice(plan, isAnnual, now)
+                const { price, was } = planPrice(plan, isAnnual, now)
                 return (
                   <div
                     key={plan.name}
@@ -801,6 +828,16 @@ function PlanComparison({
                       {price}
                     </p>
                     <p className={compare.planUnit}>
+                      {was && (
+                        <>
+                          <s className={compare.planWas}>
+                            <span className="sr-only">
+                              {t('Original price ')}
+                            </span>
+                            {was}
+                          </s>{' '}
+                        </>
+                      )}
                       {t(planUnit(plan, isAnnual))}
                     </p>
                     {plan.name === 'Teams' ? (

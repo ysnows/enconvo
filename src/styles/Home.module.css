@@ -26,7 +26,10 @@
   transition-duration: 0ms;
 }
 
-.hero { position: relative; z-index: 2; isolation: isolate; }
+/* The fixed site nav lives inside the hero, so the hero's z-index is the nav's
+   level on the page: above every later section (the raised pricing card is 2),
+   below dialogs and the cookie banner (50 and up). HeroLayout repeats this. */
+.hero { position: relative; z-index: 40; isolation: isolate; }
 
 .darkVeil {
   position: absolute;

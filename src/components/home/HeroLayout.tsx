@@ -13,7 +13,7 @@ const layout = `
   -webkit-font-smoothing: antialiased;
 }
 .${styles.page} :is(h1, h2, h3, p, a, button, span, th) { letter-spacing: 0; }
-.${styles.hero} { position: relative; z-index: 2; isolation: isolate; overflow: hidden; }
+.${styles.hero} { position: relative; z-index: 40; isolation: isolate; overflow: hidden; }
 .${styles.hero} header { isolation: isolate; background: transparent; border-color: transparent; backdrop-filter: none; }
 .${styles.hero} header nav { max-width: 1240px; min-height: 64px; margin: 0 auto; padding: 12px 24px; }
 .${styles.hero} header nav > div > a > svg { height: 28px; }

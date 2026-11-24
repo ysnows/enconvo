@@ -39,6 +39,9 @@
 .planPrice { margin-top: 14px; color: #f4f4f6; font-size: 30px; font-weight: 600; line-height: 36px; font-variant-numeric: tabular-nums; }
 .planPriceCents { font-size: 23px; }
 .planUnit { color: #9c9c9d; font-size: 12px; line-height: 18px; }
+/* While a sale runs, each discounted plan shows the price it replaces, and the heading the sale. */
+.planWas { color: #7d8387; font-variant-numeric: tabular-nums; }
+.saleBadge { display: inline-block; margin-left: 12px; padding: 3px 8px; border-radius: 5px; background: #ffc533; color: #1a1403; font-size: 12px; font-weight: 600; line-height: 18px; vertical-align: 6px; white-space: nowrap; }
 .planCta { display: flex; align-items: center; justify-content: center; min-height: 36px; margin-top: 14px; padding: 6px 8px; border: 1px solid rgba(255,255,255,.17); border-radius: 8px; background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.03)); color: #f4f4f6; font-size: 13px; font-weight: 500; line-height: 16px; text-align: center; box-shadow: 0 1px 0 rgba(255,255,255,.06) inset; transition: background-color 160ms, border-color 160ms; }
 .planCta:hover { border-color: rgba(255,255,255,.3); color: #fff; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)); }
 .planCta:focus-visible { outline: 2px solid #57c1ff; outline-offset: 2px; }
