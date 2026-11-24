@@ -9,7 +9,6 @@
 // the `-web` files are x264 CRF 23 re-encodes of the 7.5 and 5 Mbps masters.
 
 import launchFilmPoster from '@/images/posters/enconvo-launch-film-v27.webp'
-import powerfulHandsPoster from '@/images/posters/enconvo-powerful-hands-v27d.webp'
 import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-fullscreen-20261020.webp'
 import appSidebarPoster from '@/images/posters/app-sidebar.webp'
 import popbarPoster from '@/images/posters/popbar-launch-v7-20261018.webp'
@@ -48,20 +47,6 @@ export const heroTabs: HeroTab[] = [
                 label: 'Launch film',
                 caption: 'One working day: AI in every app, plugins, Computer Use, and an agent team that ships the launch.',
                 media: { type: 'video', src: 'https://file.enconvo.com/videos/enconvo-launch-film-v27b.mp4', poster: launchFilmPoster.src },
-            },
-        ],
-    },
-    {
-        id: 'powerful-hands',
-        benefitLabel: 'Give your agent hands',
-        productName: 'Computer Use & Plugins',
-        tagline: 'Your agent works your apps for you, with thousands of plugins one click away.',
-        subScenes: [
-            {
-                id: 'launch-film',
-                label: 'Launch film',
-                caption: 'Computer Use clicks through your apps for you, thousands of plugins connect your tools, and Knowledge Base, Memory, Spaces, and Artifacts turn one sentence into finished work.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/enconvo-powerful-hands-v27d.mp4', poster: powerfulHandsPoster.src },
             },
         ],
     },

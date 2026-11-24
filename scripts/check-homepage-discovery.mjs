@@ -49,7 +49,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   assert.equal(graph?.length, 4)
   const app = graph.find((item) => item['@type'] === 'SoftwareApplication')
   assert.equal(app.operatingSystem, 'macOS 14 or later')
-  assert.equal(app.featureList.length, 8)
+  assert.equal(app.featureList.length, 7)
   assert.ok(!app.aggregateRating && !app.review, 'no invented review signals')
   assert.equal(app.offers.price, '0')
   assert.ok(
@@ -66,8 +66,8 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   )
   const tabs = [...html.matchAll(/id="hero-tab-([^"]+)"/g)].map((m) => m[1])
   assert.deepEqual(tabs, [
-    'launch-film', 'powerful-hands', 'app-sidebar', 'popbar',
-    'dynamic-island', 'voice', 'meeting-caption', 'ai-companion',
+    'launch-film', 'app-sidebar', 'popbar', 'dynamic-island', 'voice',
+    'meeting-caption', 'ai-companion',
   ])
   assert.ok(
     html.includes('<video src="https://file.enconvo.com/videos/enconvo-launch-film-v27b.mp4"') &&
