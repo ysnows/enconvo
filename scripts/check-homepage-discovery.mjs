@@ -49,7 +49,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
   assert.equal(graph?.length, 4)
   const app = graph.find((item) => item['@type'] === 'SoftwareApplication')
   assert.equal(app.operatingSystem, 'macOS 14 or later')
-  assert.equal(app.featureList.length, 6)
+  assert.equal(app.featureList.length, 7)
   assert.ok(!app.aggregateRating && !app.review, 'no invented review signals')
   assert.equal(app.offers.price, '0')
   assert.ok(
@@ -61,16 +61,16 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-speak-select-ask-v2.jpg')
   )
   assert.ok(
-    /poster="\/_next\/static\/media\/app-sidebar\.[\w-]+\.webp"/.test(html) &&
-      html.includes('id="hero-tab-app-sidebar" role="tab" aria-selected="true"')
+    /poster="\/_next\/static\/media\/enconvo-launch-film-v27\.[\w-]+\.webp"/.test(html) &&
+      html.includes('id="hero-tab-launch-film" role="tab" aria-selected="true"')
   )
   const tabs = [...html.matchAll(/id="hero-tab-([^"]+)"/g)].map((m) => m[1])
   assert.deepEqual(tabs, [
-    'app-sidebar', 'popbar', 'dynamic-island', 'voice',
+    'launch-film', 'app-sidebar', 'popbar', 'dynamic-island', 'voice',
     'meeting-caption', 'ai-companion',
   ])
   assert.ok(
-    html.includes('<video src="https://file.enconvo.com/videos/app-sidebar-launch-v67.mp4"') &&
+    html.includes('<video src="https://file.enconvo.com/videos/enconvo-launch-film-v27.mp4"') &&
       html.includes('preload="none"'),
     'the opening showcase uses the shared MP4 player'
   )
