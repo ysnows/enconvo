@@ -46,7 +46,7 @@ export const heroTabs: HeroTab[] = [
                 id: 'launch-film',
                 label: 'Launch film',
                 caption: 'One working day: AI in every app, plugins, Computer Use, and an agent team that ships the launch.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/enconvo-launch-film-v27.mp4', poster: launchFilmPoster.src },
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/enconvo-launch-film-v27b.mp4', poster: launchFilmPoster.src },
             },
         ],
     },

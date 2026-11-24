@@ -70,7 +70,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
     'meeting-caption', 'ai-companion',
   ])
   assert.ok(
-    html.includes('<video src="https://file.enconvo.com/videos/enconvo-launch-film-v27.mp4"') &&
+    html.includes('<video src="https://file.enconvo.com/videos/enconvo-launch-film-v27b.mp4"') &&
       html.includes('preload="none"'),
     'the opening showcase uses the shared MP4 player'
   )
