@@ -61,7 +61,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
       html.includes('enconvo-speak-select-ask-v2.jpg')
   )
   assert.ok(
-    /poster="\/_next\/static\/media\/enconvo-launch-film-v27\.[\w-]+\.webp"/.test(html) &&
+    /poster="\/_next\/static\/media\/enconvo-launch-film-v28\.[\w-]+\.webp"/.test(html) &&
       html.includes('id="hero-tab-launch-film" role="tab" aria-selected="true"')
   )
   const tabs = [...html.matchAll(/id="hero-tab-([^"]+)"/g)].map((m) => m[1])
@@ -70,7 +70,7 @@ for (const agent of ['Googlebot', 'OAI-SearchBot', 'PerplexityBot']) {
     'meeting-caption', 'ai-companion',
   ])
   assert.ok(
-    html.includes('<video src="https://file.enconvo.com/videos/enconvo-launch-film-v27b.mp4"') &&
+    html.includes('<video src="https://file.enconvo.com/videos/enconvo-launch-film-v28.mp4"') &&
       html.includes('preload="none"'),
     'the opening showcase uses the shared MP4 player'
   )
