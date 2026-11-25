@@ -4,11 +4,11 @@
 // Sub-scenes without `media` render as styled placeholders until their demo
 // clip is recorded; dropping a video into `media` later needs no code change.
 // Posters are WebP imports (hashed, cached for good): the first one is the
-// homepage's preloaded LCP image (pages/index.tsx), 87 KB for the launch film.
+// homepage's preloaded LCP image (pages/index.tsx), 88 KB for the launch film.
 // Films are H.264 with the index first (`-movflags +faststart`), around 2 Mbps:
 // the `-web` files are x264 CRF 23 re-encodes of the 7.5 and 5 Mbps masters.
 
-import launchFilmPoster from '@/images/posters/enconvo-launch-film-v28b.webp'
+import launchFilmPoster from '@/images/posters/enconvo-launch-film-v28c.webp'
 import liveAvatarPoster from '@/images/posters/enconvo-live-avatar-fullscreen-20261020.webp'
 import appSidebarPoster from '@/images/posters/app-sidebar.webp'
 import popbarPoster from '@/images/posters/popbar-launch-v7-20261018.webp'
@@ -46,7 +46,7 @@ export const heroTabs: HeroTab[] = [
                 id: 'launch-film',
                 label: 'Launch film',
                 caption: 'One working day: AI in every app, plugins, Computer Use, and an agent team that ships the launch.',
-                media: { type: 'video', src: 'https://file.enconvo.com/videos/enconvo-launch-film-v28b.mp4', poster: launchFilmPoster.src },
+                media: { type: 'video', src: 'https://file.enconvo.com/videos/enconvo-launch-film-v28c.mp4', poster: launchFilmPoster.src },
             },
         ],
     },
