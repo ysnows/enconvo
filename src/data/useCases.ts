@@ -19,6 +19,97 @@ export interface UseCase {
 
 export const useCases: UseCase[] = [
   {
+    slug: 'whats-new-2-5-18',
+    title: 'What’s new in Enconvo 2.5.18',
+    description:
+      'Everything new in 2.5.18 in one narrated tour: Teamwork, Todos, Screenshot & Recording, Email with Mail Triage, Project budgets and per-action permissions, Enconvo Guide and a chat for each automation, a new home on iPhone with Enconvo Keyboard, and a few more touches.',
+    youtubeId: 'lof_8m05ESg',
+    category: 'Tutorials',
+    version: '2.5.18',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'teamwork-2-5-18',
+    title: 'Teamwork: a team that works on your request together',
+    description:
+      'Turn on Teamwork in a chat’s top bar and the All-round team joins in: the Lead splits the work, the members work at the same time, a reviewer checks it, and Flow shows the run step by step.',
+    youtubeId: '2GfKCQO7Cyc',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'todos-2-5-18',
+    title: 'Todos: everything you mean to do in one place',
+    description:
+      'Mention something in a chat and Mavis puts it on Todos with the time you asked for; change or undo it on the card, and check it off in the Chat Window’s sidebar.',
+    youtubeId: '83c5DmC5fCQ',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'screenshot-and-recording-2-5-18',
+    title: 'Screenshot & Recording in one tool',
+    description:
+      'Every capture mode in one place, with key hints you can click: a window, a scrolling page stitched into one picture, text copied from anywhere on screen, and a recording of just the part you pick.',
+    youtubeId: 'M_L6mO1Rf8U',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'mail-triage-voice-replies-2-5-18',
+    title: 'Email with Mail Triage and voice replies',
+    description:
+      'Mail Triage gives every new mail an urgency and a topic, Mavis writes a reply from what you say, and Mail Alerts arrive as boards where you read, reply, snooze or mark a mail Handled.',
+    youtubeId: 'GmiDlWTFvDs',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'project-budgets-permissions-2-5-18',
+    title: 'Project budgets and per-action permissions',
+    description:
+      'Give a Project a monthly budget in Enconvo Cloud points and see in Spend where they went, set each Connector action to Allowed, Ask first or Off, and give each chat its own permissions.',
+    youtubeId: 'kn46u3kUUQI',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'enconvo-guide-automation-chats-2-5-18',
+    title: 'Enconvo Guide and a chat for each automation',
+    description:
+      'A built-in agent that answers from the live docs, changes a setting only when you press Apply, and walks you through a feature with Show me, plus a chat of its own for every automation.',
+    youtubeId: 'vx8l1ZVPVWY',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
+    slug: 'iphone-home-enconvo-keyboard-2-5-18',
+    title: 'A new home on iPhone and Enconvo Keyboard',
+    description:
+      'The phone app’s new tab bar, a Today card with what needs you and your todos, and Enconvo Keyboard on iPhone, which types English and Chinese pinyin.',
+    youtubeId: 'iQvhzFNXKWQ',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/integrations/iphone-app',
+  },
+  {
+    slug: 'few-more-touches-2-5-18',
+    title: 'A few more touches in 2.5.18',
+    description:
+      'Friends in its own place, pinyin search, Regenerate and /learn, Backup for your chats, Projects, agents and settings, a Font Size setting, and Invite Friends, now Affiliate.',
+    youtubeId: 'ZSaPqZwWkMM',
+    category: 'Tutorials',
+    date: '2026-11-25',
+    docsUrl: 'https://docs.enconvo.ai/changelog',
+  },
+  {
     slug: 'whats-new-2-5-17',
     title: 'What’s new in Enconvo 2.5.17',
     description:
